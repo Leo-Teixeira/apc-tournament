@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@heroui/react";
+import { Button } from "@heroui/button";
 import ChipLegend from "../components/chipLegend";
 import InfoItem from "../components/infoItem";
 
@@ -11,8 +11,11 @@ export default function Dashboard() {
       style={{ backgroundImage: `url('/images/background_dashboard.svg')` }}>
       <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-8">
         <div className="text-center text-white">
-          <h1 className="text-title font-bold">APT 1-T1</h1>
+          <h1 className="text-h1 font-bold">APT 1-T1</h1>
           <p className="text-title font-">17/01/2025 20:29</p>
+        </div>
+        <div>
+          <Button color="primary">Button</Button>
         </div>
 
         <div className="flex justify-between">
