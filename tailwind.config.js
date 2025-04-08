@@ -8,7 +8,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
 
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -25,7 +25,7 @@ module.exports = {
           600: "#145025",
           700: "#103e1d",
           800: "#0c3017",
-          900: "#092511",
+          900: "#092511"
         },
         grey: {
           50: "#e9e9e9",
@@ -37,8 +37,8 @@ module.exports = {
           600: "#1d1d23",
           700: "#17171c",
           800: "#121215",
-          900: "#0d0d10",
-        },
+          900: "#0d0d10"
+        }
       },
       fontFamily: {
         satoshi: ["Satoshi-regular", "sans-serif"],
@@ -46,10 +46,11 @@ module.exports = {
         satoshiBold: ["Satoshi-bold", "sans-serif"],
         satoshiLight: ["Satoshi-light", "sans-serif"],
         satoshiItalic: ["Satoshi-italic", "sans-serif"],
-        satoshiMedium: ["Satoshi-medium", "sans-serif"],
+        satoshiMedium: ["Satoshi-medium", "sans-serif"]
       },
       fontSize: {
         title: "70px",
+        subtitle: "50px",
         h1: "36px",
         h2: "32px",
         h3: "29px",
@@ -58,10 +59,10 @@ module.exports = {
         h6: "20px",
         body1: "18px",
         body2: "16px",
-        body3: "14px",
-      },
-    },
+        body3: "14px"
+      }
+    }
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [heroui()]
 };
