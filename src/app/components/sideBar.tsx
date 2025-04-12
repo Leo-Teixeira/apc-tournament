@@ -24,7 +24,7 @@ export default function Sidebar() {
     <div
       className={`flex flex-col justify-between ${
         collapsed ? "w-16" : "w-64"
-      } h-screen bg-black text-white transition-all duration-300`}>
+      } h-screen bg-black/20 text-white transition-all duration-300`}>
       <div>
         <div
           className={`flex ${

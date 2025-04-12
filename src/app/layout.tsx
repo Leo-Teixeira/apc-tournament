@@ -1,3 +1,4 @@
+import SideBar from "./components/sideBar";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -15,7 +16,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <SideBar />
+        <Providers>
+          <div className="flex-1 p-6 bg-slate-500">{children}</div>
+        </Providers>
       </body>
     </html>
   );
