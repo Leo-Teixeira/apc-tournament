@@ -1,7 +1,13 @@
 "use client";
-
-import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  redirect("/apt");
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/apt");
+  }, [router]);
+
+  return null;
 }

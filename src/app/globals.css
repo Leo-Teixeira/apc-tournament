@@ -60,4 +60,9 @@
   p {
     @apply text-body1 text-foreground;
   }
+
+  html,
+  body {
+    @apply h-full w-full m-0 p-0 overflow-auto;
+  }
 }

@@ -1,6 +1,5 @@
-import SideBar from "./components/sideBar";
+import Sidebar from "./components/sideBar";
 import "./globals.css";
-import { Providers } from "./providers";
 
 export default function RootLayout({
   children
@@ -8,18 +7,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
-        <SideBar />
-        <Providers>
-          <div className="flex-1 p-6 bg-slate-500">{children}</div>
-        </Providers>
+    <html lang="fr" className="dark h-full w-full">
+      <body className="h-full w-full overflow-hidden">
+        <div className="flex h-screen w-screen overflow-hidden">
+          <Sidebar />
+          <div className="flex-1 min-w-0 min-h-0 overflow-y-auto bg-slate-500 p-6">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );
