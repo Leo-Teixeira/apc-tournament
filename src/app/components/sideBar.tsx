@@ -3,6 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { STRINGS } from "../constants/string";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Logout02Icon,
+  SidebarLeft01Icon,
+  SidebarLeftIcon,
+  ViewIcon
+} from "@hugeicons/core-free-icons";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -12,12 +19,27 @@ export default function Sidebar() {
     <div
       className={`flex flex-col justify-between ${sidebarWidth} shrink-0 h-full bg-black/20 text-white transition-all duration-300`}>
       <div>
-        <div className="flex items-center justify-between p-4">
+        <div
+          className={`flex ${
+            collapsed ? "flex-col gap-6" : "flex-row"
+          } items-center justify-between p-4`}>
           <img src="/images/white_logo.svg" alt="Logo" className="h-8 w-8" />
           <button onClick={() => setCollapsed(!collapsed)}>
-            <span className="material-icons">
-              {collapsed ? "chevron_right" : "chevron_left"}
-            </span>
+            {collapsed ? (
+              <HugeiconsIcon
+                icon={SidebarLeftIcon}
+                size={24}
+                color="currentColor"
+                strokeWidth={1.5}
+              />
+            ) : (
+              <HugeiconsIcon
+                icon={SidebarLeft01Icon}
+                size={24}
+                color="currentColor"
+                strokeWidth={1.5}
+              />
+            )}
           </button>
         </div>
 
@@ -27,7 +49,12 @@ export default function Sidebar() {
               key={label}
               href={href}
               className="flex items-center gap-4 px-4 py-2 hover:bg-white/10 transition-colors rounded">
-              <span className="material-icons text-lg">{icon}</span>
+              <HugeiconsIcon
+                icon={icon}
+                size={24}
+                color="currentColor"
+                strokeWidth={1.5}
+              />
               {!collapsed && <span className="text-sm">{label}</span>}
             </Link>
           ))}
@@ -38,7 +65,12 @@ export default function Sidebar() {
         <Link
           href="/"
           className="flex items-center gap-2 text-sm bg-white/10 rounded px-3 py-2 hover:bg-white/20">
-          <span className="material-icons rotate-180">logout</span>
+          <HugeiconsIcon
+            icon={Logout02Icon}
+            size={24}
+            color="currentColor"
+            strokeWidth={1.5}
+          />
           {!collapsed && <span>Retour au site</span>}
         </Link>
       </div>

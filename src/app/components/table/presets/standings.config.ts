@@ -1,12 +1,5 @@
-import { Column } from "../table.types";
-
-
-type StandingRow = {
-  id: string;
-  place: number;
-  name: string;
-  points: number | "-";
-};
+import { Column } from "../generic_table";
+import { StandingRow } from "../table.types";
 
 export const standingsColumns: Column<StandingRow>[] = [
   { name: "Place", uid: "place", align: "start" },

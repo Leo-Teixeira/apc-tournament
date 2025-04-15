@@ -1,3 +1,5 @@
+import { Briefcase09Icon, Cards01Icon, Cards02Icon, ChampionIcon, HealtcareIcon, RankingIcon, SidebarLeft01Icon } from "@hugeicons/core-free-icons";
+
 export const STRINGS = {
   common: {
     tournament_title: "Tournoi",
@@ -15,18 +17,18 @@ export const STRINGS = {
     menu_item: [
       {
         label: "Championnat APT",
-        icon: "emoji_events",
+        icon: Cards01Icon,
         href: "/apt"
       },
       {
         label: "Championnat Sit&Go",
-        icon: "sports_esports",
+        icon: Cards02Icon,
         href: "/sitgo"
       },
-      { label: "Super finale", icon: "star", href: "/super_finale" },
-      { label: "Tournoi de l'AG", icon: "emoji_events", href: "/ag" },
-      { label: "SoliPoker", icon: "layers", href: "/solipoker" },
-      { label: "Mallettes", icon: "card_giftcard", href: "/mallette" }
+      { label: "Super finale", icon: RankingIcon, href: "/super_finale" },
+      { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
+      { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
+      { label: "Mallettes", icon: Briefcase09Icon, href: "/mallette" }
     ]
   },
   apt: {

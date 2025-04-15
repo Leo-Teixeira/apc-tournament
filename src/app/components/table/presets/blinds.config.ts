@@ -1,14 +1,5 @@
 import { Column } from "../generic_table";
-
-type BlindRow = {
-  id: string;
-  level: string;
-  small: string;
-  big: string;
-  ante: string;
-  duration: string;
-  time: string;
-};
+import { BlindRow } from "../table.types";
 
 export const blindsColumns: Column<BlindRow>[] = [
   { name: "Niveau", uid: "level" },
