@@ -60,6 +60,10 @@ module.exports = {
         body1: "18px",
         body2: "16px",
         body3: "14px"
+      },
+      backgroundImage: {
+        "apt-gradient":
+          "radial-gradient(circle at bottom left, #103E1D 0%, transparent 10%), radial-gradient(circle at top right, #103E1D 0%, transparent 10%)"
       }
     }
   },
