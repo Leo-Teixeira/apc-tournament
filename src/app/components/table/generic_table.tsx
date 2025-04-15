@@ -32,13 +32,17 @@ export type GenericTableProps<T extends { id: string | number }> = {
   items: T[];
   ariaLabel: string;
   showActions?: boolean;
+  enableRowClick?: boolean;
+  getDetailUrl?: (id: T["id"]) => string;
 };
 
 export function GenericTable<T extends { id: string | number }>({
   columns,
   items,
   ariaLabel,
-  showActions = false
+  showActions = false,
+  enableRowClick = false,
+  getDetailUrl
 }: GenericTableProps<T>) {
   const visibleColumns = showActions
     ? columns
@@ -91,7 +95,11 @@ export function GenericTable<T extends { id: string | number }>({
         isLoading={false}
         loadingContent={<Spinner label="Chargement..." />}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${
+              enableRowClick && getDetailUrl ? "hover:bg-green-600" : ""
+            }`}>
             {(columnKey) => {
               if (columnKey === "action") {
                 return (
@@ -134,14 +142,24 @@ export function GenericTable<T extends { id: string | number }>({
 
               const col = columns.find((c) => c.uid === columnKey);
               const value = item[columnKey as keyof T];
+              const content = col?.render
+                ? col.render(value, item)
+                : (value as React.ReactNode);
 
-              return (
-                <TableCell>
-                  {col?.render
-                    ? col.render(value, item)
-                    : (value as React.ReactNode)}
-                </TableCell>
-              );
+              if (enableRowClick && getDetailUrl) {
+                return (
+                  <TableCell>
+                    <a
+                      href={getDetailUrl(item.id)}
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      {content}
+                    </a>
+                  </TableCell>
+                );
+              }
+
+              return <TableCell>{content}</TableCell>;
             }}
           </TableRow>
         )}

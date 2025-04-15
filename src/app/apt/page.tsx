@@ -23,6 +23,8 @@ export default function APTHome() {
               columns={tournamentColumns}
               ariaLabel="Liste des sièges"
               showActions={true}
+              enableRowClick
+              getDetailUrl={(id) => `/apt/${id}`}
             />
           </CardBody>
         </Card>

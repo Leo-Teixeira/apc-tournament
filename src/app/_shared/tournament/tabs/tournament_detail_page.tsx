@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
 
-export default function DashboardHome() {
+export default function TournamentDetailPage() {
   let tabs = [
     {
       id: "general",

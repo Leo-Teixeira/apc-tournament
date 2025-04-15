@@ -1,4 +1,8 @@
-import { SeatRow, StandingRow, TournamentRow } from "../components/table/table.types";
+import {
+  SeatRow,
+  StandingRow,
+  TournamentRow
+} from "../components/table/table.types";
 
 export const tournamentMocks: TournamentRow[] = [
   {
