@@ -7,7 +7,9 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Tooltip
+  Tooltip,
+  SortDescriptor,
+  Spinner
 } from "@heroui/react";
 import {
   Delete02Icon,
@@ -16,6 +18,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import React from "react";
+import { getKeyValue } from "@heroui/react";
 
 export type Column<T> = {
   name: string;
@@ -41,17 +44,52 @@ export function GenericTable<T extends { id: string | number }>({
     ? columns
     : columns.filter((col) => col.uid !== "action");
 
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    column: String(columns[0]?.uid || "id"),
+    direction: "ascending"
+  });
+
+  const sortedItems = React.useMemo(() => {
+    const { column, direction } = sortDescriptor;
+
+    if (!column || column === "action") return items;
+
+    const sorted = [...items].sort((a, b) => {
+      const aVal = getKeyValue(a, column);
+      const bVal = getKeyValue(b, column);
+
+      const aParsed = typeof aVal === "string" ? aVal.toLowerCase() : aVal;
+      const bParsed = typeof bVal === "string" ? bVal.toLowerCase() : bVal;
+
+      if (aParsed < bParsed) return direction === "ascending" ? -1 : 1;
+      if (aParsed > bParsed) return direction === "ascending" ? 1 : -1;
+      return 0;
+    });
+
+    return sorted;
+  }, [items, sortDescriptor]);
+
   return (
-    <Table aria-label={ariaLabel} isStriped>
+    <Table
+      aria-label={ariaLabel}
+      sortDescriptor={sortDescriptor}
+      onSortChange={setSortDescriptor}
+      isStriped>
       <TableHeader columns={visibleColumns}>
         {(column) => (
-          <TableColumn key={String(column.uid)} align={column.align || "start"}>
+          <TableColumn
+            key={String(column.uid)}
+            align={column.align || "start"}
+            allowsSorting={column.uid !== "action"}>
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
 
-      <TableBody items={items}>
+      <TableBody
+        items={sortedItems}
+        isLoading={false}
+        loadingContent={<Spinner label="Chargement..." />}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => {
