@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        background_card: "#FFFFFF0F",
         green: {
           50: "#e8eeea",
           100: "#b7cbbd",

@@ -1,37 +1,33 @@
 "use client";
 import { Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
+import General from "./general";
 
 export default function TournamentDetailPage() {
   let tabs = [
     {
       id: "general",
       label: "Général",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      content: <General />
     },
     {
       id: "niveaux",
       label: "Niveaux",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      content: <General />
     },
     {
       id: "joueurs",
       label: "Joueurs",
-      content:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      content: <General />
     },
     {
       id: "tables",
       label: "Tables",
-      content:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      content: <General />
     },
     {
       id: "jetons",
       label: "Jetons",
-      content:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      content: <General />
     }
   ];
   return (
@@ -45,9 +41,7 @@ export default function TournamentDetailPage() {
         <Tabs aria-label="Dynamic tabs" items={tabs}>
           {(item) => (
             <Tab key={item.id} title={item.label}>
-              <Card>
-                <CardBody>{item.content}</CardBody>
-              </Card>
+              {item.content}
             </Tab>
           )}
         </Tabs>
