@@ -1,0 +1,13 @@
+import { Tournament } from "./tournament.types";
+
+export interface TournamentLevel {
+  id: string;
+  tournament_id: string | Tournament;
+  level_number: number;
+  level_start: string;
+  level_end: string;
+  level_small_blinde: number;
+  level_big_blinde: number;
+  level_pause: boolean;
+  level_chip_race: boolean;
+}
