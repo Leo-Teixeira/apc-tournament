@@ -3,9 +3,13 @@ import { Registration, Tournament } from "@/app/types";
 
 export const mapTournamentToRow = (
   tournaments: Tournament[],
-  registrations: Registration[]
+  registrations: Registration[],
+  category: string
 ): TournamentRow[] => {
-  return tournaments.map((tournament) => {
+  const tournamentsCat = tournaments.filter(
+    (tournament) => tournament.tournament_category == category
+  );
+  return tournamentsCat.map((tournament) => {
     const players = registrations.filter(
       (r) =>
         typeof r.tournament_id !== "string" &&

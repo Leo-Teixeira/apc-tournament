@@ -26,7 +26,7 @@ export type StandingRow = {
   id: string;
   place: number;
   name: string;
-  points: number | "-";
+  points: number;
 };
 
 export type BlindRow = {

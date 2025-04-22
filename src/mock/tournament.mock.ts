@@ -6,8 +6,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-02",
     tournament_end_date: "2025-01-03",
     tournament_trimestry: "T1",
-    tournament_category: "Classic",
-    tournament_status: "Clôturé"
+    tournament_category: "APT",
+    tournament_status: "finish"
   },
   {
     id: "2",
@@ -16,8 +16,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-03",
     tournament_end_date: "2025-01-04",
     tournament_trimestry: "T1",
-    tournament_category: "Classic",
-    tournament_status: "Clôturé"
+    tournament_category: "Sit&Go",
+    tournament_status: "finish"
   },
   {
     id: "3",
@@ -25,9 +25,9 @@ export const tournamentMocks = [
     tournament_description: "Description 3",
     tournament_start_date: "2025-01-04",
     tournament_end_date: "2025-01-05",
-    tournament_trimestry: "T2",
-    tournament_category: "Classic",
-    tournament_status: "Clôturé"
+    tournament_trimestry: "T1",
+    tournament_category: "APT",
+    tournament_status: "finish"
   },
   {
     id: "4",
@@ -36,8 +36,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-05",
     tournament_end_date: "2025-01-06",
     tournament_trimestry: "T3",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "APT",
+    tournament_status: "in_coming"
   },
   {
     id: "5",
@@ -46,8 +46,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-06",
     tournament_end_date: "2025-01-07",
     tournament_trimestry: "T2",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "Superfinale",
+    tournament_status: "in_coming"
   },
   {
     id: "6",
@@ -56,8 +56,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-07",
     tournament_end_date: "2025-01-08",
     tournament_trimestry: "T2",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "AG",
+    tournament_status: "in_coming"
   },
   {
     id: "7",
@@ -66,8 +66,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-08",
     tournament_end_date: "2025-01-09",
     tournament_trimestry: "T3",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "Solipoker",
+    tournament_status: "in_coming"
   },
   {
     id: "8",
@@ -76,8 +76,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-09",
     tournament_end_date: "2025-01-10",
     tournament_trimestry: "T3",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "AG",
+    tournament_status: "in_coming"
   },
   {
     id: "9",
@@ -86,8 +86,8 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-10",
     tournament_end_date: "2025-01-11",
     tournament_trimestry: "T3",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "APT",
+    tournament_status: "in_coming"
   },
   {
     id: "10",
@@ -96,7 +96,7 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-11",
     tournament_end_date: "2025-01-12",
     tournament_trimestry: "T2",
-    tournament_category: "Classic",
-    tournament_status: "À venir"
+    tournament_category: "APT",
+    tournament_status: "start"
   }
 ];

@@ -35,8 +35,11 @@ export default function APTHome() {
         const registrations = await registrationsRes.json();
         const quarterRanking = await quarterRankingRes.json();
 
-        const rows = mapTournamentToRow(tournaments, registrations);
-        const quarterRankingRows = mapQuarterRankingByTrimestry(quarterRanking);
+        const rows = mapTournamentToRow(tournaments, registrations, "APT");
+        const quarterRankingRows = mapQuarterRankingByTrimestry(
+          quarterRanking,
+          "APT"
+        );
         setTournamentRows(rows);
         setQuarterRankingRows(quarterRankingRows);
       } catch (error) {
