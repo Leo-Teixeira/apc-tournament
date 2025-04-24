@@ -1,4 +1,12 @@
-import { Briefcase09Icon, Cards01Icon, Cards02Icon, ChampionIcon, HealtcareIcon, RankingIcon, SidebarLeft01Icon } from "@hugeicons/core-free-icons";
+import {
+  Briefcase09Icon,
+  Cards01Icon,
+  Cards02Icon,
+  ChampionIcon,
+  HealtcareIcon,
+  RankingIcon,
+  SidebarLeft01Icon
+} from "@hugeicons/core-free-icons";
 
 export const STRINGS = {
   common: {
@@ -33,7 +41,11 @@ export const STRINGS = {
   },
   apt: {
     title: "Championnat APT",
-    trimestry: ["Trimestre 1", "Trimestre 2", "Trimestre 3"]
+    trimestry: {
+      T1: "Trimestre 1",
+      T2: "Trimestre 2",
+      T3: "Trimestre 3"
+    }
   },
   home: {
     title: "Bienvenue sur le Dashboard Poker",
@@ -45,5 +57,10 @@ export const STRINGS = {
     joueurs: "Joueurs",
     tables: "Tables",
     jetons: "Jetons"
+  },
+  status: {
+    finish: "Terminé",
+    in_coming: "En cours",
+    start: "À venir"
   }
 };

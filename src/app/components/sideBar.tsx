@@ -10,52 +10,54 @@ import {
   SidebarLeftIcon,
   ViewIcon
 } from "@hugeicons/core-free-icons";
+import { ButtonComponents } from "./button";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
-  const sidebarWidth = collapsed ? "w-16" : "w-64";
+  const sidebarWidth = collapsed ? "w-16" : "w-72";
 
   return (
     <div
-      className={`flex flex-col justify-between ${sidebarWidth} shrink-0 h-full bg-black/20 text-white transition-all duration-300`}>
-      <div>
+      className={`flex flex-col justify-between ${sidebarWidth} shrink-0 h-full bg-neutral-950/5 text-ligth transition-all duration-300`}>
+      <div className={`flex flex-col ${collapsed ? "gap-8" : "gap-10"}`}>
         <div
           className={`flex ${
             collapsed ? "flex-col gap-6" : "flex-row"
           } items-center justify-between p-4`}>
           <img src="/images/white_logo.svg" alt="Logo" className="h-8 w-8" />
-          <button onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? (
-              <HugeiconsIcon
-                icon={SidebarLeftIcon}
-                size={24}
-                color="currentColor"
-                strokeWidth={1.5}
-              />
-            ) : (
-              <HugeiconsIcon
-                icon={SidebarLeft01Icon}
-                size={24}
-                color="currentColor"
-                strokeWidth={1.5}
-              />
-            )}
-          </button>
+          <ButtonComponents
+            iconOnly={true}
+            onClick={() => setCollapsed(!collapsed)}
+            icon={
+              collapsed ? (
+                <HugeiconsIcon
+                  icon={SidebarLeftIcon}
+                  size={20}
+                  strokeWidth={1.5}
+                />
+              ) : (
+                <HugeiconsIcon
+                  icon={SidebarLeft01Icon}
+                  size={20}
+                  strokeWidth={1.5}
+                />
+              )
+            }
+          />
         </div>
 
-        <nav className="space-y-1 mt-6">
+        <nav className="px-3 gap-2">
           {STRINGS.sidebar.menu_item.map(({ label, icon, href }) => (
             <Link
               key={label}
               href={href}
-              className="flex items-center gap-4 px-4 py-2 hover:bg-white/10 transition-colors rounded">
-              <HugeiconsIcon
-                icon={icon}
-                size={24}
-                color="currentColor"
-                strokeWidth={1.5}
-              />
-              {!collapsed && <span className="text-sm">{label}</span>}
+              className="flex items-center gap-4 p-4 hover:bg-primary_brand-700 transition-colors rounded">
+              <HugeiconsIcon icon={icon} size={20} />
+              {!collapsed && (
+                <span className="text-l font-medium font-satoshi text-neutral-50">
+                  {label}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
@@ -64,14 +66,18 @@ export default function Sidebar() {
       <div className="p-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm bg-white/10 rounded px-3 py-2 hover:bg-white/20">
+          className="flex justify-between items-center bg-white/5 rounded p-2 hover:bg-primary_brand-500">
+          {!collapsed && (
+            <span className="text-s font-satoshi font-normal leading-4">
+              Retour au site
+            </span>
+          )}
           <HugeiconsIcon
             icon={Logout02Icon}
-            size={24}
+            size={20}
             color="currentColor"
             strokeWidth={1.5}
           />
-          {!collapsed && <span>Retour au site</span>}
         </Link>
       </div>
     </div>

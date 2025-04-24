@@ -12,11 +12,31 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "480px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px"
+      },
       colors: {
-        background: "var(--background)",
+        background: "#11181C",
         foreground: "var(--foreground)",
         background_card: "#FFFFFF0F",
-        green: {
+        dark: "#09090B",
+        ligth: "#FFFFFF",
+        primary_background: "#165829",
+        primary_hover_background: "#103E1D",
+        neutral: {
+          50: "#FAFAFA",
+          100: "#F4F4F5",
+          300: "#D4D4D8",
+          400: "#A1A1AA",
+          600: "#52525B",
+          700: "#3F3F46",
+          950: "#09090B"
+        },
+        primary_brand: {
           50: "#e8eeea",
           100: "#b7cbbd",
           200: "#94b29d",
@@ -27,6 +47,42 @@ module.exports = {
           700: "#103e1d",
           800: "#0c3017",
           900: "#092511"
+        },
+        secondary_brand: {
+          50: "#FAF5FF",
+          100: "#F3E8FF",
+          300: "#D8B4FE",
+          500: "#A855F7",
+          700: "#7E22CE",
+          900: "#581C87",
+          950: "#3B0764"
+        },
+        success: {
+          50: "#F0FDF4",
+          100: "#DCFCE7",
+          300: "#86EFAC",
+          500: "#22C55E",
+          700: "#15803D",
+          900: "#14532D",
+          950: "#052E16"
+        },
+        warning: {
+          50: "#FFF7ED",
+          100: "#FFEDD5",
+          300: "#FDBA74",
+          500: "#F97316",
+          700: "#C2410C",
+          800: "#9A3412",
+          900: "#7C2D12"
+        },
+        danger: {
+          50: "#FEF2F2",
+          100: "#FEE2E2",
+          300: "#FCA5A5",
+          500: "#EF4444",
+          700: "#B91C1C",
+          900: "#7F1D1D",
+          950: "#450A0A"
         },
         grey: {
           50: "#e9e9e9",
@@ -50,17 +106,40 @@ module.exports = {
         satoshiMedium: ["Satoshi-medium", "sans-serif"]
       },
       fontSize: {
-        title: "70px",
-        subtitle: "50px",
-        h1: "36px",
-        h2: "32px",
-        h3: "29px",
-        h4: "26px",
-        h5: "23px",
-        h6: "20px",
-        body1: "18px",
-        body2: "16px",
-        body3: "14px"
+        xl7: "80px",
+        xl6: "60px",
+        xl5: "48px",
+        xl4: "36px",
+        xl3p2: "32px",
+        xl3: "30px",
+        xl2p9: "29px",
+        xl2p6: "26px",
+        xl2: "24px",
+        xl2p3: "23px",
+        xl: "20px",
+        l: "18px",
+        m: "16px",
+        s: "14px",
+        xs: "12px",
+        xs2: "10px"
+      },
+      spacing: {
+        "5xs": "2px",
+        "4xs": "4px",
+        "3xs": "6px",
+        "2xs": "8px",
+        xs: "12px",
+        s: "14px",
+        m: "16px",
+        l: "20px",
+        "2xl": "28px",
+        "3xl": "32px",
+        "4xl": "48px",
+        "5xl": "64px",
+        "7xl": "80px"
+      },
+      gap: {
+        "gap-6": "6px"
       },
       backgroundImage: {
         "apt-gradient":

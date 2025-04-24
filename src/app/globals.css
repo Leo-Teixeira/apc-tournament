@@ -33,28 +33,38 @@
 }
 
 @layer base {
-  h1 {
-    @apply text-h1 font-satoshiBold text-foreground;
+  /* display */
+  display-generic {
+    @apply font-extrabold font-satoshi;
   }
 
-  h2 {
-    @apply text-h2 font-satoshiBold text-foreground;
+  /* title */
+  title-bold {
+    @apply font-bold font-satoshi;
   }
 
-  h3 {
-    @apply text-h3 font-satoshiMedium text-foreground;
+  title-medium {
+    @apply font-medium font-satoshi;
   }
 
-  h4 {
-    @apply text-h4 font-satoshi text-foreground;
+  /* text */
+  text-generic {
+    @apply font-extrabold font-satoshi;
   }
 
-  h5 {
-    @apply text-h5 font-satoshi text-foreground;
+  /* label */
+  label-generic {
+    @apply font-extrabold font-satoshi;
   }
 
-  h6 {
-    @apply text-h6 font-satoshi text-foreground;
+  /* heading */
+  heading-generic {
+    @apply font-extrabold font-satoshi;
+  }
+
+  /* button */
+  default-button {
+    @apply bg-red-500 inline-flex items-center justify-center gap-gap-6 py-3xs px-xs md:py-2xs md:px-m size-10  rounded-xl;
   }
 
   html,

@@ -3,8 +3,10 @@ import { Button, Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
 import General from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useState } from "react";
+import { TournamentRow } from "@/app/components/table/table.types";
 
-export default function TournamentDetailPage() {
+export default function TournamentDetailPage(id: string) {
   let tabs = [
     {
       id: "general",
@@ -32,6 +34,34 @@ export default function TournamentDetailPage() {
       content: <General />
     }
   ];
+
+  const [tournamentRows, setTournamentRows] = useState<TournamentRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [tournamentsRes, registrationsRes] = await Promise.all([
+          fetch(`/lib/api/tournaments/apt/${id}`),
+          fetch(`/lib/api/registrations/tournament/apt/${id}`)
+        ]);
+        console.log(tournamentsRes);
+        const tournaments = await tournamentsRes.json();
+        console.log(tournaments);
+        const registrations = await registrationsRes.json();
+
+        // const rows = mapTournamentToRow(tournaments, registrations, "APT");
+        // setTournamentRows(rows);
+      } catch (error) {
+        console.error("Erreur lors du chargement des données :", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between">
