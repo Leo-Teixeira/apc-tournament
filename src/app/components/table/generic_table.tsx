@@ -83,7 +83,7 @@ export function GenericTable<T extends { id: string | number }>({
       <TableHeader columns={visibleColumns}>
         {(column) => (
           <TableColumn
-            className="text-s font-medium font-satoshi text-neutral-300"
+            className="text-s font-satoshiMedium text-neutral-300"
             key={String(column.uid)}
             align={column.align || "start"}
             allowsSorting={column.uid !== "action"}>
@@ -99,49 +99,54 @@ export function GenericTable<T extends { id: string | number }>({
         {(item) => (
           <TableRow
             key={item.id}
+            onClick={() => {
+              if (enableRowClick && getDetailUrl) {
+                window.open(getDetailUrl(item.id), "_self");
+              }
+            }}
             className={`${
               enableRowClick && getDetailUrl
-                ? "hover:bg-white/10 hover:rounded-full"
+                ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                 : "rounded-full"
-            } rounded-lg`}>
+            }`}>
             {(columnKey) => {
               if (columnKey === "action") {
                 return (
                   <TableCell>
                     <div className="relative flex items-center gap-2">
-                      {/* <Tooltip content="Details" className="px-3xs"> */}
-                      <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
-                        <HugeiconsIcon
-                          icon={ViewIcon}
-                          size={20}
-                          color="currentColor"
-                          strokeWidth={1.5}
-                        />
-                      </span>
-                      {/* </Tooltip> */}
-                      {/* <Tooltip content="Edit" className="px-3xs"> */}
-                      <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
-                        <HugeiconsIcon
-                          icon={PencilEdit02Icon}
-                          size={20}
-                          color="currentColor"
-                          strokeWidth={1.5}
-                        />
-                      </span>
-                      {/* </Tooltip> */}
-                      {/* <Tooltip
+                      <Tooltip content="Details" className="px-3xs">
+                        <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
+                          <HugeiconsIcon
+                            icon={ViewIcon}
+                            size={20}
+                            color="currentColor"
+                            strokeWidth={1.5}
+                          />
+                        </span>
+                      </Tooltip>
+                      <Tooltip content="Edit" className="px-3xs">
+                        <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
+                          <HugeiconsIcon
+                            icon={PencilEdit02Icon}
+                            size={20}
+                            color="currentColor"
+                            strokeWidth={1.5}
+                          />
+                        </span>
+                      </Tooltip>
+                      <Tooltip
                         color="danger"
                         content="Delete"
-                        className="px-3xs"> */}
-                      <span className="text-lg text-danger-500 px-3xs rounded-xl text-danger cursor-pointer active:opacity-50">
-                        <HugeiconsIcon
-                          icon={Delete02Icon}
-                          size={20}
-                          color="currentColor"
-                          strokeWidth={1.5}
-                        />
-                      </span>
-                      {/* </Tooltip> */}
+                        className="px-3xs">
+                        <span className="text-lg text-danger-500 px-3xs rounded-xl text-danger cursor-pointer active:opacity-50">
+                          <HugeiconsIcon
+                            icon={Delete02Icon}
+                            size={20}
+                            color="currentColor"
+                            strokeWidth={1.5}
+                          />
+                        </span>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 );
@@ -177,21 +182,8 @@ export function GenericTable<T extends { id: string | number }>({
                 }
               }
 
-              if (enableRowClick && getDetailUrl) {
-                return (
-                  <TableCell className="font-satoshi text-l font-normal leading-7">
-                    <a
-                      href={getDetailUrl(item.id)}
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      {content}
-                    </a>
-                  </TableCell>
-                );
-              }
-
               return (
-                <TableCell className="font-satoshi text-l font-normal leading-7">
+                <TableCell className="font-satoshiMedium text-l leading-7">
                   {content}
                 </TableCell>
               );

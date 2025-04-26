@@ -1,57 +1,38 @@
 "use client";
-import { Button, Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
-import General from "./general";
+
+import { Chip, Tab, Tabs } from "@heroui/react";
+import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useState } from "react";
-import { TournamentRow } from "@/app/components/table/table.types";
+import { useEffect, useMemo, useState } from "react";
+import { Registration, Tournament, TournamentRanking } from "@/app/types";
+import { STRINGS } from "@/app/constants/string";
+import { useParams } from "next/navigation";
+import { ButtonComponents } from "@/app/components/button";
 
-export default function TournamentDetailPage(id: string) {
-  let tabs = [
-    {
-      id: "general",
-      label: "Général",
-      content: <General />
-    },
-    {
-      id: "niveaux",
-      label: "Niveaux",
-      content: <General />
-    },
-    {
-      id: "joueurs",
-      label: "Joueurs",
-      content: <General />
-    },
-    {
-      id: "tables",
-      label: "Tables",
-      content: <General />
-    },
-    {
-      id: "jetons",
-      label: "Jetons",
-      content: <General />
-    }
-  ];
+export default function TournamentDetailPage() {
+  const { id } = useParams();
 
-  const [tournamentRows, setTournamentRows] = useState<TournamentRow[]>([]);
+  const [tournament, setTournament] = useState<Tournament>();
+  const [classement, setClassement] = useState<TournamentRanking[]>();
+  const [registration, setRegistration] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState<string>("general");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tournamentsRes, registrationsRes] = await Promise.all([
-          fetch(`/lib/api/tournaments/apt/${id}`),
-          fetch(`/lib/api/registrations/tournament/apt/${id}`)
-        ]);
-        console.log(tournamentsRes);
-        const tournaments = await tournamentsRes.json();
-        console.log(tournaments);
-        const registrations = await registrationsRes.json();
-
-        // const rows = mapTournamentToRow(tournaments, registrations, "APT");
-        // setTournamentRows(rows);
+        const [tournamentRes, registrationRes, classementRes] =
+          await Promise.all([
+            fetch(`/api/tournaments/apt/${id}`),
+            fetch(`/api/registrations/apt/${id}`),
+            fetch(`/api/tournaments/apt/${id}/classement`)
+          ]);
+        console.log("test");
+        setTournament(await tournamentRes.json());
+        setRegistration(await registrationRes.json());
+        setClassement(await classementRes.json());
+        console.log(classement);
       } catch (error) {
         console.error("Erreur lors du chargement des données :", error);
       } finally {
@@ -60,45 +41,110 @@ export default function TournamentDetailPage(id: string) {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
+
+  const tabs = useMemo(() => {
+    if (!tournament || !registration || !classement) return [];
+    return [
+      {
+        id: "general",
+        label: "Général",
+        content: (
+          <GeneralTabs
+            tournament={tournament}
+            registrations={registration}
+            classement={classement}
+          />
+        )
+      },
+      { id: "niveaux", label: "Niveaux", content: <div /> },
+      { id: "joueurs", label: "Joueurs", content: <div /> },
+      { id: "tables", label: "Tables", content: <div /> },
+      { id: "jetons", label: "Jetons", content: <div /> }
+    ];
+  }, [tournament, registration, classement]);
+
+  if (isLoading || !tournament || !registration || !classement) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        Chargement en cours...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between">
-        <div className="flex flex-row gap-3">
-          <h1>Tournoi APT 1 - T1</h1>
-          <Chip>En cours</Chip>
+        <div className="flex flex-row items-center gap-3">
+          <h1 className="font-satoshiBlack text-xl4">
+            {tournament.tournament_name}
+          </h1>
+          <Chip
+            className={`font-satoshiMedium text-s ${
+              tournament.tournament_status === "finish"
+                ? "bg-red-950"
+                : tournament.tournament_status === "in_coming"
+                ? "bg-purple-950"
+                : "bg-green-950"
+            }`}>
+            {tournament.tournament_status === "finish"
+              ? STRINGS.status.finish
+              : tournament.tournament_status === "in_coming"
+              ? STRINGS.status.in_coming
+              : STRINGS.status.start}
+          </Chip>
         </div>
 
         <div className="flex flex-row gap-3">
-          <Button className="bg-green-500 rounded-xl p-3">
-            <p className="text-grey-50 font-satoshi text-body1 font-normal">
-              Lancer le tournoi
-            </p>
-          </Button>
-          <div className="flex flex-col gap-6">
-            <Button className="bg-green-500 rounded-xl p-3">
-              <p className="text-grey-50 font-satoshi text-body1 font-normal">
-                Voir l'affichage
-              </p>
-              <HugeiconsIcon icon={LinkSquare02Icon} color="white" />
-            </Button>
-            <Button className="bg-grey-50 rounded-xl p-3">
-              <p className="text-green-500 font-satoshi text-body1 font-normal">
-                Modifier le tournoi
-              </p>
-            </Button>
-          </div>
+          <ButtonComponents
+            text="Lancer le tournoi"
+            onClick={() => {}}
+            buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+            textClassName="text-primary_brand-50"
+          />
+          <ButtonComponents
+            text="Voir l'affichage"
+            onClick={() => {}}
+            buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+            textClassName="text-primary_brand-50"
+            icon={
+              <HugeiconsIcon
+                icon={LinkSquare02Icon}
+                size={20}
+                className="shrink-0"
+                color="white"
+              />
+            }
+          />
         </div>
       </div>
-      <div className="flex w-full flex-col">
-        <Tabs aria-label="Dynamic tabs" items={tabs}>
-          {(item) => (
-            <Tab key={item.id} title={item.label}>
-              {item.content}
-            </Tab>
-          )}
-        </Tabs>
+
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex flex-row justify-between items-center">
+          <Tabs
+            className="flex p-1 items-center gap-2"
+            selectedKey={selectedTab}
+            onSelectionChange={(key) => setSelectedTab(String(key))}
+            aria-label="Dynamic tabs"
+            items={tabs}>
+            {(item) => (
+              <Tab
+                key={item.id}
+                title={item.label}
+                className="text-neutral-50 text-center font-satoshiMedium text-l"
+              />
+            )}
+          </Tabs>
+
+          <ButtonComponents
+            text="Modifier le tournoi"
+            onClick={() => {}}
+            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+            textClassName="text-primary_brand-50"
+          />
+        </div>
+
+        <div>{tabs.find((tab) => tab.id === selectedTab)?.content}</div>
       </div>
     </div>
   );

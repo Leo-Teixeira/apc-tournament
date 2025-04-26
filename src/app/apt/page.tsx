@@ -8,7 +8,7 @@ import { STRINGS } from "../constants/string";
 import { standingsColumns } from "../components/table/presets/standings.config";
 import { StandingRow, TournamentRow } from "../components/table/table.types";
 import { tournamentColumns } from "../components/table/presets/tournament.config";
-import { mapTournamentToRow } from "@/app/lib/adapter/tournament.adapter";
+import { mapTournamentsToRow, mapTournamentToRow } from "@/app/lib/adapter/tournament.adapter";
 import { QuarterRanking } from "../types";
 import { mapQuarterRankingByTrimestry } from "../lib/adapter/quarter_ranking.adapter";
 
@@ -25,9 +25,9 @@ export default function APTHome() {
       try {
         const [tournamentsRes, registrationsRes, quarterRankingRes] =
           await Promise.all([
-            fetch("/lib/api/tournaments/apt"),
-            fetch("/lib/api/registrations/apt"),
-            fetch("/lib/api/quarter_ranking")
+            fetch("/api/tournaments/apt"),
+            fetch("/api/registrations/apt"),
+            fetch("/api/quarter_ranking")
           ]);
         console.log(tournamentsRes);
         const tournaments = await tournamentsRes.json();
@@ -35,7 +35,7 @@ export default function APTHome() {
         const registrations = await registrationsRes.json();
         const quarterRanking = await quarterRankingRes.json();
 
-        const rows = mapTournamentToRow(tournaments, registrations);
+        const rows = mapTournamentsToRow(tournaments, registrations);
         const quarterRankingRows = mapQuarterRankingByTrimestry(
           quarterRanking,
           "APT"
@@ -54,14 +54,10 @@ export default function APTHome() {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <h1 className="font-satoshi font-bold text-xl4 leading-10">
-        Championnat APT
-      </h1>
+      <h1 className="font-satoshiBold text-4xl">Championnat APT</h1>
 
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshi text-xl3p2 font-bold leading-10">
-          Tournois
-        </h2>
+        <h2 className="font-satoshiBold text-xl3p2 leading-10">Tournois</h2>
         <GenericTable<TournamentRow>
           items={tournamentRows}
           columns={tournamentColumns}
@@ -73,14 +69,12 @@ export default function APTHome() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshi text-xl3p2 font-bold leading-10">
-          Classement
-        </h2>
+        <h2 className="font-satoshiBold text-xl3p2 leading-10">Classement</h2>
         <div className="flex flex-row gap-6">
           {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
             (trimestry) => (
               <div key={trimestry} className="flex-1 flex flex-col gap-2">
-                <h2 className="font-satoshi text-xl2p9 font-bold leading-10">
+                <h2 className="font-satoshibold text-xl2p9 leading-10">
                   {trimestry == "T1"
                     ? STRINGS.apt.trimestry.T1
                     : trimestry == "T2"

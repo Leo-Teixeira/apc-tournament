@@ -1,5 +1,10 @@
 import { StandingRow } from "@/app/components/table/table.types";
-import { QuarterRanking, Tournament } from "@/app/types";
+import {
+  QuarterRanking,
+  Registration,
+  Tournament,
+  TournamentRanking
+} from "@/app/types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
@@ -50,4 +55,18 @@ export const mapQuarterRankingByTrimestry = (
   });
 
   return result;
+};
+
+export const mapClassementTournament = (
+  classement: TournamentRanking[]
+): StandingRow[] => {
+  return classement.map((classe) => {
+    const player = classe.registration_id as Registration;
+    return {
+      id: classe.id,
+      place: classe.ranking_position,
+      name: player.user_id,
+      points: classe.ranking_score
+    };
+  });
 };

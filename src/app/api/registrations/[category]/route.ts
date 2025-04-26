@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { registrationMocks } from "@/mock";
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { category: string; id: string } }
+  _: NextRequest,
+  { params }: { params: { category: string } }
 ) {
-  const { category, id } = params;
+  const { category } = await params;
 
   switch (category) {
     case "apt":

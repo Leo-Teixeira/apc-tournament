@@ -46,15 +46,23 @@ export default function Sidebar() {
           />
         </div>
 
-        <nav className="px-3 gap-2">
+        <nav className="px-3 flex flex-col gap-2">
           {STRINGS.sidebar.menu_item.map(({ label, icon, href }) => (
             <Link
               key={label}
               href={href}
-              className="flex items-center gap-4 p-4 hover:bg-primary_brand-700 transition-colors rounded">
-              <HugeiconsIcon icon={icon} size={20} />
+              className={`group flex items-center transition-colors rounded-lg ${
+                collapsed
+                  ? "justify-center p-3 hover:bg-primary_brand-700"
+                  : "p-4 gap-4 hover:bg-primary_brand-700"
+              }`}>
+              <HugeiconsIcon
+                icon={icon}
+                size={20}
+                className="shrink-0 text-neutral-50"
+              />
               {!collapsed && (
-                <span className="text-l font-medium font-satoshi text-neutral-50">
+                <span className="text-l font-satoshiMedium text-neutral-50">
                   {label}
                 </span>
               )}
@@ -68,7 +76,7 @@ export default function Sidebar() {
           href="/"
           className="flex justify-between items-center bg-white/5 rounded p-2 hover:bg-primary_brand-500">
           {!collapsed && (
-            <span className="text-s font-satoshi font-normal leading-4">
+            <span className="text-s font-satoshiMedium leading-4">
               Retour au site
             </span>
           )}

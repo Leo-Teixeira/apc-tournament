@@ -14,7 +14,7 @@ type ButtonProps = {
 export const ButtonComponents: React.FC<ButtonProps> = ({
   text,
   icon,
-  iconOnly,
+  iconOnly = false,
   onClick,
   buttonClassName = "",
   textClassName = "",
@@ -27,12 +27,12 @@ export const ButtonComponents: React.FC<ButtonProps> = ({
       variant="light"
       isIconOnly={iconOnly}
       disabled={disabled}
-      className={`flex justify-center items-center gap-gap-6 ${
+      className={`flex justify-center items-center rounded-xl gap-gap-6 ${
         iconOnly ? "p-2" : "px-4 py-2"
       } ${buttonClassName}`}>
       {!iconOnly && text && (
         <span
-          className={`text-s md:text-l font-medium leading-5 md:leading-7 font-satoshi ${textClassName}`}>
+          className={`text-s md:text-l leading-5 md:leading-7 font-satoshiMedium ${textClassName}`}>
           {text}
         </span>
       )}
