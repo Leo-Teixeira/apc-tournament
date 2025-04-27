@@ -32,6 +32,7 @@ export const ClassementComponent: React.FC<ClassementProps> = ({
             <GenericTable<StandingRow>
               items={classementRow}
               columns={standingsColumns}
+              enableSorting={false}
               ariaLabel="Classement"
             />
           </div>

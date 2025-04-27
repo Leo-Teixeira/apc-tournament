@@ -1,4 +1,4 @@
-import { Registration } from "@/app/types";
+import { Registration, Tournament } from "@/app/types";
 import { registrationMocks } from "@/mock";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -43,7 +43,9 @@ export async function GET(
     default:
       registrationCategory = [];
   }
-
-  const result = registrationCategory.filter((tournament) => tournament.id == id);
+  const result = registrationCategory.filter((registration) => {
+    const tournament = registration.tournament_id as Tournament;
+    return tournament.id === id;
+  });
   return NextResponse.json(JSON.parse(JSON.stringify(result ?? {})));
 }

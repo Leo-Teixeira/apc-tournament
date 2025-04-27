@@ -35,6 +35,7 @@ export type GenericTableProps<T extends { id: string | number }> = {
   ariaLabel: string;
   showActions?: boolean;
   enableRowClick?: boolean;
+  enableSorting?: boolean;
   getDetailUrl?: (id: T["id"]) => string;
 };
 
@@ -44,6 +45,7 @@ export function GenericTable<T extends { id: string | number }>({
   ariaLabel,
   showActions = false,
   enableRowClick = false,
+  enableSorting = true,
   getDetailUrl
 }: GenericTableProps<T>) {
   const visibleColumns = showActions
@@ -56,6 +58,8 @@ export function GenericTable<T extends { id: string | number }>({
   });
 
   const sortedItems = React.useMemo(() => {
+    if (!enableSorting) return items;
+
     const { column, direction } = sortDescriptor;
 
     if (!column || column === "action") return items;
@@ -73,20 +77,22 @@ export function GenericTable<T extends { id: string | number }>({
     });
 
     return sorted;
-  }, [items, sortDescriptor]);
+  }, [items, sortDescriptor, enableSorting]);
 
   return (
     <Table
       aria-label={ariaLabel}
-      sortDescriptor={sortDescriptor}
-      onSortChange={setSortDescriptor}>
+      sortDescriptor={enableSorting ? sortDescriptor : undefined}
+      onSortChange={enableSorting ? setSortDescriptor : undefined}
+    >
       <TableHeader columns={visibleColumns}>
         {(column) => (
           <TableColumn
             className="text-s font-satoshiMedium text-neutral-300"
             key={String(column.uid)}
             align={column.align || "start"}
-            allowsSorting={column.uid !== "action"}>
+            allowsSorting={enableSorting && column.uid !== "action"}
+          >
             {column.name.toUpperCase()}
           </TableColumn>
         )}
@@ -95,7 +101,8 @@ export function GenericTable<T extends { id: string | number }>({
       <TableBody
         items={sortedItems}
         isLoading={false}
-        loadingContent={<Spinner label="Chargement..." />}>
+        loadingContent={<Spinner label="Chargement..." />}
+      >
         {(item) => (
           <TableRow
             key={item.id}
@@ -108,7 +115,8 @@ export function GenericTable<T extends { id: string | number }>({
               enableRowClick && getDetailUrl
                 ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                 : "rounded-full"
-            }`}>
+            }`}
+          >
             {(columnKey) => {
               if (columnKey === "action") {
                 return (
@@ -134,10 +142,7 @@ export function GenericTable<T extends { id: string | number }>({
                           />
                         </span>
                       </Tooltip>
-                      <Tooltip
-                        color="danger"
-                        content="Delete"
-                        className="px-3xs">
+                      <Tooltip color="danger" content="Delete" className="px-3xs">
                         <span className="text-lg text-danger-500 px-3xs rounded-xl text-danger cursor-pointer active:opacity-50">
                           <HugeiconsIcon
                             icon={Delete02Icon}
@@ -157,29 +162,29 @@ export function GenericTable<T extends { id: string | number }>({
               const content = col?.render
                 ? col.render(value, item)
                 : (value as React.ReactNode);
+
               if (columnKey === "status") {
-                if (columnKey === "status") {
-                  return (
-                    <TableCell>
-                      <Chip
-                        className={`capitalize py-0 px-1 items-center justify-center text-white font-satoshi text-l font-normal ${
-                          value === "finish"
-                            ? "bg-red-950"
-                            : value === "in_coming"
-                            ? "bg-purple-950"
-                            : "bg-green-950"
-                        }`}
-                        size="sm"
-                        variant="flat">
-                        {content == "finish"
-                          ? STRINGS.status.finish
-                          : content == "in_coming"
-                          ? STRINGS.status.in_coming
-                          : STRINGS.status.start}
-                      </Chip>
-                    </TableCell>
-                  );
-                }
+                return (
+                  <TableCell>
+                    <Chip
+                      className={`capitalize py-0 px-1 items-center justify-center text-white font-satoshi text-l font-normal ${
+                        value === "finish"
+                          ? "bg-red-950"
+                          : value === "in_coming"
+                          ? "bg-purple-950"
+                          : "bg-green-950"
+                      }`}
+                      size="sm"
+                      variant="flat"
+                    >
+                      {content == "finish"
+                        ? STRINGS.status.finish
+                        : content == "in_coming"
+                        ? STRINGS.status.in_coming
+                        : STRINGS.status.start}
+                    </Chip>
+                  </TableCell>
+                );
               }
 
               return (
