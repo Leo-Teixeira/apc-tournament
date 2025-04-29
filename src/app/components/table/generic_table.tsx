@@ -83,16 +83,14 @@ export function GenericTable<T extends { id: string | number }>({
     <Table
       aria-label={ariaLabel}
       sortDescriptor={enableSorting ? sortDescriptor : undefined}
-      onSortChange={enableSorting ? setSortDescriptor : undefined}
-    >
+      onSortChange={enableSorting ? setSortDescriptor : undefined}>
       <TableHeader columns={visibleColumns}>
         {(column) => (
           <TableColumn
             className="text-s font-satoshiMedium text-neutral-300"
             key={String(column.uid)}
             align={column.align || "start"}
-            allowsSorting={enableSorting && column.uid !== "action"}
-          >
+            allowsSorting={enableSorting && column.uid !== "action"}>
             {column.name.toUpperCase()}
           </TableColumn>
         )}
@@ -101,8 +99,7 @@ export function GenericTable<T extends { id: string | number }>({
       <TableBody
         items={sortedItems}
         isLoading={false}
-        loadingContent={<Spinner label="Chargement..." />}
-      >
+        loadingContent={<Spinner label="Chargement..." />}>
         {(item) => (
           <TableRow
             key={item.id}
@@ -115,8 +112,7 @@ export function GenericTable<T extends { id: string | number }>({
               enableRowClick && getDetailUrl
                 ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                 : "rounded-full"
-            }`}
-          >
+            }`}>
             {(columnKey) => {
               if (columnKey === "action") {
                 return (
@@ -142,7 +138,10 @@ export function GenericTable<T extends { id: string | number }>({
                           />
                         </span>
                       </Tooltip>
-                      <Tooltip color="danger" content="Delete" className="px-3xs">
+                      <Tooltip
+                        color="danger"
+                        content="Delete"
+                        className="px-3xs">
                         <span className="text-lg text-danger-500 px-3xs rounded-xl text-danger cursor-pointer active:opacity-50">
                           <HugeiconsIcon
                             icon={Delete02Icon}
@@ -175,8 +174,7 @@ export function GenericTable<T extends { id: string | number }>({
                           : "bg-green-950"
                       }`}
                       size="sm"
-                      variant="flat"
-                    >
+                      variant="flat">
                       {content == "finish"
                         ? STRINGS.status.finish
                         : content == "in_coming"

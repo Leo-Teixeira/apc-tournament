@@ -126,7 +126,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
         <BackgroundComponent tournamentStatus={tournament.tournament_status} />
       </div>
 
-      <div>
+      <div className="w-1/4">
         <ClassementComponent
           tournament_status={tournament.tournament_status}
           classement={classement}

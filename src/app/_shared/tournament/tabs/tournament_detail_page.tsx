@@ -9,6 +9,8 @@ import { Registration, Tournament, TournamentRanking } from "@/app/types";
 import { STRINGS } from "@/app/constants/string";
 import { useParams } from "next/navigation";
 import { ButtonComponents } from "@/app/components/button";
+import { NiveauxTabs } from "./niveaux";
+import { ButtonTabsComponents } from "./components/button_tabs_components";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -17,7 +19,7 @@ export default function TournamentDetailPage() {
   const [classement, setClassement] = useState<TournamentRanking[]>();
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<string>("general");
+  const [selectedTab, setSelectedTab] = useState<string>("0");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +49,7 @@ export default function TournamentDetailPage() {
     if (!tournament || !registration || !classement) return [];
     return [
       {
-        id: "general",
+        id: "0",
         label: "Général",
         content: (
           <GeneralTabs
@@ -57,10 +59,14 @@ export default function TournamentDetailPage() {
           />
         )
       },
-      { id: "niveaux", label: "Niveaux", content: <div /> },
-      { id: "joueurs", label: "Joueurs", content: <div /> },
-      { id: "tables", label: "Tables", content: <div /> },
-      { id: "jetons", label: "Jetons", content: <div /> }
+      {
+        id: "1",
+        label: "Niveaux",
+        content: <NiveauxTabs tournament={tournament} />
+      },
+      { id: "2", label: "Joueurs", content: <div /> },
+      { id: "3", label: "Tables", content: <div /> },
+      { id: "4", label: "Jetons", content: <div /> }
     ];
   }, [tournament, registration, classement]);
 
@@ -136,12 +142,7 @@ export default function TournamentDetailPage() {
             )}
           </Tabs>
 
-          <ButtonComponents
-            text="Modifier le tournoi"
-            onClick={() => {}}
-            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-            textClassName="text-primary_brand-50"
-          />
+          <ButtonTabsComponents tabsId={selectedTab} />
         </div>
 
         <div>{tabs.find((tab) => tab.id === selectedTab)?.content}</div>

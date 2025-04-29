@@ -31,12 +31,14 @@ export type StandingRow = {
 
 export type BlindRow = {
   id: string;
-  level: string;
+  level: number;
   small: string;
   big: string;
   ante: string;
+  pause: boolean;
   duration: string;
   time: string;
+  action: string;
 };
 
 export type TournamentRow = {

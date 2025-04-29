@@ -7,5 +7,6 @@ export const blindsColumns: Column<BlindRow>[] = [
   { name: "Grosse blinde", uid: "big" },
   { name: "Ante", uid: "ante" },
   { name: "Durée", uid: "duration" },
-  { name: "Heure", uid: "time" }
+  { name: "Heure", uid: "time" },
+  { name: "", uid: "action" }
 ];
