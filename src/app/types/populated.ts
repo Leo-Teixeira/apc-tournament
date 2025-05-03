@@ -1,6 +1,7 @@
 import { Populated } from "./helper";
 import { QuarterRanking } from "./quarter_ranking.types";
 import { Registration } from "./registration.types";
+import { Stack } from "./stack.types";
 import { TableAssignement } from "./table_assignement.types";
 import { TournamentChipInventory } from "./tournament_chip_inventory.types";
 import { TournamentLevel } from "./tournament_level.types";
@@ -10,6 +11,10 @@ import { TournamentTable } from "./tournament_table.types";
 export type TournamentChipInventoryPopulated = Populated<
   TournamentChipInventory,
   "tournament_id" | "chip_id"
+>;
+export type StackChipPopulated = Populated<
+  Stack,
+  "id" | "chips"
 >;
 export type TournamentLevelPopulated = Populated<
   TournamentLevel,

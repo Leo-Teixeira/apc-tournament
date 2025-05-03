@@ -40,10 +40,10 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
       <div className="flex flex-col gap-5 w-3/4">
         <div className="flex flex-row gap-6">
           <Card
-            className="bg-red-400 rounded-xl px-5 py-3 bg-background_card w-3/4"
+            className="rounded-xl bg-background_card w-3/4"
             fullWidth>
             <div className="flex flex-col gap-3">
-              <p className="text-primary_brand-50 font-satoshiBold text-l">
+              <p className="text-primary_brand-50 font-satoshiBold text-l px-5 py-3">
                 Début du tournoi
               </p>
               <Divider />
@@ -68,7 +68,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
               </div>
             </div>
           </Card>
-          <Card className="bg-red-400 rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
+          <Card className=" rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
             <div className="flex flex-col justify-between items-start p-5 self-stretch">
               <p className="text-primary_brand-50 font-satoshiBold text-l">
                 Durée estimée
@@ -82,7 +82,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
 
         <div className="flex flex-row gap-6">
           <Card
-            className="bg-red-400 rounded-xl px-5 py-3 bg-background_card w-3/4"
+            className=" rounded-xl px-5 py-3 bg-background_card w-3/4"
             fullWidth>
             <div className="flex flex-col gap-3">
               <p className="text-primary_brand-50 font-satoshiBold text-l">
@@ -111,7 +111,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
             </div>
           </Card>
 
-          <Card className="bg-red-400 rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
+          <Card className=" rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
             <div className="flex flex-col justify-between items-start p-5 self-stretch">
               <p className="text-primary_brand-50 font-satoshiBold text-l">
                 Participants

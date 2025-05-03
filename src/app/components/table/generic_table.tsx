@@ -13,6 +13,7 @@ import {
   Chip
 } from "@heroui/react";
 import {
+  DeadIcon,
   Delete02Icon,
   PencilEdit02Icon,
   ViewIcon
@@ -21,6 +22,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import React from "react";
 import { getKeyValue } from "@heroui/react";
 import { STRINGS } from "@/app/constants/string";
+import { ActionDefinition } from "./table.types";
 
 export type Column<T> = {
   name: string;
@@ -32,21 +34,29 @@ export type Column<T> = {
 export type GenericTableProps<T extends { id: string | number }> = {
   columns: Column<T>[];
   items: T[];
+  width?: boolean;
   ariaLabel: string;
   showActions?: boolean;
   enableRowClick?: boolean;
   enableSorting?: boolean;
   getDetailUrl?: (id: T["id"]) => string;
+  actions?: (item: T) => ActionDefinition<T>[];
+  useEliminationStatus?: boolean;
 };
 
-export function GenericTable<T extends { id: string | number }>({
+export function GenericTable<
+  T extends { id: string | number; eliminated?: boolean }
+>({
   columns,
   items,
+  width = true,
   ariaLabel,
   showActions = false,
   enableRowClick = false,
   enableSorting = true,
-  getDetailUrl
+  getDetailUrl,
+  actions,
+  useEliminationStatus = false
 }: GenericTableProps<T>) {
   const visibleColumns = showActions
     ? columns
@@ -59,37 +69,32 @@ export function GenericTable<T extends { id: string | number }>({
 
   const sortedItems = React.useMemo(() => {
     if (!enableSorting) return items;
-
     const { column, direction } = sortDescriptor;
-
     if (!column || column === "action") return items;
-
     const sorted = [...items].sort((a, b) => {
       const aVal = getKeyValue(a, column);
       const bVal = getKeyValue(b, column);
-
       const aParsed = typeof aVal === "string" ? aVal.toLowerCase() : aVal;
       const bParsed = typeof bVal === "string" ? bVal.toLowerCase() : bVal;
-
       if (aParsed < bParsed) return direction === "ascending" ? -1 : 1;
       if (aParsed > bParsed) return direction === "ascending" ? 1 : -1;
       return 0;
     });
-
     return sorted;
   }, [items, sortDescriptor, enableSorting]);
 
   return (
     <Table
       aria-label={ariaLabel}
+      fullWidth={width}
       sortDescriptor={enableSorting ? sortDescriptor : undefined}
       onSortChange={enableSorting ? setSortDescriptor : undefined}>
       <TableHeader columns={visibleColumns}>
         {(column) => (
           <TableColumn
-            className="text-s font-satoshiMedium text-neutral-300"
             key={String(column.uid)}
             align={column.align || "start"}
+            className="text-s font-satoshiMedium text-neutral-300"
             allowsSorting={enableSorting && column.uid !== "action"}>
             {column.name.toUpperCase()}
           </TableColumn>
@@ -108,7 +113,7 @@ export function GenericTable<T extends { id: string | number }>({
                 window.open(getDetailUrl(item.id), "_self");
               }
             }}
-            className={`${
+            className={`$ {
               enableRowClick && getDetailUrl
                 ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                 : "rounded-full"
@@ -118,39 +123,37 @@ export function GenericTable<T extends { id: string | number }>({
                 return (
                   <TableCell>
                     <div className="relative flex items-center gap-2">
-                      <Tooltip content="Details" className="px-3xs">
-                        <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
-                          <HugeiconsIcon
-                            icon={ViewIcon}
-                            size={20}
-                            color="currentColor"
-                            strokeWidth={1.5}
-                          />
-                        </span>
-                      </Tooltip>
-                      <Tooltip content="Edit" className="px-3xs">
-                        <span className="text-lg px-3xs rounded-xl text-white cursor-pointer active:opacity-50">
-                          <HugeiconsIcon
-                            icon={PencilEdit02Icon}
-                            size={20}
-                            color="currentColor"
-                            strokeWidth={1.5}
-                          />
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        color="danger"
-                        content="Delete"
-                        className="px-3xs">
-                        <span className="text-lg text-danger-500 px-3xs rounded-xl text-danger cursor-pointer active:opacity-50">
-                          <HugeiconsIcon
-                            icon={Delete02Icon}
-                            size={20}
-                            color="currentColor"
-                            strokeWidth={1.5}
-                          />
-                        </span>
-                      </Tooltip>
+                      {useEliminationStatus && item.eliminated ? (
+                        <Tooltip content="Éliminé" className="px-3xs">
+                          <span className="text-danger-500">
+                            <HugeiconsIcon
+                              icon={DeadIcon}
+                              size={20}
+                              strokeWidth={1.5}
+                            />
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        actions?.(item)?.map((action, idx) => (
+                          <Tooltip
+                            key={idx}
+                            content={action.tooltip}
+                            color={
+                              action.color === "danger" ? "danger" : "default"
+                            }
+                            className="px-3xs">
+                            <span
+                              onClick={() => action.onClick(item)}
+                              className={`text-lg px-3xs rounded-xl cursor-pointer active:opacity-50 ${
+                                action.color === "danger"
+                                  ? "text-danger-500"
+                                  : "text-white"
+                              }`}>
+                              {action.icon}
+                            </span>
+                          </Tooltip>
+                        ))
+                      )}
                     </div>
                   </TableCell>
                 );
@@ -158,9 +161,7 @@ export function GenericTable<T extends { id: string | number }>({
 
               const col = columns.find((c) => c.uid === columnKey);
               const value = item[columnKey as keyof T];
-              const content = col?.render
-                ? col.render(value, item)
-                : (value as React.ReactNode);
+              const content = col?.render ? col.render(value, item) : value;
 
               if (columnKey === "status") {
                 return (
@@ -175,9 +176,9 @@ export function GenericTable<T extends { id: string | number }>({
                       }`}
                       size="sm"
                       variant="flat">
-                      {content == "finish"
+                      {content === "finish"
                         ? STRINGS.status.finish
-                        : content == "in_coming"
+                        : content === "in_coming"
                         ? STRINGS.status.in_coming
                         : STRINGS.status.start}
                     </Chip>
@@ -187,7 +188,7 @@ export function GenericTable<T extends { id: string | number }>({
 
               return (
                 <TableCell className="font-satoshiMedium text-l leading-7">
-                  {content}
+                  {content as React.ReactNode}
                 </TableCell>
               );
             }}

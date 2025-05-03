@@ -18,12 +18,20 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
       );
     case "1":
       return (
-        <ButtonComponents
-          text="Ajouter un niveau"
-          onClick={() => {}}
-          buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-          textClassName="text-primary_brand-50"
-        />
+        <div className="flex flex-row justify-between gap-3">
+          <ButtonComponents
+            text="Ajouter un niveau"
+            onClick={() => {}}
+            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+            textClassName="text-primary_brand-50"
+          />
+          <ButtonComponents
+            text="Réinitialiser les niveaux"
+            onClick={() => {}}
+            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+            textClassName="text-primary_brand-50"
+          />
+        </div>
       );
     case "2":
       return (

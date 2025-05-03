@@ -6,11 +6,24 @@ import { GenericTable } from "../components/table/generic_table";
 import { seatsColumns } from "../components/table/presets/seats.config";
 import { STRINGS } from "../constants/string";
 import { standingsColumns } from "../components/table/presets/standings.config";
-import { StandingRow, TournamentRow } from "../components/table/table.types";
+import {
+  ActionDefinition,
+  StandingRow,
+  TournamentRow
+} from "../components/table/table.types";
 import { tournamentColumns } from "../components/table/presets/tournament.config";
-import { mapTournamentsToRow, mapTournamentToRow } from "@/app/lib/adapter/tournament.adapter";
+import {
+  mapTournamentsToRow,
+  mapTournamentToRow
+} from "@/app/lib/adapter/tournament.adapter";
 import { QuarterRanking } from "../types";
 import { mapQuarterRankingByTrimestry } from "../lib/adapter/quarter_ranking.adapter";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Delete02Icon,
+  PencilEdit02Icon,
+  ViewIcon
+} from "@hugeicons/core-free-icons";
 
 export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
@@ -52,6 +65,35 @@ export default function APTHome() {
     fetchData();
   }, []);
 
+  const getConditionalActions = (item: TournamentRow) => {
+    const actions: ActionDefinition<TournamentRow>[] = [
+      {
+        tooltip: "Voir",
+        icon: <HugeiconsIcon icon={ViewIcon} size={20} strokeWidth={1.5} />,
+        onClick: () => window.open(`/apt/${item.id}`, "_self")
+      }
+    ];
+
+    if (item.status !== "finish") {
+      actions.push({
+        tooltip: "Éditer",
+        icon: (
+          <HugeiconsIcon icon={PencilEdit02Icon} size={20} strokeWidth={1.5} />
+        ),
+        onClick: () => {}
+      });
+
+      actions.push({
+        tooltip: "Supprimer",
+        icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
+        onClick: () => {},
+        color: "danger"
+      });
+    }
+
+    return actions;
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full">
       <h1 className="font-satoshiBold text-4xl">Championnat APT</h1>
@@ -63,6 +105,7 @@ export default function APTHome() {
           columns={tournamentColumns}
           ariaLabel="Liste des sièges"
           showActions={true}
+          actions={getConditionalActions}
           enableRowClick
           getDetailUrl={(id) => `/apt/${id}`}
         />

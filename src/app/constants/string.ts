@@ -36,7 +36,7 @@ export const STRINGS = {
       { label: "Super finale", icon: RankingIcon, href: "/super_finale" },
       { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
-      { label: "Mallettes", icon: Briefcase09Icon, href: "/mallette" }
+      { label: "Mallettes", icon: Briefcase09Icon, href: "/malette" }
     ]
   },
   apt: {

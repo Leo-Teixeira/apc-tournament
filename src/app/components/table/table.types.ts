@@ -15,11 +15,19 @@ export type GenericTableProps<T extends { id: string | number }> = {
   onReorder?: (newItems: T[]) => void;
 };
 
+export type ActionDefinition<T> = {
+  icon: React.ReactNode;
+  tooltip: string;
+  onClick: (item: T) => void;
+  color?: "default" | "danger";
+};
+
 export type SeatRow = {
   id: string;
-  name: string;
+  avatarName: string;
   seat: string;
-  eliminated: boolean;
+  // eliminated: boolean;
+  action: string;
 };
 
 export type StandingRow = {

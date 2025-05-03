@@ -1,6 +1,6 @@
 "use client";
 
-import { Chip, Tab, Tabs } from "@heroui/react";
+import { Chip, Tab, Table, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -11,6 +11,9 @@ import { useParams } from "next/navigation";
 import { ButtonComponents } from "@/app/components/button";
 import { NiveauxTabs } from "./niveaux";
 import { ButtonTabsComponents } from "./components/button_tabs_components";
+import { PlayerTabs } from "./player";
+import { TableTabs } from "./table";
+import { ChipTabs } from "./chip";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -26,15 +29,13 @@ export default function TournamentDetailPage() {
       try {
         const [tournamentRes, registrationRes, classementRes] =
           await Promise.all([
-            fetch(`/api/tournaments/apt/${id}`),
-            fetch(`/api/registrations/apt/${id}`),
-            fetch(`/api/tournaments/apt/${id}/classement`)
+            fetch(`/api/tournament/${id}`),
+            fetch(`/api/registrations/${id}`),
+            fetch(`/api/tournament/${id}/classement`)
           ]);
-        console.log("test");
         setTournament(await tournamentRes.json());
         setRegistration(await registrationRes.json());
         setClassement(await classementRes.json());
-        console.log(classement);
       } catch (error) {
         console.error("Erreur lors du chargement des données :", error);
       } finally {
@@ -64,9 +65,21 @@ export default function TournamentDetailPage() {
         label: "Niveaux",
         content: <NiveauxTabs tournament={tournament} />
       },
-      { id: "2", label: "Joueurs", content: <div /> },
-      { id: "3", label: "Tables", content: <div /> },
-      { id: "4", label: "Jetons", content: <div /> }
+      {
+        id: "2",
+        label: "Joueurs",
+        content: <PlayerTabs tournament={tournament} />
+      },
+      {
+        id: "3",
+        label: "Tables",
+        content: <TableTabs tournament={tournament} />
+      },
+      {
+        id: "4",
+        label: "Jetons",
+        content: <ChipTabs tournament={tournament} classement={classement} />
+      }
     ];
   }, [tournament, registration, classement]);
 
