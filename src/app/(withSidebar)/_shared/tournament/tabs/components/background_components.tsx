@@ -5,12 +5,14 @@ import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 type BackgroundProps = {
+  tournamentId: string;
   tournamentStatus: string;
   onChangeClick?: () => void;
   onShowClick?: () => void;
 };
 
 export const BackgroundComponent: React.FC<BackgroundProps> = ({
+  tournamentId,
   tournamentStatus,
   onChangeClick,
   onShowClick
@@ -34,7 +36,7 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
               />
               <ButtonComponents
                 text="Afficher"
-                onClick={() => {}}
+                onClick={() => {window.open(`/game/${tournamentId}`, "_self");}}
                 buttonClassName="bg-primary_background hover:bg-primary_hover_background"
                 textClassName="text-primary_brand-50"
                 icon={

@@ -3,10 +3,10 @@
 import { Chip, Stack } from "@/app/types";
 import { Card, useDisclosure } from "@heroui/react";
 import React, { useEffect, useState } from "react";
-import { ButtonComponents } from "../components/button";
+import { ButtonComponents } from "../../components/button";
 import Link from "next/link";
-import { GenericModal } from "../components/popup";
-import { InputComponents } from "../components/form/input";
+import { GenericModal } from "../../components/popup";
+import { InputComponents } from "../../components/form/input";
 
 export default function StackPage() {
   const [stacks, setStack] = useState<Stack[]>([]);

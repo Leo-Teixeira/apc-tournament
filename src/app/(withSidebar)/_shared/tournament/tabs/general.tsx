@@ -39,9 +39,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
     <div className="flex flex-row gap-6">
       <div className="flex flex-col gap-5 w-3/4">
         <div className="flex flex-row gap-6">
-          <Card
-            className="rounded-xl bg-background_card w-3/4"
-            fullWidth>
+          <Card className="rounded-xl bg-background_card w-3/4" fullWidth>
             <div className="flex flex-col gap-3">
               <p className="text-primary_brand-50 font-satoshiBold text-l px-5 py-3">
                 Début du tournoi
@@ -123,7 +121,10 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
           </Card>
         </div>
 
-        <BackgroundComponent tournamentStatus={tournament.tournament_status} />
+        <BackgroundComponent
+          tournamentStatus={tournament.tournament_status}
+          tournamentId={tournament.id}
+        />
       </div>
 
       <div className="w-1/4">

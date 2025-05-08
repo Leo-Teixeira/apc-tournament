@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardBody } from "@heroui/react";
-import { GenericTable } from "../components/table/generic_table";
-import { seatsColumns } from "../components/table/presets/seats.config";
-import { STRINGS } from "../constants/string";
-import { standingsColumns } from "../components/table/presets/standings.config";
+import { GenericTable } from "../../components/table/generic_table";
+import { seatsColumns } from "../../components/table/presets/seats.config";
+import { STRINGS } from "../../constants/string";
+import { standingsColumns } from "../../components/table/presets/standings.config";
 import {
   ActionDefinition,
   StandingRow,
   TournamentRow
-} from "../components/table/table.types";
-import { tournamentColumns } from "../components/table/presets/tournament.config";
+} from "../../components/table/table.types";
+import { tournamentColumns } from "../../components/table/presets/tournament.config";
 import {
   mapTournamentsToRow,
   mapTournamentToRow
 } from "@/app/lib/adapter/tournament.adapter";
-import { QuarterRanking } from "../types";
-import { mapQuarterRankingByTrimestry } from "../lib/adapter/quarter_ranking.adapter";
+import { QuarterRanking } from "../../types";
+import { mapQuarterRankingByTrimestry } from "../../lib/adapter/quarter_ranking.adapter";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Delete02Icon,

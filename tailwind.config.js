@@ -107,6 +107,8 @@ module.exports = {
         satoshiMedium: ["Satoshi-medium", "sans-serif"]
       },
       fontSize: {
+        xl20: "200px",
+        xl12: "120px",
         xl7: "80px",
         xl6: "60px",
         xl5: "48px",

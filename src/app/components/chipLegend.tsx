@@ -7,8 +7,14 @@ export default function ChipLegend() {
     <div className="flex justify-center gap-32 mt-4">
       {chipValues.map((value) => (
         <div key={value} className="flex flex-col items-center">
-          <div className="w-36 h-36 rounded-full bg-green-800" />
-          <span className="text-white text-h1 font-bold mt-1">{value}</span>
+          <img
+            src="/images/ellipseAvatar.png"
+            alt={`Jeton test`}
+            className="w-36 h-36"
+          />
+          <span className="text-primary_brand-50 text-xl4 font-satoshiBlack mt-1">
+            {value}
+          </span>
         </div>
       ))}
     </div>
