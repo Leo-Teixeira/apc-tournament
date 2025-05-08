@@ -25,6 +25,7 @@ export type ActionDefinition<T> = {
 export type SeatRow = {
   id: string;
   avatarName: string;
+  avatar: string | null;
   seat: string;
   // eliminated: boolean;
   action: string;

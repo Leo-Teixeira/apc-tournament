@@ -5,6 +5,7 @@ import {
   Tournament,
   TournamentRanking
 } from "@/app/types";
+import { User } from "@/app/types/user.types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
@@ -20,6 +21,7 @@ export const mapQuarterRankingByTrimestry = (
 
   rankings.forEach((ranking) => {
     const tournament = ranking.tournament_id as Tournament;
+    const user = ranking.user_id as User;
 
     if (tournament.tournament_category === category) {
       const trimestry = tournament.tournament_trimestry as TrimestryKey;
@@ -27,7 +29,7 @@ export const mapQuarterRankingByTrimestry = (
       if (!result[trimestry]) return;
 
       const existingUser = result[trimestry].find(
-        (rank) => rank.id === ranking.user_id
+        (rank) => Number(rank.id) === user.id
       );
 
       if (existingUser) {
@@ -36,9 +38,9 @@ export const mapQuarterRankingByTrimestry = (
       } else {
         // Sinon, on l'ajoute
         result[trimestry].push({
-          id: ranking.user_id,
+          id: String(user.id),
           place: 0, // La place sera recalculée après
-          name: `Joueur ${ranking.user_id}`,
+          name: `Joueur ${user.pseudo_winamax}`,
           points: ranking.aggregated_score
         });
       }
@@ -62,10 +64,11 @@ export const mapClassementTournament = (
 ): StandingRow[] => {
   return classement.map((classe) => {
     const player = classe.registration_id as Registration;
+    const user = player.user_id as User;
     return {
       id: classe.id,
       place: classe.ranking_position,
-      name: player.user_id,
+      name: user.pseudo_winamax,
       points: classe.ranking_score
     };
   });

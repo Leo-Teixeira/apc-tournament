@@ -1,9 +1,10 @@
 import { tournamentMocks } from "./tournament.mock";
+import { usersMock } from "./user.mock";
 
 export const quarterRankingMocks = [
   {
     id: "1",
-    user_id: "201",
+    user_id: usersMock[0],
     tournament_id: tournamentMocks[0],
     trimestry_ranking: "Top 10",
     aggregated_score: 510,
@@ -11,7 +12,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "1",
-    user_id: "201",
+    user_id: usersMock[1],
     tournament_id: tournamentMocks[2],
     trimestry_ranking: "Top 10",
     aggregated_score: 50,
@@ -19,7 +20,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "2",
-    user_id: "202",
+    user_id: usersMock[2],
     tournament_id: tournamentMocks[1],
     trimestry_ranking: "Top 10",
     aggregated_score: 520,
@@ -27,7 +28,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "3",
-    user_id: "203",
+    user_id: usersMock[3],
     tournament_id: tournamentMocks[2],
     trimestry_ranking: "Top 10",
     aggregated_score: 530,
@@ -35,7 +36,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "3",
-    user_id: "203",
+    user_id: usersMock[3],
     tournament_id: tournamentMocks[0],
     trimestry_ranking: "Top 10",
     aggregated_score: 530,
@@ -43,7 +44,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "4",
-    user_id: "204",
+    user_id: usersMock[4],
     tournament_id: tournamentMocks[3],
     trimestry_ranking: "Top 10",
     aggregated_score: 540,
@@ -51,7 +52,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "5",
-    user_id: "205",
+    user_id: usersMock[5],
     tournament_id: tournamentMocks[4],
     trimestry_ranking: "Top 10",
     aggregated_score: 550,
@@ -59,7 +60,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "6",
-    user_id: "206",
+    user_id: usersMock[6],
     tournament_id: tournamentMocks[5],
     trimestry_ranking: "Top 10",
     aggregated_score: 560,
@@ -67,7 +68,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "7",
-    user_id: "207",
+    user_id: usersMock[7],
     tournament_id: tournamentMocks[6],
     trimestry_ranking: "Top 10",
     aggregated_score: 570,
@@ -75,7 +76,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "8",
-    user_id: "208",
+    user_id: usersMock[8],
     tournament_id: tournamentMocks[7],
     trimestry_ranking: "Top 10",
     aggregated_score: 580,
@@ -83,7 +84,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "9",
-    user_id: "209",
+    user_id: usersMock[9],
     tournament_id: tournamentMocks[8],
     trimestry_ranking: "Top 10",
     aggregated_score: 590,
@@ -91,7 +92,7 @@ export const quarterRankingMocks = [
   },
   {
     id: "10",
-    user_id: "210",
+    user_id: usersMock[10],
     tournament_id: tournamentMocks[9],
     trimestry_ranking: "Top 10",
     aggregated_score: 600,

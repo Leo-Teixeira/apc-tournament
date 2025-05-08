@@ -185,7 +185,24 @@ export function GenericTable<
                   </TableCell>
                 );
               }
-
+              if (columnKey === "avatarName") {
+                return (
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          (item as any).avatarUrl || "/images/ellipseAvatar.png"
+                        }
+                        alt={(item as any).avatarName}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <span className="font-satoshiMedium text-white">
+                        {(item as any).avatarName}
+                      </span>
+                    </div>
+                  </TableCell>
+                );
+              }
               return (
                 <TableCell className="font-satoshiMedium text-l leading-7">
                   {content as React.ReactNode}
