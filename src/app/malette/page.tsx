@@ -1,14 +1,18 @@
 "use client";
 
 import { Chip, Stack } from "@/app/types";
-import { Button, Card, Divider } from "@heroui/react";
+import { Card, useDisclosure } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 import { ButtonComponents } from "../components/button";
 import Link from "next/link";
+import { GenericModal } from "../components/popup";
+import { InputComponents } from "../components/form/input";
 
 export default function StackPage() {
   const [stacks, setStack] = useState<Stack[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [newStackName, setNewStackName] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +30,13 @@ export default function StackPage() {
     fetchData();
   }, []);
 
+  const handleCreateStack = () => {
+    console.log("Créer le stack :", newStackName);
+    // Ajouter un appel API ici
+    setNewStackName("");
+    onClose();
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between">
@@ -36,6 +47,7 @@ export default function StackPage() {
           text="Nouveau Stack"
           buttonClassName="bg-primary_brand-500"
           textClassName="text-primary_brand-50"
+          onClick={onOpen}
         />
       </div>
 
@@ -60,6 +72,20 @@ export default function StackPage() {
           </Link>
         ))}
       </div>
+
+      <GenericModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Nouveau stack"
+        confirmLabel="Créer le stack"
+        onConfirm={handleCreateStack}>
+        <InputComponents
+          label="Nom du stack"
+          type={"text"}
+          value={newStackName}
+          onChange={(e) => setNewStackName(e.target.value)}
+        />
+      </GenericModal>
     </div>
   );
 }

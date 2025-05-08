@@ -7,7 +7,7 @@ export const tournamentMocks = [
     tournament_end_date: "2025-01-03T01:00:00",
     tournament_trimestry: "T1",
     tournament_category: "APT",
-    tournament_status: "finish"
+    tournament_status: "in_coming"
   },
   {
     id: "2",

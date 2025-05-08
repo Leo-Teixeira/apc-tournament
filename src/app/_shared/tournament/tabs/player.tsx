@@ -22,6 +22,7 @@ import {
 import { useEffect, useState } from "react";
 import { seatsColumns } from "@/app/components/table/presets/seats.config";
 import { mapFlatAssignementsToSeatRows } from "@/app/lib/adapter/tournament_table.adapter";
+import { SearchBarComponents } from "@/app/components/form/search_bar";
 
 type PlayerProps = {
   tournament: Tournament;
@@ -30,6 +31,7 @@ type PlayerProps = {
 export const PlayerTabs: React.FC<PlayerProps> = ({ tournament }) => {
   const [flatRows, setFlatRows] = useState<SeatRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     const fetchAssignements = async () => {
       try {
@@ -68,15 +70,10 @@ export const PlayerTabs: React.FC<PlayerProps> = ({ tournament }) => {
     <div className="items-center">
       {flatRows && flatRows?.length > 0 ? (
         <div className="flex flex-col gap-6 justify-center px-64">
-          <Input
-            endContent={
-              <HugeiconsIcon
-                icon={Search01Icon}
-                className="text-2xl text-default-400 pointer-events-none flex-shrink-0"
-              />
-            }
-            placeholder=""
-            type="search"
+          <SearchBarComponents
+            label="Pseudo"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           <GenericTable<SeatRow>

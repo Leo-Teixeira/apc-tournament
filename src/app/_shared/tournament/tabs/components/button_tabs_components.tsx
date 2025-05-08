@@ -2,16 +2,19 @@ import { ButtonComponents } from "@/app/components/button";
 
 type ButtonTabsProps = {
   tabsId: string;
+  onClick: () => void;
 };
 
-export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
-  console.log(tabsId);
+export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
+  tabsId,
+  onClick
+}) => {
   switch (tabsId) {
     case "0":
       return (
         <ButtonComponents
           text="Modifier le tournoi"
-          onClick={() => {}}
+          onClick={onClick}
           buttonClassName="bg-white/20 hover:bg-primary_brand-300"
           textClassName="text-primary_brand-50"
         />
@@ -21,13 +24,13 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
         <div className="flex flex-row justify-between gap-3">
           <ButtonComponents
             text="Ajouter un niveau"
-            onClick={() => {}}
+            onClick={onClick}
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
           <ButtonComponents
             text="Réinitialiser les niveaux"
-            onClick={() => {}}
+            onClick={onClick}
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
@@ -37,7 +40,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
       return (
         <ButtonComponents
           text="Ajouter un joueur"
-          onClick={() => {}}
+          onClick={onClick}
           buttonClassName="bg-white/20 hover:bg-primary_brand-300"
           textClassName="text-primary_brand-50"
         />
@@ -46,7 +49,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
       return (
         <ButtonComponents
           text="Ajouter une table"
-          onClick={() => {}}
+          onClick={onClick}
           buttonClassName="bg-white/20 hover:bg-primary_brand-300"
           textClassName="text-primary_brand-50"
         />
@@ -55,7 +58,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({ tabsId }) => {
       return (
         <ButtonComponents
           text="Modifier le stack"
-          onClick={() => {}}
+          onClick={onClick}
           buttonClassName="bg-white/20 hover:bg-primary_brand-300"
           textClassName="text-primary_brand-50"
         />

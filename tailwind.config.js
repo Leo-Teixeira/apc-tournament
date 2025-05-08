@@ -27,6 +27,7 @@ module.exports = {
         ligth: "#FFFFFF",
         primary_background: "#165829",
         primary_hover_background: "#103E1D",
+        primary: "#165829",
         neutral: {
           50: "#FAFAFA",
           100: "#F4F4F5",

@@ -27,7 +27,7 @@ export const ButtonComponents: React.FC<ButtonProps> = ({
       variant="light"
       isIconOnly={iconOnly}
       disabled={disabled}
-      className={`flex justify-center items-center rounded-xl gap-gap-6 ${
+      className={`flex  cursor-pointer justify-center items-center rounded-xl gap-gap-6 ${
         iconOnly ? "p-2" : "px-4 py-2"
       } ${buttonClassName}`}>
       {!iconOnly && text && (

@@ -1,0 +1,35 @@
+import { Input } from "@heroui/react";
+
+type InputProps = {
+  label?: string;
+  type: string;
+  inputClassName?: string;
+  value: string;
+  onChange: (e?: any) => void;
+};
+
+export const InputComponents: React.FC<InputProps> = ({
+  label,
+  type,
+  inputClassName,
+  value,
+  onChange
+}) => {
+  return (
+    <div className="flex flex-col gap-3">
+      {label ? (
+        <span className="text-l font-satoshiMedium text-primary_brand-50">
+          {label}
+        </span>
+      ) : (
+        <></>
+      )}
+      <Input
+        className=" text-primary_brand-50"
+        type={type}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};

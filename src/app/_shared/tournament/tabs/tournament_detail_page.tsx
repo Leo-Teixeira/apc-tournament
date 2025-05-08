@@ -14,6 +14,10 @@ import { ButtonTabsComponents } from "./components/button_tabs_components";
 import { PlayerTabs } from "./player";
 import { TableTabs } from "./table";
 import { ChipTabs } from "./chip";
+import { GenericModal } from "@/app/components/popup";
+import { useDisclosure } from "@heroui/react";
+import { InputComponents } from "@/app/components/form/input";
+import { ModalManager } from "./components/popup_tabs_components";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -23,6 +27,26 @@ export default function TournamentDetailPage() {
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<string>("0");
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const [tournamentName, setTournamentName] = useState("");
+  const [date, setDate] = useState("");
+  const [openDate, setOpenDate] = useState("");
+  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">("T1");
+  const [stackStart, setStackStart] = useState("");
+  const [estimatedDuration, setEstimatedDuration] = useState("");
+
+  const handleCreateTournament = () => {
+    console.log({
+      tournamentName,
+      date,
+      openDate,
+      quarter,
+      stackStart,
+      estimatedDuration
+    });
+    onClose();
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,12 +178,23 @@ export default function TournamentDetailPage() {
               />
             )}
           </Tabs>
-
-          <ButtonTabsComponents tabsId={selectedTab} />
+          {tournament.tournament_status !== "finish" ? (
+            <ButtonTabsComponents tabsId={selectedTab} onClick={onOpen} />
+          ) : (
+            <></>
+          )}
         </div>
 
         <div>{tabs.find((tab) => tab.id === selectedTab)?.content}</div>
       </div>
+
+      <ModalManager
+        selectedTab={selectedTab}
+        isOpen={isOpen}
+        onClose={onClose}
+        tournament={tournament}
+        classement={classement}
+      />
     </div>
   );
 }
