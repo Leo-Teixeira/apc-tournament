@@ -1,10 +1,20 @@
+const now = new Date();
+now.setSeconds(0);
+now.setMilliseconds(0);
+
+const tournamentStart = new Date(now);
+const tournamentEnd = new Date(now.getTime() + 10 * 40 * 60 * 1000); // 10 niveaux de 40 min
+
+const toISOStringWithTZ = (date: Date) =>
+  new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+
 export const tournamentMocks = [
   {
     id: "1",
     tournament_name: "Tournament 1",
     tournament_description: "Description 1",
-    tournament_start_date: "2025-01-02T21:00:00",
-    tournament_end_date: "2025-01-03T01:00:00",
+    tournament_start_date: toISOStringWithTZ(tournamentStart),
+    tournament_end_date: toISOStringWithTZ(tournamentEnd),
     tournament_trimestry: "T1",
     tournament_category: "APT",
     tournament_status: "in_coming"

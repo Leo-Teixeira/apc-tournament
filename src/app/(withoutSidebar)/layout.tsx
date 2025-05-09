@@ -5,11 +5,5 @@ export default function GameLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="fr" className="dark bg-neutral-950 h-full w-full">
-      <body>
-          {children}
-      </body>
-    </html>
-  );
+  return <div>{children}</div>;
 }

@@ -11,7 +11,7 @@ export const registrationMocks = Array.from({ length: 24 }, (_, i) => {
   return {
     id,
     user_id: usersMock[i + 1],
-    tournament_id: tournamentMocks[0].id,
+    tournament_id: tournamentMocks[0],
     inscription_date: `2025-01-${String(i + 1).padStart(2, "0")}`,
     statut: randomStatus
   };
