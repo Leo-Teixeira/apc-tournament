@@ -1,8 +1,10 @@
 import { Chip } from "./chip.types";
 import { Tournament } from "./tournament.types";
 
-export interface TournamentChipInventory {
-  tournament_id: string | Tournament;
-  chip_id: string | Chip;
+export type TournamentChipInventory = {
+  tournament_id: number;
+  chip_id: number;
   chip_player_quantity: number;
-}
+  tournament?: Tournament;
+  chip?: Chip;
+};

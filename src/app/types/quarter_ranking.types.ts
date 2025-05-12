@@ -1,11 +1,13 @@
 import { Tournament } from "./tournament.types";
-import { User } from "./user.types";
+import { WPUser } from "./user.types";
 
-export interface QuarterRanking {
-  id: string;
-  user_id: string | User;
-  tournament_id: string | Tournament;
-  trimestry_ranking: string;
+export type QuarterRanking = {
+  id: number;
+  user_id: number;
+  tournament_id: number;
+  trimestry_ranking: "T1" | "T2" | "T3";
   aggregated_score: number;
   position: number;
-}
+  wp_users?: WPUser;
+  tournament?: Tournament;
+};

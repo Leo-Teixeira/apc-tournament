@@ -22,6 +22,9 @@ export const ClassementComponent: React.FC<ClassementProps> = ({
 }) => {
   const [classementRow, setClassementRow] = useState<StandingRow[]>([]);
   useEffect(() => {
+    console.log("classement est un tableau :", Array.isArray(classement));
+    console.log("type réel :", typeof classement);
+    console.log("valeur :", classement);
     setClassementRow(mapClassementTournament(classement));
   }, [classement]);
   return (

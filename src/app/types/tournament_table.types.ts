@@ -1,8 +1,11 @@
+import { TableAssignment } from "./table_assignement.types";
 import { Tournament } from "./tournament.types";
 
-export interface TournamentTable {
-  id: string;
-  tournament_id: string | Tournament;
+export type TournamentTable = {
+  id: number;
+  tournament_id: number;
   table_number: number;
   table_capacity: number;
-}
+  table_assignment?: TableAssignment[];
+  tournament?: Tournament;
+};

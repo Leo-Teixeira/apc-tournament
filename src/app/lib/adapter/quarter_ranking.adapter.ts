@@ -5,7 +5,7 @@ import {
   Tournament,
   TournamentRanking
 } from "@/app/types";
-import { User } from "@/app/types/user.types";
+import { WPUser } from "@/app/types/user.types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
@@ -20,30 +20,32 @@ export const mapQuarterRankingByTrimestry = (
   };
 
   rankings.forEach((ranking) => {
-    const tournament = ranking.tournament_id as Tournament;
-    const user = ranking.user_id as User;
+    if (ranking.tournament || ranking.wp_users) {
+      if (ranking.tournament?.tournament_category === category) {
+        const trimestry = ranking.tournament
+          .tournament_trimestry as TrimestryKey;
 
-    if (tournament.tournament_category === category) {
-      const trimestry = tournament.tournament_trimestry as TrimestryKey;
+        if (!result[trimestry]) return;
 
-      if (!result[trimestry]) return;
+        const existingUser = result[trimestry].find(
+          (rank) => Number(rank.id) === ranking.wp_users?.ID
+        );
 
-      const existingUser = result[trimestry].find(
-        (rank) => Number(rank.id) === user.id
-      );
-
-      if (existingUser) {
-        // Si l'utilisateur existe déjà, on met à jour son score
-        existingUser.points += ranking.aggregated_score;
-      } else {
-        // Sinon, on l'ajoute
-        result[trimestry].push({
-          id: String(user.id),
-          place: 0, // La place sera recalculée après
-          name: `Joueur ${user.pseudo_winamax}`,
-          points: ranking.aggregated_score
-        });
+        if (existingUser) {
+          // Si l'utilisateur existe déjà, on met à jour son score
+          existingUser.points += ranking.aggregated_score;
+        } else {
+          // Sinon, on l'ajoute
+          result[trimestry].push({
+            id: String(ranking.wp_users?.ID),
+            place: 0, // La place sera recalculée après
+            name: `Joueur ${ranking.wp_users?.pseudo_winamax}`,
+            points: ranking.aggregated_score
+          });
+        }
       }
+    } else {
+      return [];
     }
   });
 
@@ -62,14 +64,17 @@ export const mapQuarterRankingByTrimestry = (
 export const mapClassementTournament = (
   classement: TournamentRanking[]
 ): StandingRow[] => {
-  return classement.map((classe) => {
-    const player = classe.registration_id as Registration;
-    const user = player.user_id as User;
-    return {
-      id: classe.id,
-      place: classe.ranking_position,
-      name: user.pseudo_winamax,
-      points: classe.ranking_score
-    };
-  });
+  console.log(classement);
+  return classement
+    .flatMap((classe) => {
+      if (!classe.registration || !classe.registration.wp_users)
+        return undefined;
+      return {
+        id: String(classe.id),
+        place: classe.ranking_position,
+        name: classe.registration.wp_users.pseudo_winamax,
+        points: classe.ranking_score
+      };
+    })
+    .filter((row): row is StandingRow => row !== undefined);
 };

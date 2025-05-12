@@ -42,7 +42,7 @@ export default function APTHome() {
             fetch("/api/registrations/apt"),
             fetch("/api/quarter_ranking")
           ]);
-        console.log(tournamentsRes);
+        console.log("test" + tournamentsRes);
         const tournaments = await tournamentsRes.json();
         console.log(tournaments);
         const registrations = await registrationsRes.json();

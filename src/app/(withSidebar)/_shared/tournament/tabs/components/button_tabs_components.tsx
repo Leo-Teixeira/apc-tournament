@@ -1,23 +1,31 @@
 import { ButtonComponents } from "@/app/components/button";
 
 type ButtonTabsProps = {
+  tournamentStatus: string;
   tabsId: string;
   onClick: () => void;
 };
 
 export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
+  tournamentStatus,
   tabsId,
   onClick
 }) => {
   switch (tabsId) {
     case "0":
       return (
-        <ButtonComponents
-          text="Modifier le tournoi"
-          onClick={onClick}
-          buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-          textClassName="text-primary_brand-50"
-        />
+        <div>
+          {tournamentStatus !== "in_coming" ? (
+            <ButtonComponents
+              text="Modifier le tournoi"
+              onClick={onClick}
+              buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       );
     case "1":
       return (
@@ -28,40 +36,62 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
-          <ButtonComponents
-            text="Réinitialiser les niveaux"
-            onClick={onClick}
-            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-            textClassName="text-primary_brand-50"
-          />
+          {tournamentStatus !== "in_coming" ? (
+            <ButtonComponents
+              text="Réinitialiser les niveaux"
+              onClick={onClick}
+              buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          ) : (
+            <></>
+          )}
         </div>
       );
     case "2":
       return (
-        <ButtonComponents
-          text="Ajouter un joueur"
-          onClick={onClick}
-          buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-          textClassName="text-primary_brand-50"
-        />
+        <div>
+          {tournamentStatus !== "in_coming" ? (
+            <ButtonComponents
+              text="Ajouter un joueur"
+              onClick={onClick}
+              buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       );
     case "3":
       return (
-        <ButtonComponents
-          text="Ajouter une table"
-          onClick={onClick}
-          buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-          textClassName="text-primary_brand-50"
-        />
+        <div>
+          {tournamentStatus !== "in_coming" ? (
+            <ButtonComponents
+              text="Ajouter une table"
+              onClick={onClick}
+              buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          ) : (
+            <></>
+          )}{" "}
+        </div>
       );
     case "4":
       return (
-        <ButtonComponents
-          text="Modifier le stack"
-          onClick={onClick}
-          buttonClassName="bg-white/20 hover:bg-primary_brand-300"
-          textClassName="text-primary_brand-50"
-        />
+        <div>
+          {tournamentStatus !== "in_coming" ? (
+            <ButtonComponents
+              text="Modifier le stack"
+              onClick={onClick}
+              buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          ) : (
+            <></>
+          )}{" "}
+        </div>
       );
     default:
       return <></>;

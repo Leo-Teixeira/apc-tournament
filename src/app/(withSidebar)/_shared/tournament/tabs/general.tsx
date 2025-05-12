@@ -24,8 +24,9 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
   registrations,
   classement
 }) => {
-  const startDate = parseDateTimeLocal(tournament.tournament_start_date);
-  const endDate = parseDateTimeLocal(tournament.tournament_end_date);
+  const startDate = new Date(tournament.tournament_start_date);
+  const endDate = new Date(tournament.tournament_end_date);
+  
 
   const startDateString = formatDate(startDate);
   const startTimeString = formatHour(startDate);

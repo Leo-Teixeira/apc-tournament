@@ -115,8 +115,7 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
             .map((a) => a.registration)
             .filter((r): r is Registration => !!r && typeof r === "object")
             .filter((r) => {
-              const user = typeof r.user_id === "object" ? r.user_id : null;
-              const pseudo = user?.pseudo_winamax ?? user ?? "";
+              const pseudo = r.wp_users?.pseudo_winamax ?? "";
               return pseudo !== selectedPlayer?.avatarName;
             })}
         />

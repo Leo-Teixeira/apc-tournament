@@ -23,7 +23,7 @@ export type ActionDefinition<T> = {
 };
 
 export type SeatRow = {
-  id: string;
+  id: number;
   avatarName: string;
   avatar: string | null;
   seat: string;
@@ -39,7 +39,7 @@ export type StandingRow = {
 };
 
 export type BlindRow = {
-  id: string;
+  id: number;
   level: number;
   small: string;
   big: string;

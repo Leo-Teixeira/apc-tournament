@@ -1,7 +1,8 @@
 import { Chip } from "./chip.types";
 
-export interface Stack {
-  id: string;
-  name: string;
-  chips: string[] | Chip[];
-}
+export type Stack = {
+  id: number;
+  stack_name: string;
+  stack_chip: number;
+  chip?: Chip;
+};

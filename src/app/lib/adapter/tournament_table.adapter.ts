@@ -1,22 +1,19 @@
 import {
-  TableAssignement,
   Tournament,
   TournamentTable,
-  Registration
+  Registration,
+  TableAssignment
 } from "@/app/types";
 import { SeatRow } from "@/app/components/table/table.types";
-import { User } from "@/app/types/user.types";
+import { WPUser } from "@/app/types/user.types";
 
 export const mapFlatAssignementsToSeatRows = (
-  assignements: TableAssignement[]
+  assignements: TableAssignment[]
 ): SeatRow[] => {
   return assignements.map((a) => {
-    const registration = a.registration_id as Registration;
-    const user =
-      typeof registration?.user_id === "object"
-        ? registration.user_id
-        : undefined;
-    const table = typeof a.table_id === "object" ? a.table_id : undefined;
+    const registration = a.registration;
+    const user = registration?.wp_users;
+    const table = a.tournament_table;
 
     return {
       id: a.id,
@@ -30,22 +27,15 @@ export const mapFlatAssignementsToSeatRows = (
   });
 };
 
-export const mapAssignementsGroupedByTable = (assignements: any[]) => {
+export const mapAssignementsGroupedByTable = (
+  assignements: TableAssignment[]
+) => {
   const groups: Record<string, SeatRow[]> = {};
 
   assignements.forEach((a) => {
-    const table =
-      typeof a.table_id === "object"
-        ? (a.table_id as TournamentTable)
-        : undefined;
-    const registration =
-      typeof a.registration_id === "object"
-        ? (a.registration_id as Registration)
-        : undefined;
-    const user =
-      typeof registration?.user_id === "object"
-        ? (registration.user_id as User)
-        : undefined;
+    const registration = a.registration;
+    const user = registration?.wp_users;
+    const table = a.tournament_table;
 
     const tableNumber = table?.table_number;
     if (!tableNumber) return;

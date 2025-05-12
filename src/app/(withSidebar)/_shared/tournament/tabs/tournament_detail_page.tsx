@@ -147,7 +147,9 @@ export default function TournamentDetailPage() {
           />
           <ButtonComponents
             text="Voir l'affichage"
-            onClick={() => {}}
+            onClick={() => {
+              window.open(`/game/${id}`, "_self");
+            }}
             buttonClassName="bg-primary_background hover:bg-primary_hover_background"
             textClassName="text-primary_brand-50"
             icon={
@@ -179,7 +181,11 @@ export default function TournamentDetailPage() {
             )}
           </Tabs>
           {tournament.tournament_status !== "finish" ? (
-            <ButtonTabsComponents tabsId={selectedTab} onClick={onOpen} />
+            <ButtonTabsComponents
+              tournamentStatus={tournament.tournament_status}
+              tabsId={selectedTab}
+              onClick={onOpen}
+            />
           ) : (
             <></>
           )}

@@ -7,18 +7,12 @@ export const mapTournamentLevelsToRow = (
   return levels
     .sort((a, b) => a.level_number - b.level_number)
     .map((level) => {
-      const [startHours, startMinutes] = level.level_start
-        .split("h")
-        .map(Number);
-      const [endHours, endMinutes] = level.level_end.split("h").map(Number);
+      const start = new Date(level.level_start);
+      const end = new Date(level.level_end);
 
-      const startTotalMinutes = startHours * 60 + startMinutes;
-      const endTotalMinutes = endHours * 60 + endMinutes;
-
-      const duration =
-        endTotalMinutes >= startTotalMinutes
-          ? endTotalMinutes - startTotalMinutes
-          : 24 * 60 - startTotalMinutes + endTotalMinutes;
+      const durationMinutes = Math.round(
+        (end.getTime() - start.getTime()) / 60000
+      );
 
       return {
         id: level.id,
@@ -27,8 +21,12 @@ export const mapTournamentLevelsToRow = (
         big: level.level_pause ? "" : level.level_big_blinde.toString(),
         ante: "-",
         pause: level.level_pause,
-        duration: `${duration.toString()}"`,
-        time: level.level_start,
+        duration: `${durationMinutes}"`,
+        time: start.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "UTC"
+        }),
         action: ""
       };
     });

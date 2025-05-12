@@ -2,19 +2,19 @@ import { Tournament, TournamentRanking } from "@/app/types";
 import { Card, Divider } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 
-type ChipProps = {
-  tournament: Tournament;
-  classement: TournamentRanking[];
-};
-
-type Chip = {
+type ChipDisplay = {
   image: string;
   value: number;
   player_quantity: number;
 };
 
+type ChipProps = {
+  tournament: Tournament;
+  classement: TournamentRanking[];
+};
+
 export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
-  const [chips, setChips] = useState<Chip[]>([]);
+  const [chips, setChips] = useState<ChipDisplay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [stackTotal, setStackTotal] = useState(0);
   const [stackPerPlayer, setStackPerPlayer] = useState(0);
@@ -23,11 +23,15 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const chipRes = await fetch(
-          `/api/tournament/${tournament.id}/chip`
-        );
+        const chipRes = await fetch(`/api/tournament/${tournament.id}/chip`);
         const data = await chipRes.json();
-        const chips: Chip[] = data.chips ?? [];
+        const rawChips = Array.isArray(data) ? data : [];
+
+        const chips: ChipDisplay[] = rawChips.map((entry) => ({
+          image: entry.chip?.chip_image ?? "",
+          value: entry.chip?.value ?? 0,
+          player_quantity: entry.chip_player_quantity ?? 0
+        }));
 
         const total = chips.reduce(
           (acc, chip) => acc + chip.value * chip.player_quantity,
@@ -35,6 +39,7 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
         );
 
         const perPlayer = chips.reduce((acc, chip) => acc + chip.value, 0);
+
         const playerCount = classement.length;
         const average = playerCount > 0 ? Math.floor(total / playerCount) : 0;
 
@@ -80,18 +85,9 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
 
       <div className="flex flex-row justify-between gap-6">
         {[
-          {
-            title: "Stack Total",
-            value: stackTotal
-          },
-          {
-            title: "Stack initial par joueur",
-            value: stackPerPlayer
-          },
-          {
-            title: "Stack moyen",
-            value: stackAverage
-          }
+          { title: "Stack Total", value: stackTotal },
+          { title: "Stack initial par joueur", value: stackPerPlayer },
+          { title: "Stack moyen", value: stackAverage }
         ].map((card, index) => (
           <Card
             key={index}
