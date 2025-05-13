@@ -26,7 +26,6 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
 }) => {
   const startDate = new Date(tournament.tournament_start_date);
   const endDate = new Date(tournament.tournament_end_date);
-  
 
   const startDateString = formatDate(startDate);
   const startTimeString = formatHour(startDate);
@@ -115,9 +114,16 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
               <p className="text-primary_brand-50 font-satoshiBold text-l">
                 Participants
               </p>
-              <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                {classement.length}/{registrations.length}
-              </p>
+              {registrations.length > 0 ? (
+                <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                  {registrations.filter((r) => r.statut == "Confirmed").length}/
+                  {registrations.length}
+                </p>
+              ) : (
+                <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                  0
+                </p>
+              )}
             </div>
           </Card>
         </div>

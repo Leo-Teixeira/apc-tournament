@@ -9,7 +9,7 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   if (MOCK) {
     const result = tournamentLevelMocks.filter((level) =>
@@ -17,7 +17,7 @@ export async function GET(
         ? level.tournament_id === id
         : level.tournament_id.id === id
     );
-    return NextResponse.json(JSON.parse(JSON.stringify(result ?? [])));
+    return NextResponse.json(result);
   }
 
   try {
@@ -27,7 +27,18 @@ export async function GET(
     }
 
     const levels = await prisma.tournament_level.findMany({
-      where: { tournament_id: tournamentId }
+      where: { tournament_id: tournamentId },
+      select: {
+        id: true,
+        tournament_id: true,
+        level_number: true,
+        level_start: true,
+        level_end: true,
+        level_small_blinde: true,
+        level_big_blinde: true,
+        level_pause: true,
+        level_chip_race: true
+      }
     });
 
     return NextResponse.json(serializeBigInt(levels));

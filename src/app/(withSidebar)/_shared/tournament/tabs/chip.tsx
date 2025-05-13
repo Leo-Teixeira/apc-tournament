@@ -57,6 +57,22 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
     fetchData();
   }, [tournament.id, classement.length]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        Chargement en cours...
+      </div>
+    );
+  }
+
+  if (chips.length === 0) {
+    return (
+      <div className="text-center text-white mt-10">
+        Aucun jeton n’a encore été défini pour ce tournoi.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <Card>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Chip, Tab, Table, Tabs } from "@heroui/react";
+import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -16,50 +16,28 @@ import { TableTabs } from "./table";
 import { ChipTabs } from "./chip";
 import { GenericModal } from "@/app/components/popup";
 import { useDisclosure } from "@heroui/react";
-import { InputComponents } from "@/app/components/form/input";
 import { ModalManager } from "./components/popup_tabs_components";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
 
   const [tournament, setTournament] = useState<Tournament>();
-  const [classement, setClassement] = useState<TournamentRanking[]>();
+  const [classement, setClassement] = useState<TournamentRanking[]>([]);
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-  const [tournamentName, setTournamentName] = useState("");
-  const [date, setDate] = useState("");
-  const [openDate, setOpenDate] = useState("");
-  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">("T1");
-  const [stackStart, setStackStart] = useState("");
-  const [estimatedDuration, setEstimatedDuration] = useState("");
-
-  const handleCreateTournament = () => {
-    console.log({
-      tournamentName,
-      date,
-      openDate,
-      quarter,
-      stackStart,
-      estimatedDuration
-    });
-    onClose();
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tournamentRes, registrationRes, classementRes] =
-          await Promise.all([
-            fetch(`/api/tournament/${id}`),
-            fetch(`/api/registrations/${id}`),
-            fetch(`/api/tournament/${id}/classement`)
-          ]);
-        setTournament(await tournamentRes.json());
-        setRegistration(await registrationRes.json());
-        setClassement(await classementRes.json());
+        const res = await fetch(`/api/tournament/${id}/details`);
+        const data = await res.json();
+
+        setTournament(data.tournament);
+        setRegistration(data.registrations);
+        setClassement(data.classement);
       } catch (error) {
         console.error("Erreur lors du chargement des données :", error);
       } finally {
@@ -69,6 +47,12 @@ export default function TournamentDetailPage() {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (tournament?.tournament_status === "finish") {
+      setIsDisabled(true);
+    }
+  }, [tournament]);
 
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
@@ -123,7 +107,7 @@ export default function TournamentDetailPage() {
             {tournament.tournament_name}
           </h1>
           <Chip
-            className={`font-satoshiMedium text-s ${
+            className={`font-satoshiRegular text-s ${
               tournament.tournament_status === "finish"
                 ? "bg-red-950"
                 : tournament.tournament_status === "in_coming"
@@ -167,6 +151,7 @@ export default function TournamentDetailPage() {
       <div className="flex w-full flex-col gap-6">
         <div className="flex flex-row justify-between items-center">
           <Tabs
+            isDisabled={isDisabled}
             className="flex p-1 items-center gap-2"
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(String(key))}
@@ -176,18 +161,16 @@ export default function TournamentDetailPage() {
               <Tab
                 key={item.id}
                 title={item.label}
-                className="text-neutral-50 text-center font-satoshiMedium text-l"
+                className="text-neutral-50 text-center font-satoshiRegular text-l"
               />
             )}
           </Tabs>
-          {tournament.tournament_status !== "finish" ? (
+          {tournament.tournament_status !== "finish" && (
             <ButtonTabsComponents
               tournamentStatus={tournament.tournament_status}
               tabsId={selectedTab}
               onClick={onOpen}
             />
-          ) : (
-            <></>
           )}
         </div>
 

@@ -62,7 +62,7 @@ export default function Sidebar() {
                 className="shrink-0 text-neutral-50"
               />
               {!collapsed && (
-                <span className="text-l font-satoshiMedium text-neutral-50">
+                <span className="text-l font-satoshiRegular text-neutral-50">
                   {label}
                 </span>
               )}
@@ -76,7 +76,7 @@ export default function Sidebar() {
           href="/"
           className="flex justify-between items-center bg-white/5 rounded p-2 hover:bg-primary_brand-500">
           {!collapsed && (
-            <span className="text-s font-satoshiMedium leading-4">
+            <span className="text-s font-satoshiRegular leading-4">
               Retour au site
             </span>
           )}

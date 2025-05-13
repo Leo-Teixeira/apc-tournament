@@ -29,14 +29,24 @@ export const NiveauxTabs: React.FC<NiveauxProps> = ({ tournament }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [levelRes] = await Promise.all([
-          fetch(`/api/tournament/${tournament.id}/level`)
-        ]);
-        const levels = await levelRes.json();
-        const levelsRow = mapTournamentLevelsToRow(levels);
-        setLevelsRow(levelsRow);
+        const res = await fetch(`/api/tournament/${tournament.id}/level`);
+
+        if (res.status === 404) {
+          window.location.href = "/not-found";
+          return;
+        }
+
+        if (res.status >= 500) {
+          window.location.href = "/500";
+          return;
+        }
+
+        const levels: TournamentLevel[] = await res.json();
+        const rows = mapTournamentLevelsToRow(levels);
+        setLevelsRow(rows);
       } catch (error) {
         console.error("Erreur lors du chargement des données :", error);
+        window.location.href = "/500";
       } finally {
         setIsLoading(false);
       }
@@ -71,19 +81,24 @@ export const NiveauxTabs: React.FC<NiveauxProps> = ({ tournament }) => {
 
   return (
     <div className="items-center">
-      {levelsRow && levelsRow?.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
+          Chargement en cours...
+        </div>
+      ) : levelsRow && levelsRow.length > 0 ? (
         <GenericTable<BlindRow>
           columns={blindsColumns}
           items={levelsRow}
-          ariaLabel={""}
+          ariaLabel=""
           showActions={true}
           actions={getConditionalActions}
         />
       ) : (
-        <div className="flex justify-center items-center h-full">
-          Chargement en cours...
+        <div className="text-center text-white mt-10">
+          Aucun niveau défini pour ce tournoi.
         </div>
       )}
+
       <GenericModal
         isOpen={isOpen}
         onClose={onClose}

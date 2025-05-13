@@ -94,7 +94,7 @@ export function GenericTable<
           <TableColumn
             key={String(column.uid)}
             align={column.align || "start"}
-            className="text-s font-satoshiMedium text-neutral-300"
+            className="text-l font-satoshiRegular text-neutral-300"
             allowsSorting={enableSorting && column.uid !== "action"}>
             {column.name.toUpperCase()}
           </TableColumn>
@@ -196,7 +196,7 @@ export function GenericTable<
                         alt={(item as any).avatarName}
                         className="w-8 h-8 rounded-full"
                       />
-                      <span className="font-satoshiMedium text-white">
+                      <span className="font-satoshiRegular text-l text-white">
                         {(item as any).avatarName}
                       </span>
                     </div>
@@ -204,7 +204,7 @@ export function GenericTable<
                 );
               }
               return (
-                <TableCell className="font-satoshiMedium text-l leading-7">
+                <TableCell className="font-satoshiLight text-l leading-7">
                   {content as React.ReactNode}
                 </TableCell>
               );

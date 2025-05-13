@@ -32,7 +32,7 @@ export const ButtonComponents: React.FC<ButtonProps> = ({
       } ${buttonClassName}`}>
       {!iconOnly && text && (
         <span
-          className={`text-s md:text-l leading-5 md:leading-7 font-satoshiMedium ${textClassName}`}>
+          className={`text-s md:text-l leading-5 md:leading-7 font-satoshiRegular ${textClassName}`}>
           {text}
         </span>
       )}

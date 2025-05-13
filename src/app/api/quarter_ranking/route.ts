@@ -7,13 +7,20 @@ const MOCK_MODE = process.env.MOCK === "true";
 
 export async function GET() {
   if (MOCK_MODE) {
-    return NextResponse.json(quarterRankingMocks);
+    return NextResponse.json(quarterRankingMocks ?? []);
   }
 
   try {
     const rankings = await prisma.quarter_ranking.findMany({
       include: {
-        wp_users: true,
+        wp_users: {
+          select: {
+            ID: true,
+            pseudo_winamax: true,
+            display_name: true,
+            user_email: true
+          }
+        },
         tournament: true
       }
     });

@@ -17,7 +17,7 @@ export const DatePickerComponents: React.FC<DatePickerProps> = ({
   return (
     <div className="flex flex-col gap-3">
       {label ? (
-        <span className="text-l font-satoshiMedium text-primary_brand-50">
+        <span className="text-l font-satoshiRegular text-primary_brand-50">
           {label}
         </span>
       ) : (

@@ -1,6 +1,7 @@
 import { stackMock } from "@/mock/stack.mock";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
 const isMock = process.env.MOCK === "true";
 
@@ -16,7 +17,7 @@ export async function GET(_: NextRequest) {
       }
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(serializeBigInt(result));
   } catch (error) {
     console.error("Error fetching stack:", error);
     return NextResponse.json(

@@ -5,10 +5,13 @@ export const mapTournamentLevelsToRow = (
   levels: TournamentLevel[]
 ): BlindRow[] => {
   return levels
+    .filter((level) => level.level_start && level.level_end)
     .sort((a, b) => a.level_number - b.level_number)
     .map((level) => {
       const start = new Date(level.level_start);
       const end = new Date(level.level_end);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
 
       const durationMinutes = Math.round(
         (end.getTime() - start.getTime()) / 60000
@@ -29,5 +32,6 @@ export const mapTournamentLevelsToRow = (
         }),
         action: ""
       };
-    });
+    })
+    .filter((row): row is BlindRow => row !== null);
 };

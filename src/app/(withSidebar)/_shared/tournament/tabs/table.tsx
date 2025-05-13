@@ -19,10 +19,22 @@ export const TableTabs: React.FC<TableProps> = ({ tournament }) => {
     const fetchAssignements = async () => {
       try {
         const res = await fetch(`/api/tournament/${tournament.id}/table`);
+        if (res.status === 404) {
+          window.location.href = "/not-found";
+          return;
+        }
+
+        if (res.status >= 500) {
+          window.location.href = "/500";
+          return;
+        }
         const enrichedAssignements = await res.json();
-        setGroupedRows(mapAssignementsGroupedByTable(enrichedAssignements));
+        const assignements =
+          mapAssignementsGroupedByTable(enrichedAssignements);
+        setGroupedRows(assignements);
       } catch (err) {
         console.error("Erreur chargement assignements :", err);
+        window.location.href = "/500";
       } finally {
         setIsLoading(false);
       }
@@ -49,19 +61,31 @@ export const TableTabs: React.FC<TableProps> = ({ tournament }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {Object.entries(groupedRows).map(([tableNumber, rows]) => (
-        <div key={tableNumber} className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold">TABLE {tableNumber}</h2>
-          <GenericTable<SeatRow>
-            columns={seatsColumns}
-            items={rows}
-            ariaLabel={`Table ${tableNumber}`}
-            showActions={true}
-            actions={getConditionalActions}
-          />
+    <div>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
+          Chargement en cours...
         </div>
-      ))}
+      ) : Object.keys(groupedRows).length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {Object.entries(groupedRows).map(([tableNumber, rows]) => (
+            <div key={tableNumber} className="flex flex-col gap-2">
+              <h2 className="text-xl font-bold">TABLE {tableNumber}</h2>
+              <GenericTable<SeatRow>
+                columns={seatsColumns}
+                items={rows}
+                ariaLabel={`Table ${tableNumber}`}
+                showActions={true}
+                actions={getConditionalActions}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-white mt-10">
+          Aucun joueur assigné à une table pour ce tournoi.
+        </div>
+      )}
     </div>
   );
 };

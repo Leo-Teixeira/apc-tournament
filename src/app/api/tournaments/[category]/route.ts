@@ -4,11 +4,21 @@ import { tournamentMocks } from "@/mock";
 import { tournament_tournament_category } from "@/generated/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
+const categoryMap: Record<string, tournament_tournament_category> = {
+  apt: tournament_tournament_category.APT,
+  ag: tournament_tournament_category.AG,
+  sit_and_go: tournament_tournament_category.SitAndGo,
+  superfinale: tournament_tournament_category.Superfinale,
+  solipoker: tournament_tournament_category.Solipoker
+};
+
 export async function GET(
   _: NextRequest,
   { params }: { params: { category: string } }
 ) {
-  const { category } = await params;
+  const { category } = params;
+  const rawCategory = category.toLowerCase();
+
   const isMock = process.env.MOCK === "true";
 
   if (isMock) {
@@ -21,18 +31,20 @@ export async function GET(
     return NextResponse.json(filtered);
   }
 
+  const categoryEnum = categoryMap[rawCategory];
+
   const validCategories = Object.values(tournament_tournament_category);
-  const categoryEnum = validCategories.includes(category as any)
-    ? (category as tournament_tournament_category)
-    : undefined;
+
+  if (!categoryEnum) {
+    return NextResponse.json(
+      { error: `Invalid category '${category}'` },
+      { status: 400 }
+    );
+  }
 
   try {
     const tournaments = await prisma.tournament.findMany({
-      where: categoryEnum
-        ? {
-            tournament_category: categoryEnum
-          }
-        : undefined
+      where: { tournament_category: categoryEnum }
     });
 
     return NextResponse.json(serializeBigInt(tournaments));

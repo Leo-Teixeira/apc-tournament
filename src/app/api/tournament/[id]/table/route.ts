@@ -9,7 +9,7 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
   const isMock = process.env.MOCK === "true";
 
   if (isMock) {
@@ -55,36 +55,46 @@ export async function GET(
   }
 
   try {
-    const tables = await prisma.tournament_table.findMany({
-      where: { tournament_id: BigInt(id) },
+    const tournamentId = parseInt(id);
+    if (isNaN(tournamentId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 404 });
+    }
+
+    const assignements = await prisma.table_assignment.findMany({
+      where: {
+        tournament_table: {
+          tournament_id: BigInt(tournamentId)
+        }
+      },
       include: {
-        table_assignment: {
+        registration: {
           include: {
-            registration: {
-              include: {
-                wp_users: true,
-                table_assignment: true,
-                tournament_ranking: true
+            wp_users: {
+              select: {
+                ID: true,
+                pseudo_winamax: true,
+                photo_url: true,
+                display_name: true,
+                user_status: true,
+                user_url: true,
+                user_email: true,
+                user_nicename: true,
+                user_login: true
               }
-            },
-            tournament_table: true
+            }
+          }
+        },
+        tournament_table: {
+          select: {
+            id: true,
+            table_number: true,
+            table_capacity: true
           }
         }
       }
     });
 
-    const result = tables.flatMap((table) =>
-      table.table_assignment.map((assignement) => ({
-        ...assignement,
-        table: {
-          id: table.id,
-          table_number: table.table_number,
-          table_capacity: table.table_capacity
-        }
-      }))
-    );
-
-    return NextResponse.json(serializeBigInt(result));
+    return NextResponse.json(serializeBigInt(assignements));
   } catch (error) {
     console.error("Error fetching table assignments:", error);
     return NextResponse.json(

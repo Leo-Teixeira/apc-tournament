@@ -10,7 +10,7 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   const tournamentId = parseInt(id);
   if (isNaN(tournamentId)) {
@@ -21,8 +21,8 @@ export async function GET(
     const chips = tournamentChipInventoryMocks
       .filter((entry) =>
         typeof entry.tournament_id === "string"
-          ? entry.tournament_id === params.id
-          : entry.tournament_id.id === params.id
+          ? entry.tournament_id === id
+          : entry.tournament_id.id === id
       )
       .map((entry) => {
         const chip = chipMocks.find((c) => c.id === entry.chip_id.id);
@@ -39,18 +39,25 @@ export async function GET(
 
   try {
     const chips = await prisma.tournament_chip_inventory.findMany({
-      where: { tournament_id: BigInt(id) },
-      include: {
+      where: { tournament_id: BigInt(tournamentId) },
+      select: {
+        chip_player_quantity: true,
         chip: {
-          include: {
-            stack: true,
-            tournament_chip_inventory: true
+          select: {
+            chip_image: true,
+            value: true
           }
         }
       }
     });
 
-    return NextResponse.json(serializeBigInt(chips));
+    const result = chips.map((entry) => ({
+      image: entry.chip?.chip_image ?? "",
+      value: entry.chip?.value ?? 0,
+      player_quantity: entry.chip_player_quantity
+    }));
+
+    return NextResponse.json(serializeBigInt(result));
   } catch (error) {
     console.error("Error fetching chips:", error);
     return NextResponse.json(

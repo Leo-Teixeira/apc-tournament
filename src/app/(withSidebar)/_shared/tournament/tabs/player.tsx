@@ -19,6 +19,7 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
   const [search, setSearch] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState<SeatRow | null>(null);
   const [sameTablePlayers, setSameTablePlayers] = useState<SeatRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -30,6 +31,8 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
         setFlatRows(mapFlatAssignementsToSeatRows(data));
       } catch (err) {
         console.error("Erreur chargement assignements :", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -43,7 +46,6 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
         icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
         onClick: () => {
           setSelectedPlayer(item);
-
           const assignment = assignements.find((a) => a.id === item.id);
           if (!assignment?.table?.table_number) return;
 
@@ -74,7 +76,11 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
 
   return (
     <div className="items-center">
-      {flatRows.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
+          Chargement en cours...
+        </div>
+      ) : flatRows.length > 0 ? (
         <div className="flex flex-col gap-6 justify-center px-64">
           <SearchBarComponents
             label="Pseudo"
@@ -91,8 +97,8 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
           />
         </div>
       ) : (
-        <div className="flex justify-center items-center h-full">
-          Chargement en cours...
+        <div className="text-center text-white mt-10">
+          Aucun joueur n’est assigné à une table pour ce tournoi.
         </div>
       )}
 

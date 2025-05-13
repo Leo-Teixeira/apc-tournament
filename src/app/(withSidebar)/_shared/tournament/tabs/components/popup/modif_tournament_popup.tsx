@@ -37,7 +37,7 @@ export const TournamentFormBody = () => {
         {["T1", "T2", "T3"].map((label) => (
           <button
             key={label}
-            className={` text-primary_brand-50 px-4 py-2 font-satoshiMedium text-l rounded-lg transition-colors ${
+            className={` text-primary_brand-50 px-4 py-2 font-satoshiRegular text-l rounded-lg transition-colors ${
               quarter === label ? "bg-primary_background font-bold" : ""
             }`}
             onClick={() => setQuarter(label as "T1" | "T2" | "T3")}>

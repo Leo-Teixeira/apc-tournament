@@ -99,7 +99,7 @@ module.exports = {
         }
       },
       fontFamily: {
-        satoshi: ["Satoshi-regular", "sans-serif"],
+        satoshiRegular: ["Satoshi-regular", "sans-serif"],
         satoshiBlack: ["Satoshi-black", "sans-serif"],
         satoshiBold: ["Satoshi-bold", "sans-serif"],
         satoshiLight: ["Satoshi-light", "sans-serif"],

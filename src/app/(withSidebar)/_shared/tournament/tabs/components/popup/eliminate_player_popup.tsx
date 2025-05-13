@@ -19,7 +19,7 @@ export const EliminatePlayerFormBody: React.FC<EliminatePlayerProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-4 text-primary_brand-50">
-      <span className="text-l font-satoshiMedium text-primary_brand-50">
+      <span className="text-l font-satoshiRegular text-primary_brand-50">
         Qui a éliminé {eliminatePlayer}
       </span>
       <CheckboxGroup>
@@ -34,7 +34,7 @@ export const EliminatePlayerFormBody: React.FC<EliminatePlayerProps> = ({
                     alt={user.pseudo_winamax ?? ""}
                     className="w-8 h-8 rounded-full"
                   />
-                  <span className="font-satoshiMedium text-l text-primary_brand-50">
+                  <span className="font-satoshiRegular text-l text-primary_brand-50">
                     {user.pseudo_winamax ?? ""}
                   </span>
                 </div>

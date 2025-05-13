@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardBody } from "@heroui/react";
 import { GenericTable } from "../../components/table/generic_table";
-import { seatsColumns } from "../../components/table/presets/seats.config";
 import { STRINGS } from "../../constants/string";
 import { standingsColumns } from "../../components/table/presets/standings.config";
 import {
@@ -12,11 +10,7 @@ import {
   TournamentRow
 } from "../../components/table/table.types";
 import { tournamentColumns } from "../../components/table/presets/tournament.config";
-import {
-  mapTournamentsToRow,
-  mapTournamentToRow
-} from "@/app/lib/adapter/tournament.adapter";
-import { QuarterRanking } from "../../types";
+import { mapTournamentsToRow } from "@/app/lib/adapter/tournament.adapter";
 import { mapQuarterRankingByTrimestry } from "../../lib/adapter/quarter_ranking.adapter";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -36,23 +30,19 @@ export default function APTHome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tournamentsRes, registrationsRes, quarterRankingRes] =
-          await Promise.all([
-            fetch("/api/tournaments/apt"),
-            fetch("/api/registrations/apt"),
-            fetch("/api/quarter_ranking")
-          ]);
-        console.log("test" + tournamentsRes);
-        const tournaments = await tournamentsRes.json();
-        console.log(tournaments);
-        const registrations = await registrationsRes.json();
-        const quarterRanking = await quarterRankingRes.json();
+        const res = await fetch("/api/tournaments/apt/details");
+        const data = await res.json();
+
+        const tournaments = data.tournaments;
+        const registrations = data.registrations;
+        const quarterRanking = data.quarterRanking;
 
         const rows = mapTournamentsToRow(tournaments, registrations);
         const quarterRankingRows = mapQuarterRankingByTrimestry(
           quarterRanking,
           "APT"
         );
+
         setTournamentRows(rows);
         setQuarterRankingRows(quarterRankingRows);
       } catch (error) {

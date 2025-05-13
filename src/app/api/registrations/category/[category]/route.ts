@@ -18,7 +18,7 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { category: string } }
 ) {
-  const { category } = await params;
+  const { category } = params;
 
   if (isMock) {
     const normalizedCategory = categoryMap[category];
@@ -26,23 +26,24 @@ export async function GET(
       ? registrationMocks.filter(
           (r) => r.tournament_id.tournament_category === normalizedCategory
         )
-      : registrationMocks;
+      : [];
 
     return NextResponse.json(result);
   }
 
-  try {
-    const mappedCategory = categoryMap[category];
+  const mappedCategory = categoryMap[category];
+  if (!mappedCategory) {
+    return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+  }
 
+  try {
     const registrations = await prisma.registration.findMany({
       include: { tournament: true },
-      where: mappedCategory
-        ? {
-            tournament: {
-              tournament_category: mappedCategory
-            }
-          }
-        : undefined
+      where: {
+        tournament: {
+          tournament_category: mappedCategory
+        }
+      }
     });
 
     return NextResponse.json(serializeBigInt(registrations));

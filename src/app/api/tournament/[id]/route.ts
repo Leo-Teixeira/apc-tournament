@@ -7,9 +7,10 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const id = parseInt(await params.id);
+  const { id } = await params;
+  const tournamentId = parseInt(id);
 
-  if (isNaN(id)) {
+  if (isNaN(tournamentId)) {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
   }
 
@@ -21,7 +22,7 @@ export async function GET(
 
   try {
     const tournament = await prisma.tournament.findUnique({
-      where: { id },
+      where: { id: BigInt(id) },
       include: {
         tournament_level: true,
         tournament_chip_inventory: true,
@@ -29,7 +30,19 @@ export async function GET(
         tournament_table: true,
         registration: {
           include: {
-            wp_users: true,
+            wp_users: {
+              select: {
+                ID: true,
+                pseudo_winamax: true,
+                photo_url: true,
+                display_name: true,
+                user_status: true,
+                user_url: true,
+                user_email: true,
+                user_nicename: true,
+                user_login: true
+              }
+            },
             table_assignment: true,
             tournament_ranking: true
           }

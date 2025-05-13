@@ -9,11 +9,13 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   if (isMock) {
-    const result = tournamentRankingMocks.filter(
-      (ranking) => ranking.tournament_id.id === id
+    const result = tournamentRankingMocks.filter((ranking) =>
+      typeof ranking.tournament_id === "string"
+        ? ranking.tournament_id === id
+        : ranking.tournament_id.id === id
     );
     return NextResponse.json(JSON.parse(JSON.stringify(result ?? [])));
   }
@@ -45,12 +47,9 @@ export async function GET(
                 user_login: true
               }
             },
-            table_assignment: true,
-            tournament_ranking: true
+            table_assignment: true
           }
-        },
-
-        tournament: true
+        }
       }
     });
 
@@ -58,7 +57,7 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching tournament rankings:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : String(error) },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
