@@ -26,6 +26,10 @@ export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [tournamentFormData, setTournamentFormData] = useState<
+    Partial<Tournament>
+  >({});
+
   const [tournamentToDelete, setTournamentToDelete] =
     useState<TournamentRow | null>(null);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -52,6 +56,7 @@ export default function APTHome() {
           quarterRanking,
           "APT"
         );
+
         setTournaments(tournaments);
         setTournamentRows(rows);
         setQuarterRankingRows(quarterRankingRows);
@@ -66,7 +71,6 @@ export default function APTHome() {
   }, []);
 
   const getConditionalActions = (item: TournamentRow) => {
-    setItemSelected(item);
     const actions: ActionDefinition<TournamentRow>[] = [
       {
         tooltip: "Voir",
@@ -82,6 +86,7 @@ export default function APTHome() {
           <HugeiconsIcon icon={PencilEdit02Icon} size={20} strokeWidth={1.5} />
         ),
         onClick: () => {
+          setItemSelected(item);
           setIsDeleteModalOpen(false);
           setIsModifyModalOpen(true);
         }
@@ -91,6 +96,7 @@ export default function APTHome() {
         tooltip: "Supprimer",
         icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
         onClick: () => {
+          setItemSelected(item);
           setTournamentToDelete(item);
           setIsDeleteModalOpen(true);
         },
@@ -185,9 +191,36 @@ export default function APTHome() {
         onClose={() => setIsModifyModalOpen(false)}
         title="Modifier tournoi"
         confirmLabel="Modifier le tournoi"
-        onConfirm={() => {}}>
+        onConfirm={async () => {
+          if (!itemSelected) return;
+
+          try {
+            const res = await fetch(`/api/tournament/${itemSelected.id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(tournamentFormData)
+            });
+
+            if (!res.ok) throw new Error("Erreur serveur");
+
+            setTournamentRows((prev) =>
+              prev.filter((t) => t.id !== itemSelected.id)
+            );
+
+            setIsModifyModalOpen(false);
+            setItemSelected(null);
+          } catch (error) {
+            console.error("Erreur modification tournoi :", error);
+            alert("Une erreur est survenue.");
+          }
+        }}>
         <TournamentFormBody
           tournament={tournaments.find((t) => t.id == Number(itemSelected?.id))}
+          onUpdate={(updatedFields) => {
+            setTournamentFormData((prev) => ({ ...prev, ...updatedFields }));
+          }}
         />
       </GenericModal>
     </div>

@@ -67,20 +67,21 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: Request, context: { params: { id: string } }) {
+  const { params } = context;
+  const { id } = params;
+
   try {
     const data = await req.json();
 
     const updated = await prisma.tournament.update({
-      where: { id: BigInt(params.id) },
+      where: { id: BigInt(id) },
       data: {
         tournament_name: data.tournament_name,
         tournament_description: data.tournament_description,
         tournament_start_date: new Date(data.tournament_start_date),
-        tournament_end_date: new Date(data.tournament_end_date),
+        tournament_open_date: new Date(data.tournament_open_date),
+        estimate_duration: data.estimate_duration,
         tournament_trimestry: data.tournament_trimestry,
         tournament_category: data.tournament_category,
         tournament_status: data.tournament_status
@@ -89,6 +90,7 @@ export async function PUT(
 
     return NextResponse.json(serializeBigInt(updated));
   } catch (error) {
+    console.error("PATCH Error:", error);
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
 }

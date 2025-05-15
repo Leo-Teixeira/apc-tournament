@@ -1,29 +1,58 @@
+// TournamentFormBody.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import { DatePickerComponents } from "@/app/components/form/date_picker";
 import { InputComponents } from "@/app/components/form/input";
 import { NumberInputComponents } from "@/app/components/form/number_input";
 import { TimeInputComponents } from "@/app/components/form/time_input";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { Tournament } from "@/app/types";
-import { DateValue, NumberInput } from "@heroui/react";
-import { useState } from "react";
 
-type TournamentProps = {
+export type TournamentFormBodyProps = {
   tournament?: Tournament;
+  onUpdate: (data: Partial<Tournament>) => void;
 };
 
-export const TournamentFormBody: React.FC<TournamentProps> = ({
-  tournament
+export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
+  tournament,
+  onUpdate
 }) => {
-  const [tournamentName, setTournamentName] = useState(
-    tournament?.tournament_name ?? ""
-  );
-  const [date, setDate] = useState<DateValue | null>(null);
-  const [openDate, setOpenDate] = useState<DateValue | null>(null);
-  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">(
-    tournament?.tournament_trimestry ?? "T1"
-  );
+  const [tournamentName, setTournamentName] = useState("");
+  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">("T1");
+  const [date, setDate] = useState<string>("");
+  const [openDate, setOpenDate] = useState<string>("");
+  const [estimatedDuration, setEstimatedDuration] = useState<string>("");
   const [stackStart, setStackStart] = useState<number>(0);
-  const [estimatedDuration, setEstimatedDuration] = useState<any>(null);
+
+  useEffect(() => {
+    if (tournament) {
+      const dateStr = new Date(tournament.tournament_start_date)
+        .toISOString()
+        .slice(0, 16);
+      const openStr = new Date(tournament.tournament_open_date)
+        .toISOString()
+        .slice(0, 16);
+      const durationStr = tournament.estimate_duration
+        ? new Date(tournament.estimate_duration).toISOString().slice(11, 16)
+        : "";
+
+      setTournamentName(tournament.tournament_name);
+      setDate(dateStr);
+      setOpenDate(openStr);
+      setQuarter(tournament.tournament_trimestry);
+      setEstimatedDuration(durationStr);
+      setStackStart(0); // adapter si besoin
+
+      onUpdate({
+        tournament_name: tournament.tournament_name,
+        tournament_start_date: new Date(dateStr),
+        tournament_open_date: new Date(openStr),
+        tournament_trimestry: tournament.tournament_trimestry,
+        estimate_duration: new Date(`1970-01-01T${durationStr}:00`)
+      });
+    }
+  }, [tournament]);
 
   if (!tournament) return <LoadingComponent />;
 
@@ -33,28 +62,22 @@ export const TournamentFormBody: React.FC<TournamentProps> = ({
         label="Nom du tournoi"
         type="text"
         value={tournamentName}
-        onChange={(e) => setTournamentName(e.target.value)}
-      />
-      <DatePickerComponents
-        label="Date du tournoi"
-        type="datetime-local"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <DatePickerComponents
-        label="Date d'ouverture"
-        type="datetime-local"
-        value={openDate}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={(e) => {
+          setTournamentName(e.target.value);
+          onUpdate({ tournament_name: e.target.value });
+        }}
       />
       <div className="flex justify-between bg-neutral-800 rounded-lg">
         {["T1", "T2", "T3"].map((label) => (
           <button
             key={label}
-            className={` text-primary_brand-50 px-4 py-2 font-satoshiRegular text-l rounded-lg transition-colors ${
+            className={`text-primary_brand-50 px-4 py-2 font-satoshiRegular text-l rounded-lg transition-colors ${
               quarter === label ? "bg-primary_background font-bold" : ""
             }`}
-            onClick={() => setQuarter(label as "T1" | "T2" | "T3")}>
+            onClick={() => {
+              setQuarter(label as "T1" | "T2" | "T3");
+              onUpdate({ tournament_trimestry: label as "T1" | "T2" | "T3" });
+            }}>
             {label === "T1"
               ? "Trimestre 1"
               : label === "T2"
@@ -63,17 +86,39 @@ export const TournamentFormBody: React.FC<TournamentProps> = ({
           </button>
         ))}
       </div>
+      <DatePickerComponents
+        label="Date du tournoi"
+        value={date}
+        onChange={(e) => {
+          setDate(e.target.value);
+          onUpdate({ tournament_start_date: new Date(e.target.value) });
+        }}
+      />
+      <DatePickerComponents
+        label="Date d'ouverture des inscriptions"
+        value={openDate}
+        onChange={(e) => {
+          setOpenDate(e.target.value);
+          onUpdate({ tournament_open_date: new Date(e.target.value) });
+        }}
+      />
       <NumberInputComponents
         label="Tapis de départ"
         type="text"
         value={stackStart}
-        onChange={(e) => setStackStart(e.target.value)}
+        onChange={(e) => {
+          setStackStart(e.target.value);
+        }}
       />
       <TimeInputComponents
         label="Durée totale estimée"
-        type="text"
         value={estimatedDuration}
-        onChange={(e) => setEstimatedDuration(e.target.value)}
+        onChange={(e) => {
+          setEstimatedDuration(e.target.value);
+          onUpdate({
+            estimate_duration: new Date(`1970-01-01T${e.target.value}:00Z`)
+          });
+        }}
       />
     </div>
   );

@@ -918,14 +918,14 @@ exports.Prisma.stackOrderByRelevanceFieldEnum = {
   stack_name: 'stack_name'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.tournamentOrderByRelevanceFieldEnum = {
   tournament_name: 'tournament_name',
   tournament_description: 'tournament_description'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 
 exports.Prisma.wp_actionscheduler_actionsOrderByRelevanceFieldEnum = {

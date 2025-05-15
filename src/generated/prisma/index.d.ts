@@ -11722,7 +11722,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | null
+    estimate_duration: Date
     _count: TournamentCountAggregateOutputType | null
     _avg: TournamentAvgAggregateOutputType | null
     _sum: TournamentSumAggregateOutputType | null
@@ -11807,7 +11807,7 @@ export namespace Prisma {
       tournament_trimestry: $Enums.tournament_tournament_trimestry
       tournament_category: $Enums.tournament_tournament_category
       tournament_status: $Enums.tournament_tournament_status
-      estimate_duration: Date | null
+      estimate_duration: Date
     }, ExtArgs["result"]["tournament"]>
     composites: {}
   }
@@ -12861,7 +12861,7 @@ export namespace Prisma {
   export type Tournament_chip_inventoryGroupByOutputType = {
     tournament_id: bigint
     chip_id: bigint
-    chip_player_quantity: number | null
+    chip_player_quantity: number
     _count: Tournament_chip_inventoryCountAggregateOutputType | null
     _avg: Tournament_chip_inventoryAvgAggregateOutputType | null
     _sum: Tournament_chip_inventorySumAggregateOutputType | null
@@ -12914,7 +12914,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       tournament_id: bigint
       chip_id: bigint
-      chip_player_quantity: number | null
+      chip_player_quantity: number
     }, ExtArgs["result"]["tournament_chip_inventory"]>
     composites: {}
   }
@@ -72710,20 +72710,20 @@ export namespace Prisma {
   export type stackOrderByRelevanceFieldEnum = (typeof stackOrderByRelevanceFieldEnum)[keyof typeof stackOrderByRelevanceFieldEnum]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
   export const tournamentOrderByRelevanceFieldEnum: {
     tournament_name: 'tournament_name',
     tournament_description: 'tournament_description'
   };
 
   export type tournamentOrderByRelevanceFieldEnum = (typeof tournamentOrderByRelevanceFieldEnum)[keyof typeof tournamentOrderByRelevanceFieldEnum]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   export const wp_actionscheduler_actionsOrderByRelevanceFieldEnum: {
@@ -73637,7 +73637,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeNullableFilter<"tournament"> | Date | string | null
+    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
@@ -73655,7 +73655,7 @@ export namespace Prisma {
     tournament_trimestry?: SortOrder
     tournament_category?: SortOrder
     tournament_status?: SortOrder
-    estimate_duration?: SortOrderInput | SortOrder
+    estimate_duration?: SortOrder
     quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
     tournament_chip_inventory?: tournament_chip_inventoryOrderByRelationAggregateInput
@@ -73677,7 +73677,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeNullableFilter<"tournament"> | Date | string | null
+    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
@@ -73695,7 +73695,7 @@ export namespace Prisma {
     tournament_trimestry?: SortOrder
     tournament_category?: SortOrder
     tournament_status?: SortOrder
-    estimate_duration?: SortOrderInput | SortOrder
+    estimate_duration?: SortOrder
     _count?: tournamentCountOrderByAggregateInput
     _avg?: tournamentAvgOrderByAggregateInput
     _max?: tournamentMaxOrderByAggregateInput
@@ -73715,7 +73715,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeNullableWithAggregatesFilter<"tournament"> | Date | string | null
+    estimate_duration?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
   }
 
   export type tournament_chip_inventoryWhereInput = {
@@ -73724,7 +73724,7 @@ export namespace Prisma {
     NOT?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
     tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
     chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntNullableFilter<"tournament_chip_inventory"> | number | null
+    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
     chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
   }
@@ -73732,7 +73732,7 @@ export namespace Prisma {
   export type tournament_chip_inventoryOrderByWithRelationInput = {
     tournament_id?: SortOrder
     chip_id?: SortOrder
-    chip_player_quantity?: SortOrderInput | SortOrder
+    chip_player_quantity?: SortOrder
     tournament?: tournamentOrderByWithRelationInput
     chip?: chipOrderByWithRelationInput
   }
@@ -73744,7 +73744,7 @@ export namespace Prisma {
     NOT?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
     tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
     chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntNullableFilter<"tournament_chip_inventory"> | number | null
+    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
     chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
   }, "tournament_id_chip_id">
@@ -73752,7 +73752,7 @@ export namespace Prisma {
   export type tournament_chip_inventoryOrderByWithAggregationInput = {
     tournament_id?: SortOrder
     chip_id?: SortOrder
-    chip_player_quantity?: SortOrderInput | SortOrder
+    chip_player_quantity?: SortOrder
     _count?: tournament_chip_inventoryCountOrderByAggregateInput
     _avg?: tournament_chip_inventoryAvgOrderByAggregateInput
     _max?: tournament_chip_inventoryMaxOrderByAggregateInput
@@ -73766,7 +73766,7 @@ export namespace Prisma {
     NOT?: tournament_chip_inventoryScalarWhereWithAggregatesInput | tournament_chip_inventoryScalarWhereWithAggregatesInput[]
     tournament_id?: BigIntWithAggregatesFilter<"tournament_chip_inventory"> | bigint | number
     chip_id?: BigIntWithAggregatesFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntNullableWithAggregatesFilter<"tournament_chip_inventory"> | number | null
+    chip_player_quantity?: IntWithAggregatesFilter<"tournament_chip_inventory"> | number
   }
 
   export type tournament_levelWhereInput = {
@@ -78596,7 +78596,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
@@ -78614,7 +78614,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
@@ -78632,7 +78632,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
@@ -78650,7 +78650,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
@@ -78668,7 +78668,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
   }
 
   export type tournamentUpdateManyMutationInput = {
@@ -78680,7 +78680,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type tournamentUncheckedUpdateManyInput = {
@@ -78692,11 +78692,11 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type tournament_chip_inventoryCreateInput = {
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
     tournament: tournamentCreateNestedOneWithoutTournament_chip_inventoryInput
     chip: chipCreateNestedOneWithoutTournament_chip_inventoryInput
   }
@@ -78704,11 +78704,11 @@ export namespace Prisma {
   export type tournament_chip_inventoryUncheckedCreateInput = {
     tournament_id: bigint | number
     chip_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type tournament_chip_inventoryUpdateInput = {
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
     tournament?: tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
     chip?: chipUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
   }
@@ -78716,23 +78716,23 @@ export namespace Prisma {
   export type tournament_chip_inventoryUncheckedUpdateInput = {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_chip_inventoryCreateManyInput = {
     tournament_id: bigint | number
     chip_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type tournament_chip_inventoryUpdateManyMutationInput = {
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_chip_inventoryUncheckedUpdateManyInput = {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_levelCreateInput = {
@@ -84241,17 +84241,6 @@ export namespace Prisma {
     not?: NestedEnumtournament_tournament_statusFilter<$PrismaModel> | $Enums.tournament_tournament_status
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type Quarter_rankingListRelationFilter = {
     every?: quarter_rankingWhereInput
     some?: quarter_rankingWhereInput
@@ -84274,11 +84263,6 @@ export namespace Prisma {
     every?: tournament_tableWhereInput
     some?: tournament_tableWhereInput
     none?: tournament_tableWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type quarter_rankingOrderByRelationAggregateInput = {
@@ -84377,31 +84361,6 @@ export namespace Prisma {
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type tournament_chip_inventoryTournament_idChip_idCompoundUniqueInput = {
     tournament_id: bigint | number
     chip_id: bigint | number
@@ -84435,22 +84394,6 @@ export namespace Prisma {
     tournament_id?: SortOrder
     chip_id?: SortOrder
     chip_player_quantity?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -84593,6 +84536,17 @@ export namespace Prisma {
     table_capacity?: SortOrder
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -84606,6 +84560,11 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type wp_actionscheduler_actionsOrderByRelevanceInput = {
@@ -84679,6 +84638,20 @@ export namespace Prisma {
     group_id?: SortOrder
     attempts?: SortOrder
     claim_id?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -84904,6 +84877,17 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type wp_em_price_optionsOrderByRelevanceInput = {
     fields: wp_em_price_optionsOrderByRelevanceFieldEnum | wp_em_price_optionsOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -85053,6 +85037,22 @@ export namespace Prisma {
     show_remaining_tickets?: SortOrder
     show_ticket_booking_dates?: SortOrder
     ticket_template_id?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type wp_eventprime_checkout_fieldsOrderByRelevanceInput = {
@@ -88396,10 +88396,6 @@ export namespace Prisma {
     set?: $Enums.tournament_tournament_status
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type quarter_rankingUpdateManyWithoutTournamentNestedInput = {
     create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
@@ -88580,14 +88576,6 @@ export namespace Prisma {
     connect?: chipWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput = {
     create?: XOR<tournamentCreateWithoutTournament_chip_inventoryInput, tournamentUncheckedCreateWithoutTournament_chip_inventoryInput>
     connectOrCreate?: tournamentCreateOrConnectWithoutTournament_chip_inventoryInput
@@ -88706,8 +88694,20 @@ export namespace Prisma {
     deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type wp_mec_bookingsCreateNestedOneWithoutWp_mec_booking_attendeesInput = {
@@ -89068,17 +89068,6 @@ export namespace Prisma {
     not?: NestedEnumtournament_tournament_statusFilter<$PrismaModel> | $Enums.tournament_tournament_status
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
     in?: $Enums.tournament_tournament_trimestry[]
@@ -89109,6 +89098,45 @@ export namespace Prisma {
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -89132,6 +89160,24 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -89159,52 +89205,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -89354,13 +89354,13 @@ export namespace Prisma {
   }
 
   export type tournament_chip_inventoryCreateWithoutChipInput = {
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
     tournament: tournamentCreateNestedOneWithoutTournament_chip_inventoryInput
   }
 
   export type tournament_chip_inventoryUncheckedCreateWithoutChipInput = {
     tournament_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type tournament_chip_inventoryCreateOrConnectWithoutChipInput = {
@@ -89420,7 +89420,7 @@ export namespace Prisma {
     NOT?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
     tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
     chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntNullableFilter<"tournament_chip_inventory"> | number | null
+    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
   }
 
   export type wp_usersCreateWithoutQuarter_rankingInput = {
@@ -89469,7 +89469,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -89486,7 +89486,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -89562,7 +89562,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -89579,7 +89579,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -89633,7 +89633,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -89650,7 +89650,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -89772,7 +89772,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -89789,7 +89789,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90045,13 +90045,13 @@ export namespace Prisma {
   }
 
   export type tournament_chip_inventoryCreateWithoutTournamentInput = {
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
     chip: chipCreateNestedOneWithoutTournament_chip_inventoryInput
   }
 
   export type tournament_chip_inventoryUncheckedCreateWithoutTournamentInput = {
     chip_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type tournament_chip_inventoryCreateOrConnectWithoutTournamentInput = {
@@ -90297,7 +90297,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -90314,7 +90314,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -90366,7 +90366,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -90383,7 +90383,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90425,7 +90425,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
@@ -90442,7 +90442,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
@@ -90475,7 +90475,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
@@ -90492,7 +90492,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90532,7 +90532,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
@@ -90549,7 +90549,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
@@ -90611,7 +90611,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
@@ -90628,7 +90628,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90667,7 +90667,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
@@ -90684,7 +90684,7 @@ export namespace Prisma {
     tournament_trimestry: $Enums.tournament_tournament_trimestry
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration?: Date | string | null
+    estimate_duration: Date | string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
@@ -90733,7 +90733,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
@@ -90750,7 +90750,7 @@ export namespace Prisma {
     tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90976,7 +90976,7 @@ export namespace Prisma {
 
   export type tournament_chip_inventoryCreateManyChipInput = {
     tournament_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type stackUpdateWithoutChipInput = {
@@ -90994,18 +90994,18 @@ export namespace Prisma {
   }
 
   export type tournament_chip_inventoryUpdateWithoutChipInput = {
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
     tournament?: tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
   }
 
   export type tournament_chip_inventoryUncheckedUpdateWithoutChipInput = {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_chip_inventoryUncheckedUpdateManyWithoutChipInput = {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type table_assignmentCreateManyRegistrationInput = {
@@ -91077,7 +91077,7 @@ export namespace Prisma {
 
   export type tournament_chip_inventoryCreateManyTournamentInput = {
     chip_id: bigint | number
-    chip_player_quantity?: number | null
+    chip_player_quantity: number
   }
 
   export type tournament_levelCreateManyTournamentInput = {
@@ -91154,18 +91154,18 @@ export namespace Prisma {
   }
 
   export type tournament_chip_inventoryUpdateWithoutTournamentInput = {
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
     chip?: chipUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
   }
 
   export type tournament_chip_inventoryUncheckedUpdateWithoutTournamentInput = {
     chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentInput = {
     chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_levelUpdateWithoutTournamentInput = {
