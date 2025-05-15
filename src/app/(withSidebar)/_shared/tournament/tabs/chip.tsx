@@ -1,3 +1,4 @@
+import { LoadingComponent } from "@/app/error/loading/page";
 import { Tournament, TournamentRanking } from "@/app/types";
 import { Card, Divider } from "@heroui/react";
 import React, { useEffect, useState } from "react";
@@ -58,11 +59,7 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
   }, [tournament.id, classement.length]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        Chargement en cours...
-      </div>
-    );
+    return <LoadingComponent />;
   }
 
   if (chips.length === 0) {

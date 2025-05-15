@@ -50,7 +50,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         title="Modifier tournoi"
         confirmLabel="Modifier le tournoi"
         onConfirm={handleCreateTournament}>
-        <TournamentFormBody />
+        <TournamentFormBody tournament={tournament} />
       </GenericModal>
     );
   }

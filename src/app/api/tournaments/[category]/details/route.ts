@@ -1,4 +1,3 @@
-// /api/tournaments/[category]/details/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
@@ -20,7 +19,12 @@ export async function GET(
   const normalizedCategory = categoryParam.toLowerCase();
   const mappedCategory = categoryMap[normalizedCategory];
 
+  console.log("Received category param:", categoryParam);
+  console.log("Normalized category:", normalizedCategory);
+  console.log("Mapped category:", mappedCategory);
+
   if (!mappedCategory) {
+    console.warn(`Invalid category received: ${categoryParam}`);
     return NextResponse.json(
       { error: `Invalid category '${categoryParam}'` },
       { status: 400 }
@@ -28,6 +32,8 @@ export async function GET(
   }
 
   try {
+    console.log("Launching transaction for category:", mappedCategory);
+
     const [tournaments, registrations, quarterRanking] =
       await prisma.$transaction([
         prisma.tournament.findMany({
@@ -62,10 +68,11 @@ export async function GET(
     return NextResponse.json(
       serializeBigInt({ tournaments, registrations, quarterRanking })
     );
-  } catch (error) {
-    console.error("Error fetching data by category:", error);
+  } catch (error: any) {
+    console.error("Error fetching data by category:", error.message);
+    console.error("Stack trace:", error.stack);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error.message },
       { status: 500 }
     );
   }

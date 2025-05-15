@@ -10,6 +10,7 @@ import { seatsColumns } from "@/app/components/table/presets/seats.config";
 import { SearchBarComponents } from "@/app/components/form/search_bar";
 import { GenericModal } from "@/app/components/popup";
 import { EliminatePlayerFormBody } from "./components/popup/eliminate_player_popup";
+import { LoadingComponent } from "@/app/error/loading/page";
 
 export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
   tournament
@@ -77,9 +78,7 @@ export const PlayerTabs: React.FC<{ tournament: Tournament }> = ({
   return (
     <div className="items-center">
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
-          Chargement en cours...
-        </div>
+        <LoadingComponent />
       ) : flatRows.length > 0 ? (
         <div className="flex flex-col gap-6 justify-center px-64">
           <SearchBarComponents

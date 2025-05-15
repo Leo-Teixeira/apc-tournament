@@ -19,18 +19,23 @@ import {
   ViewIcon
 } from "@hugeicons/core-free-icons";
 import { GenericModal } from "@/app/components/popup";
+import { TournamentFormBody } from "../_shared/tournament/tabs/components/popup/modif_tournament_popup";
+import { Tournament } from "@/app/types";
 
 export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
   const [tournamentToDelete, setTournamentToDelete] =
     useState<TournamentRow | null>(null);
+  const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
   const [tournamentRows, setTournamentRows] = useState<TournamentRow[]>([]);
   const [quarterRankingRows, setQuarterRankingRows] = useState<
     Record<TrimestryKey, StandingRow[]>
   >({ T1: [], T2: [], T3: [] });
   const [isLoading, setIsLoading] = useState(true);
+  const [itemSelected, setItemSelected] = useState<TournamentRow | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +52,7 @@ export default function APTHome() {
           quarterRanking,
           "APT"
         );
-
+        setTournaments(tournaments);
         setTournamentRows(rows);
         setQuarterRankingRows(quarterRankingRows);
       } catch (error) {
@@ -61,6 +66,7 @@ export default function APTHome() {
   }, []);
 
   const getConditionalActions = (item: TournamentRow) => {
+    setItemSelected(item);
     const actions: ActionDefinition<TournamentRow>[] = [
       {
         tooltip: "Voir",
@@ -75,7 +81,10 @@ export default function APTHome() {
         icon: (
           <HugeiconsIcon icon={PencilEdit02Icon} size={20} strokeWidth={1.5} />
         ),
-        onClick: () => {}
+        onClick: () => {
+          setIsDeleteModalOpen(false);
+          setIsModifyModalOpen(true);
+        }
       });
 
       actions.push({
@@ -83,7 +92,7 @@ export default function APTHome() {
         icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
         onClick: () => {
           setTournamentToDelete(item);
-          setIsModalOpen(true);
+          setIsDeleteModalOpen(true);
         },
         color: "danger"
       });
@@ -132,10 +141,11 @@ export default function APTHome() {
         </div>
       </div>
       <GenericModal
-        isOpen={isModalOpen}
+        isOpen={isDeleteModalOpen}
         onClose={() => {
-          setIsModalOpen(false);
+          setIsDeleteModalOpen(false);
           setTournamentToDelete(null);
+          setItemSelected(null);
         }}
         title="Supprimer le tournoi"
         confirmLabel="Supprimer"
@@ -157,8 +167,9 @@ export default function APTHome() {
               prev.filter((t) => t.id !== tournamentToDelete.id)
             );
 
-            setIsModalOpen(false);
+            setIsDeleteModalOpen(false);
             setTournamentToDelete(null);
+            setItemSelected(null);
           } catch (error) {
             console.error("Erreur suppression tournoi :", error);
             alert("Une erreur est survenue.");
@@ -169,7 +180,16 @@ export default function APTHome() {
           <b>{tournamentToDelete?.name}</b> ?
         </p>
       </GenericModal>
-      ;
+      <GenericModal
+        isOpen={isModifyModalOpen}
+        onClose={() => setIsModifyModalOpen(false)}
+        title="Modifier tournoi"
+        confirmLabel="Modifier le tournoi"
+        onConfirm={() => {}}>
+        <TournamentFormBody
+          tournament={tournaments.find((t) => t.id == Number(itemSelected?.id))}
+        />
+      </GenericModal>
     </div>
   );
 }

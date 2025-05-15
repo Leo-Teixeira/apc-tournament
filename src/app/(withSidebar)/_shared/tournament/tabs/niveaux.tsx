@@ -2,6 +2,7 @@ import { GenericModal } from "@/app/components/popup";
 import { GenericTable } from "@/app/components/table/generic_table";
 import { blindsColumns } from "@/app/components/table/presets/blinds.config";
 import { ActionDefinition, BlindRow } from "@/app/components/table/table.types";
+import { LoadingComponent } from "@/app/error/loading/page";
 import { mapTournamentLevelsToRow } from "@/app/lib/adapter/tournament_level.adapter";
 import { Tournament, TournamentLevel } from "@/app/types";
 import { useDisclosure } from "@heroui/react";
@@ -82,9 +83,7 @@ export const NiveauxTabs: React.FC<NiveauxProps> = ({ tournament }) => {
   return (
     <div className="items-center">
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
-          Chargement en cours...
-        </div>
+        <LoadingComponent />
       ) : levelsRow && levelsRow.length > 0 ? (
         <GenericTable<BlindRow>
           columns={blindsColumns}

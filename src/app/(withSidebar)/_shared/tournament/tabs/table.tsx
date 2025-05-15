@@ -1,6 +1,7 @@
 import { GenericTable } from "@/app/components/table/generic_table";
 import { seatsColumns } from "@/app/components/table/presets/seats.config";
 import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
+import { LoadingComponent } from "@/app/error/loading/page";
 import { mapAssignementsGroupedByTable } from "@/app/lib/adapter/tournament_table.adapter";
 import { Tournament } from "@/app/types";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
@@ -63,9 +64,7 @@ export const TableTabs: React.FC<TableProps> = ({ tournament }) => {
   return (
     <div>
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
-          Chargement en cours...
-        </div>
+        <LoadingComponent />
       ) : Object.keys(groupedRows).length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {Object.entries(groupedRows).map(([tableNumber, rows]) => (

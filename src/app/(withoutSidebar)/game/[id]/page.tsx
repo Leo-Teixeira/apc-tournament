@@ -2,6 +2,7 @@
 
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
+import { LoadingComponent } from "@/app/error/loading/page";
 import {
   Chip,
   Registration,
@@ -155,9 +156,7 @@ export default function Game() {
     !Array.isArray(chips)
   ) {
     return (
-      <div className="flex items-center justify-center h-screen w-screen bg-black text-white text-3xl font-satoshiBold">
-        Chargement en cours...
-      </div>
+      <LoadingComponent />
     );
   }
 

@@ -11,10 +11,12 @@ import {
   ViewIcon
 } from "@hugeicons/core-free-icons";
 import { ButtonComponents } from "./button";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const sidebarWidth = collapsed ? "w-16" : "w-72";
+  const pathname = usePathname();
 
   return (
     <div
@@ -53,8 +55,16 @@ export default function Sidebar() {
               href={href}
               className={`group flex items-center transition-colors rounded-lg ${
                 collapsed
-                  ? "justify-center p-3 hover:bg-primary_brand-700"
-                  : "p-4 gap-4 hover:bg-primary_brand-700"
+                  ? `justify-center p-3 ${
+                      pathname.startsWith(href)
+                        ? "bg-primary_brand-700"
+                        : "hover:bg-primary_brand-700"
+                    }`
+                  : `p-4 gap-4 ${
+                      pathname.startsWith(href)
+                        ? "bg-primary_brand-700"
+                        : "hover:bg-primary_brand-700"
+                    }`
               }`}>
               <HugeiconsIcon
                 icon={icon}

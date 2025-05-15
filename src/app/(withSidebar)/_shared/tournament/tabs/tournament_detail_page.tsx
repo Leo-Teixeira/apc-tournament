@@ -17,6 +17,7 @@ import { ChipTabs } from "./chip";
 import { GenericModal } from "@/app/components/popup";
 import { useDisclosure } from "@heroui/react";
 import { ModalManager } from "./components/popup_tabs_components";
+import { LoadingComponent } from "@/app/error/loading/page";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -93,9 +94,7 @@ export default function TournamentDetailPage() {
 
   if (isLoading || !tournament || !registration || !classement) {
     return (
-      <div className="flex justify-center items-center h-full">
-        Chargement en cours...
-      </div>
+      <LoadingComponent />
     );
   }
 

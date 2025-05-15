@@ -2,16 +2,30 @@ import { DatePickerComponents } from "@/app/components/form/date_picker";
 import { InputComponents } from "@/app/components/form/input";
 import { NumberInputComponents } from "@/app/components/form/number_input";
 import { TimeInputComponents } from "@/app/components/form/time_input";
+import { LoadingComponent } from "@/app/error/loading/page";
+import { Tournament } from "@/app/types";
 import { DateValue, NumberInput } from "@heroui/react";
 import { useState } from "react";
 
-export const TournamentFormBody = () => {
-  const [tournamentName, setTournamentName] = useState("");
+type TournamentProps = {
+  tournament?: Tournament;
+};
+
+export const TournamentFormBody: React.FC<TournamentProps> = ({
+  tournament
+}) => {
+  const [tournamentName, setTournamentName] = useState(
+    tournament?.tournament_name ?? ""
+  );
   const [date, setDate] = useState<DateValue | null>(null);
   const [openDate, setOpenDate] = useState<DateValue | null>(null);
-  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">("T1");
+  const [quarter, setQuarter] = useState<"T1" | "T2" | "T3">(
+    tournament?.tournament_trimestry ?? "T1"
+  );
   const [stackStart, setStackStart] = useState<number>(0);
   const [estimatedDuration, setEstimatedDuration] = useState<any>(null);
+
+  if (!tournament) return <LoadingComponent />;
 
   return (
     <div className="flex flex-col gap-6">

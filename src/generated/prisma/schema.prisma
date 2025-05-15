@@ -71,10 +71,11 @@ model tournament {
   tournament_name           String                          @db.VarChar(255)
   tournament_description    String                          @db.VarChar(255)
   tournament_start_date     DateTime                        @db.DateTime(0)
-  tournament_end_date       DateTime                        @db.DateTime(0)
+  tournament_open_date      DateTime                        @db.DateTime(0)
   tournament_trimestry      tournament_tournament_trimestry
   tournament_category       tournament_tournament_category
   tournament_status         tournament_tournament_status
+  estimate_duration         DateTime?                       @db.Time(0)
   quarter_ranking           quarter_ranking[]
   registration              registration[]
   tournament_chip_inventory tournament_chip_inventory[]
@@ -86,7 +87,7 @@ model tournament {
 model tournament_chip_inventory {
   tournament_id        BigInt     @db.UnsignedBigInt
   chip_id              BigInt     @db.UnsignedBigInt
-  chip_player_quantity Int
+  chip_player_quantity Int?
   tournament           tournament @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "tournament_chip_inventory_ibfk_1")
   chip                 chip       @relation(fields: [chip_id], references: [id], onDelete: Cascade, map: "tournament_chip_inventory_ibfk_2")
 
@@ -514,15 +515,17 @@ model wp_tec_occurrences {
   occurrence_id  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
   event_id       BigInt    @db.UnsignedBigInt
   post_id        BigInt    @db.UnsignedBigInt
-  start_date     String    @db.VarChar(19)
-  start_date_utc String    @db.VarChar(19)
-  end_date       String    @db.VarChar(19)
-  end_date_utc   String    @db.VarChar(19)
+  start_date     DateTime  @db.DateTime(0)
+  start_date_utc DateTime  @db.DateTime(0)
+  end_date       DateTime  @db.DateTime(0)
+  end_date_utc   DateTime  @db.DateTime(0)
   duration       Int?      @default(7200) @db.MediumInt
   hash           String    @unique(map: "hash") @db.VarChar(40)
   updated_at     DateTime? @default(now()) @db.Timestamp(0)
 
   @@index([event_id], map: "event_id")
+  @@index([post_id, end_date, start_date], map: "idx_wp_tec_occurrences_post_id_dates")
+  @@index([post_id, end_date_utc, start_date_utc], map: "idx_wp_tec_occurrences_post_id_dates_utc")
 }
 
 model wp_tec_order_modifier_relationships {
@@ -679,6 +682,312 @@ model wp_users {
   @@index([user_email], map: "user_email")
   @@index([user_login], map: "user_login_key")
   @@index([user_nicename], map: "user_nicename")
+}
+
+model wp_booking {
+  booking_id        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  booking_options   String?   @db.Text
+  trash             BigInt    @default(0)
+  is_trash          DateTime? @db.DateTime(0)
+  sync_gid          String    @default("") @db.VarChar(200)
+  is_new            BigInt    @default(1)
+  status            String    @default("") @db.VarChar(200)
+  sort_date         DateTime? @db.DateTime(0)
+  modification_date DateTime? @db.DateTime(0)
+  creation_date     DateTime  @default(now()) @db.Timestamp(0)
+  form              String?   @db.Text
+  hash              String?   @db.Text
+  booking_type      BigInt    @default(1)
+}
+
+model wp_booking_dates_props {
+  booking_dates_prop_id BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  resource_id           BigInt   @default(1)
+  calendar_date         DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
+  prop_name             String   @default("") @db.VarChar(200)
+  prop_value            String?  @db.Text
+}
+
+model wp_bookingdates {
+  booking_dates_id BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  booking_id       BigInt   @db.UnsignedBigInt
+  booking_date     DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
+  approved         BigInt   @default(0) @db.UnsignedBigInt
+
+  @@unique([booking_id, booking_date], map: "booking_id_dates")
+}
+
+model wp_em_bookings {
+  booking_id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  booking_uuid        String   @db.Char(32)
+  event_id            BigInt?  @db.UnsignedBigInt
+  person_id           BigInt   @db.UnsignedBigInt
+  booking_spaces      Int
+  booking_comment     String?  @db.Text
+  booking_date        DateTime @default(now()) @db.Timestamp(0)
+  booking_status      Int      @default(1)
+  booking_rsvp_status Int?
+  booking_price       Decimal  @default(0.0000) @db.Decimal(14, 4)
+  booking_tax_rate    Decimal? @db.Decimal(7, 4)
+  booking_taxes       Decimal? @db.Decimal(14, 4)
+  booking_meta        String?  @db.LongText
+
+  @@index([booking_rsvp_status], map: "booking_rsvp_status")
+  @@index([booking_status], map: "booking_status")
+  @@index([event_id], map: "event_id")
+  @@index([person_id], map: "person_id")
+}
+
+model wp_em_bookings_meta {
+  meta_id    BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  booking_id BigInt  @db.UnsignedBigInt
+  meta_key   String? @db.VarChar(255)
+  meta_value String? @db.LongText
+
+  @@index([booking_id], map: "booking_id")
+  @@index([meta_key], map: "meta_key")
+}
+
+model wp_em_events {
+  event_id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  post_id              BigInt    @db.UnsignedBigInt
+  event_parent         BigInt?   @db.UnsignedBigInt
+  event_slug           String?   @db.VarChar(200)
+  event_owner          BigInt?   @db.UnsignedBigInt
+  event_status         Boolean?
+  event_active_status  Int?      @default(1) @db.TinyInt
+  event_name           String?   @db.Text
+  event_start_date     DateTime? @db.Date
+  event_end_date       DateTime? @db.Date
+  event_start_time     DateTime? @db.Time(0)
+  event_end_time       DateTime? @db.Time(0)
+  event_all_day        Boolean?
+  event_start          DateTime? @db.DateTime(0)
+  event_end            DateTime? @db.DateTime(0)
+  event_timezone       String?   @db.TinyText
+  post_content         String?   @db.LongText
+  event_rsvp           Boolean   @default(false)
+  event_rsvp_date      DateTime? @db.Date
+  event_rsvp_time      DateTime? @db.Time(0)
+  event_rsvp_spaces    Int?
+  event_spaces         Int?      @default(0)
+  event_private        Boolean   @default(false)
+  location_id          BigInt?   @db.UnsignedBigInt
+  event_location_type  String?   @db.VarChar(15)
+  recurrence_id        BigInt?   @db.UnsignedBigInt
+  event_date_created   DateTime? @db.DateTime(0)
+  event_date_modified  DateTime? @db.DateTime(0)
+  recurrence           Boolean   @default(false)
+  recurrence_interval  Int?
+  recurrence_freq      String?   @db.TinyText
+  recurrence_byday     String?   @db.TinyText
+  recurrence_byweekno  Int?
+  recurrence_days      Int?
+  recurrence_rsvp_days Int?
+  blog_id              BigInt?   @db.UnsignedBigInt
+  group_id             BigInt?   @db.UnsignedBigInt
+  event_language       String?   @db.VarChar(14)
+  event_translation    Boolean   @default(false)
+
+  @@index([blog_id], map: "blog_id")
+  @@index([event_active_status], map: "event_active_status")
+  @@index([event_end], map: "event_end")
+  @@index([event_end_date], map: "event_end_date")
+  @@index([event_start], map: "event_start")
+  @@index([event_start_date], map: "event_start_date")
+  @@index([event_status], map: "event_status")
+  @@index([group_id], map: "group_id")
+  @@index([location_id], map: "location_id")
+  @@index([post_id], map: "post_id")
+}
+
+model wp_em_locations {
+  location_id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  post_id              BigInt   @db.UnsignedBigInt
+  blog_id              BigInt?  @db.UnsignedBigInt
+  location_parent      BigInt?  @db.UnsignedBigInt
+  location_slug        String?  @db.VarChar(200)
+  location_name        String?  @db.Text
+  location_owner       BigInt   @default(0) @db.UnsignedBigInt
+  location_address     String?  @db.VarChar(200)
+  location_town        String?  @db.VarChar(200)
+  location_state       String?  @db.VarChar(200)
+  location_postcode    String?  @db.VarChar(10)
+  location_region      String?  @db.VarChar(200)
+  location_country     String?  @db.Char(2)
+  location_latitude    Decimal? @db.Decimal(9, 6)
+  location_longitude   Decimal? @db.Decimal(9, 6)
+  post_content         String?  @db.LongText
+  location_status      Int?
+  location_private     Boolean  @default(false)
+  location_language    String?  @db.VarChar(14)
+  location_translation Boolean  @default(false)
+
+  @@index([blog_id], map: "blog_id")
+  @@index([location_country], map: "location_country")
+  @@index([location_region(length: 191)], map: "location_region")
+  @@index([location_state(length: 191)], map: "location_state")
+  @@index([post_id], map: "post_id")
+}
+
+model wp_em_meta {
+  meta_id    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  object_id  BigInt   @db.UnsignedBigInt
+  meta_key   String?  @db.VarChar(255)
+  meta_value String?  @db.LongText
+  meta_date  DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([meta_key], map: "meta_key")
+  @@index([object_id], map: "object_id")
+}
+
+model wp_em_tickets {
+  ticket_id            BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  event_id             BigInt    @db.UnsignedBigInt
+  ticket_name          String    @db.TinyText
+  ticket_description   String?   @db.Text
+  ticket_price         Decimal?  @db.Decimal(14, 4)
+  ticket_start         DateTime? @db.DateTime(0)
+  ticket_end           DateTime? @db.DateTime(0)
+  ticket_min           Int?
+  ticket_max           Int?
+  ticket_spaces        Int?
+  ticket_members       Int?
+  ticket_members_roles String?   @db.LongText
+  ticket_guests        Int?
+  ticket_required      Int?
+  ticket_parent        BigInt?   @db.UnsignedBigInt
+  ticket_order         Int?      @db.UnsignedInt
+  ticket_meta          String?   @db.LongText
+
+  @@index([event_id], map: "event_id")
+}
+
+model wp_em_tickets_bookings {
+  ticket_booking_id     BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  ticket_uuid           String  @db.Char(32)
+  booking_id            BigInt  @db.UnsignedBigInt
+  ticket_id             BigInt  @db.UnsignedBigInt
+  ticket_booking_spaces Int
+  ticket_booking_price  Decimal @db.Decimal(14, 4)
+  ticket_booking_order  Int?
+
+  @@index([booking_id], map: "booking_id")
+  @@index([ticket_id], map: "ticket_id")
+  @@index([ticket_uuid], map: "ticket_uuid")
+}
+
+model wp_em_tickets_bookings_meta {
+  meta_id           BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  ticket_booking_id BigInt  @db.UnsignedBigInt
+  meta_key          String? @db.VarChar(255)
+  meta_value        String? @db.LongText
+
+  @@index([meta_key], map: "meta_key")
+  @@index([ticket_booking_id], map: "ticket_booking_id")
+}
+
+model wp_my_calendar {
+  event_id           Int       @id @default(autoincrement())
+  event_begin        DateTime  @db.Date
+  event_end          DateTime  @db.Date
+  event_title        String    @db.VarChar(255)
+  event_desc         String    @db.Text
+  event_short        String    @db.Text
+  event_registration String    @db.Text
+  event_tickets      String    @db.VarChar(255)
+  event_time         DateTime? @db.Time(0)
+  event_endtime      DateTime? @db.Time(0)
+  event_recur        String?   @db.Char(3)
+  event_repeats      String?   @db.Text
+  event_status       Int       @default(1)
+  event_author       BigInt?   @db.UnsignedBigInt
+  event_host         BigInt?   @db.UnsignedBigInt
+  event_category     BigInt    @default(1) @db.UnsignedBigInt
+  event_link         String?   @db.Text
+  event_post         BigInt    @default(0) @db.UnsignedBigInt
+  event_link_expires Boolean
+  event_location     BigInt    @default(0) @db.UnsignedBigInt
+  event_label        String    @db.VarChar(255)
+  event_street       String    @db.VarChar(255)
+  event_street2      String    @db.VarChar(255)
+  event_city         String    @db.VarChar(255)
+  event_state        String    @db.VarChar(255)
+  event_postcode     String    @db.VarChar(10)
+  event_region       String    @db.VarChar(255)
+  event_country      String    @db.VarChar(255)
+  event_url          String?   @db.Text
+  event_longitude    Float     @default(0.000000) @db.Float
+  event_latitude     Float     @default(0.000000) @db.Float
+  event_zoom         Int       @default(14)
+  event_phone        String    @db.VarChar(32)
+  event_phone2       String    @db.VarChar(32)
+  event_access       String?   @db.Text
+  event_group_id     Int       @default(0)
+  event_span         Int       @default(0)
+  event_approved     Int       @default(1)
+  event_flagged      Int       @default(0)
+  event_hide_end     Int       @default(0)
+  event_holiday      Int       @default(0)
+  event_fifth_week   Int       @default(1)
+  event_image        String?   @db.Text
+  event_added        DateTime  @default(now()) @db.Timestamp(0)
+
+  @@index([event_category], map: "event_category")
+}
+
+model wp_my_calendar_categories {
+  category_id      Int    @id @default(autoincrement())
+  category_name    String @db.VarChar(255)
+  category_color   String @db.VarChar(7)
+  category_icon    String @db.VarChar(128)
+  category_private Int    @default(0)
+  category_term    Int    @default(0)
+}
+
+model wp_my_calendar_category_relationships {
+  relationship_id Int @id @default(autoincrement())
+  event_id        Int
+  category_id     Int @default(1)
+
+  @@index([event_id], map: "event_id")
+}
+
+model wp_my_calendar_events {
+  occur_id       Int      @id @default(autoincrement())
+  occur_event_id Int
+  occur_begin    DateTime @db.DateTime(0)
+  occur_end      DateTime @db.DateTime(0)
+  occur_group_id Int      @default(0)
+
+  @@index([occur_event_id], map: "occur_event_id")
+}
+
+model wp_my_calendar_location_relationships {
+  relationship_id Int @id @default(autoincrement())
+  location_id     Int
+  post_id         Int @default(1)
+
+  @@index([location_id], map: "location_id")
+}
+
+model wp_my_calendar_locations {
+  location_id        Int     @id @default(autoincrement())
+  location_label     String  @db.VarChar(255)
+  location_street    String  @db.VarChar(255)
+  location_street2   String  @db.VarChar(255)
+  location_city      String  @db.VarChar(255)
+  location_state     String  @db.VarChar(255)
+  location_postcode  String  @db.VarChar(10)
+  location_region    String  @db.VarChar(255)
+  location_url       String? @db.Text
+  location_country   String  @db.VarChar(255)
+  location_longitude Float   @default(0.000000) @db.Float
+  location_latitude  Float   @default(0.000000) @db.Float
+  location_zoom      Int     @default(14)
+  location_phone     String  @db.VarChar(32)
+  location_phone2    String  @db.VarChar(32)
+  location_access    String? @db.Text
 }
 
 enum tournament_tournament_category {
