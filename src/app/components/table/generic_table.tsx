@@ -85,6 +85,7 @@ export function GenericTable<
 
   return (
     <Table
+      className="!text-l"
       aria-label={ariaLabel}
       fullWidth={width}
       sortDescriptor={enableSorting ? sortDescriptor : undefined}
@@ -94,7 +95,7 @@ export function GenericTable<
           <TableColumn
             key={String(column.uid)}
             align={column.align || "start"}
-            className="text-l font-satoshiRegular text-neutral-300"
+            className="!text-s !font-satoshiLight text-neutral-300"
             allowsSorting={enableSorting && column.uid !== "action"}>
             {column.name.toUpperCase()}
           </TableColumn>
@@ -113,11 +114,11 @@ export function GenericTable<
                 window.open(getDetailUrl(item.id), "_self");
               }
             }}
-            className={`$ {
+            className={`${
               enableRowClick && getDetailUrl
                 ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                 : "rounded-full"
-            }`}>
+            } !text-l !font-satoshiRegular`}>
             {(columnKey) => {
               if (columnKey === "action") {
                 return (
@@ -143,8 +144,11 @@ export function GenericTable<
                             }
                             className="px-3xs">
                             <span
-                              onClick={() => action.onClick(item)}
-                              className={`text-lg px-3xs rounded-xl cursor-pointer active:opacity-50 ${
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                action.onClick(item);
+                              }}
+                              className={`text-l px-3xs rounded-xl cursor-pointer active:opacity-50 ${
                                 action.color === "danger"
                                   ? "text-danger-500"
                                   : "text-white"
@@ -167,10 +171,10 @@ export function GenericTable<
                 return (
                   <TableCell>
                     <Chip
-                      className={`capitalize py-0 px-1 items-center justify-center text-white font-satoshi text-l font-normal ${
+                      className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
                         value === "finish"
                           ? "bg-red-950"
-                          : value === "in_coming"
+                          : value === "start"
                           ? "bg-purple-950"
                           : "bg-green-950"
                       }`}
@@ -185,6 +189,7 @@ export function GenericTable<
                   </TableCell>
                 );
               }
+
               if (columnKey === "avatarName") {
                 return (
                   <TableCell>
@@ -196,15 +201,16 @@ export function GenericTable<
                         alt={(item as any).avatarName}
                         className="w-8 h-8 rounded-full"
                       />
-                      <span className="font-satoshiRegular text-l text-white">
+                      <span className="!font-satoshiRegular !text-l text-white">
                         {(item as any).avatarName}
                       </span>
                     </div>
                   </TableCell>
                 );
               }
+
               return (
-                <TableCell className="font-satoshiLight text-l leading-7">
+                <TableCell className="!font-satoshiLight !text-l leading-7">
                   {content as React.ReactNode}
                 </TableCell>
               );

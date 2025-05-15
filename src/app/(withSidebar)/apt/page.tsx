@@ -18,9 +18,14 @@ import {
   PencilEdit02Icon,
   ViewIcon
 } from "@hugeicons/core-free-icons";
+import { GenericModal } from "@/app/components/popup";
 
 export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tournamentToDelete, setTournamentToDelete] =
+    useState<TournamentRow | null>(null);
+
   const [tournamentRows, setTournamentRows] = useState<TournamentRow[]>([]);
   const [quarterRankingRows, setQuarterRankingRows] = useState<
     Record<TrimestryKey, StandingRow[]>
@@ -76,7 +81,10 @@ export default function APTHome() {
       actions.push({
         tooltip: "Supprimer",
         icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
-        onClick: () => {},
+        onClick: () => {
+          setTournamentToDelete(item);
+          setIsModalOpen(true);
+        },
         color: "danger"
       });
     }
@@ -87,9 +95,8 @@ export default function APTHome() {
   return (
     <div className="flex flex-col gap-6 w-full">
       <h1 className="font-satoshiBold text-4xl">Championnat APT</h1>
-
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshiBold text-xl3p2 leading-10">Tournois</h2>
+        <h2 className="font-satoshiMedium text-xl3p2 leading-10">Tournois</h2>
         <GenericTable<TournamentRow>
           items={tournamentRows}
           columns={tournamentColumns}
@@ -100,14 +107,13 @@ export default function APTHome() {
           getDetailUrl={(id) => `/apt/${id}`}
         />
       </div>
-
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshiBold text-xl3p2 leading-10">Classement</h2>
+        <h2 className="font-satoshiMedium text-xl3p2 leading-10">Classement</h2>
         <div className="flex flex-row gap-6">
           {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
             (trimestry) => (
               <div key={trimestry} className="flex-1 flex flex-col gap-2">
-                <h2 className="font-satoshibold text-xl2p9 leading-10">
+                <h2 className="font-satoshiRegular text-xl2p9 leading-10">
                   {trimestry == "T1"
                     ? STRINGS.apt.trimestry.T1
                     : trimestry == "T2"
@@ -125,6 +131,45 @@ export default function APTHome() {
           )}
         </div>
       </div>
+      <GenericModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setTournamentToDelete(null);
+        }}
+        title="Supprimer le tournoi"
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          if (!tournamentToDelete) return;
+
+          try {
+            const res = await fetch(
+              `/api/tournament/${tournamentToDelete.id}`,
+              {
+                method: "DELETE"
+              }
+            );
+
+            if (!res.ok) throw new Error("Erreur serveur");
+
+            setTournamentRows((prev) =>
+              prev.filter((t) => t.id !== tournamentToDelete.id)
+            );
+
+            setIsModalOpen(false);
+            setTournamentToDelete(null);
+          } catch (error) {
+            console.error("Erreur suppression tournoi :", error);
+            alert("Une erreur est survenue.");
+          }
+        }}>
+        <p>
+          Es-tu sûr de vouloir supprimer le tournoi{" "}
+          <b>{tournamentToDelete?.name}</b> ?
+        </p>
+      </GenericModal>
+      ;
     </div>
   );
 }

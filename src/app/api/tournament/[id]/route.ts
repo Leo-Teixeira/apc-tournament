@@ -66,3 +66,44 @@ export async function GET(
     );
   }
 }
+
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const data = await req.json();
+
+    const updated = await prisma.tournament.update({
+      where: { id: BigInt(params.id) },
+      data: {
+        tournament_name: data.tournament_name,
+        tournament_description: data.tournament_description,
+        tournament_start_date: new Date(data.tournament_start_date),
+        tournament_end_date: new Date(data.tournament_end_date),
+        tournament_trimestry: data.tournament_trimestry,
+        tournament_category: data.tournament_category,
+        tournament_status: data.tournament_status
+      }
+    });
+
+    return NextResponse.json(serializeBigInt(updated));
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await prisma.tournament.delete({
+      where: { id: BigInt(params.id) }
+    });
+
+    return NextResponse.json({ message: "Deleted" });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+  }
+}
