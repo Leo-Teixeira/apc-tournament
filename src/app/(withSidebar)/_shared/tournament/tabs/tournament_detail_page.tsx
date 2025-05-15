@@ -4,7 +4,7 @@ import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Registration, Tournament, TournamentRanking } from "@/app/types";
 import { STRINGS } from "@/app/constants/string";
 import { useParams } from "next/navigation";
@@ -14,14 +14,12 @@ import { ButtonTabsComponents } from "./components/button_tabs_components";
 import { PlayerTabs } from "./player";
 import { TableTabs } from "./table";
 import { ChipTabs } from "./chip";
-import { GenericModal } from "@/app/components/popup";
 import { useDisclosure } from "@heroui/react";
 import { ModalManager } from "./components/popup_tabs_components";
 import { LoadingComponent } from "@/app/error/loading/page";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
-
   const [tournament, setTournament] = useState<Tournament>();
   const [classement, setClassement] = useState<TournamentRanking[]>([]);
   const [registration, setRegistration] = useState<Registration[]>([]);
@@ -30,24 +28,23 @@ export default function TournamentDetailPage() {
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/tournament/${id}/details`);
-        const data = await res.json();
-
-        setTournament(data.tournament);
-        setRegistration(data.registrations);
-        setClassement(data.classement);
-      } catch (error) {
-        console.error("Erreur lors du chargement des données :", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+  const loadTournamentData = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/tournament/${id}/details`);
+      const data = await res.json();
+      setTournament(data.tournament);
+      setRegistration(data.registrations);
+      setClassement(data.classement);
+    } catch (error) {
+      console.error("Erreur lors du chargement des données :", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [id]);
+
+  useEffect(() => {
+    loadTournamentData();
+  }, [loadTournamentData]);
 
   useEffect(() => {
     if (tournament?.tournament_status === "finish") {
@@ -93,9 +90,7 @@ export default function TournamentDetailPage() {
   }, [tournament, registration, classement]);
 
   if (isLoading || !tournament || !registration || !classement) {
-    return (
-      <LoadingComponent />
-    );
+    return <LoadingComponent />;
   }
 
   return (
@@ -113,11 +108,7 @@ export default function TournamentDetailPage() {
                 ? "bg-purple-950"
                 : "bg-green-950"
             }`}>
-            {tournament.tournament_status === "finish"
-              ? STRINGS.status.finish
-              : tournament.tournament_status === "in_coming"
-              ? STRINGS.status.in_coming
-              : STRINGS.status.start}
+            {STRINGS.status[tournament.tournament_status]}
           </Chip>
         </div>
 
@@ -130,9 +121,7 @@ export default function TournamentDetailPage() {
           />
           <ButtonComponents
             text="Voir l'affichage"
-            onClick={() => {
-              window.open(`/game/${id}`, "_self");
-            }}
+            onClick={() => window.open(`/game/${id}`, "_self")}
             buttonClassName="bg-primary_background hover:bg-primary_hover_background"
             textClassName="text-primary_brand-50"
             icon={
@@ -179,7 +168,10 @@ export default function TournamentDetailPage() {
       <ModalManager
         selectedTab={selectedTab}
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={async () => {
+          await loadTournamentData();
+          onClose();
+        }}
         tournament={tournament}
         classement={classement}
       />

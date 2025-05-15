@@ -49,7 +49,7 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
         tournament_start_date: new Date(dateStr),
         tournament_open_date: new Date(openStr),
         tournament_trimestry: tournament.tournament_trimestry,
-        estimate_duration: new Date(`1970-01-01T${durationStr}:00`)
+        estimate_duration: new Date(`1970-01-01T${durationStr}:00Z`)
       });
     }
   }, [tournament]);

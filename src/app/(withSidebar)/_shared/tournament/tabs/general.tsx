@@ -6,12 +6,7 @@ import { ButtonComponents } from "@/app/components/button";
 import { BackgroundComponent } from "./components/background_components";
 import { Registration, Tournament, TournamentRanking } from "@/app/types";
 import { ClassementComponent } from "./components/classement_components";
-import {
-  formatDate,
-  formatDuration,
-  formatHour,
-  parseDateTimeLocal
-} from "@/app/utils/date";
+import { formatDate, formatHour, parseDateTimeLocal } from "@/app/utils/date";
 
 type GeneralProps = {
   tournament: Tournament;
@@ -25,15 +20,15 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
   classement
 }) => {
   const startDate = new Date(tournament.tournament_start_date);
-  const endDate = new Date(tournament.tournament_end_date);
+  const openDate = new Date(tournament.tournament_open_date);
 
   const startDateString = formatDate(startDate);
   const startTimeString = formatHour(startDate);
 
-  const endDateString = formatDate(endDate);
-  const endTimeString = formatHour(endDate);
+  const openDateString = formatDate(openDate);
+  const openTimeString = formatHour(openDate);
 
-  const durationFormatted = formatDuration(startDate, endDate);
+  const durationFormatted = formatHour(tournament.estimate_duration);
 
   return (
     <div className="flex flex-row gap-6">
@@ -93,7 +88,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
                     Date
                   </p>
                   <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {endDateString}
+                    {openDateString}
                   </p>
                 </div>
                 <Divider orientation="vertical" />
@@ -102,7 +97,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
                     Heure
                   </p>
                   <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {endTimeString}
+                    {openTimeString}
                   </p>
                 </div>
               </div>
