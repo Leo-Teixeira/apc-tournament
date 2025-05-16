@@ -13668,6 +13668,7 @@ export namespace Prisma {
     level_number: number | null
     level_small_blinde: number | null
     level_big_blinde: number | null
+    level_ante: number | null
   }
 
   export type Tournament_levelSumAggregateOutputType = {
@@ -13676,6 +13677,7 @@ export namespace Prisma {
     level_number: number | null
     level_small_blinde: number | null
     level_big_blinde: number | null
+    level_ante: number | null
   }
 
   export type Tournament_levelMinAggregateOutputType = {
@@ -13688,6 +13690,7 @@ export namespace Prisma {
     level_big_blinde: number | null
     level_pause: boolean | null
     level_chip_race: boolean | null
+    level_ante: number | null
   }
 
   export type Tournament_levelMaxAggregateOutputType = {
@@ -13700,6 +13703,7 @@ export namespace Prisma {
     level_big_blinde: number | null
     level_pause: boolean | null
     level_chip_race: boolean | null
+    level_ante: number | null
   }
 
   export type Tournament_levelCountAggregateOutputType = {
@@ -13712,6 +13716,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: number
     level_chip_race: number
+    level_ante: number
     _all: number
   }
 
@@ -13722,6 +13727,7 @@ export namespace Prisma {
     level_number?: true
     level_small_blinde?: true
     level_big_blinde?: true
+    level_ante?: true
   }
 
   export type Tournament_levelSumAggregateInputType = {
@@ -13730,6 +13736,7 @@ export namespace Prisma {
     level_number?: true
     level_small_blinde?: true
     level_big_blinde?: true
+    level_ante?: true
   }
 
   export type Tournament_levelMinAggregateInputType = {
@@ -13742,6 +13749,7 @@ export namespace Prisma {
     level_big_blinde?: true
     level_pause?: true
     level_chip_race?: true
+    level_ante?: true
   }
 
   export type Tournament_levelMaxAggregateInputType = {
@@ -13754,6 +13762,7 @@ export namespace Prisma {
     level_big_blinde?: true
     level_pause?: true
     level_chip_race?: true
+    level_ante?: true
   }
 
   export type Tournament_levelCountAggregateInputType = {
@@ -13766,6 +13775,7 @@ export namespace Prisma {
     level_big_blinde?: true
     level_pause?: true
     level_chip_race?: true
+    level_ante?: true
     _all?: true
   }
 
@@ -13865,6 +13875,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante: number | null
     _count: Tournament_levelCountAggregateOutputType | null
     _avg: Tournament_levelAvgAggregateOutputType | null
     _sum: Tournament_levelSumAggregateOutputType | null
@@ -13896,6 +13907,7 @@ export namespace Prisma {
     level_big_blinde?: boolean
     level_pause?: boolean
     level_chip_race?: boolean
+    level_ante?: boolean
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tournament_level"]>
 
@@ -13911,9 +13923,10 @@ export namespace Prisma {
     level_big_blinde?: boolean
     level_pause?: boolean
     level_chip_race?: boolean
+    level_ante?: boolean
   }
 
-  export type tournament_levelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_id" | "level_number" | "level_start" | "level_end" | "level_small_blinde" | "level_big_blinde" | "level_pause" | "level_chip_race", ExtArgs["result"]["tournament_level"]>
+  export type tournament_levelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_id" | "level_number" | "level_start" | "level_end" | "level_small_blinde" | "level_big_blinde" | "level_pause" | "level_chip_race" | "level_ante", ExtArgs["result"]["tournament_level"]>
   export type tournament_levelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
   }
@@ -13933,6 +13946,7 @@ export namespace Prisma {
       level_big_blinde: number
       level_pause: boolean
       level_chip_race: boolean
+      level_ante: number | null
     }, ExtArgs["result"]["tournament_level"]>
     composites: {}
   }
@@ -14312,6 +14326,7 @@ export namespace Prisma {
     readonly level_big_blinde: FieldRef<"tournament_level", 'Int'>
     readonly level_pause: FieldRef<"tournament_level", 'Boolean'>
     readonly level_chip_race: FieldRef<"tournament_level", 'Boolean'>
+    readonly level_ante: FieldRef<"tournament_level", 'Int'>
   }
     
 
@@ -71789,7 +71804,8 @@ export namespace Prisma {
     level_small_blinde: 'level_small_blinde',
     level_big_blinde: 'level_big_blinde',
     level_pause: 'level_pause',
-    level_chip_race: 'level_chip_race'
+    level_chip_race: 'level_chip_race',
+    level_ante: 'level_ante'
   };
 
   export type Tournament_levelScalarFieldEnum = (typeof Tournament_levelScalarFieldEnum)[keyof typeof Tournament_levelScalarFieldEnum]
@@ -73782,6 +73798,7 @@ export namespace Prisma {
     level_big_blinde?: IntFilter<"tournament_level"> | number
     level_pause?: BoolFilter<"tournament_level"> | boolean
     level_chip_race?: BoolFilter<"tournament_level"> | boolean
+    level_ante?: IntNullableFilter<"tournament_level"> | number | null
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }
 
@@ -73795,6 +73812,7 @@ export namespace Prisma {
     level_big_blinde?: SortOrder
     level_pause?: SortOrder
     level_chip_race?: SortOrder
+    level_ante?: SortOrderInput | SortOrder
     tournament?: tournamentOrderByWithRelationInput
   }
 
@@ -73811,6 +73829,7 @@ export namespace Prisma {
     level_big_blinde?: IntFilter<"tournament_level"> | number
     level_pause?: BoolFilter<"tournament_level"> | boolean
     level_chip_race?: BoolFilter<"tournament_level"> | boolean
+    level_ante?: IntNullableFilter<"tournament_level"> | number | null
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }, "id">
 
@@ -73824,6 +73843,7 @@ export namespace Prisma {
     level_big_blinde?: SortOrder
     level_pause?: SortOrder
     level_chip_race?: SortOrder
+    level_ante?: SortOrderInput | SortOrder
     _count?: tournament_levelCountOrderByAggregateInput
     _avg?: tournament_levelAvgOrderByAggregateInput
     _max?: tournament_levelMaxOrderByAggregateInput
@@ -73844,6 +73864,7 @@ export namespace Prisma {
     level_big_blinde?: IntWithAggregatesFilter<"tournament_level"> | number
     level_pause?: BoolWithAggregatesFilter<"tournament_level"> | boolean
     level_chip_race?: BoolWithAggregatesFilter<"tournament_level"> | boolean
+    level_ante?: IntNullableWithAggregatesFilter<"tournament_level"> | number | null
   }
 
   export type tournament_rankingWhereInput = {
@@ -78744,6 +78765,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
     tournament: tournamentCreateNestedOneWithoutTournament_levelInput
   }
 
@@ -78757,6 +78779,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
   }
 
   export type tournament_levelUpdateInput = {
@@ -78768,6 +78791,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
     tournament?: tournamentUpdateOneRequiredWithoutTournament_levelNestedInput
   }
 
@@ -78781,6 +78805,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_levelCreateManyInput = {
@@ -78793,6 +78818,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
   }
 
   export type tournament_levelUpdateManyMutationInput = {
@@ -78804,6 +78830,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_levelUncheckedUpdateManyInput = {
@@ -78816,6 +78843,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_rankingCreateInput = {
@@ -84401,6 +84429,22 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type tournament_levelCountOrderByAggregateInput = {
     id?: SortOrder
     tournament_id?: SortOrder
@@ -84411,6 +84455,7 @@ export namespace Prisma {
     level_big_blinde?: SortOrder
     level_pause?: SortOrder
     level_chip_race?: SortOrder
+    level_ante?: SortOrder
   }
 
   export type tournament_levelAvgOrderByAggregateInput = {
@@ -84419,6 +84464,7 @@ export namespace Prisma {
     level_number?: SortOrder
     level_small_blinde?: SortOrder
     level_big_blinde?: SortOrder
+    level_ante?: SortOrder
   }
 
   export type tournament_levelMaxOrderByAggregateInput = {
@@ -84431,6 +84477,7 @@ export namespace Prisma {
     level_big_blinde?: SortOrder
     level_pause?: SortOrder
     level_chip_race?: SortOrder
+    level_ante?: SortOrder
   }
 
   export type tournament_levelMinOrderByAggregateInput = {
@@ -84443,6 +84490,7 @@ export namespace Prisma {
     level_big_blinde?: SortOrder
     level_pause?: SortOrder
     level_chip_race?: SortOrder
+    level_ante?: SortOrder
   }
 
   export type tournament_levelSumOrderByAggregateInput = {
@@ -84451,6 +84499,7 @@ export namespace Prisma {
     level_number?: SortOrder
     level_small_blinde?: SortOrder
     level_big_blinde?: SortOrder
+    level_ante?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -84459,6 +84508,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type tournament_rankingCountOrderByAggregateInput = {
@@ -84560,11 +84625,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type wp_actionscheduler_actionsOrderByRelevanceInput = {
@@ -84877,17 +84937,6 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type wp_em_price_optionsOrderByRelevanceInput = {
     fields: wp_em_price_optionsOrderByRelevanceFieldEnum | wp_em_price_optionsOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -85037,22 +85086,6 @@ export namespace Prisma {
     show_remaining_tickets?: SortOrder
     show_ticket_booking_dates?: SortOrder
     ticket_template_id?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type wp_eventprime_checkout_fieldsOrderByRelevanceInput = {
@@ -88602,6 +88635,14 @@ export namespace Prisma {
     set?: boolean
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type tournamentUpdateOneRequiredWithoutTournament_levelNestedInput = {
     create?: XOR<tournamentCreateWithoutTournament_levelInput, tournamentUncheckedCreateWithoutTournament_levelInput>
     connectOrCreate?: tournamentCreateOrConnectWithoutTournament_levelInput
@@ -88700,14 +88741,6 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type wp_mec_bookingsCreateNestedOneWithoutWp_mec_booking_attendeesInput = {
@@ -89103,12 +89136,50 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -89151,17 +89222,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -89178,33 +89238,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -90073,6 +90106,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
   }
 
   export type tournament_levelUncheckedCreateWithoutTournamentInput = {
@@ -90084,6 +90118,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
   }
 
   export type tournament_levelCreateOrConnectWithoutTournamentInput = {
@@ -90244,6 +90279,7 @@ export namespace Prisma {
     level_big_blinde?: IntFilter<"tournament_level"> | number
     level_pause?: BoolFilter<"tournament_level"> | boolean
     level_chip_race?: BoolFilter<"tournament_level"> | boolean
+    level_ante?: IntNullableFilter<"tournament_level"> | number | null
   }
 
   export type tournament_rankingUpsertWithWhereUniqueWithoutTournamentInput = {
@@ -91089,6 +91125,7 @@ export namespace Prisma {
     level_big_blinde: number
     level_pause: boolean
     level_chip_race: boolean
+    level_ante?: number | null
   }
 
   export type tournament_rankingCreateManyTournamentInput = {
@@ -91177,6 +91214,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_levelUncheckedUpdateWithoutTournamentInput = {
@@ -91188,6 +91226,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_levelUncheckedUpdateManyWithoutTournamentInput = {
@@ -91199,6 +91238,7 @@ export namespace Prisma {
     level_big_blinde?: IntFieldUpdateOperationsInput | number
     level_pause?: BoolFieldUpdateOperationsInput | boolean
     level_chip_race?: BoolFieldUpdateOperationsInput | boolean
+    level_ante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type tournament_rankingUpdateWithoutTournamentInput = {

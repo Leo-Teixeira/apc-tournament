@@ -19,7 +19,7 @@ export const mapTournamentLevelsToRow = (
 
       return {
         id: level.id,
-        level: level.level_number,
+        level: level.level_pause ? "Pause" : level.level_number,
         small: level.level_pause ? "" : level.level_small_blinde.toString(),
         big: level.level_pause ? "" : level.level_big_blinde.toString(),
         ante: "-",

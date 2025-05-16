@@ -32,7 +32,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
 
   return (
     <div className="flex flex-row gap-6">
-      <div className="flex flex-col gap-5 w-3/4">
+      <div className="flex flex-col gap-5 w-2/3">
         <div className="flex flex-row gap-6">
           <Card className="rounded-xl bg-background_card w-3/4" fullWidth>
             <div className="flex flex-col gap-3">
@@ -40,75 +40,78 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
                 Début du tournoi
               </p>
               <Divider />
-              <div className="flex flex-row justify-between">
-                <div className="flex flex-col px-5 py-3 justify-center items-start gap-2">
-                  <p className="text-primary_brand-50 font-satoshiBold text-l">
-                    Date
-                  </p>
-                  <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {startDateString}
-                  </p>
+              <div className="flex flex-row  justify-between">
+                <div className="flex flex-col px-5 py-3 gap-2 w-full">
+                  <div className="flex flex-col justify-between w-full">
+                    <p className="text-primary_brand-50 font-satoshiBold text-l">
+                      Date
+                    </p>
+                    <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                      {startDateString}
+                    </p>
+                  </div>
                 </div>
                 <Divider orientation="vertical" />
-                <div className="flex flex-col px-5 py-3 justify-center items-start gap-2">
-                  <p className="text-primary_brand-50 font-satoshiBold text-l">
-                    Heure
-                  </p>
-                  <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {startTimeString}
-                  </p>
+                <div className="flex flex-col px-5 py-3 gap-2 w-full">
+                  <div className="flex flex-col justify-between w-full">
+                    <p className="text-primary_brand-50 font-satoshiBold text-l">
+                      Heure
+                    </p>
+                    <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                      {startTimeString}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </Card>
-          <Card className=" rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
-            <div className="flex flex-col justify-between items-start p-5 self-stretch">
-              <p className="text-primary_brand-50 font-satoshiBold text-l">
-                Durée estimée
-              </p>
-              <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                {durationFormatted}
-              </p>
-            </div>
+          <Card className=" rounded-xl flex flex-col justify-between bg-background_card p-5 w-1/4">
+            <p className="text-primary_brand-50 font-satoshiBold text-l">
+              Durée estimée
+            </p>
+            <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+              {durationFormatted}
+            </p>
           </Card>
         </div>
 
         <div className="flex flex-row gap-6">
-          <Card
-            className=" rounded-xl px-5 py-3 bg-background_card w-3/4"
-            fullWidth>
+          <Card className="rounded-xl bg-background_card w-3/4" fullWidth>
             <div className="flex flex-col gap-3">
-              <p className="text-primary_brand-50 font-satoshiBold text-l">
+              <p className="text-primary_brand-50 font-satoshiBold text-l px-5 py-3">
                 Ouverture des inscriptions
               </p>
               <Divider />
-              <div className="flex flex-row justify-between">
-                <div className="flex flex-col px-5 py-3 justify-center items-start gap-2">
-                  <p className="text-primary_brand-50 font-satoshiBold text-l">
-                    Date
-                  </p>
-                  <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {openDateString}
-                  </p>
+              <div className="flex flex-row  justify-between">
+                <div className="flex flex-col px-5 py-3 gap-2 w-full">
+                  <div className="flex flex-col justify-between w-full">
+                    <p className="text-primary_brand-50 font-satoshiBold text-l">
+                      Date
+                    </p>
+                    <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                      {openDateString}
+                    </p>
+                  </div>
                 </div>
                 <Divider orientation="vertical" />
-                <div className="flex flex-col px-5 py-3 justify-center items-start gap-2">
-                  <p className="text-primary_brand-50 font-satoshiBold text-l">
-                    Heure
-                  </p>
-                  <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                    {openTimeString}
-                  </p>
+                <div className="flex flex-col px-5 py-3 gap-2 w-full">
+                  <div className="flex flex-col justify-between w-full">
+                    <p className="text-primary_brand-50 font-satoshiBold text-l">
+                      Heure
+                    </p>
+                    <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+                      {openTimeString}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </Card>
-
-          <Card className=" rounded-xl px-5 py-3 bg-background_card p-5 w-1/4">
-            <div className="flex flex-col justify-between items-start p-5 self-stretch">
-              <p className="text-primary_brand-50 font-satoshiBold text-l">
-                Participants
-              </p>
+          <Card className="flex flex-col justify-between rounded-xl p-5 bg-background_card w-1/4">
+            <p className="text-primary_brand-50 font-satoshiBold text-l">
+              Participants
+            </p>
+            <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
               {registrations.length > 0 ? (
                 <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
                   {registrations.filter((r) => r.statut == "Confirmed").length}/
@@ -119,7 +122,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
                   0
                 </p>
               )}
-            </div>
+            </p>
           </Card>
         </div>
 
@@ -129,7 +132,7 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
         />
       </div>
 
-      <div className="w-1/4">
+      <div className="w-1/3">
         <ClassementComponent
           tournament_status={tournament.tournament_status}
           classement={classement}

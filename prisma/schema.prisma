@@ -105,6 +105,7 @@ model tournament_level {
   level_big_blinde   Int
   level_pause        Boolean
   level_chip_race    Boolean
+  level_ante         Int?
   tournament         tournament @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "tournament_level_ibfk_1")
 
   @@index([tournament_id], map: "tournament_id")

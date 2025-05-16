@@ -50,3 +50,31 @@ export async function GET(
     );
   }
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const data = await req.json();
+
+    const newLevel = await prisma.tournament_level.create({
+      data: {
+        tournament_id: BigInt(data.tournament_id),
+        level_number: data.level_number,
+        level_start: data.level_start,
+        level_end: data.level_end,
+        level_small_blinde: data.level_small_blinde,
+        level_big_blinde: data.level_big_blinde,
+        level_pause: data.level_pause,
+        level_chip_race: data.level_chip_race,
+        level_ante: data.level_ante
+      }
+    });
+
+    return NextResponse.json(serializeBigInt(newLevel));
+  } catch (error) {
+    console.error("Error creating level:", error);
+    return NextResponse.json(
+      { error: "Failed to create level" },
+      { status: 500 }
+    );
+  }
+}

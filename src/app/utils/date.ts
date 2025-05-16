@@ -19,3 +19,7 @@ export const formatHour = (value: string | Date) => {
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };
+
+export function getDurationInMinutes(start: Date, end: Date): number {
+  return Math.floor((end.getTime() - start.getTime()) / 60000);
+}

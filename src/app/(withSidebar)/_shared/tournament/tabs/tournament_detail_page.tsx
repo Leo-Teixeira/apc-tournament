@@ -4,8 +4,7 @@ import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Registration, Tournament, TournamentRanking } from "@/app/types";
+import { useEffect, useMemo, useState } from "react";
 import { STRINGS } from "@/app/constants/string";
 import { useParams } from "next/navigation";
 import { ButtonComponents } from "@/app/components/button";
@@ -17,33 +16,19 @@ import { ChipTabs } from "./chip";
 import { useDisclosure } from "@heroui/react";
 import { ModalManager } from "./components/popup_tabs_components";
 import { LoadingComponent } from "@/app/error/loading/page";
+import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
-  const [tournament, setTournament] = useState<Tournament>();
-  const [classement, setClassement] = useState<TournamentRanking[]>([]);
-  const [registration, setRegistration] = useState<Registration[]>([]);
+  const { tournament, levels, registration, classement, loadTournamentData } =
+    useTournamentContext();
   const [isLoading, setIsLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  const loadTournamentData = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/tournament/${id}/details`);
-      const data = await res.json();
-      setTournament(data.tournament);
-      setRegistration(data.registrations);
-      setClassement(data.classement);
-    } catch (error) {
-      console.error("Erreur lors du chargement des données :", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
-
   useEffect(() => {
-    loadTournamentData();
+    loadTournamentData().finally(() => setIsLoading(false));
   }, [loadTournamentData]);
 
   useEffect(() => {
@@ -51,6 +36,14 @@ export default function TournamentDetailPage() {
       setIsDisabled(true);
     }
   }, [tournament]);
+
+  const lastLevel = useMemo(() => {
+    return levels && levels.length > 0
+      ? levels.reduce((max, curr) =>
+          curr.level_number > max.level_number ? curr : max
+        )
+      : undefined;
+  }, [levels]);
 
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
@@ -69,7 +62,7 @@ export default function TournamentDetailPage() {
       {
         id: "1",
         label: "Niveaux",
-        content: <NiveauxTabs tournament={tournament} />
+        content: <NiveauxTabs />
       },
       {
         id: "2",
@@ -87,7 +80,7 @@ export default function TournamentDetailPage() {
         content: <ChipTabs tournament={tournament} classement={classement} />
       }
     ];
-  }, [tournament, registration, classement]);
+  }, [tournament, registration, classement, levels]);
 
   if (isLoading || !tournament || !registration || !classement) {
     return <LoadingComponent />;
@@ -140,7 +133,8 @@ export default function TournamentDetailPage() {
         <div className="flex flex-row justify-between items-center">
           <Tabs
             isDisabled={isDisabled}
-            className="flex p-1 items-center gap-2"
+            className="flex items-center gap-2"
+            size="lg"
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(String(key))}
             aria-label="Dynamic tabs"
@@ -149,7 +143,7 @@ export default function TournamentDetailPage() {
               <Tab
                 key={item.id}
                 title={item.label}
-                className="text-neutral-50 text-center font-satoshiRegular text-l"
+                className="text-neutral-50 text-center !font-satoshiRegular !text-l"
               />
             )}
           </Tabs>
@@ -174,6 +168,7 @@ export default function TournamentDetailPage() {
         }}
         tournament={tournament}
         classement={classement}
+        level={lastLevel}
       />
     </div>
   );

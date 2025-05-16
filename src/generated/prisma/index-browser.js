@@ -183,7 +183,8 @@ exports.Prisma.Tournament_levelScalarFieldEnum = {
   level_small_blinde: 'level_small_blinde',
   level_big_blinde: 'level_big_blinde',
   level_pause: 'level_pause',
-  level_chip_race: 'level_chip_race'
+  level_chip_race: 'level_chip_race',
+  level_ante: 'level_ante'
 };
 
 exports.Prisma.Tournament_rankingScalarFieldEnum = {

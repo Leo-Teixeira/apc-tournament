@@ -1,9 +1,10 @@
 import { GenericModal } from "@/app/components/popup";
-import { Tournament, TournamentRanking } from "@/app/types";
+import { Tournament, TournamentLevel, TournamentRanking } from "@/app/types";
 import { NiveauFormBody } from "./popup/add_level_popup";
 import { TournamentFormBody } from "./popup/modif_tournament_popup";
 import { PlayerFormBody } from "./popup/add_player_popup";
 import { useState } from "react";
+import { formatDate } from "@/app/utils/date";
 
 interface ModalManagerProps {
   selectedTab: string;
@@ -11,6 +12,7 @@ interface ModalManagerProps {
   onClose: () => void;
   tournament: Tournament;
   classement: TournamentRanking[];
+  level?: TournamentLevel;
 }
 
 export const ModalManager: React.FC<ModalManagerProps> = ({
@@ -18,11 +20,15 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   isOpen,
   onClose,
   tournament,
-  classement
+  classement,
+  level
 }) => {
   const [tournamentFormData, setTournamentFormData] = useState<
     Partial<Tournament>
   >({});
+  const [levelFormData, setLevelFormData] = useState<Partial<TournamentLevel>>(
+    {}
+  );
 
   const handleCreateTournament = async () => {
     try {
@@ -43,9 +49,25 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
     }
   };
 
-  const handleCreateNiveau = () => {
-    console.log("Créer niveau");
-    onClose();
+  const handleCreateNiveau = async () => {
+    try {
+      const res = await fetch(`/api/tournament/${tournament.id}/level`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...levelFormData,
+          tournament_id: tournament.id
+        })
+      });
+
+      if (!res.ok) throw new Error("Erreur serveur");
+      onClose();
+    } catch (error) {
+      console.error("Erreur création niveau :", error);
+      alert("Une erreur est survenue.");
+    }
   };
 
   if (selectedTab === "1") {
@@ -56,7 +78,14 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         title="Ajouter un niveau"
         confirmLabel="Ajouter le niveau"
         onConfirm={handleCreateNiveau}>
-        <NiveauFormBody />
+        <NiveauFormBody
+          isModify={false}
+          tournamentStart={formatDate(tournament.tournament_start_date)}
+          level={level}
+          onUpdate={(updated) =>
+            setLevelFormData((prev) => ({ ...prev, ...updated }))
+          }
+        />
       </GenericModal>
     );
   }

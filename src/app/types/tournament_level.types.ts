@@ -10,5 +10,6 @@ export type TournamentLevel = {
   level_big_blinde: number;
   level_pause: boolean;
   level_chip_race: boolean;
+  level_ante?: number;
   tournament?: Tournament;
 };
