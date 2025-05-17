@@ -78,7 +78,7 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
   ]);
 
   return (
-    <div className="flex flex-col gap-4 text-white">
+    <div className="flex flex-col gap-4 text-primary_brand-50">
       <RadioGroupComponents
         label="Pause"
         value={String(isPause)}
@@ -91,6 +91,7 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
       <div className="flex gap-4">
         <div className="w-full">
           <InputComponents
+            disabled={isModify ? true : false}
             type="text"
             label="Après le niveau"
             value={afterLevel}

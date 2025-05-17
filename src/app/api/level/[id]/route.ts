@@ -11,13 +11,12 @@ export async function PUT(req: NextRequest) {
     const updatedLevel = await prisma.tournament_level.update({
       where: { id: BigInt(data.id) },
       data: {
-        level_number: data.level_number,
-        level_start: data.level_start,
         level_end: data.level_end,
         level_small_blinde: data.level_small_blinde,
         level_big_blinde: data.level_big_blinde,
         level_pause: data.level_pause,
-        level_chip_race: data.level_chip_race
+        level_chip_race: data.level_chip_race,
+        level_ante: data.level_ante
       }
     });
 

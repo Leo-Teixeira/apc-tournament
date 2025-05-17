@@ -3,6 +3,7 @@ import { Input } from "@heroui/react";
 type InputProps = {
   label?: string;
   type: string;
+  disabled?: boolean;
   inputClassName?: string;
   value: string;
   onChange: (e?: any) => void;
@@ -13,6 +14,7 @@ export const InputComponents: React.FC<InputProps> = ({
   type,
   inputClassName,
   value,
+  disabled = false,
   onChange
 }) => {
   return (
@@ -25,7 +27,8 @@ export const InputComponents: React.FC<InputProps> = ({
         <></>
       )}
       <Input
-        className=" text-primary_brand-50"
+        isDisabled={disabled}
+        className={"text-primary_brand-50"}
         type={type}
         value={value}
         onChange={onChange}

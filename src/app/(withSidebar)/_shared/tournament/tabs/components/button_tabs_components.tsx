@@ -36,7 +36,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
-          {tournamentStatus !== "in_coming" ? (
+          {tournamentStatus == "start" ? (
             <ButtonComponents
               text="Réinitialiser les niveaux"
               onClick={onClick}

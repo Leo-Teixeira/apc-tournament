@@ -19,7 +19,7 @@ export const TimeInputComponents: React.FC<TimeInputProps> = ({
       <input
         type="time"
         step="60"
-        className="bg-neutral-800 text-white p-2 rounded-md"
+        className=" bg-default-100 hover:bg-default-200 text-white p-2 rounded-md"
         value={value}
         onChange={onChange}
       />
