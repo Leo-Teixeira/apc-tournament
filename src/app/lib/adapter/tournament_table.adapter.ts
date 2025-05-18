@@ -59,5 +59,12 @@ export const mapAssignementsGroupedByTable = (
     groups[tableNumber].push(seatRow);
   });
 
+  // Trier chaque groupe par numéro de siège
+  Object.keys(groups).forEach((tableNumber) => {
+    groups[tableNumber].sort(
+      (a, b) => (parseInt(a.seat) ?? 0) - (parseInt(b.seat) ?? 0)
+    );
+  });
+
   return groups;
 };

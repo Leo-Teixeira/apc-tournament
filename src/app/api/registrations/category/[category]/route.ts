@@ -42,7 +42,8 @@ export async function GET(
       where: {
         tournament: {
           tournament_category: mappedCategory
-        }
+        },
+        statut: "Confirmed"
       }
     });
 

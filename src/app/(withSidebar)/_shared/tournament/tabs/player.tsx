@@ -22,6 +22,7 @@ export const PlayerTabs = () => {
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelKillModal, setIsCancelKillModal] = useState(false);
+  const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { tournament, assignements, loadTournamentData } =
     useTournamentContext();
@@ -33,41 +34,61 @@ export const PlayerTabs = () => {
   }, [tournament?.id, assignements]);
 
   const getConditionalActions = (item: SeatRow) => {
-    console.log(item.eliminated);
     const actions: ActionDefinition<SeatRow>[] =
-      item.eliminated == false
-        ? [
-            {
-              tooltip: "Éliminer",
-              icon: (
-                <HugeiconsIcon
-                  icon={Cancel01Icon}
-                  size={20}
-                  strokeWidth={1.5}
-                />
-              ),
-              onClick: () => {
-                const assignment = assignements.find((a) => a.id === item.id);
-                if (!assignment?.tournament_table?.table_number) return;
+      tournament?.tournament_status !== "start"
+        ? item.eliminated == false
+          ? [
+              {
+                tooltip: "Éliminer",
+                icon: (
+                  <HugeiconsIcon
+                    icon={Cancel01Icon}
+                    size={20}
+                    strokeWidth={1.5}
+                  />
+                ),
+                onClick: () => {
+                  const assignment = assignements.find((a) => a.id === item.id);
+                  if (!assignment?.tournament_table?.table_number) return;
 
-                setSelectedPlayer(assignment);
+                  setSelectedPlayer(assignment);
 
-                const killers = assignements
-                  .filter(
-                    (a) =>
-                      !a.eliminated &&
-                      a.registration &&
-                      a.tournament_table?.table_number ===
-                        assignment.tournament_table?.table_number &&
-                      a.registration_id !== assignment.registration_id
-                  )
-                  .map((a) => a.registration)
-                  .filter((r): r is Registration => !!r);
+                  const killers = assignements
+                    .filter(
+                      (a) =>
+                        !a.eliminated &&
+                        a.registration &&
+                        a.tournament_table?.table_number ===
+                          assignment.tournament_table?.table_number &&
+                        a.registration_id !== assignment.registration_id
+                    )
+                    .map((a) => a.registration)
+                    .filter((r): r is Registration => !!r);
 
-                setKillerOptions(killers);
-                onOpen();
+                  setKillerOptions(killers);
+                  onOpen();
+                }
               }
-            },
+            ]
+          : [
+              {
+                tooltip: "Annuler élimination",
+                icon: (
+                  <HugeiconsIcon
+                    icon={Cancel01Icon}
+                    size={20}
+                    strokeWidth={1.5}
+                  />
+                ),
+                onClick: () => {
+                  const assignment = assignements.find((a) => a.id === item.id);
+                  if (!assignment?.tournament_table?.table_number) return;
+                  setSelectedPlayer(assignment);
+                  setIsCancelKillModal(true);
+                }
+              }
+            ]
+        : [
             {
               tooltip: "Supprimer",
               icon: (
@@ -77,26 +98,13 @@ export const PlayerTabs = () => {
                   strokeWidth={1.5}
                 />
               ),
-              onClick: () => {},
-              color: "danger"
-            }
-          ]
-        : [
-            {
-              tooltip: "Annuler élimination",
-              icon: (
-                <HugeiconsIcon
-                  icon={Cancel01Icon}
-                  size={20}
-                  strokeWidth={1.5}
-                />
-              ),
               onClick: () => {
                 const assignment = assignements.find((a) => a.id === item.id);
                 if (!assignment?.tournament_table?.table_number) return;
                 setSelectedPlayer(assignment);
-                setIsCancelKillModal(true);
-              }
+                setIsCancelStatusModal(true);
+              },
+              color: "danger"
             }
           ];
     return actions;
@@ -107,7 +115,7 @@ export const PlayerTabs = () => {
 
     try {
       const res = await fetch(
-        `/api/tournament/${tournament?.id}/player/elimination/${selectedPlayer.registration_id}`,
+        `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/elimination`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -129,7 +137,7 @@ export const PlayerTabs = () => {
       {isLoading ? (
         <LoadingComponent />
       ) : flatRows.length > 0 ? (
-        <div className="flex flex-col gap-6 justify-center px-64">
+        <div className="flex flex-col gap-6 justify-center">
           <SearchBarComponents
             label="Pseudo"
             value={search}
@@ -182,7 +190,7 @@ export const PlayerTabs = () => {
 
           try {
             const res = await fetch(
-              `/api/tournament/${tournament?.id}/player/elimination/${selectedPlayer.registration_id}/cancel`,
+              `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/cancelElimination`,
               {
                 method: "PUT"
               }
@@ -198,6 +206,40 @@ export const PlayerTabs = () => {
         }}>
         <p>
           Es-tu sûr de vouloir annuler l'élimination de{" "}
+          <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
+        </p>
+      </GenericModal>
+      <GenericModal
+        isOpen={isCancelStatusModal}
+        onClose={() => {
+          setIsCancelStatusModal(false);
+        }}
+        title="Supprimer le joueur du tournoi"
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          if (!selectedPlayer || !tournament) return;
+
+          try {
+            const res = await fetch(
+              `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/status`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newStatus: "Cancelled" })
+              }
+            );
+            if (!res.ok) throw new Error("Erreur serveur");
+            await loadTournamentData();
+            setSelectedPlayer(null);
+            setIsCancelStatusModal(false);
+          } catch (error) {
+            console.error("Erreur suppression joueur:", error);
+            alert("Une erreur est survenue lors de la suppression.");
+          }
+        }}>
+        <p>
+          Es-tu sûr de vouloir supprimer l'invitation du joueur
           <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
         </p>
       </GenericModal>

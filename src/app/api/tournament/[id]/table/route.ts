@@ -16,7 +16,8 @@ export async function GET(
       where: {
         tournament_table: {
           tournament_id: BigInt(tournamentId)
-        }
+        },
+        registration: { statut: "Confirmed" }
       },
       include: {
         registration: {
