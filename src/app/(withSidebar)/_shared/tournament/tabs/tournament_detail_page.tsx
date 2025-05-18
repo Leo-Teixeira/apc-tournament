@@ -37,14 +37,6 @@ export default function TournamentDetailPage() {
     }
   }, [tournament]);
 
-  const lastLevel = useMemo(() => {
-    return levels && levels.length > 0
-      ? levels.reduce((max, curr) =>
-          curr.level_number > max.level_number ? curr : max
-        )
-      : undefined;
-  }, [levels]);
-
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
     return [
@@ -67,12 +59,12 @@ export default function TournamentDetailPage() {
       {
         id: "2",
         label: "Joueurs",
-        content: <PlayerTabs tournament={tournament} />
+        content: <PlayerTabs />
       },
       {
         id: "3",
         label: "Tables",
-        content: <TableTabs tournament={tournament} />
+        content: <TableTabs />
       },
       {
         id: "4",
@@ -166,9 +158,6 @@ export default function TournamentDetailPage() {
           await loadTournamentData();
           onClose();
         }}
-        tournament={tournament}
-        classement={classement}
-        level={lastLevel}
       />
     </div>
   );

@@ -10,21 +10,27 @@ import { WPUser } from "@/app/types/user.types";
 export const mapFlatAssignementsToSeatRows = (
   assignements: TableAssignment[]
 ): SeatRow[] => {
-  return assignements.map((a) => {
-    const registration = a.registration;
-    const user = registration?.wp_users;
-    const table = a.tournament_table;
+  return assignements
+    .map((a) => {
+      const registration = a.registration;
+      const user = registration?.wp_users;
+      const table = a.tournament_table;
 
-    return {
-      id: a.id,
-      avatarName: user?.pseudo_winamax ?? "Inconnu",
-      avatar: user?.photo_url ?? "",
-      seat: table
-        ? `Table ${table.table_number}, siège ${a.table_seat_number}`
-        : "Table inconnue",
-      action: ""
-    };
-  });
+      return {
+        id: a.id,
+        avatarName: user?.pseudo_winamax ?? "Inconnu",
+        avatar: user?.photo_url ?? "",
+        seat: table
+          ? `Table ${table.table_number}, siège ${a.table_seat_number}`
+          : "Table inconnue",
+        action: "",
+        eliminated: a.eliminated
+      };
+    })
+    .sort((a, b) => {
+      if (a.eliminated === b.eliminated) return 0;
+      return a.eliminated ? 1 : -1;
+    });
 };
 
 export const mapAssignementsGroupedByTable = (
@@ -45,8 +51,8 @@ export const mapAssignementsGroupedByTable = (
       avatarName: user?.pseudo_winamax ?? "Inconnu",
       avatar: user?.photo_url ?? "",
       seat: `Siège ${a.table_seat_number}`,
-      action: ""
-      // eliminated: false
+      action: "",
+      eliminated: a.eliminated
     };
 
     if (!groups[tableNumber]) groups[tableNumber] = [];

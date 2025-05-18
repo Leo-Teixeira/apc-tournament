@@ -4,7 +4,9 @@ import {
   Tournament,
   TournamentLevel,
   TournamentRanking,
-  Registration
+  Registration,
+  TournamentTable,
+  TableAssignment
 } from "@/app/types";
 
 type TournamentContextType = {
@@ -12,6 +14,7 @@ type TournamentContextType = {
   levels: TournamentLevel[];
   registration: Registration[];
   classement: TournamentRanking[];
+  assignements: TableAssignment[];
   loadTournamentData: () => Promise<void>;
 };
 
@@ -30,20 +33,24 @@ export const TournamentProvider = ({
   const [levels, setLevels] = useState<TournamentLevel[]>([]);
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [classement, setClassement] = useState<TournamentRanking[]>([]);
+  const [assignements, setAssignements] = useState<TableAssignment[]>([]);
 
   const loadTournamentData = useCallback(async () => {
-    const [resDetails, resLevels] = await Promise.all([
+    const [resDetails, resLevels, resTable] = await Promise.all([
       fetch(`/api/tournament/${tournamentId}/details`),
-      fetch(`/api/tournament/${tournamentId}/level`)
+      fetch(`/api/tournament/${tournamentId}/level`),
+      fetch(`/api/tournament/${tournamentId}/table`)
     ]);
 
     const data = await resDetails.json();
     const levelData = await resLevels.json();
+    const tableData = await resTable.json();
 
     setTournament(data.tournament);
     setLevels(levelData);
     setRegistration(data.registrations);
     setClassement(data.classement);
+    setAssignements(tableData);
   }, [tournamentId]);
 
   return (
@@ -53,6 +60,7 @@ export const TournamentProvider = ({
         levels,
         registration,
         classement,
+        assignements,
         loadTournamentData
       }}>
       {children}

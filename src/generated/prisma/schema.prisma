@@ -31,15 +31,16 @@ model quarter_ranking {
 }
 
 model registration {
-  id                 BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
-  user_id            BigInt               @db.UnsignedBigInt
-  tournament_id      BigInt               @db.UnsignedBigInt
-  inscription_date   DateTime             @db.DateTime(0)
-  statut             registration_statut
-  wp_users           wp_users             @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "registration_ibfk_1")
-  tournament         tournament           @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "registration_ibfk_2")
-  table_assignment   table_assignment[]
-  tournament_ranking tournament_ranking[]
+  id                                                           BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                                                      BigInt               @db.UnsignedBigInt
+  tournament_id                                                BigInt               @db.UnsignedBigInt
+  inscription_date                                             DateTime             @db.DateTime(0)
+  statut                                                       registration_statut
+  wp_users                                                     wp_users             @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "registration_ibfk_1")
+  tournament                                                   tournament           @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "registration_ibfk_2")
+  table_assignment                                             table_assignment[]
+  table_assignment_table_assignment_user_kill_idToregistration table_assignment[]   @relation("table_assignment_user_kill_idToregistration")
+  tournament_ranking                                           tournament_ranking[]
 
   @@index([tournament_id], map: "tournament_id")
   @@index([user_id], map: "user_id")
@@ -55,15 +56,19 @@ model stack {
 }
 
 model table_assignment {
-  id                BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  registration_id   BigInt           @db.UnsignedBigInt
-  table_id          BigInt           @db.UnsignedBigInt
-  table_seat_number Int              @db.TinyInt
-  registration      registration     @relation(fields: [registration_id], references: [id], onDelete: Cascade, map: "table_assignment_ibfk_1")
-  tournament_table  tournament_table @relation(fields: [table_id], references: [id], onDelete: Cascade, map: "table_assignment_ibfk_2")
+  id                                                       BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  registration_id                                          BigInt           @db.UnsignedBigInt
+  table_id                                                 BigInt           @db.UnsignedBigInt
+  table_seat_number                                        Int              @db.TinyInt
+  eliminated                                               Boolean          @default(false)
+  user_kill_id                                             BigInt?          @db.UnsignedBigInt
+  registration                                             registration     @relation(fields: [registration_id], references: [id], onDelete: Cascade, map: "table_assignment_ibfk_1")
+  tournament_table                                         tournament_table @relation(fields: [table_id], references: [id], onDelete: Cascade, map: "table_assignment_ibfk_2")
+  registration_table_assignment_user_kill_idToregistration registration?    @relation("table_assignment_user_kill_idToregistration", fields: [user_kill_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "table_assignment_ibfk_3")
 
   @@index([registration_id], map: "registration_id")
   @@index([table_id], map: "table_id")
+  @@index([user_kill_id], map: "user_kill_id")
 }
 
 model tournament {

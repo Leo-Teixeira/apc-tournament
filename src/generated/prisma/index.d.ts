@@ -6369,11 +6369,13 @@ export namespace Prisma {
 
   export type RegistrationCountOutputType = {
     table_assignment: number
+    table_assignment_table_assignment_user_kill_idToregistration: number
     tournament_ranking: number
   }
 
   export type RegistrationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     table_assignment?: boolean | RegistrationCountOutputTypeCountTable_assignmentArgs
+    table_assignment_table_assignment_user_kill_idToregistration?: boolean | RegistrationCountOutputTypeCountTable_assignment_table_assignment_user_kill_idToregistrationArgs
     tournament_ranking?: boolean | RegistrationCountOutputTypeCountTournament_rankingArgs
   }
 
@@ -6392,6 +6394,13 @@ export namespace Prisma {
    * RegistrationCountOutputType without action
    */
   export type RegistrationCountOutputTypeCountTable_assignmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: table_assignmentWhereInput
+  }
+
+  /**
+   * RegistrationCountOutputType without action
+   */
+  export type RegistrationCountOutputTypeCountTable_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: table_assignmentWhereInput
   }
 
@@ -8787,6 +8796,7 @@ export namespace Prisma {
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
     table_assignment?: boolean | registration$table_assignmentArgs<ExtArgs>
+    table_assignment_table_assignment_user_kill_idToregistration?: boolean | registration$table_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs>
     tournament_ranking?: boolean | registration$tournament_rankingArgs<ExtArgs>
     _count?: boolean | RegistrationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registration"]>
@@ -8806,6 +8816,7 @@ export namespace Prisma {
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
     table_assignment?: boolean | registration$table_assignmentArgs<ExtArgs>
+    table_assignment_table_assignment_user_kill_idToregistration?: boolean | registration$table_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs>
     tournament_ranking?: boolean | registration$tournament_rankingArgs<ExtArgs>
     _count?: boolean | RegistrationCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -8816,6 +8827,7 @@ export namespace Prisma {
       wp_users: Prisma.$wp_usersPayload<ExtArgs>
       tournament: Prisma.$tournamentPayload<ExtArgs>
       table_assignment: Prisma.$table_assignmentPayload<ExtArgs>[]
+      table_assignment_table_assignment_user_kill_idToregistration: Prisma.$table_assignmentPayload<ExtArgs>[]
       tournament_ranking: Prisma.$tournament_rankingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -9167,6 +9179,7 @@ export namespace Prisma {
     wp_users<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tournament<T extends tournamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tournamentDefaultArgs<ExtArgs>>): Prisma__tournamentClient<$Result.GetResult<Prisma.$tournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     table_assignment<T extends registration$table_assignmentArgs<ExtArgs> = {}>(args?: Subset<T, registration$table_assignmentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$table_assignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    table_assignment_table_assignment_user_kill_idToregistration<T extends registration$table_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs> = {}>(args?: Subset<T, registration$table_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$table_assignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tournament_ranking<T extends registration$tournament_rankingArgs<ExtArgs> = {}>(args?: Subset<T, registration$tournament_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9548,6 +9561,30 @@ export namespace Prisma {
    * registration.table_assignment
    */
   export type registration$table_assignmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the table_assignment
+     */
+    select?: table_assignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the table_assignment
+     */
+    omit?: table_assignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: table_assignmentInclude<ExtArgs> | null
+    where?: table_assignmentWhereInput
+    orderBy?: table_assignmentOrderByWithRelationInput | table_assignmentOrderByWithRelationInput[]
+    cursor?: table_assignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Table_assignmentScalarFieldEnum | Table_assignmentScalarFieldEnum[]
+  }
+
+  /**
+   * registration.table_assignment_table_assignment_user_kill_idToregistration
+   */
+  export type registration$table_assignment_table_assignment_user_kill_idToregistrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the table_assignment
      */
@@ -10573,6 +10610,7 @@ export namespace Prisma {
     registration_id: number | null
     table_id: number | null
     table_seat_number: number | null
+    user_kill_id: number | null
   }
 
   export type Table_assignmentSumAggregateOutputType = {
@@ -10580,6 +10618,7 @@ export namespace Prisma {
     registration_id: bigint | null
     table_id: bigint | null
     table_seat_number: number | null
+    user_kill_id: bigint | null
   }
 
   export type Table_assignmentMinAggregateOutputType = {
@@ -10587,6 +10626,8 @@ export namespace Prisma {
     registration_id: bigint | null
     table_id: bigint | null
     table_seat_number: number | null
+    eliminated: boolean | null
+    user_kill_id: bigint | null
   }
 
   export type Table_assignmentMaxAggregateOutputType = {
@@ -10594,6 +10635,8 @@ export namespace Prisma {
     registration_id: bigint | null
     table_id: bigint | null
     table_seat_number: number | null
+    eliminated: boolean | null
+    user_kill_id: bigint | null
   }
 
   export type Table_assignmentCountAggregateOutputType = {
@@ -10601,6 +10644,8 @@ export namespace Prisma {
     registration_id: number
     table_id: number
     table_seat_number: number
+    eliminated: number
+    user_kill_id: number
     _all: number
   }
 
@@ -10610,6 +10655,7 @@ export namespace Prisma {
     registration_id?: true
     table_id?: true
     table_seat_number?: true
+    user_kill_id?: true
   }
 
   export type Table_assignmentSumAggregateInputType = {
@@ -10617,6 +10663,7 @@ export namespace Prisma {
     registration_id?: true
     table_id?: true
     table_seat_number?: true
+    user_kill_id?: true
   }
 
   export type Table_assignmentMinAggregateInputType = {
@@ -10624,6 +10671,8 @@ export namespace Prisma {
     registration_id?: true
     table_id?: true
     table_seat_number?: true
+    eliminated?: true
+    user_kill_id?: true
   }
 
   export type Table_assignmentMaxAggregateInputType = {
@@ -10631,6 +10680,8 @@ export namespace Prisma {
     registration_id?: true
     table_id?: true
     table_seat_number?: true
+    eliminated?: true
+    user_kill_id?: true
   }
 
   export type Table_assignmentCountAggregateInputType = {
@@ -10638,6 +10689,8 @@ export namespace Prisma {
     registration_id?: true
     table_id?: true
     table_seat_number?: true
+    eliminated?: true
+    user_kill_id?: true
     _all?: true
   }
 
@@ -10732,6 +10785,8 @@ export namespace Prisma {
     registration_id: bigint
     table_id: bigint
     table_seat_number: number
+    eliminated: boolean
+    user_kill_id: bigint | null
     _count: Table_assignmentCountAggregateOutputType | null
     _avg: Table_assignmentAvgAggregateOutputType | null
     _sum: Table_assignmentSumAggregateOutputType | null
@@ -10758,8 +10813,11 @@ export namespace Prisma {
     registration_id?: boolean
     table_id?: boolean
     table_seat_number?: boolean
+    eliminated?: boolean
+    user_kill_id?: boolean
     registration?: boolean | registrationDefaultArgs<ExtArgs>
     tournament_table?: boolean | tournament_tableDefaultArgs<ExtArgs>
+    registration_table_assignment_user_kill_idToregistration?: boolean | table_assignment$registration_table_assignment_user_kill_idToregistrationArgs<ExtArgs>
   }, ExtArgs["result"]["table_assignment"]>
 
 
@@ -10769,12 +10827,15 @@ export namespace Prisma {
     registration_id?: boolean
     table_id?: boolean
     table_seat_number?: boolean
+    eliminated?: boolean
+    user_kill_id?: boolean
   }
 
-  export type table_assignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registration_id" | "table_id" | "table_seat_number", ExtArgs["result"]["table_assignment"]>
+  export type table_assignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registration_id" | "table_id" | "table_seat_number" | "eliminated" | "user_kill_id", ExtArgs["result"]["table_assignment"]>
   export type table_assignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     registration?: boolean | registrationDefaultArgs<ExtArgs>
     tournament_table?: boolean | tournament_tableDefaultArgs<ExtArgs>
+    registration_table_assignment_user_kill_idToregistration?: boolean | table_assignment$registration_table_assignment_user_kill_idToregistrationArgs<ExtArgs>
   }
 
   export type $table_assignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10782,12 +10843,15 @@ export namespace Prisma {
     objects: {
       registration: Prisma.$registrationPayload<ExtArgs>
       tournament_table: Prisma.$tournament_tablePayload<ExtArgs>
+      registration_table_assignment_user_kill_idToregistration: Prisma.$registrationPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       registration_id: bigint
       table_id: bigint
       table_seat_number: number
+      eliminated: boolean
+      user_kill_id: bigint | null
     }, ExtArgs["result"]["table_assignment"]>
     composites: {}
   }
@@ -11130,6 +11194,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     registration<T extends registrationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, registrationDefaultArgs<ExtArgs>>): Prisma__registrationClient<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tournament_table<T extends tournament_tableDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tournament_tableDefaultArgs<ExtArgs>>): Prisma__tournament_tableClient<$Result.GetResult<Prisma.$tournament_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    registration_table_assignment_user_kill_idToregistration<T extends table_assignment$registration_table_assignment_user_kill_idToregistrationArgs<ExtArgs> = {}>(args?: Subset<T, table_assignment$registration_table_assignment_user_kill_idToregistrationArgs<ExtArgs>>): Prisma__registrationClient<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11163,6 +11228,8 @@ export namespace Prisma {
     readonly registration_id: FieldRef<"table_assignment", 'BigInt'>
     readonly table_id: FieldRef<"table_assignment", 'BigInt'>
     readonly table_seat_number: FieldRef<"table_assignment", 'Int'>
+    readonly eliminated: FieldRef<"table_assignment", 'Boolean'>
+    readonly user_kill_id: FieldRef<"table_assignment", 'BigInt'>
   }
     
 
@@ -11503,6 +11570,25 @@ export namespace Prisma {
      * Limit how many table_assignments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * table_assignment.registration_table_assignment_user_kill_idToregistration
+   */
+  export type table_assignment$registration_table_assignment_user_kill_idToregistrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the registration
+     */
+    select?: registrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the registration
+     */
+    omit?: registrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: registrationInclude<ExtArgs> | null
+    where?: registrationWhereInput
   }
 
   /**
@@ -71765,7 +71851,9 @@ export namespace Prisma {
     id: 'id',
     registration_id: 'registration_id',
     table_id: 'table_id',
-    table_seat_number: 'table_seat_number'
+    table_seat_number: 'table_seat_number',
+    eliminated: 'eliminated',
+    user_kill_id: 'user_kill_id'
   };
 
   export type Table_assignmentScalarFieldEnum = (typeof Table_assignmentScalarFieldEnum)[keyof typeof Table_assignmentScalarFieldEnum]
@@ -72726,20 +72814,20 @@ export namespace Prisma {
   export type stackOrderByRelevanceFieldEnum = (typeof stackOrderByRelevanceFieldEnum)[keyof typeof stackOrderByRelevanceFieldEnum]
 
 
-  export const tournamentOrderByRelevanceFieldEnum: {
-    tournament_name: 'tournament_name',
-    tournament_description: 'tournament_description'
-  };
-
-  export type tournamentOrderByRelevanceFieldEnum = (typeof tournamentOrderByRelevanceFieldEnum)[keyof typeof tournamentOrderByRelevanceFieldEnum]
-
-
   export const NullsOrder: {
     first: 'first',
     last: 'last'
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const tournamentOrderByRelevanceFieldEnum: {
+    tournament_name: 'tournament_name',
+    tournament_description: 'tournament_description'
+  };
+
+  export type tournamentOrderByRelevanceFieldEnum = (typeof tournamentOrderByRelevanceFieldEnum)[keyof typeof tournamentOrderByRelevanceFieldEnum]
 
 
   export const wp_actionscheduler_actionsOrderByRelevanceFieldEnum: {
@@ -73305,6 +73393,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'tournament_tournament_trimestry'
    */
   export type Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tournament_tournament_trimestry'>
@@ -73322,13 +73417,6 @@ export namespace Prisma {
    * Reference to a field of type 'tournament_tournament_status'
    */
   export type Enumtournament_tournament_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tournament_tournament_status'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -73484,6 +73572,7 @@ export namespace Prisma {
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
     table_assignment?: Table_assignmentListRelationFilter
+    table_assignment_table_assignment_user_kill_idToregistration?: Table_assignmentListRelationFilter
     tournament_ranking?: Tournament_rankingListRelationFilter
   }
 
@@ -73496,6 +73585,7 @@ export namespace Prisma {
     wp_users?: wp_usersOrderByWithRelationInput
     tournament?: tournamentOrderByWithRelationInput
     table_assignment?: table_assignmentOrderByRelationAggregateInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentOrderByRelationAggregateInput
     tournament_ranking?: tournament_rankingOrderByRelationAggregateInput
   }
 
@@ -73511,6 +73601,7 @@ export namespace Prisma {
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
     table_assignment?: Table_assignmentListRelationFilter
+    table_assignment_table_assignment_user_kill_idToregistration?: Table_assignmentListRelationFilter
     tournament_ranking?: Tournament_rankingListRelationFilter
   }, "id">
 
@@ -73594,8 +73685,11 @@ export namespace Prisma {
     registration_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_seat_number?: IntFilter<"table_assignment"> | number
+    eliminated?: BoolFilter<"table_assignment"> | boolean
+    user_kill_id?: BigIntNullableFilter<"table_assignment"> | bigint | number | null
     registration?: XOR<RegistrationScalarRelationFilter, registrationWhereInput>
     tournament_table?: XOR<Tournament_tableScalarRelationFilter, tournament_tableWhereInput>
+    registration_table_assignment_user_kill_idToregistration?: XOR<RegistrationNullableScalarRelationFilter, registrationWhereInput> | null
   }
 
   export type table_assignmentOrderByWithRelationInput = {
@@ -73603,8 +73697,11 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    eliminated?: SortOrder
+    user_kill_id?: SortOrderInput | SortOrder
     registration?: registrationOrderByWithRelationInput
     tournament_table?: tournament_tableOrderByWithRelationInput
+    registration_table_assignment_user_kill_idToregistration?: registrationOrderByWithRelationInput
   }
 
   export type table_assignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -73615,8 +73712,11 @@ export namespace Prisma {
     registration_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_seat_number?: IntFilter<"table_assignment"> | number
+    eliminated?: BoolFilter<"table_assignment"> | boolean
+    user_kill_id?: BigIntNullableFilter<"table_assignment"> | bigint | number | null
     registration?: XOR<RegistrationScalarRelationFilter, registrationWhereInput>
     tournament_table?: XOR<Tournament_tableScalarRelationFilter, tournament_tableWhereInput>
+    registration_table_assignment_user_kill_idToregistration?: XOR<RegistrationNullableScalarRelationFilter, registrationWhereInput> | null
   }, "id">
 
   export type table_assignmentOrderByWithAggregationInput = {
@@ -73624,6 +73724,8 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    eliminated?: SortOrder
+    user_kill_id?: SortOrderInput | SortOrder
     _count?: table_assignmentCountOrderByAggregateInput
     _avg?: table_assignmentAvgOrderByAggregateInput
     _max?: table_assignmentMaxOrderByAggregateInput
@@ -73639,6 +73741,8 @@ export namespace Prisma {
     registration_id?: BigIntWithAggregatesFilter<"table_assignment"> | bigint | number
     table_id?: BigIntWithAggregatesFilter<"table_assignment"> | bigint | number
     table_seat_number?: IntWithAggregatesFilter<"table_assignment"> | number
+    eliminated?: BoolWithAggregatesFilter<"table_assignment"> | boolean
+    user_kill_id?: BigIntNullableWithAggregatesFilter<"table_assignment"> | bigint | number | null
   }
 
   export type tournamentWhereInput = {
@@ -78468,6 +78572,7 @@ export namespace Prisma {
     wp_users: wp_usersCreateNestedOneWithoutRegistrationInput
     tournament: tournamentCreateNestedOneWithoutRegistrationInput
     table_assignment?: table_assignmentCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutRegistrationInput
   }
 
@@ -78478,6 +78583,7 @@ export namespace Prisma {
     inscription_date: Date | string
     statut: $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutRegistrationInput
   }
 
@@ -78488,6 +78594,7 @@ export namespace Prisma {
     wp_users?: wp_usersUpdateOneRequiredWithoutRegistrationNestedInput
     tournament?: tournamentUpdateOneRequiredWithoutRegistrationNestedInput
     table_assignment?: table_assignmentUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -78498,6 +78605,7 @@ export namespace Prisma {
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -78564,8 +78672,10 @@ export namespace Prisma {
   export type table_assignmentCreateInput = {
     id?: bigint | number
     table_seat_number: number
+    eliminated?: boolean
     registration: registrationCreateNestedOneWithoutTable_assignmentInput
     tournament_table: tournament_tableCreateNestedOneWithoutTable_assignmentInput
+    registration_table_assignment_user_kill_idToregistration?: registrationCreateNestedOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
   }
 
   export type table_assignmentUncheckedCreateInput = {
@@ -78573,13 +78683,17 @@ export namespace Prisma {
     registration_id: bigint | number
     table_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
   }
 
   export type table_assignmentUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
     registration?: registrationUpdateOneRequiredWithoutTable_assignmentNestedInput
     tournament_table?: tournament_tableUpdateOneRequiredWithoutTable_assignmentNestedInput
+    registration_table_assignment_user_kill_idToregistration?: registrationUpdateOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationNestedInput
   }
 
   export type table_assignmentUncheckedUpdateInput = {
@@ -78587,6 +78701,8 @@ export namespace Prisma {
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type table_assignmentCreateManyInput = {
@@ -78594,11 +78710,14 @@ export namespace Prisma {
     registration_id: bigint | number
     table_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
   }
 
   export type table_assignmentUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type table_assignmentUncheckedUpdateManyInput = {
@@ -78606,6 +78725,8 @@ export namespace Prisma {
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournamentCreateInput = {
@@ -84203,6 +84324,22 @@ export namespace Prisma {
     stack_chip?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type BigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | null
+    notIn?: bigint[] | number[] | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
   export type RegistrationScalarRelationFilter = {
     is?: registrationWhereInput
     isNot?: registrationWhereInput
@@ -84213,11 +84350,23 @@ export namespace Prisma {
     isNot?: tournament_tableWhereInput
   }
 
+  export type RegistrationNullableScalarRelationFilter = {
+    is?: registrationWhereInput | null
+    isNot?: registrationWhereInput | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type table_assignmentCountOrderByAggregateInput = {
     id?: SortOrder
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    eliminated?: SortOrder
+    user_kill_id?: SortOrder
   }
 
   export type table_assignmentAvgOrderByAggregateInput = {
@@ -84225,6 +84374,7 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    user_kill_id?: SortOrder
   }
 
   export type table_assignmentMaxOrderByAggregateInput = {
@@ -84232,6 +84382,8 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    eliminated?: SortOrder
+    user_kill_id?: SortOrder
   }
 
   export type table_assignmentMinOrderByAggregateInput = {
@@ -84239,6 +84391,8 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    eliminated?: SortOrder
+    user_kill_id?: SortOrder
   }
 
   export type table_assignmentSumOrderByAggregateInput = {
@@ -84246,6 +84400,31 @@ export namespace Prisma {
     registration_id?: SortOrder
     table_id?: SortOrder
     table_seat_number?: SortOrder
+    user_kill_id?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | null
+    notIn?: bigint[] | number[] | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type Enumtournament_tournament_trimestryFilter<$PrismaModel = never> = {
@@ -84424,11 +84603,6 @@ export namespace Prisma {
     chip_player_quantity?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -84438,11 +84612,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type tournament_levelCountOrderByAggregateInput = {
@@ -84500,14 +84669,6 @@ export namespace Prisma {
     level_small_blinde?: SortOrder
     level_big_blinde?: SortOrder
     level_ante?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -86944,17 +87105,6 @@ export namespace Prisma {
     approved?: SortOrder
   }
 
-  export type BigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | null
-    notIn?: bigint[] | number[] | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
-  }
-
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -87042,22 +87192,6 @@ export namespace Prisma {
     booking_price?: SortOrder
     booking_tax_rate?: SortOrder
     booking_taxes?: SortOrder
-  }
-
-  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | null
-    notIn?: bigint[] | number[] | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -88190,6 +88324,13 @@ export namespace Prisma {
     connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
   }
 
+  export type table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    create?: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput> | table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[] | table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    connectOrCreate?: table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    createMany?: table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInputEnvelope
+    connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+  }
+
   export type tournament_rankingCreateNestedManyWithoutRegistrationInput = {
     create?: XOR<tournament_rankingCreateWithoutRegistrationInput, tournament_rankingUncheckedCreateWithoutRegistrationInput> | tournament_rankingCreateWithoutRegistrationInput[] | tournament_rankingUncheckedCreateWithoutRegistrationInput[]
     connectOrCreate?: tournament_rankingCreateOrConnectWithoutRegistrationInput | tournament_rankingCreateOrConnectWithoutRegistrationInput[]
@@ -88201,6 +88342,13 @@ export namespace Prisma {
     create?: XOR<table_assignmentCreateWithoutRegistrationInput, table_assignmentUncheckedCreateWithoutRegistrationInput> | table_assignmentCreateWithoutRegistrationInput[] | table_assignmentUncheckedCreateWithoutRegistrationInput[]
     connectOrCreate?: table_assignmentCreateOrConnectWithoutRegistrationInput | table_assignmentCreateOrConnectWithoutRegistrationInput[]
     createMany?: table_assignmentCreateManyRegistrationInputEnvelope
+    connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+  }
+
+  export type table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    create?: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput> | table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[] | table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    connectOrCreate?: table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    createMany?: table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInputEnvelope
     connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
   }
 
@@ -88249,6 +88397,20 @@ export namespace Prisma {
     deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
   }
 
+  export type table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput = {
+    create?: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput> | table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[] | table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    connectOrCreate?: table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    upsert?: table_assignmentUpsertWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpsertWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    createMany?: table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInputEnvelope
+    set?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    disconnect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    delete?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    update?: table_assignmentUpdateWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpdateWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    updateMany?: table_assignmentUpdateManyWithWhereWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpdateManyWithWhereWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
+  }
+
   export type tournament_rankingUpdateManyWithoutRegistrationNestedInput = {
     create?: XOR<tournament_rankingCreateWithoutRegistrationInput, tournament_rankingUncheckedCreateWithoutRegistrationInput> | tournament_rankingCreateWithoutRegistrationInput[] | tournament_rankingUncheckedCreateWithoutRegistrationInput[]
     connectOrCreate?: tournament_rankingCreateOrConnectWithoutRegistrationInput | tournament_rankingCreateOrConnectWithoutRegistrationInput[]
@@ -88274,6 +88436,20 @@ export namespace Prisma {
     connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
     update?: table_assignmentUpdateWithWhereUniqueWithoutRegistrationInput | table_assignmentUpdateWithWhereUniqueWithoutRegistrationInput[]
     updateMany?: table_assignmentUpdateManyWithWhereWithoutRegistrationInput | table_assignmentUpdateManyWithWhereWithoutRegistrationInput[]
+    deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
+  }
+
+  export type table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput = {
+    create?: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput> | table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[] | table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    connectOrCreate?: table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    upsert?: table_assignmentUpsertWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpsertWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    createMany?: table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInputEnvelope
+    set?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    disconnect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    delete?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    connect?: table_assignmentWhereUniqueInput | table_assignmentWhereUniqueInput[]
+    update?: table_assignmentUpdateWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpdateWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
+    updateMany?: table_assignmentUpdateManyWithWhereWithoutRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentUpdateManyWithWhereWithoutRegistration_table_assignment_user_kill_idToregistrationInput[]
     deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
   }
 
@@ -88317,6 +88493,16 @@ export namespace Prisma {
     connect?: tournament_tableWhereUniqueInput
   }
 
+  export type registrationCreateNestedOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    create?: XOR<registrationCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+    connectOrCreate?: registrationCreateOrConnectWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
+    connect?: registrationWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type registrationUpdateOneRequiredWithoutTable_assignmentNestedInput = {
     create?: XOR<registrationCreateWithoutTable_assignmentInput, registrationUncheckedCreateWithoutTable_assignmentInput>
     connectOrCreate?: registrationCreateOrConnectWithoutTable_assignmentInput
@@ -88331,6 +88517,24 @@ export namespace Prisma {
     upsert?: tournament_tableUpsertWithoutTable_assignmentInput
     connect?: tournament_tableWhereUniqueInput
     update?: XOR<XOR<tournament_tableUpdateToOneWithWhereWithoutTable_assignmentInput, tournament_tableUpdateWithoutTable_assignmentInput>, tournament_tableUncheckedUpdateWithoutTable_assignmentInput>
+  }
+
+  export type registrationUpdateOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationNestedInput = {
+    create?: XOR<registrationCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+    connectOrCreate?: registrationCreateOrConnectWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
+    upsert?: registrationUpsertWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
+    disconnect?: registrationWhereInput | boolean
+    delete?: registrationWhereInput | boolean
+    connect?: registrationWhereUniqueInput
+    update?: XOR<XOR<registrationUpdateToOneWithWhereWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>, registrationUncheckedUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+  }
+
+  export type NullableBigIntFieldUpdateOperationsInput = {
+    set?: bigint | number | null
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type quarter_rankingCreateNestedManyWithoutTournamentInput = {
@@ -88631,10 +88835,6 @@ export namespace Prisma {
     connect?: tournamentWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -88899,14 +89099,6 @@ export namespace Prisma {
     deleteMany?: registrationScalarWhereInput | registrationScalarWhereInput[]
   }
 
-  export type NullableBigIntFieldUpdateOperationsInput = {
-    set?: bigint | number | null
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
-  }
-
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
@@ -89080,6 +89272,68 @@ export namespace Prisma {
     _max?: NestedEnumregistration_statutFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | null
+    notIn?: bigint[] | number[] | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | null
+    notIn?: bigint[] | number[] | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumtournament_tournament_trimestryFilter<$PrismaModel = never> = {
     equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
     in?: $Enums.tournament_tournament_trimestry[]
@@ -89131,30 +89385,6 @@ export namespace Prisma {
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -89169,17 +89399,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -89297,17 +89516,6 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
-  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | null
-    notIn?: bigint[] | number[] | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
-  }
-
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -89317,22 +89525,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | null
-    notIn?: bigint[] | number[] | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -89699,13 +89891,17 @@ export namespace Prisma {
   export type table_assignmentCreateWithoutRegistrationInput = {
     id?: bigint | number
     table_seat_number: number
+    eliminated?: boolean
     tournament_table: tournament_tableCreateNestedOneWithoutTable_assignmentInput
+    registration_table_assignment_user_kill_idToregistration?: registrationCreateNestedOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
   }
 
   export type table_assignmentUncheckedCreateWithoutRegistrationInput = {
     id?: bigint | number
     table_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
   }
 
   export type table_assignmentCreateOrConnectWithoutRegistrationInput = {
@@ -89715,6 +89911,32 @@ export namespace Prisma {
 
   export type table_assignmentCreateManyRegistrationInputEnvelope = {
     data: table_assignmentCreateManyRegistrationInput | table_assignmentCreateManyRegistrationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: bigint | number
+    table_seat_number: number
+    eliminated?: boolean
+    registration: registrationCreateNestedOneWithoutTable_assignmentInput
+    tournament_table: tournament_tableCreateNestedOneWithoutTable_assignmentInput
+  }
+
+  export type table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: bigint | number
+    registration_id: bigint | number
+    table_id: bigint | number
+    table_seat_number: number
+    eliminated?: boolean
+  }
+
+  export type table_assignmentCreateOrConnectWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    where: table_assignmentWhereUniqueInput
+    create: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput>
+  }
+
+  export type table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInputEnvelope = {
+    data: table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInput | table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInput[]
     skipDuplicates?: boolean
   }
 
@@ -89854,6 +90076,24 @@ export namespace Prisma {
     registration_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_id?: BigIntFilter<"table_assignment"> | bigint | number
     table_seat_number?: IntFilter<"table_assignment"> | number
+    eliminated?: BoolFilter<"table_assignment"> | boolean
+    user_kill_id?: BigIntNullableFilter<"table_assignment"> | bigint | number | null
+  }
+
+  export type table_assignmentUpsertWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    where: table_assignmentWhereUniqueInput
+    update: XOR<table_assignmentUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput>
+    create: XOR<table_assignmentCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedCreateWithoutRegistration_table_assignment_user_kill_idToregistrationInput>
+  }
+
+  export type table_assignmentUpdateWithWhereUniqueWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    where: table_assignmentWhereUniqueInput
+    data: XOR<table_assignmentUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput, table_assignmentUncheckedUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput>
+  }
+
+  export type table_assignmentUpdateManyWithWhereWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    where: table_assignmentScalarWhereInput
+    data: XOR<table_assignmentUpdateManyMutationInput, table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput>
   }
 
   export type tournament_rankingUpsertWithWhereUniqueWithoutRegistrationInput = {
@@ -89933,6 +90173,7 @@ export namespace Prisma {
     statut: $Enums.registration_statut
     wp_users: wp_usersCreateNestedOneWithoutRegistrationInput
     tournament: tournamentCreateNestedOneWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutRegistrationInput
   }
 
@@ -89942,6 +90183,7 @@ export namespace Prisma {
     tournament_id: bigint | number
     inscription_date: Date | string
     statut: $Enums.registration_statut
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutRegistrationInput
   }
 
@@ -89969,6 +90211,31 @@ export namespace Prisma {
     create: XOR<tournament_tableCreateWithoutTable_assignmentInput, tournament_tableUncheckedCreateWithoutTable_assignmentInput>
   }
 
+  export type registrationCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    id?: bigint | number
+    inscription_date: Date | string
+    statut: $Enums.registration_statut
+    wp_users: wp_usersCreateNestedOneWithoutRegistrationInput
+    tournament: tournamentCreateNestedOneWithoutRegistrationInput
+    table_assignment?: table_assignmentCreateNestedManyWithoutRegistrationInput
+    tournament_ranking?: tournament_rankingCreateNestedManyWithoutRegistrationInput
+  }
+
+  export type registrationUncheckedCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    id?: bigint | number
+    user_id: bigint | number
+    tournament_id: bigint | number
+    inscription_date: Date | string
+    statut: $Enums.registration_statut
+    table_assignment?: table_assignmentUncheckedCreateNestedManyWithoutRegistrationInput
+    tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutRegistrationInput
+  }
+
+  export type registrationCreateOrConnectWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    where: registrationWhereUniqueInput
+    create: XOR<registrationCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+  }
+
   export type registrationUpsertWithoutTable_assignmentInput = {
     update: XOR<registrationUpdateWithoutTable_assignmentInput, registrationUncheckedUpdateWithoutTable_assignmentInput>
     create: XOR<registrationCreateWithoutTable_assignmentInput, registrationUncheckedCreateWithoutTable_assignmentInput>
@@ -89986,6 +90253,7 @@ export namespace Prisma {
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     wp_users?: wp_usersUpdateOneRequiredWithoutRegistrationNestedInput
     tournament?: tournamentUpdateOneRequiredWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -89995,6 +90263,7 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -90021,6 +90290,37 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_number?: IntFieldUpdateOperationsInput | number
     table_capacity?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type registrationUpsertWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    update: XOR<registrationUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+    create: XOR<registrationCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedCreateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+    where?: registrationWhereInput
+  }
+
+  export type registrationUpdateToOneWithWhereWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    where?: registrationWhereInput
+    data: XOR<registrationUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput, registrationUncheckedUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput>
+  }
+
+  export type registrationUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
+    wp_users?: wp_usersUpdateOneRequiredWithoutRegistrationNestedInput
+    tournament?: tournamentUpdateOneRequiredWithoutRegistrationNestedInput
+    table_assignment?: table_assignmentUpdateManyWithoutRegistrationNestedInput
+    tournament_ranking?: tournament_rankingUpdateManyWithoutRegistrationNestedInput
+  }
+
+  export type registrationUncheckedUpdateWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
+    table_assignment?: table_assignmentUncheckedUpdateManyWithoutRegistrationNestedInput
+    tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 
   export type quarter_rankingCreateWithoutTournamentInput = {
@@ -90055,6 +90355,7 @@ export namespace Prisma {
     statut: $Enums.registration_statut
     wp_users: wp_usersCreateNestedOneWithoutRegistrationInput
     table_assignment?: table_assignmentCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutRegistrationInput
   }
 
@@ -90064,6 +90365,7 @@ export namespace Prisma {
     inscription_date: Date | string
     statut: $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutRegistrationInput
   }
 
@@ -90543,6 +90845,7 @@ export namespace Prisma {
     wp_users: wp_usersCreateNestedOneWithoutRegistrationInput
     tournament: tournamentCreateNestedOneWithoutRegistrationInput
     table_assignment?: table_assignmentCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
   }
 
   export type registrationUncheckedCreateWithoutTournament_rankingInput = {
@@ -90552,6 +90855,7 @@ export namespace Prisma {
     inscription_date: Date | string
     statut: $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
   }
 
   export type registrationCreateOrConnectWithoutTournament_rankingInput = {
@@ -90616,6 +90920,7 @@ export namespace Prisma {
     wp_users?: wp_usersUpdateOneRequiredWithoutRegistrationNestedInput
     tournament?: tournamentUpdateOneRequiredWithoutRegistrationNestedInput
     table_assignment?: table_assignmentUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
   }
 
   export type registrationUncheckedUpdateWithoutTournament_rankingInput = {
@@ -90625,6 +90930,7 @@ export namespace Prisma {
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
   }
 
   export type tournamentUpsertWithoutTournament_rankingInput = {
@@ -90675,13 +90981,17 @@ export namespace Prisma {
   export type table_assignmentCreateWithoutTournament_tableInput = {
     id?: bigint | number
     table_seat_number: number
+    eliminated?: boolean
     registration: registrationCreateNestedOneWithoutTable_assignmentInput
+    registration_table_assignment_user_kill_idToregistration?: registrationCreateNestedOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationInput
   }
 
   export type table_assignmentUncheckedCreateWithoutTournament_tableInput = {
     id?: bigint | number
     registration_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
   }
 
   export type table_assignmentCreateOrConnectWithoutTournament_tableInput = {
@@ -90951,6 +91261,7 @@ export namespace Prisma {
     statut: $Enums.registration_statut
     tournament: tournamentCreateNestedOneWithoutRegistrationInput
     table_assignment?: table_assignmentCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutRegistrationInput
   }
 
@@ -90960,6 +91271,7 @@ export namespace Prisma {
     inscription_date: Date | string
     statut: $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedCreateNestedManyWithoutRegistrationInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedCreateNestedManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutRegistrationInput
   }
 
@@ -91048,6 +91360,16 @@ export namespace Prisma {
     id?: bigint | number
     table_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
+  }
+
+  export type table_assignmentCreateManyRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: bigint | number
+    registration_id: bigint | number
+    table_id: bigint | number
+    table_seat_number: number
+    eliminated?: boolean
   }
 
   export type tournament_rankingCreateManyRegistrationInput = {
@@ -91060,19 +91382,49 @@ export namespace Prisma {
   export type table_assignmentUpdateWithoutRegistrationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
     tournament_table?: tournament_tableUpdateOneRequiredWithoutTable_assignmentNestedInput
+    registration_table_assignment_user_kill_idToregistration?: registrationUpdateOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationNestedInput
   }
 
   export type table_assignmentUncheckedUpdateWithoutRegistrationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type table_assignmentUncheckedUpdateManyWithoutRegistrationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type table_assignmentUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    registration?: registrationUpdateOneRequiredWithoutTable_assignmentNestedInput
+    tournament_table?: tournament_tableUpdateOneRequiredWithoutTable_assignmentNestedInput
+  }
+
+  export type table_assignmentUncheckedUpdateWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    table_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    table_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type tournament_rankingUpdateWithoutRegistrationInput = {
@@ -91171,6 +91523,7 @@ export namespace Prisma {
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     wp_users?: wp_usersUpdateOneRequiredWithoutRegistrationNestedInput
     table_assignment?: table_assignmentUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -91180,6 +91533,7 @@ export namespace Prisma {
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -91286,24 +91640,32 @@ export namespace Prisma {
     id?: bigint | number
     registration_id: bigint | number
     table_seat_number: number
+    eliminated?: boolean
+    user_kill_id?: bigint | number | null
   }
 
   export type table_assignmentUpdateWithoutTournament_tableInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
     registration?: registrationUpdateOneRequiredWithoutTable_assignmentNestedInput
+    registration_table_assignment_user_kill_idToregistration?: registrationUpdateOneWithoutTable_assignment_table_assignment_user_kill_idToregistrationNestedInput
   }
 
   export type table_assignmentUncheckedUpdateWithoutTournament_tableInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type table_assignmentUncheckedUpdateManyWithoutTournament_tableInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     table_seat_number?: IntFieldUpdateOperationsInput | number
+    eliminated?: BoolFieldUpdateOperationsInput | boolean
+    user_kill_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type wp_mec_booking_attendeesCreateManyWp_mec_bookingsInput = {
@@ -91374,6 +91736,7 @@ export namespace Prisma {
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     tournament?: tournamentUpdateOneRequiredWithoutRegistrationNestedInput
     table_assignment?: table_assignmentUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutRegistrationNestedInput
   }
 
@@ -91383,6 +91746,7 @@ export namespace Prisma {
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
     table_assignment?: table_assignmentUncheckedUpdateManyWithoutRegistrationNestedInput
+    table_assignment_table_assignment_user_kill_idToregistration?: table_assignmentUncheckedUpdateManyWithoutRegistration_table_assignment_user_kill_idToregistrationNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 

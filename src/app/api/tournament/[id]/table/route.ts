@@ -1,63 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { tableAssignementMocks } from "@/mock/table_assignement.mock";
-import { tournamentTableMocks } from "@/mock/tournament_table.mock";
-import { registrationMocks } from "@/mock/registration.mock";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
 export async function GET(
   _: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
-  const isMock = process.env.MOCK === "true";
-
-  if (isMock) {
-    const tournamentTables = tournamentTableMocks.filter((table) =>
-      typeof table.tournament_id === "string"
-        ? table.tournament_id === id
-        : table.tournament_id.id === id
-    );
-
-    const tableIds = tournamentTables.map((table) => table.id);
-
-    const assignements = tableAssignementMocks.filter((assignement) =>
-      typeof assignement.table_id === "string"
-        ? tableIds.includes(assignement.table_id)
-        : tableIds.includes(assignement.table_id.id)
-    );
-
-    const enrichedAssignements = assignements.map((assignement) => {
-      const registration = registrationMocks.find(
-        (reg) =>
-          reg.id ===
-          (typeof assignement.registration_id === "string"
-            ? assignement.registration_id
-            : assignement.registration_id.id)
-      );
-
-      const table = tournamentTables.find(
-        (tbl) =>
-          tbl.id ===
-          (typeof assignement.table_id === "string"
-            ? assignement.table_id
-            : assignement.table_id.id)
-      );
-
-      return {
-        ...assignement,
-        registration,
-        table
-      };
-    });
-
-    return NextResponse.json(enrichedAssignements);
-  }
-
   try {
-    const tournamentId = parseInt(id);
+    const tournamentId = parseInt(params.id);
     if (isNaN(tournamentId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 404 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
     const assignements = await prisma.table_assignment.findMany({
@@ -99,6 +51,105 @@ export async function GET(
     console.error("Error fetching table assignments:", error);
     return NextResponse.json(
       { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const tournamentId = parseInt(params.id);
+    console.log("Tournament ID reçu :", tournamentId);
+
+    if (isNaN(tournamentId)) {
+      console.error("ID de tournoi invalide :", params.id);
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    const registrations = await prisma.registration.findMany({
+      where: {
+        tournament_id: BigInt(tournamentId),
+        statut: "Confirmed"
+      }
+    });
+
+    console.log("Nombre d'inscriptions confirmées :", registrations.length);
+
+    const shuffled = registrations.sort(() => Math.random() - 0.5);
+    const totalPlayers = shuffled.length;
+    const maxPerTable = 9;
+
+    const numberOfTables = Math.ceil(totalPlayers / maxPerTable);
+    const baseCapacity = Math.floor(totalPlayers / numberOfTables);
+    const extraPlayers = totalPlayers % numberOfTables;
+
+    const tableCapacities = Array(numberOfTables)
+      .fill(baseCapacity)
+      .map((cap, index) => (index < extraPlayers ? cap + 1 : cap));
+
+    console.log("Capacités calculées :", tableCapacities);
+
+    const createdTables = await prisma.$transaction(async (tx) => {
+      const tables = [];
+
+      for (let i = 0; i < numberOfTables; i++) {
+        const table = await tx.tournament_table.create({
+          data: {
+            tournament_id: BigInt(tournamentId),
+            table_number: i + 1,
+            table_capacity: tableCapacities[i]
+          }
+        });
+        console.log(`Table ${table.table_number} créée avec ID ${table.id}`);
+        tables.push(table);
+      }
+
+      let currentIndex = 0;
+
+      for (let i = 0; i < numberOfTables; i++) {
+        const table = tables[i];
+        const tablePlayers = shuffled.slice(
+          currentIndex,
+          currentIndex + tableCapacities[i]
+        );
+
+        console.log(
+          `→ Affectation de ${tablePlayers.length} joueurs à la table ${table.table_number}`
+        );
+
+        for (let j = 0; j < tablePlayers.length; j++) {
+          await tx.table_assignment.create({
+            data: {
+              registration_id: tablePlayers[j].id,
+              table_id: table.id,
+              table_seat_number: j + 1
+            }
+          });
+
+          console.log(`   - Joueur ID ${tablePlayers[j].id} → place ${j + 1}`);
+        }
+
+        currentIndex += tableCapacities[i];
+      }
+
+      return tables;
+    });
+
+    console.log("Création terminée :", createdTables.length, "tables");
+
+    return NextResponse.json(
+      serializeBigInt({
+        message: "Tables and assignments created",
+        createdTables
+      })
+    );
+  } catch (error) {
+    console.error("Erreur lors de la génération des tables :", error);
+    return NextResponse.json(
+      { error: "Failed to generate tables" },
       { status: 500 }
     );
   }

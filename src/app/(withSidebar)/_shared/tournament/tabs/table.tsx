@@ -3,46 +3,28 @@ import { seatsColumns } from "@/app/components/table/presets/seats.config";
 import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { mapAssignementsGroupedByTable } from "@/app/lib/adapter/tournament_table.adapter";
+import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { Tournament } from "@/app/types";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 
-type TableProps = {
-  tournament: Tournament;
-};
-
-export const TableTabs: React.FC<TableProps> = ({ tournament }) => {
+export const TableTabs = () => {
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const { tournament, assignements, loadTournamentData } =
+    useTournamentContext();
 
   useEffect(() => {
     const fetchAssignements = async () => {
-      try {
-        const res = await fetch(`/api/tournament/${tournament.id}/table`);
-        if (res.status === 404) {
-          window.location.href = "/not-found";
-          return;
-        }
-
-        if (res.status >= 500) {
-          window.location.href = "/500";
-          return;
-        }
-        const enrichedAssignements = await res.json();
-        const assignements =
-          mapAssignementsGroupedByTable(enrichedAssignements);
-        setGroupedRows(assignements);
-      } catch (err) {
-        console.error("Erreur chargement assignements :", err);
-        window.location.href = "/500";
-      } finally {
-        setIsLoading(false);
-      }
+      if (!tournament?.id) return;
+      const assignementsData = mapAssignementsGroupedByTable(assignements);
+      setGroupedRows(assignementsData);
+      setIsLoading(false);
     };
 
     fetchAssignements();
-  }, [tournament.id]);
+  }, [tournament?.id, assignements]);
 
   const getConditionalActions = (item: SeatRow) => {
     const actions: ActionDefinition<SeatRow>[] = [

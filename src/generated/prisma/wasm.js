@@ -153,7 +153,9 @@ exports.Prisma.Table_assignmentScalarFieldEnum = {
   id: 'id',
   registration_id: 'registration_id',
   table_id: 'table_id',
-  table_seat_number: 'table_seat_number'
+  table_seat_number: 'table_seat_number',
+  eliminated: 'eliminated',
+  user_kill_id: 'user_kill_id'
 };
 
 exports.Prisma.TournamentScalarFieldEnum = {
@@ -919,14 +921,14 @@ exports.Prisma.stackOrderByRelevanceFieldEnum = {
   stack_name: 'stack_name'
 };
 
-exports.Prisma.tournamentOrderByRelevanceFieldEnum = {
-  tournament_name: 'tournament_name',
-  tournament_description: 'tournament_description'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.tournamentOrderByRelevanceFieldEnum = {
+  tournament_name: 'tournament_name',
+  tournament_description: 'tournament_description'
 };
 
 exports.Prisma.wp_actionscheduler_actionsOrderByRelevanceFieldEnum = {

@@ -68,7 +68,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
         <div>
           {tournamentStatus !== "in_coming" ? (
             <ButtonComponents
-              text="Ajouter une table"
+              text="Générer les tables"
               onClick={onClick}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"

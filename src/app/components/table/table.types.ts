@@ -27,7 +27,7 @@ export type SeatRow = {
   avatarName: string;
   avatar: string | null;
   seat: string;
-  // eliminated: boolean;
+  eliminated: boolean;
   action: string;
 };
 

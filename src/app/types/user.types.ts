@@ -17,3 +17,11 @@ export type WPUser = {
   quarter_ranking?: QuarterRanking[];
   registration?: Registration[];
 };
+
+export type User = {
+  ID: number;
+  user_email: string;
+  display_name: string;
+  pseudo_winamax: string;
+  photo_url?: string;
+}
