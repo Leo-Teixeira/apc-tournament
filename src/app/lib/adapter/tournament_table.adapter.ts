@@ -39,12 +39,12 @@ export const mapAssignementsGroupedByTable = (
   const groups: Record<string, SeatRow[]> = {};
 
   assignements.forEach((a) => {
+    if (a.eliminated) return;
+
     const registration = a.registration;
     const user = registration?.wp_users;
     const table = a.tournament_table;
-
-    const tableNumber = table?.table_number;
-    if (!tableNumber) return;
+    const tableNumber = table?.table_number ?? "0";
 
     const seatRow: SeatRow = {
       id: a.id,
@@ -52,18 +52,19 @@ export const mapAssignementsGroupedByTable = (
       avatar: user?.photo_url ?? "",
       seat: `Siège ${a.table_seat_number}`,
       action: "",
-      eliminated: a.eliminated
+      eliminated: false
     };
 
     if (!groups[tableNumber]) groups[tableNumber] = [];
     groups[tableNumber].push(seatRow);
   });
 
-  // Trier chaque groupe par numéro de siège
   Object.keys(groups).forEach((tableNumber) => {
-    groups[tableNumber].sort(
-      (a, b) => (parseInt(a.seat) ?? 0) - (parseInt(b.seat) ?? 0)
-    );
+    groups[tableNumber].sort((a, b) => {
+      const aSeat = parseInt(a.seat.replace("Siège ", "")) || 0;
+      const bSeat = parseInt(b.seat.replace("Siège ", "")) || 0;
+      return aSeat - bSeat;
+    });
   });
 
   return groups;

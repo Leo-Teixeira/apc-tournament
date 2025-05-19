@@ -1,62 +1,36 @@
+import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { LoadingComponent } from "@/app/error/loading/page";
-import { Tournament, TournamentRanking } from "@/app/types";
 import { Card, Divider } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 
-type ChipDisplay = {
-  image: string;
-  value: number;
-  player_quantity: number;
-};
+export const ChipTabs: React.FC = () => {
+  const { tournament, assignements } = useTournamentContext();
 
-type ChipProps = {
-  tournament: Tournament;
-  classement: TournamentRanking[];
-};
-
-export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
-  const [chips, setChips] = useState<ChipDisplay[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [stackTotal, setStackTotal] = useState(0);
   const [stackPerPlayer, setStackPerPlayer] = useState(0);
   const [stackAverage, setStackAverage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const stackChips =
+    tournament?.stack?.stack_chip?.filter((sc) => sc.chip !== undefined) ?? [];
+  const chips = stackChips.map((sc) => sc.chip!);
+
+  const stackPerPlayerValue = tournament?.stack?.stack_total_player ?? 0;
+  const aliveAssignements = assignements.filter((a) => !a.eliminated);
+  const activePlayersCount = aliveAssignements.length;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const chipRes = await fetch(`/api/tournament/${tournament.id}/chip`);
-        const data = await chipRes.json();
-        const rawChips = Array.isArray(data) ? data : [];
+    const total = stackPerPlayerValue * aliveAssignements.length;
+    const average =
+      aliveAssignements.length > 0
+        ? Math.floor(total / aliveAssignements.length)
+        : 0;
 
-        const chips: ChipDisplay[] = rawChips.map((entry) => ({
-          image: entry.chip?.chip_image ?? "",
-          value: entry.chip?.value ?? 0,
-          player_quantity: entry.chip_player_quantity ?? 0
-        }));
-
-        const total = chips.reduce(
-          (acc, chip) => acc + chip.value * chip.player_quantity,
-          0
-        );
-
-        const perPlayer = chips.reduce((acc, chip) => acc + chip.value, 0);
-
-        const playerCount = classement.length;
-        const average = playerCount > 0 ? Math.floor(total / playerCount) : 0;
-
-        setChips(chips);
-        setStackTotal(total);
-        setStackPerPlayer(perPlayer);
-        setStackAverage(average);
-      } catch (error) {
-        console.error("Erreur lors du chargement des données :", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [tournament.id, classement.length]);
+    setStackPerPlayer(stackPerPlayerValue);
+    setStackTotal(total);
+    setStackAverage(average);
+    setIsLoading(false);
+  }, [stackPerPlayerValue, aliveAssignements]);
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -74,14 +48,16 @@ export const ChipTabs: React.FC<ChipProps> = ({ tournament, classement }) => {
     <div className="flex flex-col gap-6">
       <Card>
         <div className="flex flex-col">
-          <p className="p-5 font-satoshiBold text-l">Début du tournoi</p>
+          <p className="p-5 font-satoshiBold text-l">
+            Stack utilisé : {tournament?.stack?.stack_name}
+          </p>
           <Divider />
           <div className="flex flex-row justify-between">
             {chips.map((chip, index) => (
               <React.Fragment key={index}>
                 <div className="flex flex-col p-5 gap-2 justify-end">
                   <img
-                    src={chip.image}
+                    src={chip.chip_image}
                     alt={`Jeton ${chip.value}`}
                     className="w-32 h-32"
                   />

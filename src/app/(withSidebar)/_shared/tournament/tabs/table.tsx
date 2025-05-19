@@ -20,7 +20,6 @@ export const TableTabs = () => {
   );
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isCancelKillModal, setIsCancelKillModal] = useState(false);
   const { tournament, assignements, loadTournamentData } =
     useTournamentContext();
 
@@ -58,59 +57,33 @@ export const TableTabs = () => {
   };
 
   const getConditionalActions = (item: SeatRow) => {
-    const actions: ActionDefinition<SeatRow>[] =
-      item.eliminated == false
-        ? [
-            {
-              tooltip: "Éliminer",
-              icon: (
-                <HugeiconsIcon
-                  icon={Cancel01Icon}
-                  size={20}
-                  strokeWidth={1.5}
-                />
-              ),
-              onClick: () => {
-                const assignment = assignements.find((a) => a.id === item.id);
-                if (!assignment?.tournament_table?.table_number) return;
+    const actions: ActionDefinition<SeatRow>[] = [
+      {
+        tooltip: "Éliminer",
+        icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
+        onClick: () => {
+          const assignment = assignements.find((a) => a.id === item.id);
+          if (!assignment?.tournament_table?.table_number) return;
 
-                setSelectedPlayer(assignment);
+          setSelectedPlayer(assignment);
 
-                const killers = assignements
-                  .filter(
-                    (a) =>
-                      !a.eliminated &&
-                      a.registration &&
-                      a.tournament_table?.table_number ===
-                        assignment.tournament_table?.table_number &&
-                      a.registration_id !== assignment.registration_id
-                  )
-                  .map((a) => a.registration)
-                  .filter((r): r is Registration => !!r);
+          const killers = assignements
+            .filter(
+              (a) =>
+                !a.eliminated &&
+                a.registration &&
+                a.tournament_table?.table_number ===
+                  assignment.tournament_table?.table_number &&
+                a.registration_id !== assignment.registration_id
+            )
+            .map((a) => a.registration)
+            .filter((r): r is Registration => !!r);
 
-                setKillerOptions(killers);
-                onOpen();
-              }
-            }
-          ]
-        : [
-            {
-              tooltip: "Annuler élimination",
-              icon: (
-                <HugeiconsIcon
-                  icon={Cancel01Icon}
-                  size={20}
-                  strokeWidth={1.5}
-                />
-              ),
-              onClick: () => {
-                const assignment = assignements.find((a) => a.id === item.id);
-                if (!assignment?.tournament_table?.table_number) return;
-                setSelectedPlayer(assignment);
-                setIsCancelKillModal(true);
-              }
-            }
-          ];
+          setKillerOptions(killers);
+          onOpen();
+        }
+      }
+    ];
     return actions;
   };
 
@@ -164,38 +137,6 @@ export const TableTabs = () => {
           }
           allPlayerTable={killerOptions}
         />
-      </GenericModal>
-      <GenericModal
-        isOpen={isCancelKillModal}
-        onClose={() => {
-          setIsCancelKillModal(false);
-        }}
-        title="Annuler l'élimination"
-        confirmLabel="Annuler"
-        cancelLabel="Retour"
-        onConfirm={async () => {
-          if (!selectedPlayer || !tournament) return;
-
-          try {
-            const res = await fetch(
-              `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/cancelElimination`,
-              {
-                method: "PUT"
-              }
-            );
-            if (!res.ok) throw new Error("Erreur serveur");
-            await loadTournamentData();
-            setSelectedPlayer(null);
-            setIsCancelKillModal(false);
-          } catch (error) {
-            console.error("Erreur annulation élimination:", error);
-            alert("Une erreur est survenue lors de l’annulation.");
-          }
-        }}>
-        <p>
-          Es-tu sûr de vouloir annuler l'élimination de{" "}
-          <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
-        </p>
       </GenericModal>
     </div>
   );

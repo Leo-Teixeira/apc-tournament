@@ -7,9 +7,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
-  const numericId = parseInt(id);
 
-  if (isNaN(numericId)) {
+  let tournamentId: bigint;
+  try {
+    tournamentId = BigInt(id);
+  } catch {
     return NextResponse.json(
       { error: "Invalid tournament ID" },
       { status: 400 }
@@ -17,17 +19,22 @@ export async function GET(
   }
 
   try {
-    const tournamentId = BigInt(numericId);
-
-    const [tournament, levels, chips, tables, registrations, rankings] =
+    const [tournament, levels, tables, registrations, rankings, stacks] =
       await Promise.all([
-        prisma.tournament.findUnique({ where: { id: tournamentId } }),
-
-        prisma.tournament_level.findMany({
-          where: { tournament_id: tournamentId }
+        prisma.tournament.findUnique({
+          where: { id: tournamentId },
+          include: {
+            stack: {
+              include: {
+                stack_chip: {
+                  include: { chip: true }
+                }
+              }
+            }
+          }
         }),
 
-        prisma.tournament_chip_inventory.findMany({
+        prisma.tournament_level.findMany({
           where: { tournament_id: tournamentId }
         }),
 
@@ -57,6 +64,16 @@ export async function GET(
 
         prisma.tournament_ranking.findMany({
           where: { tournament_id: tournamentId }
+        }),
+
+        prisma.stack.findMany({
+          include: {
+            stack_chip: {
+              include: {
+                chip: true
+              }
+            }
+          }
         })
       ]);
 
@@ -72,13 +89,13 @@ export async function GET(
         tournament: {
           ...tournament,
           tournament_level: levels,
-          tournament_chip_inventory: chips,
           tournament_table: tables,
           registration: registrations,
           tournament_ranking: rankings
         },
         registrations,
-        classement: rankings
+        classement: rankings,
+        stacks
       })
     );
   } catch (error) {

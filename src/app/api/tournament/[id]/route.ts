@@ -25,7 +25,7 @@ export async function GET(
       where: { id: BigInt(id) },
       include: {
         tournament_level: true,
-        tournament_chip_inventory: true,
+        stack: true,
         tournament_ranking: true,
         tournament_table: true,
         registration: {

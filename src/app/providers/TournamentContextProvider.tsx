@@ -6,7 +6,8 @@ import {
   TournamentRanking,
   Registration,
   TournamentTable,
-  TableAssignment
+  TableAssignment,
+  Stack
 } from "@/app/types";
 
 type TournamentContextType = {
@@ -34,6 +35,7 @@ export const TournamentProvider = ({
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [classement, setClassement] = useState<TournamentRanking[]>([]);
   const [assignements, setAssignements] = useState<TableAssignment[]>([]);
+  const [stack, setStack] = useState<Stack>();
 
   const loadTournamentData = useCallback(async () => {
     const [resDetails, resLevels, resTable] = await Promise.all([
@@ -51,6 +53,7 @@ export const TournamentProvider = ({
     setRegistration(data.registrations);
     setClassement(data.classement);
     setAssignements(tableData);
+    setStack(data.stacks)
   }, [tournamentId]);
 
   return (

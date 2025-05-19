@@ -36,7 +36,6 @@ export default function StackPage() {
 
   const handleCreateJeton = () => {
     console.log("Créer le stack :", newJetonName);
-    // Ajouter un appel API ici
     setNewJetonName("");
     onClose();
   };

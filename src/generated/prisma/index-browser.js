@@ -146,7 +146,7 @@ exports.Prisma.RegistrationScalarFieldEnum = {
 exports.Prisma.StackScalarFieldEnum = {
   id: 'id',
   stack_name: 'stack_name',
-  stack_chip: 'stack_chip'
+  stack_total_player: 'stack_total_player'
 };
 
 exports.Prisma.Table_assignmentScalarFieldEnum = {
@@ -167,13 +167,8 @@ exports.Prisma.TournamentScalarFieldEnum = {
   tournament_trimestry: 'tournament_trimestry',
   tournament_category: 'tournament_category',
   tournament_status: 'tournament_status',
-  estimate_duration: 'estimate_duration'
-};
-
-exports.Prisma.Tournament_chip_inventoryScalarFieldEnum = {
-  tournament_id: 'tournament_id',
-  chip_id: 'chip_id',
-  chip_player_quantity: 'chip_player_quantity'
+  estimate_duration: 'estimate_duration',
+  tournament_stack: 'tournament_stack'
 };
 
 exports.Prisma.Tournament_levelScalarFieldEnum = {
@@ -908,6 +903,11 @@ exports.Prisma.Wp_my_calendar_locationsScalarFieldEnum = {
   location_access: 'location_access'
 };
 
+exports.Prisma.Stack_chipScalarFieldEnum = {
+  stack_id: 'stack_id',
+  chip_id: 'chip_id'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1337,7 +1337,6 @@ exports.Prisma.ModelName = {
   stack: 'stack',
   table_assignment: 'table_assignment',
   tournament: 'tournament',
-  tournament_chip_inventory: 'tournament_chip_inventory',
   tournament_level: 'tournament_level',
   tournament_ranking: 'tournament_ranking',
   tournament_table: 'tournament_table',
@@ -1396,7 +1395,8 @@ exports.Prisma.ModelName = {
   wp_my_calendar_category_relationships: 'wp_my_calendar_category_relationships',
   wp_my_calendar_events: 'wp_my_calendar_events',
   wp_my_calendar_location_relationships: 'wp_my_calendar_location_relationships',
-  wp_my_calendar_locations: 'wp_my_calendar_locations'
+  wp_my_calendar_locations: 'wp_my_calendar_locations',
+  stack_chip: 'stack_chip'
 };
 
 /**

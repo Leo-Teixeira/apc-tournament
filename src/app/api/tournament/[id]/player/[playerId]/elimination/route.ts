@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { reequilibrateTables } from "../../../reequilibrate/route";
 
 export async function PUT(
   req: NextRequest,
@@ -134,6 +135,9 @@ export async function PUT(
         ranking_score: score
       }
     });
+
+    const rebalanced = await reequilibrateTables(tournamentId);
+    console.log("♻️ Rééquilibrage effectué ?", rebalanced);
 
     console.log("🏆 Ranking enregistré:", newRanking);
 

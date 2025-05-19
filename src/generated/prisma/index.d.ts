@@ -44,11 +44,6 @@ export type table_assignment = $Result.DefaultSelection<Prisma.$table_assignment
  */
 export type tournament = $Result.DefaultSelection<Prisma.$tournamentPayload>
 /**
- * Model tournament_chip_inventory
- * 
- */
-export type tournament_chip_inventory = $Result.DefaultSelection<Prisma.$tournament_chip_inventoryPayload>
-/**
  * Model tournament_level
  * 
  */
@@ -343,6 +338,11 @@ export type wp_my_calendar_location_relationships = $Result.DefaultSelection<Pri
  * 
  */
 export type wp_my_calendar_locations = $Result.DefaultSelection<Prisma.$wp_my_calendar_locationsPayload>
+/**
+ * Model stack_chip
+ * 
+ */
+export type stack_chip = $Result.DefaultSelection<Prisma.$stack_chipPayload>
 
 /**
  * Enums
@@ -600,16 +600,6 @@ export class PrismaClient<
     * ```
     */
   get tournament(): Prisma.tournamentDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.tournament_chip_inventory`: Exposes CRUD operations for the **tournament_chip_inventory** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Tournament_chip_inventories
-    * const tournament_chip_inventories = await prisma.tournament_chip_inventory.findMany()
-    * ```
-    */
-  get tournament_chip_inventory(): Prisma.tournament_chip_inventoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.tournament_level`: Exposes CRUD operations for the **tournament_level** model.
@@ -1200,6 +1190,16 @@ export class PrismaClient<
     * ```
     */
   get wp_my_calendar_locations(): Prisma.wp_my_calendar_locationsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stack_chip`: Exposes CRUD operations for the **stack_chip** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Stack_chips
+    * const stack_chips = await prisma.stack_chip.findMany()
+    * ```
+    */
+  get stack_chip(): Prisma.stack_chipDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1646,7 +1646,6 @@ export namespace Prisma {
     stack: 'stack',
     table_assignment: 'table_assignment',
     tournament: 'tournament',
-    tournament_chip_inventory: 'tournament_chip_inventory',
     tournament_level: 'tournament_level',
     tournament_ranking: 'tournament_ranking',
     tournament_table: 'tournament_table',
@@ -1705,7 +1704,8 @@ export namespace Prisma {
     wp_my_calendar_category_relationships: 'wp_my_calendar_category_relationships',
     wp_my_calendar_events: 'wp_my_calendar_events',
     wp_my_calendar_location_relationships: 'wp_my_calendar_location_relationships',
-    wp_my_calendar_locations: 'wp_my_calendar_locations'
+    wp_my_calendar_locations: 'wp_my_calendar_locations',
+    stack_chip: 'stack_chip'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1724,7 +1724,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "chip" | "quarter_ranking" | "registration" | "stack" | "table_assignment" | "tournament" | "tournament_chip_inventory" | "tournament_level" | "tournament_ranking" | "tournament_table" | "wp_actionscheduler_actions" | "wp_actionscheduler_claims" | "wp_actionscheduler_groups" | "wp_actionscheduler_logs" | "wp_commentmeta" | "wp_comments" | "wp_em_price_options" | "wp_eventprime_checkout_fields" | "wp_eventprime_ticket_categories" | "wp_links" | "wp_litespeed_url" | "wp_litespeed_url_file" | "wp_mec_attendees" | "wp_mec_booking_attendees" | "wp_mec_bookings" | "wp_mec_dates" | "wp_mec_events" | "wp_mec_occurrences" | "wp_mec_users" | "wp_options" | "wp_postmeta" | "wp_posts" | "wp_rtec_registrations" | "wp_tec_events" | "wp_tec_occurrences" | "wp_tec_order_modifier_relationships" | "wp_tec_order_modifiers" | "wp_tec_order_modifiers_meta" | "wp_tec_slr_layouts" | "wp_tec_slr_maps" | "wp_tec_slr_seat_types" | "wp_tec_slr_sessions" | "wp_term_relationships" | "wp_term_taxonomy" | "wp_termmeta" | "wp_terms" | "wp_um_metadata" | "wp_usermeta" | "wp_users" | "wp_booking" | "wp_booking_dates_props" | "wp_bookingdates" | "wp_em_bookings" | "wp_em_bookings_meta" | "wp_em_events" | "wp_em_locations" | "wp_em_meta" | "wp_em_tickets" | "wp_em_tickets_bookings" | "wp_em_tickets_bookings_meta" | "wp_my_calendar" | "wp_my_calendar_categories" | "wp_my_calendar_category_relationships" | "wp_my_calendar_events" | "wp_my_calendar_location_relationships" | "wp_my_calendar_locations"
+      modelProps: "chip" | "quarter_ranking" | "registration" | "stack" | "table_assignment" | "tournament" | "tournament_level" | "tournament_ranking" | "tournament_table" | "wp_actionscheduler_actions" | "wp_actionscheduler_claims" | "wp_actionscheduler_groups" | "wp_actionscheduler_logs" | "wp_commentmeta" | "wp_comments" | "wp_em_price_options" | "wp_eventprime_checkout_fields" | "wp_eventprime_ticket_categories" | "wp_links" | "wp_litespeed_url" | "wp_litespeed_url_file" | "wp_mec_attendees" | "wp_mec_booking_attendees" | "wp_mec_bookings" | "wp_mec_dates" | "wp_mec_events" | "wp_mec_occurrences" | "wp_mec_users" | "wp_options" | "wp_postmeta" | "wp_posts" | "wp_rtec_registrations" | "wp_tec_events" | "wp_tec_occurrences" | "wp_tec_order_modifier_relationships" | "wp_tec_order_modifiers" | "wp_tec_order_modifiers_meta" | "wp_tec_slr_layouts" | "wp_tec_slr_maps" | "wp_tec_slr_seat_types" | "wp_tec_slr_sessions" | "wp_term_relationships" | "wp_term_taxonomy" | "wp_termmeta" | "wp_terms" | "wp_um_metadata" | "wp_usermeta" | "wp_users" | "wp_booking" | "wp_booking_dates_props" | "wp_bookingdates" | "wp_em_bookings" | "wp_em_bookings_meta" | "wp_em_events" | "wp_em_locations" | "wp_em_meta" | "wp_em_tickets" | "wp_em_tickets_bookings" | "wp_em_tickets_bookings_meta" | "wp_my_calendar" | "wp_my_calendar_categories" | "wp_my_calendar_category_relationships" | "wp_my_calendar_events" | "wp_my_calendar_location_relationships" | "wp_my_calendar_locations" | "stack_chip"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2121,72 +2121,6 @@ export namespace Prisma {
           count: {
             args: Prisma.tournamentCountArgs<ExtArgs>
             result: $Utils.Optional<TournamentCountAggregateOutputType> | number
-          }
-        }
-      }
-      tournament_chip_inventory: {
-        payload: Prisma.$tournament_chip_inventoryPayload<ExtArgs>
-        fields: Prisma.tournament_chip_inventoryFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.tournament_chip_inventoryFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.tournament_chip_inventoryFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          findFirst: {
-            args: Prisma.tournament_chip_inventoryFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.tournament_chip_inventoryFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          findMany: {
-            args: Prisma.tournament_chip_inventoryFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>[]
-          }
-          create: {
-            args: Prisma.tournament_chip_inventoryCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          createMany: {
-            args: Prisma.tournament_chip_inventoryCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.tournament_chip_inventoryDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          update: {
-            args: Prisma.tournament_chip_inventoryUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          deleteMany: {
-            args: Prisma.tournament_chip_inventoryDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.tournament_chip_inventoryUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.tournament_chip_inventoryUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$tournament_chip_inventoryPayload>
-          }
-          aggregate: {
-            args: Prisma.Tournament_chip_inventoryAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTournament_chip_inventory>
-          }
-          groupBy: {
-            args: Prisma.tournament_chip_inventoryGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Tournament_chip_inventoryGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.tournament_chip_inventoryCountArgs<ExtArgs>
-            result: $Utils.Optional<Tournament_chip_inventoryCountAggregateOutputType> | number
           }
         }
       }
@@ -6084,6 +6018,72 @@ export namespace Prisma {
           }
         }
       }
+      stack_chip: {
+        payload: Prisma.$stack_chipPayload<ExtArgs>
+        fields: Prisma.stack_chipFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.stack_chipFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.stack_chipFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          findFirst: {
+            args: Prisma.stack_chipFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.stack_chipFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          findMany: {
+            args: Prisma.stack_chipFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>[]
+          }
+          create: {
+            args: Prisma.stack_chipCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          createMany: {
+            args: Prisma.stack_chipCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.stack_chipDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          update: {
+            args: Prisma.stack_chipUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          deleteMany: {
+            args: Prisma.stack_chipDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.stack_chipUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.stack_chipUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$stack_chipPayload>
+          }
+          aggregate: {
+            args: Prisma.Stack_chipAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStack_chip>
+          }
+          groupBy: {
+            args: Prisma.stack_chipGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Stack_chipGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.stack_chipCountArgs<ExtArgs>
+            result: $Utils.Optional<Stack_chipCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -6174,7 +6174,6 @@ export namespace Prisma {
     stack?: stackOmit
     table_assignment?: table_assignmentOmit
     tournament?: tournamentOmit
-    tournament_chip_inventory?: tournament_chip_inventoryOmit
     tournament_level?: tournament_levelOmit
     tournament_ranking?: tournament_rankingOmit
     tournament_table?: tournament_tableOmit
@@ -6234,6 +6233,7 @@ export namespace Prisma {
     wp_my_calendar_events?: wp_my_calendar_eventsOmit
     wp_my_calendar_location_relationships?: wp_my_calendar_location_relationshipsOmit
     wp_my_calendar_locations?: wp_my_calendar_locationsOmit
+    stack_chip?: stack_chipOmit
   }
 
   /* Types for Logging */
@@ -6328,13 +6328,11 @@ export namespace Prisma {
    */
 
   export type ChipCountOutputType = {
-    stack: number
-    tournament_chip_inventory: number
+    stack_chip: number
   }
 
   export type ChipCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    stack?: boolean | ChipCountOutputTypeCountStackArgs
-    tournament_chip_inventory?: boolean | ChipCountOutputTypeCountTournament_chip_inventoryArgs
+    stack_chip?: boolean | ChipCountOutputTypeCountStack_chipArgs
   }
 
   // Custom InputTypes
@@ -6351,15 +6349,8 @@ export namespace Prisma {
   /**
    * ChipCountOutputType without action
    */
-  export type ChipCountOutputTypeCountStackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: stackWhereInput
-  }
-
-  /**
-   * ChipCountOutputType without action
-   */
-  export type ChipCountOutputTypeCountTournament_chip_inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: tournament_chip_inventoryWhereInput
+  export type ChipCountOutputTypeCountStack_chipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: stack_chipWhereInput
   }
 
 
@@ -6413,13 +6404,52 @@ export namespace Prisma {
 
 
   /**
+   * Count Type StackCountOutputType
+   */
+
+  export type StackCountOutputType = {
+    stack_chip: number
+    tournament: number
+  }
+
+  export type StackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stack_chip?: boolean | StackCountOutputTypeCountStack_chipArgs
+    tournament?: boolean | StackCountOutputTypeCountTournamentArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StackCountOutputType without action
+   */
+  export type StackCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StackCountOutputType
+     */
+    select?: StackCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StackCountOutputType without action
+   */
+  export type StackCountOutputTypeCountStack_chipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: stack_chipWhereInput
+  }
+
+  /**
+   * StackCountOutputType without action
+   */
+  export type StackCountOutputTypeCountTournamentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tournamentWhereInput
+  }
+
+
+  /**
    * Count Type TournamentCountOutputType
    */
 
   export type TournamentCountOutputType = {
     quarter_ranking: number
     registration: number
-    tournament_chip_inventory: number
     tournament_level: number
     tournament_ranking: number
     tournament_table: number
@@ -6428,7 +6458,6 @@ export namespace Prisma {
   export type TournamentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | TournamentCountOutputTypeCountQuarter_rankingArgs
     registration?: boolean | TournamentCountOutputTypeCountRegistrationArgs
-    tournament_chip_inventory?: boolean | TournamentCountOutputTypeCountTournament_chip_inventoryArgs
     tournament_level?: boolean | TournamentCountOutputTypeCountTournament_levelArgs
     tournament_ranking?: boolean | TournamentCountOutputTypeCountTournament_rankingArgs
     tournament_table?: boolean | TournamentCountOutputTypeCountTournament_tableArgs
@@ -6457,13 +6486,6 @@ export namespace Prisma {
    */
   export type TournamentCountOutputTypeCountRegistrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: registrationWhereInput
-  }
-
-  /**
-   * TournamentCountOutputType without action
-   */
-  export type TournamentCountOutputTypeCountTournament_chip_inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: tournament_chip_inventoryWhereInput
   }
 
   /**
@@ -6780,8 +6802,7 @@ export namespace Prisma {
     id?: boolean
     value?: boolean
     chip_image?: boolean
-    stack?: boolean | chip$stackArgs<ExtArgs>
-    tournament_chip_inventory?: boolean | chip$tournament_chip_inventoryArgs<ExtArgs>
+    stack_chip?: boolean | chip$stack_chipArgs<ExtArgs>
     _count?: boolean | ChipCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chip"]>
 
@@ -6795,16 +6816,14 @@ export namespace Prisma {
 
   export type chipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "chip_image", ExtArgs["result"]["chip"]>
   export type chipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    stack?: boolean | chip$stackArgs<ExtArgs>
-    tournament_chip_inventory?: boolean | chip$tournament_chip_inventoryArgs<ExtArgs>
+    stack_chip?: boolean | chip$stack_chipArgs<ExtArgs>
     _count?: boolean | ChipCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $chipPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "chip"
     objects: {
-      stack: Prisma.$stackPayload<ExtArgs>[]
-      tournament_chip_inventory: Prisma.$tournament_chip_inventoryPayload<ExtArgs>[]
+      stack_chip: Prisma.$stack_chipPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -7150,8 +7169,7 @@ export namespace Prisma {
    */
   export interface Prisma__chipClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    stack<T extends chip$stackArgs<ExtArgs> = {}>(args?: Subset<T, chip$stackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tournament_chip_inventory<T extends chip$tournament_chip_inventoryArgs<ExtArgs> = {}>(args?: Subset<T, chip$tournament_chip_inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stack_chip<T extends chip$stack_chipArgs<ExtArgs> = {}>(args?: Subset<T, chip$stack_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7527,51 +7545,27 @@ export namespace Prisma {
   }
 
   /**
-   * chip.stack
+   * chip.stack_chip
    */
-  export type chip$stackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type chip$stack_chipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the stack
+     * Select specific fields to fetch from the stack_chip
      */
-    select?: stackSelect<ExtArgs> | null
+    select?: stack_chipSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the stack
+     * Omit specific fields from the stack_chip
      */
-    omit?: stackOmit<ExtArgs> | null
+    omit?: stack_chipOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: stackInclude<ExtArgs> | null
-    where?: stackWhereInput
-    orderBy?: stackOrderByWithRelationInput | stackOrderByWithRelationInput[]
-    cursor?: stackWhereUniqueInput
+    include?: stack_chipInclude<ExtArgs> | null
+    where?: stack_chipWhereInput
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    cursor?: stack_chipWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: StackScalarFieldEnum | StackScalarFieldEnum[]
-  }
-
-  /**
-   * chip.tournament_chip_inventory
-   */
-  export type chip$tournament_chip_inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    where?: tournament_chip_inventoryWhereInput
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Tournament_chip_inventoryScalarFieldEnum | Tournament_chip_inventoryScalarFieldEnum[]
+    distinct?: Stack_chipScalarFieldEnum | Stack_chipScalarFieldEnum[]
   }
 
   /**
@@ -9662,60 +9656,60 @@ export namespace Prisma {
 
   export type StackAvgAggregateOutputType = {
     id: number | null
-    stack_chip: number | null
+    stack_total_player: number | null
   }
 
   export type StackSumAggregateOutputType = {
     id: number | null
-    stack_chip: bigint | null
+    stack_total_player: number | null
   }
 
   export type StackMinAggregateOutputType = {
     id: number | null
     stack_name: string | null
-    stack_chip: bigint | null
+    stack_total_player: number | null
   }
 
   export type StackMaxAggregateOutputType = {
     id: number | null
     stack_name: string | null
-    stack_chip: bigint | null
+    stack_total_player: number | null
   }
 
   export type StackCountAggregateOutputType = {
     id: number
     stack_name: number
-    stack_chip: number
+    stack_total_player: number
     _all: number
   }
 
 
   export type StackAvgAggregateInputType = {
     id?: true
-    stack_chip?: true
+    stack_total_player?: true
   }
 
   export type StackSumAggregateInputType = {
     id?: true
-    stack_chip?: true
+    stack_total_player?: true
   }
 
   export type StackMinAggregateInputType = {
     id?: true
     stack_name?: true
-    stack_chip?: true
+    stack_total_player?: true
   }
 
   export type StackMaxAggregateInputType = {
     id?: true
     stack_name?: true
-    stack_chip?: true
+    stack_total_player?: true
   }
 
   export type StackCountAggregateInputType = {
     id?: true
     stack_name?: true
-    stack_chip?: true
+    stack_total_player?: true
     _all?: true
   }
 
@@ -9808,7 +9802,7 @@ export namespace Prisma {
   export type StackGroupByOutputType = {
     id: number
     stack_name: string
-    stack_chip: bigint
+    stack_total_player: number
     _count: StackCountAggregateOutputType | null
     _avg: StackAvgAggregateOutputType | null
     _sum: StackSumAggregateOutputType | null
@@ -9833,8 +9827,10 @@ export namespace Prisma {
   export type stackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     stack_name?: boolean
-    stack_chip?: boolean
-    chip?: boolean | chipDefaultArgs<ExtArgs>
+    stack_total_player?: boolean
+    stack_chip?: boolean | stack$stack_chipArgs<ExtArgs>
+    tournament?: boolean | stack$tournamentArgs<ExtArgs>
+    _count?: boolean | StackCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stack"]>
 
 
@@ -9842,23 +9838,26 @@ export namespace Prisma {
   export type stackSelectScalar = {
     id?: boolean
     stack_name?: boolean
-    stack_chip?: boolean
+    stack_total_player?: boolean
   }
 
-  export type stackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stack_name" | "stack_chip", ExtArgs["result"]["stack"]>
+  export type stackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stack_name" | "stack_total_player", ExtArgs["result"]["stack"]>
   export type stackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    chip?: boolean | chipDefaultArgs<ExtArgs>
+    stack_chip?: boolean | stack$stack_chipArgs<ExtArgs>
+    tournament?: boolean | stack$tournamentArgs<ExtArgs>
+    _count?: boolean | StackCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $stackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "stack"
     objects: {
-      chip: Prisma.$chipPayload<ExtArgs>
+      stack_chip: Prisma.$stack_chipPayload<ExtArgs>[]
+      tournament: Prisma.$tournamentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       stack_name: string
-      stack_chip: bigint
+      stack_total_player: number
     }, ExtArgs["result"]["stack"]>
     composites: {}
   }
@@ -10199,7 +10198,8 @@ export namespace Prisma {
    */
   export interface Prisma__stackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    chip<T extends chipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, chipDefaultArgs<ExtArgs>>): Prisma__chipClient<$Result.GetResult<Prisma.$chipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    stack_chip<T extends stack$stack_chipArgs<ExtArgs> = {}>(args?: Subset<T, stack$stack_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tournament<T extends stack$tournamentArgs<ExtArgs> = {}>(args?: Subset<T, stack$tournamentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournamentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10231,7 +10231,7 @@ export namespace Prisma {
   interface stackFieldRefs {
     readonly id: FieldRef<"stack", 'Int'>
     readonly stack_name: FieldRef<"stack", 'String'>
-    readonly stack_chip: FieldRef<"stack", 'BigInt'>
+    readonly stack_total_player: FieldRef<"stack", 'Int'>
   }
     
 
@@ -10572,6 +10572,54 @@ export namespace Prisma {
      * Limit how many stacks to delete.
      */
     limit?: number
+  }
+
+  /**
+   * stack.stack_chip
+   */
+  export type stack$stack_chipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    where?: stack_chipWhereInput
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    cursor?: stack_chipWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Stack_chipScalarFieldEnum | Stack_chipScalarFieldEnum[]
+  }
+
+  /**
+   * stack.tournament
+   */
+  export type stack$tournamentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tournament
+     */
+    select?: tournamentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tournament
+     */
+    omit?: tournamentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tournamentInclude<ExtArgs> | null
+    where?: tournamentWhereInput
+    orderBy?: tournamentOrderByWithRelationInput | tournamentOrderByWithRelationInput[]
+    cursor?: tournamentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TournamentScalarFieldEnum | TournamentScalarFieldEnum[]
   }
 
   /**
@@ -11624,10 +11672,12 @@ export namespace Prisma {
 
   export type TournamentAvgAggregateOutputType = {
     id: number | null
+    tournament_stack: number | null
   }
 
   export type TournamentSumAggregateOutputType = {
     id: bigint | null
+    tournament_stack: number | null
   }
 
   export type TournamentMinAggregateOutputType = {
@@ -11640,6 +11690,7 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
     estimate_duration: Date | null
+    tournament_stack: number | null
   }
 
   export type TournamentMaxAggregateOutputType = {
@@ -11652,6 +11703,7 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
     estimate_duration: Date | null
+    tournament_stack: number | null
   }
 
   export type TournamentCountAggregateOutputType = {
@@ -11664,16 +11716,19 @@ export namespace Prisma {
     tournament_category: number
     tournament_status: number
     estimate_duration: number
+    tournament_stack: number
     _all: number
   }
 
 
   export type TournamentAvgAggregateInputType = {
     id?: true
+    tournament_stack?: true
   }
 
   export type TournamentSumAggregateInputType = {
     id?: true
+    tournament_stack?: true
   }
 
   export type TournamentMinAggregateInputType = {
@@ -11686,6 +11741,7 @@ export namespace Prisma {
     tournament_category?: true
     tournament_status?: true
     estimate_duration?: true
+    tournament_stack?: true
   }
 
   export type TournamentMaxAggregateInputType = {
@@ -11698,6 +11754,7 @@ export namespace Prisma {
     tournament_category?: true
     tournament_status?: true
     estimate_duration?: true
+    tournament_stack?: true
   }
 
   export type TournamentCountAggregateInputType = {
@@ -11710,6 +11767,7 @@ export namespace Prisma {
     tournament_category?: true
     tournament_status?: true
     estimate_duration?: true
+    tournament_stack?: true
     _all?: true
   }
 
@@ -11809,6 +11867,7 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date
+    tournament_stack: number
     _count: TournamentCountAggregateOutputType | null
     _avg: TournamentAvgAggregateOutputType | null
     _sum: TournamentSumAggregateOutputType | null
@@ -11840,9 +11899,10 @@ export namespace Prisma {
     tournament_category?: boolean
     tournament_status?: boolean
     estimate_duration?: boolean
+    tournament_stack?: boolean
     quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
-    tournament_chip_inventory?: boolean | tournament$tournament_chip_inventoryArgs<ExtArgs>
+    stack?: boolean | stackDefaultArgs<ExtArgs>
     tournament_level?: boolean | tournament$tournament_levelArgs<ExtArgs>
     tournament_ranking?: boolean | tournament$tournament_rankingArgs<ExtArgs>
     tournament_table?: boolean | tournament$tournament_tableArgs<ExtArgs>
@@ -11861,13 +11921,14 @@ export namespace Prisma {
     tournament_category?: boolean
     tournament_status?: boolean
     estimate_duration?: boolean
+    tournament_stack?: boolean
   }
 
-  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration", ExtArgs["result"]["tournament"]>
+  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack", ExtArgs["result"]["tournament"]>
   export type tournamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
-    tournament_chip_inventory?: boolean | tournament$tournament_chip_inventoryArgs<ExtArgs>
+    stack?: boolean | stackDefaultArgs<ExtArgs>
     tournament_level?: boolean | tournament$tournament_levelArgs<ExtArgs>
     tournament_ranking?: boolean | tournament$tournament_rankingArgs<ExtArgs>
     tournament_table?: boolean | tournament$tournament_tableArgs<ExtArgs>
@@ -11879,7 +11940,7 @@ export namespace Prisma {
     objects: {
       quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
       registration: Prisma.$registrationPayload<ExtArgs>[]
-      tournament_chip_inventory: Prisma.$tournament_chip_inventoryPayload<ExtArgs>[]
+      stack: Prisma.$stackPayload<ExtArgs>
       tournament_level: Prisma.$tournament_levelPayload<ExtArgs>[]
       tournament_ranking: Prisma.$tournament_rankingPayload<ExtArgs>[]
       tournament_table: Prisma.$tournament_tablePayload<ExtArgs>[]
@@ -11894,6 +11955,7 @@ export namespace Prisma {
       tournament_category: $Enums.tournament_tournament_category
       tournament_status: $Enums.tournament_tournament_status
       estimate_duration: Date
+      tournament_stack: number
     }, ExtArgs["result"]["tournament"]>
     composites: {}
   }
@@ -12236,7 +12298,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     quarter_ranking<T extends tournament$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, tournament$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registration<T extends tournament$registrationArgs<ExtArgs> = {}>(args?: Subset<T, tournament$registrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tournament_chip_inventory<T extends tournament$tournament_chip_inventoryArgs<ExtArgs> = {}>(args?: Subset<T, tournament$tournament_chip_inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stack<T extends stackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, stackDefaultArgs<ExtArgs>>): Prisma__stackClient<$Result.GetResult<Prisma.$stackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tournament_level<T extends tournament$tournament_levelArgs<ExtArgs> = {}>(args?: Subset<T, tournament$tournament_levelArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_levelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tournament_ranking<T extends tournament$tournament_rankingArgs<ExtArgs> = {}>(args?: Subset<T, tournament$tournament_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tournament_table<T extends tournament$tournament_tableArgs<ExtArgs> = {}>(args?: Subset<T, tournament$tournament_tableArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_tablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12278,6 +12340,7 @@ export namespace Prisma {
     readonly tournament_category: FieldRef<"tournament", 'tournament_tournament_category'>
     readonly tournament_status: FieldRef<"tournament", 'tournament_tournament_status'>
     readonly estimate_duration: FieldRef<"tournament", 'DateTime'>
+    readonly tournament_stack: FieldRef<"tournament", 'Int'>
   }
     
 
@@ -12669,30 +12732,6 @@ export namespace Prisma {
   }
 
   /**
-   * tournament.tournament_chip_inventory
-   */
-  export type tournament$tournament_chip_inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    where?: tournament_chip_inventoryWhereInput
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Tournament_chip_inventoryScalarFieldEnum | Tournament_chip_inventoryScalarFieldEnum[]
-  }
-
-  /**
    * tournament.tournament_level
    */
   export type tournament$tournament_levelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12780,959 +12819,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: tournamentInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model tournament_chip_inventory
-   */
-
-  export type AggregateTournament_chip_inventory = {
-    _count: Tournament_chip_inventoryCountAggregateOutputType | null
-    _avg: Tournament_chip_inventoryAvgAggregateOutputType | null
-    _sum: Tournament_chip_inventorySumAggregateOutputType | null
-    _min: Tournament_chip_inventoryMinAggregateOutputType | null
-    _max: Tournament_chip_inventoryMaxAggregateOutputType | null
-  }
-
-  export type Tournament_chip_inventoryAvgAggregateOutputType = {
-    tournament_id: number | null
-    chip_id: number | null
-    chip_player_quantity: number | null
-  }
-
-  export type Tournament_chip_inventorySumAggregateOutputType = {
-    tournament_id: bigint | null
-    chip_id: bigint | null
-    chip_player_quantity: number | null
-  }
-
-  export type Tournament_chip_inventoryMinAggregateOutputType = {
-    tournament_id: bigint | null
-    chip_id: bigint | null
-    chip_player_quantity: number | null
-  }
-
-  export type Tournament_chip_inventoryMaxAggregateOutputType = {
-    tournament_id: bigint | null
-    chip_id: bigint | null
-    chip_player_quantity: number | null
-  }
-
-  export type Tournament_chip_inventoryCountAggregateOutputType = {
-    tournament_id: number
-    chip_id: number
-    chip_player_quantity: number
-    _all: number
-  }
-
-
-  export type Tournament_chip_inventoryAvgAggregateInputType = {
-    tournament_id?: true
-    chip_id?: true
-    chip_player_quantity?: true
-  }
-
-  export type Tournament_chip_inventorySumAggregateInputType = {
-    tournament_id?: true
-    chip_id?: true
-    chip_player_quantity?: true
-  }
-
-  export type Tournament_chip_inventoryMinAggregateInputType = {
-    tournament_id?: true
-    chip_id?: true
-    chip_player_quantity?: true
-  }
-
-  export type Tournament_chip_inventoryMaxAggregateInputType = {
-    tournament_id?: true
-    chip_id?: true
-    chip_player_quantity?: true
-  }
-
-  export type Tournament_chip_inventoryCountAggregateInputType = {
-    tournament_id?: true
-    chip_id?: true
-    chip_player_quantity?: true
-    _all?: true
-  }
-
-  export type Tournament_chip_inventoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which tournament_chip_inventory to aggregate.
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of tournament_chip_inventories to fetch.
-     */
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` tournament_chip_inventories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` tournament_chip_inventories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned tournament_chip_inventories
-    **/
-    _count?: true | Tournament_chip_inventoryCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: Tournament_chip_inventoryAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Tournament_chip_inventorySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Tournament_chip_inventoryMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Tournament_chip_inventoryMaxAggregateInputType
-  }
-
-  export type GetTournament_chip_inventoryAggregateType<T extends Tournament_chip_inventoryAggregateArgs> = {
-        [P in keyof T & keyof AggregateTournament_chip_inventory]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTournament_chip_inventory[P]>
-      : GetScalarType<T[P], AggregateTournament_chip_inventory[P]>
-  }
-
-
-
-
-  export type tournament_chip_inventoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: tournament_chip_inventoryWhereInput
-    orderBy?: tournament_chip_inventoryOrderByWithAggregationInput | tournament_chip_inventoryOrderByWithAggregationInput[]
-    by: Tournament_chip_inventoryScalarFieldEnum[] | Tournament_chip_inventoryScalarFieldEnum
-    having?: tournament_chip_inventoryScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Tournament_chip_inventoryCountAggregateInputType | true
-    _avg?: Tournament_chip_inventoryAvgAggregateInputType
-    _sum?: Tournament_chip_inventorySumAggregateInputType
-    _min?: Tournament_chip_inventoryMinAggregateInputType
-    _max?: Tournament_chip_inventoryMaxAggregateInputType
-  }
-
-  export type Tournament_chip_inventoryGroupByOutputType = {
-    tournament_id: bigint
-    chip_id: bigint
-    chip_player_quantity: number
-    _count: Tournament_chip_inventoryCountAggregateOutputType | null
-    _avg: Tournament_chip_inventoryAvgAggregateOutputType | null
-    _sum: Tournament_chip_inventorySumAggregateOutputType | null
-    _min: Tournament_chip_inventoryMinAggregateOutputType | null
-    _max: Tournament_chip_inventoryMaxAggregateOutputType | null
-  }
-
-  type GetTournament_chip_inventoryGroupByPayload<T extends tournament_chip_inventoryGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Tournament_chip_inventoryGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Tournament_chip_inventoryGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Tournament_chip_inventoryGroupByOutputType[P]>
-            : GetScalarType<T[P], Tournament_chip_inventoryGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type tournament_chip_inventorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    tournament_id?: boolean
-    chip_id?: boolean
-    chip_player_quantity?: boolean
-    tournament?: boolean | tournamentDefaultArgs<ExtArgs>
-    chip?: boolean | chipDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["tournament_chip_inventory"]>
-
-
-
-  export type tournament_chip_inventorySelectScalar = {
-    tournament_id?: boolean
-    chip_id?: boolean
-    chip_player_quantity?: boolean
-  }
-
-  export type tournament_chip_inventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"tournament_id" | "chip_id" | "chip_player_quantity", ExtArgs["result"]["tournament_chip_inventory"]>
-  export type tournament_chip_inventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tournament?: boolean | tournamentDefaultArgs<ExtArgs>
-    chip?: boolean | chipDefaultArgs<ExtArgs>
-  }
-
-  export type $tournament_chip_inventoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "tournament_chip_inventory"
-    objects: {
-      tournament: Prisma.$tournamentPayload<ExtArgs>
-      chip: Prisma.$chipPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      tournament_id: bigint
-      chip_id: bigint
-      chip_player_quantity: number
-    }, ExtArgs["result"]["tournament_chip_inventory"]>
-    composites: {}
-  }
-
-  type tournament_chip_inventoryGetPayload<S extends boolean | null | undefined | tournament_chip_inventoryDefaultArgs> = $Result.GetResult<Prisma.$tournament_chip_inventoryPayload, S>
-
-  type tournament_chip_inventoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<tournament_chip_inventoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: Tournament_chip_inventoryCountAggregateInputType | true
-    }
-
-  export interface tournament_chip_inventoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['tournament_chip_inventory'], meta: { name: 'tournament_chip_inventory' } }
-    /**
-     * Find zero or one Tournament_chip_inventory that matches the filter.
-     * @param {tournament_chip_inventoryFindUniqueArgs} args - Arguments to find a Tournament_chip_inventory
-     * @example
-     * // Get one Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends tournament_chip_inventoryFindUniqueArgs>(args: SelectSubset<T, tournament_chip_inventoryFindUniqueArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Tournament_chip_inventory that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {tournament_chip_inventoryFindUniqueOrThrowArgs} args - Arguments to find a Tournament_chip_inventory
-     * @example
-     * // Get one Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends tournament_chip_inventoryFindUniqueOrThrowArgs>(args: SelectSubset<T, tournament_chip_inventoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Tournament_chip_inventory that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryFindFirstArgs} args - Arguments to find a Tournament_chip_inventory
-     * @example
-     * // Get one Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends tournament_chip_inventoryFindFirstArgs>(args?: SelectSubset<T, tournament_chip_inventoryFindFirstArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Tournament_chip_inventory that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryFindFirstOrThrowArgs} args - Arguments to find a Tournament_chip_inventory
-     * @example
-     * // Get one Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends tournament_chip_inventoryFindFirstOrThrowArgs>(args?: SelectSubset<T, tournament_chip_inventoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Tournament_chip_inventories that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Tournament_chip_inventories
-     * const tournament_chip_inventories = await prisma.tournament_chip_inventory.findMany()
-     * 
-     * // Get first 10 Tournament_chip_inventories
-     * const tournament_chip_inventories = await prisma.tournament_chip_inventory.findMany({ take: 10 })
-     * 
-     * // Only select the `tournament_id`
-     * const tournament_chip_inventoryWithTournament_idOnly = await prisma.tournament_chip_inventory.findMany({ select: { tournament_id: true } })
-     * 
-     */
-    findMany<T extends tournament_chip_inventoryFindManyArgs>(args?: SelectSubset<T, tournament_chip_inventoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Tournament_chip_inventory.
-     * @param {tournament_chip_inventoryCreateArgs} args - Arguments to create a Tournament_chip_inventory.
-     * @example
-     * // Create one Tournament_chip_inventory
-     * const Tournament_chip_inventory = await prisma.tournament_chip_inventory.create({
-     *   data: {
-     *     // ... data to create a Tournament_chip_inventory
-     *   }
-     * })
-     * 
-     */
-    create<T extends tournament_chip_inventoryCreateArgs>(args: SelectSubset<T, tournament_chip_inventoryCreateArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Tournament_chip_inventories.
-     * @param {tournament_chip_inventoryCreateManyArgs} args - Arguments to create many Tournament_chip_inventories.
-     * @example
-     * // Create many Tournament_chip_inventories
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends tournament_chip_inventoryCreateManyArgs>(args?: SelectSubset<T, tournament_chip_inventoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Tournament_chip_inventory.
-     * @param {tournament_chip_inventoryDeleteArgs} args - Arguments to delete one Tournament_chip_inventory.
-     * @example
-     * // Delete one Tournament_chip_inventory
-     * const Tournament_chip_inventory = await prisma.tournament_chip_inventory.delete({
-     *   where: {
-     *     // ... filter to delete one Tournament_chip_inventory
-     *   }
-     * })
-     * 
-     */
-    delete<T extends tournament_chip_inventoryDeleteArgs>(args: SelectSubset<T, tournament_chip_inventoryDeleteArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Tournament_chip_inventory.
-     * @param {tournament_chip_inventoryUpdateArgs} args - Arguments to update one Tournament_chip_inventory.
-     * @example
-     * // Update one Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends tournament_chip_inventoryUpdateArgs>(args: SelectSubset<T, tournament_chip_inventoryUpdateArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Tournament_chip_inventories.
-     * @param {tournament_chip_inventoryDeleteManyArgs} args - Arguments to filter Tournament_chip_inventories to delete.
-     * @example
-     * // Delete a few Tournament_chip_inventories
-     * const { count } = await prisma.tournament_chip_inventory.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends tournament_chip_inventoryDeleteManyArgs>(args?: SelectSubset<T, tournament_chip_inventoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Tournament_chip_inventories.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Tournament_chip_inventories
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends tournament_chip_inventoryUpdateManyArgs>(args: SelectSubset<T, tournament_chip_inventoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Tournament_chip_inventory.
-     * @param {tournament_chip_inventoryUpsertArgs} args - Arguments to update or create a Tournament_chip_inventory.
-     * @example
-     * // Update or create a Tournament_chip_inventory
-     * const tournament_chip_inventory = await prisma.tournament_chip_inventory.upsert({
-     *   create: {
-     *     // ... data to create a Tournament_chip_inventory
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Tournament_chip_inventory we want to update
-     *   }
-     * })
-     */
-    upsert<T extends tournament_chip_inventoryUpsertArgs>(args: SelectSubset<T, tournament_chip_inventoryUpsertArgs<ExtArgs>>): Prisma__tournament_chip_inventoryClient<$Result.GetResult<Prisma.$tournament_chip_inventoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Tournament_chip_inventories.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryCountArgs} args - Arguments to filter Tournament_chip_inventories to count.
-     * @example
-     * // Count the number of Tournament_chip_inventories
-     * const count = await prisma.tournament_chip_inventory.count({
-     *   where: {
-     *     // ... the filter for the Tournament_chip_inventories we want to count
-     *   }
-     * })
-    **/
-    count<T extends tournament_chip_inventoryCountArgs>(
-      args?: Subset<T, tournament_chip_inventoryCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Tournament_chip_inventoryCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Tournament_chip_inventory.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Tournament_chip_inventoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Tournament_chip_inventoryAggregateArgs>(args: Subset<T, Tournament_chip_inventoryAggregateArgs>): Prisma.PrismaPromise<GetTournament_chip_inventoryAggregateType<T>>
-
-    /**
-     * Group by Tournament_chip_inventory.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {tournament_chip_inventoryGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends tournament_chip_inventoryGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: tournament_chip_inventoryGroupByArgs['orderBy'] }
-        : { orderBy?: tournament_chip_inventoryGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, tournament_chip_inventoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTournament_chip_inventoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the tournament_chip_inventory model
-   */
-  readonly fields: tournament_chip_inventoryFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for tournament_chip_inventory.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__tournament_chip_inventoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    tournament<T extends tournamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tournamentDefaultArgs<ExtArgs>>): Prisma__tournamentClient<$Result.GetResult<Prisma.$tournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    chip<T extends chipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, chipDefaultArgs<ExtArgs>>): Prisma__chipClient<$Result.GetResult<Prisma.$chipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the tournament_chip_inventory model
-   */
-  interface tournament_chip_inventoryFieldRefs {
-    readonly tournament_id: FieldRef<"tournament_chip_inventory", 'BigInt'>
-    readonly chip_id: FieldRef<"tournament_chip_inventory", 'BigInt'>
-    readonly chip_player_quantity: FieldRef<"tournament_chip_inventory", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * tournament_chip_inventory findUnique
-   */
-  export type tournament_chip_inventoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter, which tournament_chip_inventory to fetch.
-     */
-    where: tournament_chip_inventoryWhereUniqueInput
-  }
-
-  /**
-   * tournament_chip_inventory findUniqueOrThrow
-   */
-  export type tournament_chip_inventoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter, which tournament_chip_inventory to fetch.
-     */
-    where: tournament_chip_inventoryWhereUniqueInput
-  }
-
-  /**
-   * tournament_chip_inventory findFirst
-   */
-  export type tournament_chip_inventoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter, which tournament_chip_inventory to fetch.
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of tournament_chip_inventories to fetch.
-     */
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for tournament_chip_inventories.
-     */
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` tournament_chip_inventories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` tournament_chip_inventories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of tournament_chip_inventories.
-     */
-    distinct?: Tournament_chip_inventoryScalarFieldEnum | Tournament_chip_inventoryScalarFieldEnum[]
-  }
-
-  /**
-   * tournament_chip_inventory findFirstOrThrow
-   */
-  export type tournament_chip_inventoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter, which tournament_chip_inventory to fetch.
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of tournament_chip_inventories to fetch.
-     */
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for tournament_chip_inventories.
-     */
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` tournament_chip_inventories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` tournament_chip_inventories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of tournament_chip_inventories.
-     */
-    distinct?: Tournament_chip_inventoryScalarFieldEnum | Tournament_chip_inventoryScalarFieldEnum[]
-  }
-
-  /**
-   * tournament_chip_inventory findMany
-   */
-  export type tournament_chip_inventoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter, which tournament_chip_inventories to fetch.
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of tournament_chip_inventories to fetch.
-     */
-    orderBy?: tournament_chip_inventoryOrderByWithRelationInput | tournament_chip_inventoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing tournament_chip_inventories.
-     */
-    cursor?: tournament_chip_inventoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` tournament_chip_inventories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` tournament_chip_inventories.
-     */
-    skip?: number
-    distinct?: Tournament_chip_inventoryScalarFieldEnum | Tournament_chip_inventoryScalarFieldEnum[]
-  }
-
-  /**
-   * tournament_chip_inventory create
-   */
-  export type tournament_chip_inventoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * The data needed to create a tournament_chip_inventory.
-     */
-    data: XOR<tournament_chip_inventoryCreateInput, tournament_chip_inventoryUncheckedCreateInput>
-  }
-
-  /**
-   * tournament_chip_inventory createMany
-   */
-  export type tournament_chip_inventoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many tournament_chip_inventories.
-     */
-    data: tournament_chip_inventoryCreateManyInput | tournament_chip_inventoryCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * tournament_chip_inventory update
-   */
-  export type tournament_chip_inventoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * The data needed to update a tournament_chip_inventory.
-     */
-    data: XOR<tournament_chip_inventoryUpdateInput, tournament_chip_inventoryUncheckedUpdateInput>
-    /**
-     * Choose, which tournament_chip_inventory to update.
-     */
-    where: tournament_chip_inventoryWhereUniqueInput
-  }
-
-  /**
-   * tournament_chip_inventory updateMany
-   */
-  export type tournament_chip_inventoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update tournament_chip_inventories.
-     */
-    data: XOR<tournament_chip_inventoryUpdateManyMutationInput, tournament_chip_inventoryUncheckedUpdateManyInput>
-    /**
-     * Filter which tournament_chip_inventories to update
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * Limit how many tournament_chip_inventories to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * tournament_chip_inventory upsert
-   */
-  export type tournament_chip_inventoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * The filter to search for the tournament_chip_inventory to update in case it exists.
-     */
-    where: tournament_chip_inventoryWhereUniqueInput
-    /**
-     * In case the tournament_chip_inventory found by the `where` argument doesn't exist, create a new tournament_chip_inventory with this data.
-     */
-    create: XOR<tournament_chip_inventoryCreateInput, tournament_chip_inventoryUncheckedCreateInput>
-    /**
-     * In case the tournament_chip_inventory was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<tournament_chip_inventoryUpdateInput, tournament_chip_inventoryUncheckedUpdateInput>
-  }
-
-  /**
-   * tournament_chip_inventory delete
-   */
-  export type tournament_chip_inventoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
-    /**
-     * Filter which tournament_chip_inventory to delete.
-     */
-    where: tournament_chip_inventoryWhereUniqueInput
-  }
-
-  /**
-   * tournament_chip_inventory deleteMany
-   */
-  export type tournament_chip_inventoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which tournament_chip_inventories to delete
-     */
-    where?: tournament_chip_inventoryWhereInput
-    /**
-     * Limit how many tournament_chip_inventories to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * tournament_chip_inventory without action
-   */
-  export type tournament_chip_inventoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the tournament_chip_inventory
-     */
-    select?: tournament_chip_inventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the tournament_chip_inventory
-     */
-    omit?: tournament_chip_inventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: tournament_chip_inventoryInclude<ExtArgs> | null
   }
 
 
@@ -71793,6 +70879,944 @@ export namespace Prisma {
 
 
   /**
+   * Model stack_chip
+   */
+
+  export type AggregateStack_chip = {
+    _count: Stack_chipCountAggregateOutputType | null
+    _avg: Stack_chipAvgAggregateOutputType | null
+    _sum: Stack_chipSumAggregateOutputType | null
+    _min: Stack_chipMinAggregateOutputType | null
+    _max: Stack_chipMaxAggregateOutputType | null
+  }
+
+  export type Stack_chipAvgAggregateOutputType = {
+    stack_id: number | null
+    chip_id: number | null
+  }
+
+  export type Stack_chipSumAggregateOutputType = {
+    stack_id: number | null
+    chip_id: bigint | null
+  }
+
+  export type Stack_chipMinAggregateOutputType = {
+    stack_id: number | null
+    chip_id: bigint | null
+  }
+
+  export type Stack_chipMaxAggregateOutputType = {
+    stack_id: number | null
+    chip_id: bigint | null
+  }
+
+  export type Stack_chipCountAggregateOutputType = {
+    stack_id: number
+    chip_id: number
+    _all: number
+  }
+
+
+  export type Stack_chipAvgAggregateInputType = {
+    stack_id?: true
+    chip_id?: true
+  }
+
+  export type Stack_chipSumAggregateInputType = {
+    stack_id?: true
+    chip_id?: true
+  }
+
+  export type Stack_chipMinAggregateInputType = {
+    stack_id?: true
+    chip_id?: true
+  }
+
+  export type Stack_chipMaxAggregateInputType = {
+    stack_id?: true
+    chip_id?: true
+  }
+
+  export type Stack_chipCountAggregateInputType = {
+    stack_id?: true
+    chip_id?: true
+    _all?: true
+  }
+
+  export type Stack_chipAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which stack_chip to aggregate.
+     */
+    where?: stack_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of stack_chips to fetch.
+     */
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: stack_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` stack_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` stack_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned stack_chips
+    **/
+    _count?: true | Stack_chipCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Stack_chipAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Stack_chipSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Stack_chipMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Stack_chipMaxAggregateInputType
+  }
+
+  export type GetStack_chipAggregateType<T extends Stack_chipAggregateArgs> = {
+        [P in keyof T & keyof AggregateStack_chip]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStack_chip[P]>
+      : GetScalarType<T[P], AggregateStack_chip[P]>
+  }
+
+
+
+
+  export type stack_chipGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: stack_chipWhereInput
+    orderBy?: stack_chipOrderByWithAggregationInput | stack_chipOrderByWithAggregationInput[]
+    by: Stack_chipScalarFieldEnum[] | Stack_chipScalarFieldEnum
+    having?: stack_chipScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Stack_chipCountAggregateInputType | true
+    _avg?: Stack_chipAvgAggregateInputType
+    _sum?: Stack_chipSumAggregateInputType
+    _min?: Stack_chipMinAggregateInputType
+    _max?: Stack_chipMaxAggregateInputType
+  }
+
+  export type Stack_chipGroupByOutputType = {
+    stack_id: number
+    chip_id: bigint
+    _count: Stack_chipCountAggregateOutputType | null
+    _avg: Stack_chipAvgAggregateOutputType | null
+    _sum: Stack_chipSumAggregateOutputType | null
+    _min: Stack_chipMinAggregateOutputType | null
+    _max: Stack_chipMaxAggregateOutputType | null
+  }
+
+  type GetStack_chipGroupByPayload<T extends stack_chipGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Stack_chipGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Stack_chipGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Stack_chipGroupByOutputType[P]>
+            : GetScalarType<T[P], Stack_chipGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type stack_chipSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stack_id?: boolean
+    chip_id?: boolean
+    chip?: boolean | chipDefaultArgs<ExtArgs>
+    stack?: boolean | stackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stack_chip"]>
+
+
+
+  export type stack_chipSelectScalar = {
+    stack_id?: boolean
+    chip_id?: boolean
+  }
+
+  export type stack_chipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"stack_id" | "chip_id", ExtArgs["result"]["stack_chip"]>
+  export type stack_chipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chip?: boolean | chipDefaultArgs<ExtArgs>
+    stack?: boolean | stackDefaultArgs<ExtArgs>
+  }
+
+  export type $stack_chipPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "stack_chip"
+    objects: {
+      chip: Prisma.$chipPayload<ExtArgs>
+      stack: Prisma.$stackPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      stack_id: number
+      chip_id: bigint
+    }, ExtArgs["result"]["stack_chip"]>
+    composites: {}
+  }
+
+  type stack_chipGetPayload<S extends boolean | null | undefined | stack_chipDefaultArgs> = $Result.GetResult<Prisma.$stack_chipPayload, S>
+
+  type stack_chipCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<stack_chipFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Stack_chipCountAggregateInputType | true
+    }
+
+  export interface stack_chipDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['stack_chip'], meta: { name: 'stack_chip' } }
+    /**
+     * Find zero or one Stack_chip that matches the filter.
+     * @param {stack_chipFindUniqueArgs} args - Arguments to find a Stack_chip
+     * @example
+     * // Get one Stack_chip
+     * const stack_chip = await prisma.stack_chip.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends stack_chipFindUniqueArgs>(args: SelectSubset<T, stack_chipFindUniqueArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Stack_chip that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {stack_chipFindUniqueOrThrowArgs} args - Arguments to find a Stack_chip
+     * @example
+     * // Get one Stack_chip
+     * const stack_chip = await prisma.stack_chip.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends stack_chipFindUniqueOrThrowArgs>(args: SelectSubset<T, stack_chipFindUniqueOrThrowArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Stack_chip that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipFindFirstArgs} args - Arguments to find a Stack_chip
+     * @example
+     * // Get one Stack_chip
+     * const stack_chip = await prisma.stack_chip.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends stack_chipFindFirstArgs>(args?: SelectSubset<T, stack_chipFindFirstArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Stack_chip that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipFindFirstOrThrowArgs} args - Arguments to find a Stack_chip
+     * @example
+     * // Get one Stack_chip
+     * const stack_chip = await prisma.stack_chip.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends stack_chipFindFirstOrThrowArgs>(args?: SelectSubset<T, stack_chipFindFirstOrThrowArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Stack_chips that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Stack_chips
+     * const stack_chips = await prisma.stack_chip.findMany()
+     * 
+     * // Get first 10 Stack_chips
+     * const stack_chips = await prisma.stack_chip.findMany({ take: 10 })
+     * 
+     * // Only select the `stack_id`
+     * const stack_chipWithStack_idOnly = await prisma.stack_chip.findMany({ select: { stack_id: true } })
+     * 
+     */
+    findMany<T extends stack_chipFindManyArgs>(args?: SelectSubset<T, stack_chipFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Stack_chip.
+     * @param {stack_chipCreateArgs} args - Arguments to create a Stack_chip.
+     * @example
+     * // Create one Stack_chip
+     * const Stack_chip = await prisma.stack_chip.create({
+     *   data: {
+     *     // ... data to create a Stack_chip
+     *   }
+     * })
+     * 
+     */
+    create<T extends stack_chipCreateArgs>(args: SelectSubset<T, stack_chipCreateArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Stack_chips.
+     * @param {stack_chipCreateManyArgs} args - Arguments to create many Stack_chips.
+     * @example
+     * // Create many Stack_chips
+     * const stack_chip = await prisma.stack_chip.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends stack_chipCreateManyArgs>(args?: SelectSubset<T, stack_chipCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Stack_chip.
+     * @param {stack_chipDeleteArgs} args - Arguments to delete one Stack_chip.
+     * @example
+     * // Delete one Stack_chip
+     * const Stack_chip = await prisma.stack_chip.delete({
+     *   where: {
+     *     // ... filter to delete one Stack_chip
+     *   }
+     * })
+     * 
+     */
+    delete<T extends stack_chipDeleteArgs>(args: SelectSubset<T, stack_chipDeleteArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Stack_chip.
+     * @param {stack_chipUpdateArgs} args - Arguments to update one Stack_chip.
+     * @example
+     * // Update one Stack_chip
+     * const stack_chip = await prisma.stack_chip.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends stack_chipUpdateArgs>(args: SelectSubset<T, stack_chipUpdateArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Stack_chips.
+     * @param {stack_chipDeleteManyArgs} args - Arguments to filter Stack_chips to delete.
+     * @example
+     * // Delete a few Stack_chips
+     * const { count } = await prisma.stack_chip.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends stack_chipDeleteManyArgs>(args?: SelectSubset<T, stack_chipDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Stack_chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Stack_chips
+     * const stack_chip = await prisma.stack_chip.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends stack_chipUpdateManyArgs>(args: SelectSubset<T, stack_chipUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Stack_chip.
+     * @param {stack_chipUpsertArgs} args - Arguments to update or create a Stack_chip.
+     * @example
+     * // Update or create a Stack_chip
+     * const stack_chip = await prisma.stack_chip.upsert({
+     *   create: {
+     *     // ... data to create a Stack_chip
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Stack_chip we want to update
+     *   }
+     * })
+     */
+    upsert<T extends stack_chipUpsertArgs>(args: SelectSubset<T, stack_chipUpsertArgs<ExtArgs>>): Prisma__stack_chipClient<$Result.GetResult<Prisma.$stack_chipPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Stack_chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipCountArgs} args - Arguments to filter Stack_chips to count.
+     * @example
+     * // Count the number of Stack_chips
+     * const count = await prisma.stack_chip.count({
+     *   where: {
+     *     // ... the filter for the Stack_chips we want to count
+     *   }
+     * })
+    **/
+    count<T extends stack_chipCountArgs>(
+      args?: Subset<T, stack_chipCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Stack_chipCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Stack_chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Stack_chipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Stack_chipAggregateArgs>(args: Subset<T, Stack_chipAggregateArgs>): Prisma.PrismaPromise<GetStack_chipAggregateType<T>>
+
+    /**
+     * Group by Stack_chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {stack_chipGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends stack_chipGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: stack_chipGroupByArgs['orderBy'] }
+        : { orderBy?: stack_chipGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, stack_chipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStack_chipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the stack_chip model
+   */
+  readonly fields: stack_chipFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for stack_chip.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__stack_chipClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chip<T extends chipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, chipDefaultArgs<ExtArgs>>): Prisma__chipClient<$Result.GetResult<Prisma.$chipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    stack<T extends stackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, stackDefaultArgs<ExtArgs>>): Prisma__stackClient<$Result.GetResult<Prisma.$stackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the stack_chip model
+   */
+  interface stack_chipFieldRefs {
+    readonly stack_id: FieldRef<"stack_chip", 'Int'>
+    readonly chip_id: FieldRef<"stack_chip", 'BigInt'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * stack_chip findUnique
+   */
+  export type stack_chipFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which stack_chip to fetch.
+     */
+    where: stack_chipWhereUniqueInput
+  }
+
+  /**
+   * stack_chip findUniqueOrThrow
+   */
+  export type stack_chipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which stack_chip to fetch.
+     */
+    where: stack_chipWhereUniqueInput
+  }
+
+  /**
+   * stack_chip findFirst
+   */
+  export type stack_chipFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which stack_chip to fetch.
+     */
+    where?: stack_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of stack_chips to fetch.
+     */
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for stack_chips.
+     */
+    cursor?: stack_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` stack_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` stack_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of stack_chips.
+     */
+    distinct?: Stack_chipScalarFieldEnum | Stack_chipScalarFieldEnum[]
+  }
+
+  /**
+   * stack_chip findFirstOrThrow
+   */
+  export type stack_chipFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which stack_chip to fetch.
+     */
+    where?: stack_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of stack_chips to fetch.
+     */
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for stack_chips.
+     */
+    cursor?: stack_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` stack_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` stack_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of stack_chips.
+     */
+    distinct?: Stack_chipScalarFieldEnum | Stack_chipScalarFieldEnum[]
+  }
+
+  /**
+   * stack_chip findMany
+   */
+  export type stack_chipFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which stack_chips to fetch.
+     */
+    where?: stack_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of stack_chips to fetch.
+     */
+    orderBy?: stack_chipOrderByWithRelationInput | stack_chipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing stack_chips.
+     */
+    cursor?: stack_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` stack_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` stack_chips.
+     */
+    skip?: number
+    distinct?: Stack_chipScalarFieldEnum | Stack_chipScalarFieldEnum[]
+  }
+
+  /**
+   * stack_chip create
+   */
+  export type stack_chipCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * The data needed to create a stack_chip.
+     */
+    data: XOR<stack_chipCreateInput, stack_chipUncheckedCreateInput>
+  }
+
+  /**
+   * stack_chip createMany
+   */
+  export type stack_chipCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many stack_chips.
+     */
+    data: stack_chipCreateManyInput | stack_chipCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * stack_chip update
+   */
+  export type stack_chipUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * The data needed to update a stack_chip.
+     */
+    data: XOR<stack_chipUpdateInput, stack_chipUncheckedUpdateInput>
+    /**
+     * Choose, which stack_chip to update.
+     */
+    where: stack_chipWhereUniqueInput
+  }
+
+  /**
+   * stack_chip updateMany
+   */
+  export type stack_chipUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update stack_chips.
+     */
+    data: XOR<stack_chipUpdateManyMutationInput, stack_chipUncheckedUpdateManyInput>
+    /**
+     * Filter which stack_chips to update
+     */
+    where?: stack_chipWhereInput
+    /**
+     * Limit how many stack_chips to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * stack_chip upsert
+   */
+  export type stack_chipUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * The filter to search for the stack_chip to update in case it exists.
+     */
+    where: stack_chipWhereUniqueInput
+    /**
+     * In case the stack_chip found by the `where` argument doesn't exist, create a new stack_chip with this data.
+     */
+    create: XOR<stack_chipCreateInput, stack_chipUncheckedCreateInput>
+    /**
+     * In case the stack_chip was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<stack_chipUpdateInput, stack_chipUncheckedUpdateInput>
+  }
+
+  /**
+   * stack_chip delete
+   */
+  export type stack_chipDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+    /**
+     * Filter which stack_chip to delete.
+     */
+    where: stack_chipWhereUniqueInput
+  }
+
+  /**
+   * stack_chip deleteMany
+   */
+  export type stack_chipDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which stack_chips to delete
+     */
+    where?: stack_chipWhereInput
+    /**
+     * Limit how many stack_chips to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * stack_chip without action
+   */
+  export type stack_chipDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the stack_chip
+     */
+    select?: stack_chipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the stack_chip
+     */
+    omit?: stack_chipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: stack_chipInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -71841,7 +71865,7 @@ export namespace Prisma {
   export const StackScalarFieldEnum: {
     id: 'id',
     stack_name: 'stack_name',
-    stack_chip: 'stack_chip'
+    stack_total_player: 'stack_total_player'
   };
 
   export type StackScalarFieldEnum = (typeof StackScalarFieldEnum)[keyof typeof StackScalarFieldEnum]
@@ -71868,19 +71892,11 @@ export namespace Prisma {
     tournament_trimestry: 'tournament_trimestry',
     tournament_category: 'tournament_category',
     tournament_status: 'tournament_status',
-    estimate_duration: 'estimate_duration'
+    estimate_duration: 'estimate_duration',
+    tournament_stack: 'tournament_stack'
   };
 
   export type TournamentScalarFieldEnum = (typeof TournamentScalarFieldEnum)[keyof typeof TournamentScalarFieldEnum]
-
-
-  export const Tournament_chip_inventoryScalarFieldEnum: {
-    tournament_id: 'tournament_id',
-    chip_id: 'chip_id',
-    chip_player_quantity: 'chip_player_quantity'
-  };
-
-  export type Tournament_chip_inventoryScalarFieldEnum = (typeof Tournament_chip_inventoryScalarFieldEnum)[keyof typeof Tournament_chip_inventoryScalarFieldEnum]
 
 
   export const Tournament_levelScalarFieldEnum: {
@@ -72792,6 +72808,14 @@ export namespace Prisma {
   export type Wp_my_calendar_locationsScalarFieldEnum = (typeof Wp_my_calendar_locationsScalarFieldEnum)[keyof typeof Wp_my_calendar_locationsScalarFieldEnum]
 
 
+  export const Stack_chipScalarFieldEnum: {
+    stack_id: 'stack_id',
+    chip_id: 'chip_id'
+  };
+
+  export type Stack_chipScalarFieldEnum = (typeof Stack_chipScalarFieldEnum)[keyof typeof Stack_chipScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -73451,16 +73475,14 @@ export namespace Prisma {
     id?: BigIntFilter<"chip"> | bigint | number
     value?: IntFilter<"chip"> | number
     chip_image?: StringFilter<"chip"> | string
-    stack?: StackListRelationFilter
-    tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
+    stack_chip?: Stack_chipListRelationFilter
   }
 
   export type chipOrderByWithRelationInput = {
     id?: SortOrder
     value?: SortOrder
     chip_image?: SortOrder
-    stack?: stackOrderByRelationAggregateInput
-    tournament_chip_inventory?: tournament_chip_inventoryOrderByRelationAggregateInput
+    stack_chip?: stack_chipOrderByRelationAggregateInput
     _relevance?: chipOrderByRelevanceInput
   }
 
@@ -73471,8 +73493,7 @@ export namespace Prisma {
     NOT?: chipWhereInput | chipWhereInput[]
     value?: IntFilter<"chip"> | number
     chip_image?: StringFilter<"chip"> | string
-    stack?: StackListRelationFilter
-    tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
+    stack_chip?: Stack_chipListRelationFilter
   }, "id">
 
   export type chipOrderByWithAggregationInput = {
@@ -73635,15 +73656,17 @@ export namespace Prisma {
     NOT?: stackWhereInput | stackWhereInput[]
     id?: IntFilter<"stack"> | number
     stack_name?: StringFilter<"stack"> | string
-    stack_chip?: BigIntFilter<"stack"> | bigint | number
-    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
+    stack_total_player?: IntFilter<"stack"> | number
+    stack_chip?: Stack_chipListRelationFilter
+    tournament?: TournamentListRelationFilter
   }
 
   export type stackOrderByWithRelationInput = {
     id?: SortOrder
     stack_name?: SortOrder
-    stack_chip?: SortOrder
-    chip?: chipOrderByWithRelationInput
+    stack_total_player?: SortOrder
+    stack_chip?: stack_chipOrderByRelationAggregateInput
+    tournament?: tournamentOrderByRelationAggregateInput
     _relevance?: stackOrderByRelevanceInput
   }
 
@@ -73653,14 +73676,15 @@ export namespace Prisma {
     OR?: stackWhereInput[]
     NOT?: stackWhereInput | stackWhereInput[]
     stack_name?: StringFilter<"stack"> | string
-    stack_chip?: BigIntFilter<"stack"> | bigint | number
-    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
+    stack_total_player?: IntFilter<"stack"> | number
+    stack_chip?: Stack_chipListRelationFilter
+    tournament?: TournamentListRelationFilter
   }, "id">
 
   export type stackOrderByWithAggregationInput = {
     id?: SortOrder
     stack_name?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
     _count?: stackCountOrderByAggregateInput
     _avg?: stackAvgOrderByAggregateInput
     _max?: stackMaxOrderByAggregateInput
@@ -73674,7 +73698,7 @@ export namespace Prisma {
     NOT?: stackScalarWhereWithAggregatesInput | stackScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"stack"> | number
     stack_name?: StringWithAggregatesFilter<"stack"> | string
-    stack_chip?: BigIntWithAggregatesFilter<"stack"> | bigint | number
+    stack_total_player?: IntWithAggregatesFilter<"stack"> | number
   }
 
   export type table_assignmentWhereInput = {
@@ -73758,9 +73782,10 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    tournament_stack?: IntFilter<"tournament"> | number
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
-    tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
+    stack?: XOR<StackScalarRelationFilter, stackWhereInput>
     tournament_level?: Tournament_levelListRelationFilter
     tournament_ranking?: Tournament_rankingListRelationFilter
     tournament_table?: Tournament_tableListRelationFilter
@@ -73776,9 +73801,10 @@ export namespace Prisma {
     tournament_category?: SortOrder
     tournament_status?: SortOrder
     estimate_duration?: SortOrder
+    tournament_stack?: SortOrder
     quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
-    tournament_chip_inventory?: tournament_chip_inventoryOrderByRelationAggregateInput
+    stack?: stackOrderByWithRelationInput
     tournament_level?: tournament_levelOrderByRelationAggregateInput
     tournament_ranking?: tournament_rankingOrderByRelationAggregateInput
     tournament_table?: tournament_tableOrderByRelationAggregateInput
@@ -73798,9 +73824,10 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    tournament_stack?: IntFilter<"tournament"> | number
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
-    tournament_chip_inventory?: Tournament_chip_inventoryListRelationFilter
+    stack?: XOR<StackScalarRelationFilter, stackWhereInput>
     tournament_level?: Tournament_levelListRelationFilter
     tournament_ranking?: Tournament_rankingListRelationFilter
     tournament_table?: Tournament_tableListRelationFilter
@@ -73816,6 +73843,7 @@ export namespace Prisma {
     tournament_category?: SortOrder
     tournament_status?: SortOrder
     estimate_duration?: SortOrder
+    tournament_stack?: SortOrder
     _count?: tournamentCountOrderByAggregateInput
     _avg?: tournamentAvgOrderByAggregateInput
     _max?: tournamentMaxOrderByAggregateInput
@@ -73836,57 +73864,7 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
-  }
-
-  export type tournament_chip_inventoryWhereInput = {
-    AND?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
-    OR?: tournament_chip_inventoryWhereInput[]
-    NOT?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
-    tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
-    tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
-    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
-  }
-
-  export type tournament_chip_inventoryOrderByWithRelationInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-    tournament?: tournamentOrderByWithRelationInput
-    chip?: chipOrderByWithRelationInput
-  }
-
-  export type tournament_chip_inventoryWhereUniqueInput = Prisma.AtLeast<{
-    tournament_id_chip_id?: tournament_chip_inventoryTournament_idChip_idCompoundUniqueInput
-    AND?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
-    OR?: tournament_chip_inventoryWhereInput[]
-    NOT?: tournament_chip_inventoryWhereInput | tournament_chip_inventoryWhereInput[]
-    tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
-    tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
-    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
-  }, "tournament_id_chip_id">
-
-  export type tournament_chip_inventoryOrderByWithAggregationInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-    _count?: tournament_chip_inventoryCountOrderByAggregateInput
-    _avg?: tournament_chip_inventoryAvgOrderByAggregateInput
-    _max?: tournament_chip_inventoryMaxOrderByAggregateInput
-    _min?: tournament_chip_inventoryMinOrderByAggregateInput
-    _sum?: tournament_chip_inventorySumOrderByAggregateInput
-  }
-
-  export type tournament_chip_inventoryScalarWhereWithAggregatesInput = {
-    AND?: tournament_chip_inventoryScalarWhereWithAggregatesInput | tournament_chip_inventoryScalarWhereWithAggregatesInput[]
-    OR?: tournament_chip_inventoryScalarWhereWithAggregatesInput[]
-    NOT?: tournament_chip_inventoryScalarWhereWithAggregatesInput | tournament_chip_inventoryScalarWhereWithAggregatesInput[]
-    tournament_id?: BigIntWithAggregatesFilter<"tournament_chip_inventory"> | bigint | number
-    chip_id?: BigIntWithAggregatesFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntWithAggregatesFilter<"tournament_chip_inventory"> | number
+    tournament_stack?: IntWithAggregatesFilter<"tournament"> | number
   }
 
   export type tournament_levelWhereInput = {
@@ -78454,36 +78432,78 @@ export namespace Prisma {
     location_access?: StringNullableWithAggregatesFilter<"wp_my_calendar_locations"> | string | null
   }
 
+  export type stack_chipWhereInput = {
+    AND?: stack_chipWhereInput | stack_chipWhereInput[]
+    OR?: stack_chipWhereInput[]
+    NOT?: stack_chipWhereInput | stack_chipWhereInput[]
+    stack_id?: IntFilter<"stack_chip"> | number
+    chip_id?: BigIntFilter<"stack_chip"> | bigint | number
+    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
+    stack?: XOR<StackScalarRelationFilter, stackWhereInput>
+  }
+
+  export type stack_chipOrderByWithRelationInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+    chip?: chipOrderByWithRelationInput
+    stack?: stackOrderByWithRelationInput
+  }
+
+  export type stack_chipWhereUniqueInput = Prisma.AtLeast<{
+    stack_id_chip_id?: stack_chipStack_idChip_idCompoundUniqueInput
+    AND?: stack_chipWhereInput | stack_chipWhereInput[]
+    OR?: stack_chipWhereInput[]
+    NOT?: stack_chipWhereInput | stack_chipWhereInput[]
+    stack_id?: IntFilter<"stack_chip"> | number
+    chip_id?: BigIntFilter<"stack_chip"> | bigint | number
+    chip?: XOR<ChipScalarRelationFilter, chipWhereInput>
+    stack?: XOR<StackScalarRelationFilter, stackWhereInput>
+  }, "stack_id_chip_id">
+
+  export type stack_chipOrderByWithAggregationInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+    _count?: stack_chipCountOrderByAggregateInput
+    _avg?: stack_chipAvgOrderByAggregateInput
+    _max?: stack_chipMaxOrderByAggregateInput
+    _min?: stack_chipMinOrderByAggregateInput
+    _sum?: stack_chipSumOrderByAggregateInput
+  }
+
+  export type stack_chipScalarWhereWithAggregatesInput = {
+    AND?: stack_chipScalarWhereWithAggregatesInput | stack_chipScalarWhereWithAggregatesInput[]
+    OR?: stack_chipScalarWhereWithAggregatesInput[]
+    NOT?: stack_chipScalarWhereWithAggregatesInput | stack_chipScalarWhereWithAggregatesInput[]
+    stack_id?: IntWithAggregatesFilter<"stack_chip"> | number
+    chip_id?: BigIntWithAggregatesFilter<"stack_chip"> | bigint | number
+  }
+
   export type chipCreateInput = {
     id?: bigint | number
     value: number
     chip_image: string
-    stack?: stackCreateNestedManyWithoutChipInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutChipInput
+    stack_chip?: stack_chipCreateNestedManyWithoutChipInput
   }
 
   export type chipUncheckedCreateInput = {
     id?: bigint | number
     value: number
     chip_image: string
-    stack?: stackUncheckedCreateNestedManyWithoutChipInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutChipInput
+    stack_chip?: stack_chipUncheckedCreateNestedManyWithoutChipInput
   }
 
   export type chipUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     value?: IntFieldUpdateOperationsInput | number
     chip_image?: StringFieldUpdateOperationsInput | string
-    stack?: stackUpdateManyWithoutChipNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutChipNestedInput
+    stack_chip?: stack_chipUpdateManyWithoutChipNestedInput
   }
 
   export type chipUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     value?: IntFieldUpdateOperationsInput | number
     chip_image?: StringFieldUpdateOperationsInput | string
-    stack?: stackUncheckedUpdateManyWithoutChipNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutChipNestedInput
+    stack_chip?: stack_chipUncheckedUpdateManyWithoutChipNestedInput
   }
 
   export type chipCreateManyInput = {
@@ -78633,40 +78653,49 @@ export namespace Prisma {
 
   export type stackCreateInput = {
     stack_name: string
-    chip: chipCreateNestedOneWithoutStackInput
+    stack_total_player: number
+    stack_chip?: stack_chipCreateNestedManyWithoutStackInput
+    tournament?: tournamentCreateNestedManyWithoutStackInput
   }
 
   export type stackUncheckedCreateInput = {
     id?: number
     stack_name: string
-    stack_chip: bigint | number
+    stack_total_player: number
+    stack_chip?: stack_chipUncheckedCreateNestedManyWithoutStackInput
+    tournament?: tournamentUncheckedCreateNestedManyWithoutStackInput
   }
 
   export type stackUpdateInput = {
     stack_name?: StringFieldUpdateOperationsInput | string
-    chip?: chipUpdateOneRequiredWithoutStackNestedInput
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    stack_chip?: stack_chipUpdateManyWithoutStackNestedInput
+    tournament?: tournamentUpdateManyWithoutStackNestedInput
   }
 
   export type stackUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     stack_name?: StringFieldUpdateOperationsInput | string
-    stack_chip?: BigIntFieldUpdateOperationsInput | bigint | number
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    stack_chip?: stack_chipUncheckedUpdateManyWithoutStackNestedInput
+    tournament?: tournamentUncheckedUpdateManyWithoutStackNestedInput
   }
 
   export type stackCreateManyInput = {
     id?: number
     stack_name: string
-    stack_chip: bigint | number
+    stack_total_player: number
   }
 
   export type stackUpdateManyMutationInput = {
     stack_name?: StringFieldUpdateOperationsInput | string
+    stack_total_player?: IntFieldUpdateOperationsInput | number
   }
 
   export type stackUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     stack_name?: StringFieldUpdateOperationsInput | string
-    stack_chip?: BigIntFieldUpdateOperationsInput | bigint | number
+    stack_total_player?: IntFieldUpdateOperationsInput | number
   }
 
   export type table_assignmentCreateInput = {
@@ -78741,7 +78770,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
@@ -78757,9 +78786,9 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -78777,7 +78806,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
@@ -78793,9 +78822,9 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -78811,6 +78840,7 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
   }
 
   export type tournamentUpdateManyMutationInput = {
@@ -78835,46 +78865,7 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type tournament_chip_inventoryCreateInput = {
-    chip_player_quantity: number
-    tournament: tournamentCreateNestedOneWithoutTournament_chip_inventoryInput
-    chip: chipCreateNestedOneWithoutTournament_chip_inventoryInput
-  }
-
-  export type tournament_chip_inventoryUncheckedCreateInput = {
-    tournament_id: bigint | number
-    chip_id: bigint | number
-    chip_player_quantity: number
-  }
-
-  export type tournament_chip_inventoryUpdateInput = {
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-    tournament?: tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
-    chip?: chipUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
-  }
-
-  export type tournament_chip_inventoryUncheckedUpdateInput = {
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type tournament_chip_inventoryCreateManyInput = {
-    tournament_id: bigint | number
-    chip_id: bigint | number
-    chip_player_quantity: number
-  }
-
-  export type tournament_chip_inventoryUpdateManyMutationInput = {
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type tournament_chip_inventoryUncheckedUpdateManyInput = {
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
+    tournament_stack?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_levelCreateInput = {
@@ -83976,6 +83967,40 @@ export namespace Prisma {
     location_access?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type stack_chipCreateInput = {
+    chip: chipCreateNestedOneWithoutStack_chipInput
+    stack: stackCreateNestedOneWithoutStack_chipInput
+  }
+
+  export type stack_chipUncheckedCreateInput = {
+    stack_id: number
+    chip_id: bigint | number
+  }
+
+  export type stack_chipUpdateInput = {
+    chip?: chipUpdateOneRequiredWithoutStack_chipNestedInput
+    stack?: stackUpdateOneRequiredWithoutStack_chipNestedInput
+  }
+
+  export type stack_chipUncheckedUpdateInput = {
+    stack_id?: IntFieldUpdateOperationsInput | number
+    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type stack_chipCreateManyInput = {
+    stack_id: number
+    chip_id: bigint | number
+  }
+
+  export type stack_chipUpdateManyMutationInput = {
+
+  }
+
+  export type stack_chipUncheckedUpdateManyInput = {
+    stack_id?: IntFieldUpdateOperationsInput | number
+    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -84013,23 +84038,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type StackListRelationFilter = {
-    every?: stackWhereInput
-    some?: stackWhereInput
-    none?: stackWhereInput
+  export type Stack_chipListRelationFilter = {
+    every?: stack_chipWhereInput
+    some?: stack_chipWhereInput
+    none?: stack_chipWhereInput
   }
 
-  export type Tournament_chip_inventoryListRelationFilter = {
-    every?: tournament_chip_inventoryWhereInput
-    some?: tournament_chip_inventoryWhereInput
-    none?: tournament_chip_inventoryWhereInput
-  }
-
-  export type stackOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type tournament_chip_inventoryOrderByRelationAggregateInput = {
+  export type stack_chipOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -84285,9 +84300,14 @@ export namespace Prisma {
     _max?: NestedEnumregistration_statutFilter<$PrismaModel>
   }
 
-  export type ChipScalarRelationFilter = {
-    is?: chipWhereInput
-    isNot?: chipWhereInput
+  export type TournamentListRelationFilter = {
+    every?: tournamentWhereInput
+    some?: tournamentWhereInput
+    none?: tournamentWhereInput
+  }
+
+  export type tournamentOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type stackOrderByRelevanceInput = {
@@ -84299,29 +84319,29 @@ export namespace Prisma {
   export type stackCountOrderByAggregateInput = {
     id?: SortOrder
     stack_name?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
   }
 
   export type stackAvgOrderByAggregateInput = {
     id?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
   }
 
   export type stackMaxOrderByAggregateInput = {
     id?: SortOrder
     stack_name?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
   }
 
   export type stackMinOrderByAggregateInput = {
     id?: SortOrder
     stack_name?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
   }
 
   export type stackSumOrderByAggregateInput = {
     id?: SortOrder
-    stack_chip?: SortOrder
+    stack_total_player?: SortOrder
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -84460,6 +84480,11 @@ export namespace Prisma {
     none?: registrationWhereInput
   }
 
+  export type StackScalarRelationFilter = {
+    is?: stackWhereInput
+    isNot?: stackWhereInput
+  }
+
   export type Tournament_levelListRelationFilter = {
     every?: tournament_levelWhereInput
     some?: tournament_levelWhereInput
@@ -84504,10 +84529,12 @@ export namespace Prisma {
     tournament_category?: SortOrder
     tournament_status?: SortOrder
     estimate_duration?: SortOrder
+    tournament_stack?: SortOrder
   }
 
   export type tournamentAvgOrderByAggregateInput = {
     id?: SortOrder
+    tournament_stack?: SortOrder
   }
 
   export type tournamentMaxOrderByAggregateInput = {
@@ -84520,6 +84547,7 @@ export namespace Prisma {
     tournament_category?: SortOrder
     tournament_status?: SortOrder
     estimate_duration?: SortOrder
+    tournament_stack?: SortOrder
   }
 
   export type tournamentMinOrderByAggregateInput = {
@@ -84532,10 +84560,12 @@ export namespace Prisma {
     tournament_category?: SortOrder
     tournament_status?: SortOrder
     estimate_duration?: SortOrder
+    tournament_stack?: SortOrder
   }
 
   export type tournamentSumOrderByAggregateInput = {
     id?: SortOrder
+    tournament_stack?: SortOrder
   }
 
   export type Enumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel = never> = {
@@ -84566,41 +84596,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
-  }
-
-  export type tournament_chip_inventoryTournament_idChip_idCompoundUniqueInput = {
-    tournament_id: bigint | number
-    chip_id: bigint | number
-  }
-
-  export type tournament_chip_inventoryCountOrderByAggregateInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-  }
-
-  export type tournament_chip_inventoryAvgOrderByAggregateInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-  }
-
-  export type tournament_chip_inventoryMaxOrderByAggregateInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-  }
-
-  export type tournament_chip_inventoryMinOrderByAggregateInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
-  }
-
-  export type tournament_chip_inventorySumOrderByAggregateInput = {
-    tournament_id?: SortOrder
-    chip_id?: SortOrder
-    chip_player_quantity?: SortOrder
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -88169,32 +88164,53 @@ export namespace Prisma {
     location_zoom?: SortOrder
   }
 
-  export type stackCreateNestedManyWithoutChipInput = {
-    create?: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput> | stackCreateWithoutChipInput[] | stackUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: stackCreateOrConnectWithoutChipInput | stackCreateOrConnectWithoutChipInput[]
-    createMany?: stackCreateManyChipInputEnvelope
-    connect?: stackWhereUniqueInput | stackWhereUniqueInput[]
+  export type ChipScalarRelationFilter = {
+    is?: chipWhereInput
+    isNot?: chipWhereInput
   }
 
-  export type tournament_chip_inventoryCreateNestedManyWithoutChipInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput> | tournament_chip_inventoryCreateWithoutChipInput[] | tournament_chip_inventoryUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutChipInput | tournament_chip_inventoryCreateOrConnectWithoutChipInput[]
-    createMany?: tournament_chip_inventoryCreateManyChipInputEnvelope
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
+  export type stack_chipStack_idChip_idCompoundUniqueInput = {
+    stack_id: number
+    chip_id: bigint | number
   }
 
-  export type stackUncheckedCreateNestedManyWithoutChipInput = {
-    create?: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput> | stackCreateWithoutChipInput[] | stackUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: stackCreateOrConnectWithoutChipInput | stackCreateOrConnectWithoutChipInput[]
-    createMany?: stackCreateManyChipInputEnvelope
-    connect?: stackWhereUniqueInput | stackWhereUniqueInput[]
+  export type stack_chipCountOrderByAggregateInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
   }
 
-  export type tournament_chip_inventoryUncheckedCreateNestedManyWithoutChipInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput> | tournament_chip_inventoryCreateWithoutChipInput[] | tournament_chip_inventoryUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutChipInput | tournament_chip_inventoryCreateOrConnectWithoutChipInput[]
-    createMany?: tournament_chip_inventoryCreateManyChipInputEnvelope
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
+  export type stack_chipAvgOrderByAggregateInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type stack_chipMaxOrderByAggregateInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type stack_chipMinOrderByAggregateInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type stack_chipSumOrderByAggregateInput = {
+    stack_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type stack_chipCreateNestedManyWithoutChipInput = {
+    create?: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput> | stack_chipCreateWithoutChipInput[] | stack_chipUncheckedCreateWithoutChipInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutChipInput | stack_chipCreateOrConnectWithoutChipInput[]
+    createMany?: stack_chipCreateManyChipInputEnvelope
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+  }
+
+  export type stack_chipUncheckedCreateNestedManyWithoutChipInput = {
+    create?: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput> | stack_chipCreateWithoutChipInput[] | stack_chipUncheckedCreateWithoutChipInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutChipInput | stack_chipCreateOrConnectWithoutChipInput[]
+    createMany?: stack_chipCreateManyChipInputEnvelope
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -88217,60 +88233,32 @@ export namespace Prisma {
     set?: string
   }
 
-  export type stackUpdateManyWithoutChipNestedInput = {
-    create?: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput> | stackCreateWithoutChipInput[] | stackUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: stackCreateOrConnectWithoutChipInput | stackCreateOrConnectWithoutChipInput[]
-    upsert?: stackUpsertWithWhereUniqueWithoutChipInput | stackUpsertWithWhereUniqueWithoutChipInput[]
-    createMany?: stackCreateManyChipInputEnvelope
-    set?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    disconnect?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    delete?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    connect?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    update?: stackUpdateWithWhereUniqueWithoutChipInput | stackUpdateWithWhereUniqueWithoutChipInput[]
-    updateMany?: stackUpdateManyWithWhereWithoutChipInput | stackUpdateManyWithWhereWithoutChipInput[]
-    deleteMany?: stackScalarWhereInput | stackScalarWhereInput[]
+  export type stack_chipUpdateManyWithoutChipNestedInput = {
+    create?: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput> | stack_chipCreateWithoutChipInput[] | stack_chipUncheckedCreateWithoutChipInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutChipInput | stack_chipCreateOrConnectWithoutChipInput[]
+    upsert?: stack_chipUpsertWithWhereUniqueWithoutChipInput | stack_chipUpsertWithWhereUniqueWithoutChipInput[]
+    createMany?: stack_chipCreateManyChipInputEnvelope
+    set?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    disconnect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    delete?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    update?: stack_chipUpdateWithWhereUniqueWithoutChipInput | stack_chipUpdateWithWhereUniqueWithoutChipInput[]
+    updateMany?: stack_chipUpdateManyWithWhereWithoutChipInput | stack_chipUpdateManyWithWhereWithoutChipInput[]
+    deleteMany?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
   }
 
-  export type tournament_chip_inventoryUpdateManyWithoutChipNestedInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput> | tournament_chip_inventoryCreateWithoutChipInput[] | tournament_chip_inventoryUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutChipInput | tournament_chip_inventoryCreateOrConnectWithoutChipInput[]
-    upsert?: tournament_chip_inventoryUpsertWithWhereUniqueWithoutChipInput | tournament_chip_inventoryUpsertWithWhereUniqueWithoutChipInput[]
-    createMany?: tournament_chip_inventoryCreateManyChipInputEnvelope
-    set?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    disconnect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    delete?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    update?: tournament_chip_inventoryUpdateWithWhereUniqueWithoutChipInput | tournament_chip_inventoryUpdateWithWhereUniqueWithoutChipInput[]
-    updateMany?: tournament_chip_inventoryUpdateManyWithWhereWithoutChipInput | tournament_chip_inventoryUpdateManyWithWhereWithoutChipInput[]
-    deleteMany?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
-  }
-
-  export type stackUncheckedUpdateManyWithoutChipNestedInput = {
-    create?: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput> | stackCreateWithoutChipInput[] | stackUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: stackCreateOrConnectWithoutChipInput | stackCreateOrConnectWithoutChipInput[]
-    upsert?: stackUpsertWithWhereUniqueWithoutChipInput | stackUpsertWithWhereUniqueWithoutChipInput[]
-    createMany?: stackCreateManyChipInputEnvelope
-    set?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    disconnect?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    delete?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    connect?: stackWhereUniqueInput | stackWhereUniqueInput[]
-    update?: stackUpdateWithWhereUniqueWithoutChipInput | stackUpdateWithWhereUniqueWithoutChipInput[]
-    updateMany?: stackUpdateManyWithWhereWithoutChipInput | stackUpdateManyWithWhereWithoutChipInput[]
-    deleteMany?: stackScalarWhereInput | stackScalarWhereInput[]
-  }
-
-  export type tournament_chip_inventoryUncheckedUpdateManyWithoutChipNestedInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput> | tournament_chip_inventoryCreateWithoutChipInput[] | tournament_chip_inventoryUncheckedCreateWithoutChipInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutChipInput | tournament_chip_inventoryCreateOrConnectWithoutChipInput[]
-    upsert?: tournament_chip_inventoryUpsertWithWhereUniqueWithoutChipInput | tournament_chip_inventoryUpsertWithWhereUniqueWithoutChipInput[]
-    createMany?: tournament_chip_inventoryCreateManyChipInputEnvelope
-    set?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    disconnect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    delete?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    update?: tournament_chip_inventoryUpdateWithWhereUniqueWithoutChipInput | tournament_chip_inventoryUpdateWithWhereUniqueWithoutChipInput[]
-    updateMany?: tournament_chip_inventoryUpdateManyWithWhereWithoutChipInput | tournament_chip_inventoryUpdateManyWithWhereWithoutChipInput[]
-    deleteMany?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
+  export type stack_chipUncheckedUpdateManyWithoutChipNestedInput = {
+    create?: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput> | stack_chipCreateWithoutChipInput[] | stack_chipUncheckedCreateWithoutChipInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutChipInput | stack_chipCreateOrConnectWithoutChipInput[]
+    upsert?: stack_chipUpsertWithWhereUniqueWithoutChipInput | stack_chipUpsertWithWhereUniqueWithoutChipInput[]
+    createMany?: stack_chipCreateManyChipInputEnvelope
+    set?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    disconnect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    delete?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    update?: stack_chipUpdateWithWhereUniqueWithoutChipInput | stack_chipUpdateWithWhereUniqueWithoutChipInput[]
+    updateMany?: stack_chipUpdateManyWithWhereWithoutChipInput | stack_chipUpdateManyWithWhereWithoutChipInput[]
+    deleteMany?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
   }
 
   export type wp_usersCreateNestedOneWithoutQuarter_rankingInput = {
@@ -88467,18 +88455,88 @@ export namespace Prisma {
     deleteMany?: tournament_rankingScalarWhereInput | tournament_rankingScalarWhereInput[]
   }
 
-  export type chipCreateNestedOneWithoutStackInput = {
-    create?: XOR<chipCreateWithoutStackInput, chipUncheckedCreateWithoutStackInput>
-    connectOrCreate?: chipCreateOrConnectWithoutStackInput
-    connect?: chipWhereUniqueInput
+  export type stack_chipCreateNestedManyWithoutStackInput = {
+    create?: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput> | stack_chipCreateWithoutStackInput[] | stack_chipUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutStackInput | stack_chipCreateOrConnectWithoutStackInput[]
+    createMany?: stack_chipCreateManyStackInputEnvelope
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
   }
 
-  export type chipUpdateOneRequiredWithoutStackNestedInput = {
-    create?: XOR<chipCreateWithoutStackInput, chipUncheckedCreateWithoutStackInput>
-    connectOrCreate?: chipCreateOrConnectWithoutStackInput
-    upsert?: chipUpsertWithoutStackInput
-    connect?: chipWhereUniqueInput
-    update?: XOR<XOR<chipUpdateToOneWithWhereWithoutStackInput, chipUpdateWithoutStackInput>, chipUncheckedUpdateWithoutStackInput>
+  export type tournamentCreateNestedManyWithoutStackInput = {
+    create?: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput> | tournamentCreateWithoutStackInput[] | tournamentUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: tournamentCreateOrConnectWithoutStackInput | tournamentCreateOrConnectWithoutStackInput[]
+    createMany?: tournamentCreateManyStackInputEnvelope
+    connect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+  }
+
+  export type stack_chipUncheckedCreateNestedManyWithoutStackInput = {
+    create?: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput> | stack_chipCreateWithoutStackInput[] | stack_chipUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutStackInput | stack_chipCreateOrConnectWithoutStackInput[]
+    createMany?: stack_chipCreateManyStackInputEnvelope
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+  }
+
+  export type tournamentUncheckedCreateNestedManyWithoutStackInput = {
+    create?: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput> | tournamentCreateWithoutStackInput[] | tournamentUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: tournamentCreateOrConnectWithoutStackInput | tournamentCreateOrConnectWithoutStackInput[]
+    createMany?: tournamentCreateManyStackInputEnvelope
+    connect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+  }
+
+  export type stack_chipUpdateManyWithoutStackNestedInput = {
+    create?: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput> | stack_chipCreateWithoutStackInput[] | stack_chipUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutStackInput | stack_chipCreateOrConnectWithoutStackInput[]
+    upsert?: stack_chipUpsertWithWhereUniqueWithoutStackInput | stack_chipUpsertWithWhereUniqueWithoutStackInput[]
+    createMany?: stack_chipCreateManyStackInputEnvelope
+    set?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    disconnect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    delete?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    update?: stack_chipUpdateWithWhereUniqueWithoutStackInput | stack_chipUpdateWithWhereUniqueWithoutStackInput[]
+    updateMany?: stack_chipUpdateManyWithWhereWithoutStackInput | stack_chipUpdateManyWithWhereWithoutStackInput[]
+    deleteMany?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
+  }
+
+  export type tournamentUpdateManyWithoutStackNestedInput = {
+    create?: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput> | tournamentCreateWithoutStackInput[] | tournamentUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: tournamentCreateOrConnectWithoutStackInput | tournamentCreateOrConnectWithoutStackInput[]
+    upsert?: tournamentUpsertWithWhereUniqueWithoutStackInput | tournamentUpsertWithWhereUniqueWithoutStackInput[]
+    createMany?: tournamentCreateManyStackInputEnvelope
+    set?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    disconnect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    delete?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    connect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    update?: tournamentUpdateWithWhereUniqueWithoutStackInput | tournamentUpdateWithWhereUniqueWithoutStackInput[]
+    updateMany?: tournamentUpdateManyWithWhereWithoutStackInput | tournamentUpdateManyWithWhereWithoutStackInput[]
+    deleteMany?: tournamentScalarWhereInput | tournamentScalarWhereInput[]
+  }
+
+  export type stack_chipUncheckedUpdateManyWithoutStackNestedInput = {
+    create?: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput> | stack_chipCreateWithoutStackInput[] | stack_chipUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: stack_chipCreateOrConnectWithoutStackInput | stack_chipCreateOrConnectWithoutStackInput[]
+    upsert?: stack_chipUpsertWithWhereUniqueWithoutStackInput | stack_chipUpsertWithWhereUniqueWithoutStackInput[]
+    createMany?: stack_chipCreateManyStackInputEnvelope
+    set?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    disconnect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    delete?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    connect?: stack_chipWhereUniqueInput | stack_chipWhereUniqueInput[]
+    update?: stack_chipUpdateWithWhereUniqueWithoutStackInput | stack_chipUpdateWithWhereUniqueWithoutStackInput[]
+    updateMany?: stack_chipUpdateManyWithWhereWithoutStackInput | stack_chipUpdateManyWithWhereWithoutStackInput[]
+    deleteMany?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
+  }
+
+  export type tournamentUncheckedUpdateManyWithoutStackNestedInput = {
+    create?: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput> | tournamentCreateWithoutStackInput[] | tournamentUncheckedCreateWithoutStackInput[]
+    connectOrCreate?: tournamentCreateOrConnectWithoutStackInput | tournamentCreateOrConnectWithoutStackInput[]
+    upsert?: tournamentUpsertWithWhereUniqueWithoutStackInput | tournamentUpsertWithWhereUniqueWithoutStackInput[]
+    createMany?: tournamentCreateManyStackInputEnvelope
+    set?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    disconnect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    delete?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    connect?: tournamentWhereUniqueInput | tournamentWhereUniqueInput[]
+    update?: tournamentUpdateWithWhereUniqueWithoutStackInput | tournamentUpdateWithWhereUniqueWithoutStackInput[]
+    updateMany?: tournamentUpdateManyWithWhereWithoutStackInput | tournamentUpdateManyWithWhereWithoutStackInput[]
+    deleteMany?: tournamentScalarWhereInput | tournamentScalarWhereInput[]
   }
 
   export type registrationCreateNestedOneWithoutTable_assignmentInput = {
@@ -88551,11 +88609,10 @@ export namespace Prisma {
     connect?: registrationWhereUniqueInput | registrationWhereUniqueInput[]
   }
 
-  export type tournament_chip_inventoryCreateNestedManyWithoutTournamentInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput> | tournament_chip_inventoryCreateWithoutTournamentInput[] | tournament_chip_inventoryUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutTournamentInput | tournament_chip_inventoryCreateOrConnectWithoutTournamentInput[]
-    createMany?: tournament_chip_inventoryCreateManyTournamentInputEnvelope
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
+  export type stackCreateNestedOneWithoutTournamentInput = {
+    create?: XOR<stackCreateWithoutTournamentInput, stackUncheckedCreateWithoutTournamentInput>
+    connectOrCreate?: stackCreateOrConnectWithoutTournamentInput
+    connect?: stackWhereUniqueInput
   }
 
   export type tournament_levelCreateNestedManyWithoutTournamentInput = {
@@ -88591,13 +88648,6 @@ export namespace Prisma {
     connectOrCreate?: registrationCreateOrConnectWithoutTournamentInput | registrationCreateOrConnectWithoutTournamentInput[]
     createMany?: registrationCreateManyTournamentInputEnvelope
     connect?: registrationWhereUniqueInput | registrationWhereUniqueInput[]
-  }
-
-  export type tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput> | tournament_chip_inventoryCreateWithoutTournamentInput[] | tournament_chip_inventoryUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutTournamentInput | tournament_chip_inventoryCreateOrConnectWithoutTournamentInput[]
-    createMany?: tournament_chip_inventoryCreateManyTournamentInputEnvelope
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
   }
 
   export type tournament_levelUncheckedCreateNestedManyWithoutTournamentInput = {
@@ -88661,18 +88711,12 @@ export namespace Prisma {
     deleteMany?: registrationScalarWhereInput | registrationScalarWhereInput[]
   }
 
-  export type tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput> | tournament_chip_inventoryCreateWithoutTournamentInput[] | tournament_chip_inventoryUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutTournamentInput | tournament_chip_inventoryCreateOrConnectWithoutTournamentInput[]
-    upsert?: tournament_chip_inventoryUpsertWithWhereUniqueWithoutTournamentInput | tournament_chip_inventoryUpsertWithWhereUniqueWithoutTournamentInput[]
-    createMany?: tournament_chip_inventoryCreateManyTournamentInputEnvelope
-    set?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    disconnect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    delete?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    update?: tournament_chip_inventoryUpdateWithWhereUniqueWithoutTournamentInput | tournament_chip_inventoryUpdateWithWhereUniqueWithoutTournamentInput[]
-    updateMany?: tournament_chip_inventoryUpdateManyWithWhereWithoutTournamentInput | tournament_chip_inventoryUpdateManyWithWhereWithoutTournamentInput[]
-    deleteMany?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
+  export type stackUpdateOneRequiredWithoutTournamentNestedInput = {
+    create?: XOR<stackCreateWithoutTournamentInput, stackUncheckedCreateWithoutTournamentInput>
+    connectOrCreate?: stackCreateOrConnectWithoutTournamentInput
+    upsert?: stackUpsertWithoutTournamentInput
+    connect?: stackWhereUniqueInput
+    update?: XOR<XOR<stackUpdateToOneWithWhereWithoutTournamentInput, stackUpdateWithoutTournamentInput>, stackUncheckedUpdateWithoutTournamentInput>
   }
 
   export type tournament_levelUpdateManyWithoutTournamentNestedInput = {
@@ -88745,20 +88789,6 @@ export namespace Prisma {
     deleteMany?: registrationScalarWhereInput | registrationScalarWhereInput[]
   }
 
-  export type tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput = {
-    create?: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput> | tournament_chip_inventoryCreateWithoutTournamentInput[] | tournament_chip_inventoryUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: tournament_chip_inventoryCreateOrConnectWithoutTournamentInput | tournament_chip_inventoryCreateOrConnectWithoutTournamentInput[]
-    upsert?: tournament_chip_inventoryUpsertWithWhereUniqueWithoutTournamentInput | tournament_chip_inventoryUpsertWithWhereUniqueWithoutTournamentInput[]
-    createMany?: tournament_chip_inventoryCreateManyTournamentInputEnvelope
-    set?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    disconnect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    delete?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    connect?: tournament_chip_inventoryWhereUniqueInput | tournament_chip_inventoryWhereUniqueInput[]
-    update?: tournament_chip_inventoryUpdateWithWhereUniqueWithoutTournamentInput | tournament_chip_inventoryUpdateWithWhereUniqueWithoutTournamentInput[]
-    updateMany?: tournament_chip_inventoryUpdateManyWithWhereWithoutTournamentInput | tournament_chip_inventoryUpdateManyWithWhereWithoutTournamentInput[]
-    deleteMany?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
-  }
-
   export type tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput = {
     create?: XOR<tournament_levelCreateWithoutTournamentInput, tournament_levelUncheckedCreateWithoutTournamentInput> | tournament_levelCreateWithoutTournamentInput[] | tournament_levelUncheckedCreateWithoutTournamentInput[]
     connectOrCreate?: tournament_levelCreateOrConnectWithoutTournamentInput | tournament_levelCreateOrConnectWithoutTournamentInput[]
@@ -88799,34 +88829,6 @@ export namespace Prisma {
     update?: tournament_tableUpdateWithWhereUniqueWithoutTournamentInput | tournament_tableUpdateWithWhereUniqueWithoutTournamentInput[]
     updateMany?: tournament_tableUpdateManyWithWhereWithoutTournamentInput | tournament_tableUpdateManyWithWhereWithoutTournamentInput[]
     deleteMany?: tournament_tableScalarWhereInput | tournament_tableScalarWhereInput[]
-  }
-
-  export type tournamentCreateNestedOneWithoutTournament_chip_inventoryInput = {
-    create?: XOR<tournamentCreateWithoutTournament_chip_inventoryInput, tournamentUncheckedCreateWithoutTournament_chip_inventoryInput>
-    connectOrCreate?: tournamentCreateOrConnectWithoutTournament_chip_inventoryInput
-    connect?: tournamentWhereUniqueInput
-  }
-
-  export type chipCreateNestedOneWithoutTournament_chip_inventoryInput = {
-    create?: XOR<chipCreateWithoutTournament_chip_inventoryInput, chipUncheckedCreateWithoutTournament_chip_inventoryInput>
-    connectOrCreate?: chipCreateOrConnectWithoutTournament_chip_inventoryInput
-    connect?: chipWhereUniqueInput
-  }
-
-  export type tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput = {
-    create?: XOR<tournamentCreateWithoutTournament_chip_inventoryInput, tournamentUncheckedCreateWithoutTournament_chip_inventoryInput>
-    connectOrCreate?: tournamentCreateOrConnectWithoutTournament_chip_inventoryInput
-    upsert?: tournamentUpsertWithoutTournament_chip_inventoryInput
-    connect?: tournamentWhereUniqueInput
-    update?: XOR<XOR<tournamentUpdateToOneWithWhereWithoutTournament_chip_inventoryInput, tournamentUpdateWithoutTournament_chip_inventoryInput>, tournamentUncheckedUpdateWithoutTournament_chip_inventoryInput>
-  }
-
-  export type chipUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput = {
-    create?: XOR<chipCreateWithoutTournament_chip_inventoryInput, chipUncheckedCreateWithoutTournament_chip_inventoryInput>
-    connectOrCreate?: chipCreateOrConnectWithoutTournament_chip_inventoryInput
-    upsert?: chipUpsertWithoutTournament_chip_inventoryInput
-    connect?: chipWhereUniqueInput
-    update?: XOR<XOR<chipUpdateToOneWithWhereWithoutTournament_chip_inventoryInput, chipUpdateWithoutTournament_chip_inventoryInput>, chipUncheckedUpdateWithoutTournament_chip_inventoryInput>
   }
 
   export type tournamentCreateNestedOneWithoutTournament_levelInput = {
@@ -89113,6 +89115,34 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type chipCreateNestedOneWithoutStack_chipInput = {
+    create?: XOR<chipCreateWithoutStack_chipInput, chipUncheckedCreateWithoutStack_chipInput>
+    connectOrCreate?: chipCreateOrConnectWithoutStack_chipInput
+    connect?: chipWhereUniqueInput
+  }
+
+  export type stackCreateNestedOneWithoutStack_chipInput = {
+    create?: XOR<stackCreateWithoutStack_chipInput, stackUncheckedCreateWithoutStack_chipInput>
+    connectOrCreate?: stackCreateOrConnectWithoutStack_chipInput
+    connect?: stackWhereUniqueInput
+  }
+
+  export type chipUpdateOneRequiredWithoutStack_chipNestedInput = {
+    create?: XOR<chipCreateWithoutStack_chipInput, chipUncheckedCreateWithoutStack_chipInput>
+    connectOrCreate?: chipCreateOrConnectWithoutStack_chipInput
+    upsert?: chipUpsertWithoutStack_chipInput
+    connect?: chipWhereUniqueInput
+    update?: XOR<XOR<chipUpdateToOneWithWhereWithoutStack_chipInput, chipUpdateWithoutStack_chipInput>, chipUncheckedUpdateWithoutStack_chipInput>
+  }
+
+  export type stackUpdateOneRequiredWithoutStack_chipNestedInput = {
+    create?: XOR<stackCreateWithoutStack_chipInput, stackUncheckedCreateWithoutStack_chipInput>
+    connectOrCreate?: stackCreateOrConnectWithoutStack_chipInput
+    upsert?: stackUpsertWithoutStack_chipInput
+    connect?: stackWhereUniqueInput
+    update?: XOR<XOR<stackUpdateToOneWithWhereWithoutStack_chipInput, stackUpdateWithoutStack_chipInput>, stackUncheckedUpdateWithoutStack_chipInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -89559,93 +89589,46 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type stackCreateWithoutChipInput = {
-    stack_name: string
+  export type stack_chipCreateWithoutChipInput = {
+    stack: stackCreateNestedOneWithoutStack_chipInput
   }
 
-  export type stackUncheckedCreateWithoutChipInput = {
-    id?: number
-    stack_name: string
+  export type stack_chipUncheckedCreateWithoutChipInput = {
+    stack_id: number
   }
 
-  export type stackCreateOrConnectWithoutChipInput = {
-    where: stackWhereUniqueInput
-    create: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput>
+  export type stack_chipCreateOrConnectWithoutChipInput = {
+    where: stack_chipWhereUniqueInput
+    create: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput>
   }
 
-  export type stackCreateManyChipInputEnvelope = {
-    data: stackCreateManyChipInput | stackCreateManyChipInput[]
+  export type stack_chipCreateManyChipInputEnvelope = {
+    data: stack_chipCreateManyChipInput | stack_chipCreateManyChipInput[]
     skipDuplicates?: boolean
   }
 
-  export type tournament_chip_inventoryCreateWithoutChipInput = {
-    chip_player_quantity: number
-    tournament: tournamentCreateNestedOneWithoutTournament_chip_inventoryInput
+  export type stack_chipUpsertWithWhereUniqueWithoutChipInput = {
+    where: stack_chipWhereUniqueInput
+    update: XOR<stack_chipUpdateWithoutChipInput, stack_chipUncheckedUpdateWithoutChipInput>
+    create: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput>
   }
 
-  export type tournament_chip_inventoryUncheckedCreateWithoutChipInput = {
-    tournament_id: bigint | number
-    chip_player_quantity: number
+  export type stack_chipUpdateWithWhereUniqueWithoutChipInput = {
+    where: stack_chipWhereUniqueInput
+    data: XOR<stack_chipUpdateWithoutChipInput, stack_chipUncheckedUpdateWithoutChipInput>
   }
 
-  export type tournament_chip_inventoryCreateOrConnectWithoutChipInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    create: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput>
+  export type stack_chipUpdateManyWithWhereWithoutChipInput = {
+    where: stack_chipScalarWhereInput
+    data: XOR<stack_chipUpdateManyMutationInput, stack_chipUncheckedUpdateManyWithoutChipInput>
   }
 
-  export type tournament_chip_inventoryCreateManyChipInputEnvelope = {
-    data: tournament_chip_inventoryCreateManyChipInput | tournament_chip_inventoryCreateManyChipInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stackUpsertWithWhereUniqueWithoutChipInput = {
-    where: stackWhereUniqueInput
-    update: XOR<stackUpdateWithoutChipInput, stackUncheckedUpdateWithoutChipInput>
-    create: XOR<stackCreateWithoutChipInput, stackUncheckedCreateWithoutChipInput>
-  }
-
-  export type stackUpdateWithWhereUniqueWithoutChipInput = {
-    where: stackWhereUniqueInput
-    data: XOR<stackUpdateWithoutChipInput, stackUncheckedUpdateWithoutChipInput>
-  }
-
-  export type stackUpdateManyWithWhereWithoutChipInput = {
-    where: stackScalarWhereInput
-    data: XOR<stackUpdateManyMutationInput, stackUncheckedUpdateManyWithoutChipInput>
-  }
-
-  export type stackScalarWhereInput = {
-    AND?: stackScalarWhereInput | stackScalarWhereInput[]
-    OR?: stackScalarWhereInput[]
-    NOT?: stackScalarWhereInput | stackScalarWhereInput[]
-    id?: IntFilter<"stack"> | number
-    stack_name?: StringFilter<"stack"> | string
-    stack_chip?: BigIntFilter<"stack"> | bigint | number
-  }
-
-  export type tournament_chip_inventoryUpsertWithWhereUniqueWithoutChipInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    update: XOR<tournament_chip_inventoryUpdateWithoutChipInput, tournament_chip_inventoryUncheckedUpdateWithoutChipInput>
-    create: XOR<tournament_chip_inventoryCreateWithoutChipInput, tournament_chip_inventoryUncheckedCreateWithoutChipInput>
-  }
-
-  export type tournament_chip_inventoryUpdateWithWhereUniqueWithoutChipInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    data: XOR<tournament_chip_inventoryUpdateWithoutChipInput, tournament_chip_inventoryUncheckedUpdateWithoutChipInput>
-  }
-
-  export type tournament_chip_inventoryUpdateManyWithWhereWithoutChipInput = {
-    where: tournament_chip_inventoryScalarWhereInput
-    data: XOR<tournament_chip_inventoryUpdateManyMutationInput, tournament_chip_inventoryUncheckedUpdateManyWithoutChipInput>
-  }
-
-  export type tournament_chip_inventoryScalarWhereInput = {
-    AND?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
-    OR?: tournament_chip_inventoryScalarWhereInput[]
-    NOT?: tournament_chip_inventoryScalarWhereInput | tournament_chip_inventoryScalarWhereInput[]
-    tournament_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_id?: BigIntFilter<"tournament_chip_inventory"> | bigint | number
-    chip_player_quantity?: IntFilter<"tournament_chip_inventory"> | number
+  export type stack_chipScalarWhereInput = {
+    AND?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
+    OR?: stack_chipScalarWhereInput[]
+    NOT?: stack_chipScalarWhereInput | stack_chipScalarWhereInput[]
+    stack_id?: IntFilter<"stack_chip"> | number
+    chip_id?: BigIntFilter<"stack_chip"> | bigint | number
   }
 
   export type wp_usersCreateWithoutQuarter_rankingInput = {
@@ -89696,7 +89679,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
@@ -89712,8 +89695,8 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -89789,7 +89772,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
@@ -89805,8 +89788,8 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -89860,7 +89843,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
@@ -89876,8 +89859,8 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -90029,7 +90012,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
@@ -90045,8 +90028,8 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90123,48 +90106,114 @@ export namespace Prisma {
     ranking_score?: IntFilter<"tournament_ranking"> | number
   }
 
-  export type chipCreateWithoutStackInput = {
+  export type stack_chipCreateWithoutStackInput = {
+    chip: chipCreateNestedOneWithoutStack_chipInput
+  }
+
+  export type stack_chipUncheckedCreateWithoutStackInput = {
+    chip_id: bigint | number
+  }
+
+  export type stack_chipCreateOrConnectWithoutStackInput = {
+    where: stack_chipWhereUniqueInput
+    create: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput>
+  }
+
+  export type stack_chipCreateManyStackInputEnvelope = {
+    data: stack_chipCreateManyStackInput | stack_chipCreateManyStackInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type tournamentCreateWithoutStackInput = {
     id?: bigint | number
-    value: number
-    chip_image: string
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutChipInput
+    tournament_name: string
+    tournament_description: string
+    tournament_start_date: Date | string
+    tournament_open_date: Date | string
+    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_category: $Enums.tournament_tournament_category
+    tournament_status: $Enums.tournament_tournament_status
+    estimate_duration: Date | string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
+    registration?: registrationCreateNestedManyWithoutTournamentInput
+    tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
+    tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
+    tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
   }
 
-  export type chipUncheckedCreateWithoutStackInput = {
+  export type tournamentUncheckedCreateWithoutStackInput = {
     id?: bigint | number
-    value: number
-    chip_image: string
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutChipInput
+    tournament_name: string
+    tournament_description: string
+    tournament_start_date: Date | string
+    tournament_open_date: Date | string
+    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_category: $Enums.tournament_tournament_category
+    tournament_status: $Enums.tournament_tournament_status
+    estimate_duration: Date | string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
+    registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
+    tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
+    tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
+    tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
   }
 
-  export type chipCreateOrConnectWithoutStackInput = {
-    where: chipWhereUniqueInput
-    create: XOR<chipCreateWithoutStackInput, chipUncheckedCreateWithoutStackInput>
+  export type tournamentCreateOrConnectWithoutStackInput = {
+    where: tournamentWhereUniqueInput
+    create: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput>
   }
 
-  export type chipUpsertWithoutStackInput = {
-    update: XOR<chipUpdateWithoutStackInput, chipUncheckedUpdateWithoutStackInput>
-    create: XOR<chipCreateWithoutStackInput, chipUncheckedCreateWithoutStackInput>
-    where?: chipWhereInput
+  export type tournamentCreateManyStackInputEnvelope = {
+    data: tournamentCreateManyStackInput | tournamentCreateManyStackInput[]
+    skipDuplicates?: boolean
   }
 
-  export type chipUpdateToOneWithWhereWithoutStackInput = {
-    where?: chipWhereInput
-    data: XOR<chipUpdateWithoutStackInput, chipUncheckedUpdateWithoutStackInput>
+  export type stack_chipUpsertWithWhereUniqueWithoutStackInput = {
+    where: stack_chipWhereUniqueInput
+    update: XOR<stack_chipUpdateWithoutStackInput, stack_chipUncheckedUpdateWithoutStackInput>
+    create: XOR<stack_chipCreateWithoutStackInput, stack_chipUncheckedCreateWithoutStackInput>
   }
 
-  export type chipUpdateWithoutStackInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    value?: IntFieldUpdateOperationsInput | number
-    chip_image?: StringFieldUpdateOperationsInput | string
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutChipNestedInput
+  export type stack_chipUpdateWithWhereUniqueWithoutStackInput = {
+    where: stack_chipWhereUniqueInput
+    data: XOR<stack_chipUpdateWithoutStackInput, stack_chipUncheckedUpdateWithoutStackInput>
   }
 
-  export type chipUncheckedUpdateWithoutStackInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    value?: IntFieldUpdateOperationsInput | number
-    chip_image?: StringFieldUpdateOperationsInput | string
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutChipNestedInput
+  export type stack_chipUpdateManyWithWhereWithoutStackInput = {
+    where: stack_chipScalarWhereInput
+    data: XOR<stack_chipUpdateManyMutationInput, stack_chipUncheckedUpdateManyWithoutStackInput>
+  }
+
+  export type tournamentUpsertWithWhereUniqueWithoutStackInput = {
+    where: tournamentWhereUniqueInput
+    update: XOR<tournamentUpdateWithoutStackInput, tournamentUncheckedUpdateWithoutStackInput>
+    create: XOR<tournamentCreateWithoutStackInput, tournamentUncheckedCreateWithoutStackInput>
+  }
+
+  export type tournamentUpdateWithWhereUniqueWithoutStackInput = {
+    where: tournamentWhereUniqueInput
+    data: XOR<tournamentUpdateWithoutStackInput, tournamentUncheckedUpdateWithoutStackInput>
+  }
+
+  export type tournamentUpdateManyWithWhereWithoutStackInput = {
+    where: tournamentScalarWhereInput
+    data: XOR<tournamentUpdateManyMutationInput, tournamentUncheckedUpdateManyWithoutStackInput>
+  }
+
+  export type tournamentScalarWhereInput = {
+    AND?: tournamentScalarWhereInput | tournamentScalarWhereInput[]
+    OR?: tournamentScalarWhereInput[]
+    NOT?: tournamentScalarWhereInput | tournamentScalarWhereInput[]
+    id?: BigIntFilter<"tournament"> | bigint | number
+    tournament_name?: StringFilter<"tournament"> | string
+    tournament_description?: StringFilter<"tournament"> | string
+    tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
+    tournament_open_date?: DateTimeFilter<"tournament"> | Date | string
+    tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
+    tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
+    tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
+    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    tournament_stack?: IntFilter<"tournament"> | number
   }
 
   export type registrationCreateWithoutTable_assignmentInput = {
@@ -90379,24 +90428,22 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type tournament_chip_inventoryCreateWithoutTournamentInput = {
-    chip_player_quantity: number
-    chip: chipCreateNestedOneWithoutTournament_chip_inventoryInput
+  export type stackCreateWithoutTournamentInput = {
+    stack_name: string
+    stack_total_player: number
+    stack_chip?: stack_chipCreateNestedManyWithoutStackInput
   }
 
-  export type tournament_chip_inventoryUncheckedCreateWithoutTournamentInput = {
-    chip_id: bigint | number
-    chip_player_quantity: number
+  export type stackUncheckedCreateWithoutTournamentInput = {
+    id?: number
+    stack_name: string
+    stack_total_player: number
+    stack_chip?: stack_chipUncheckedCreateNestedManyWithoutStackInput
   }
 
-  export type tournament_chip_inventoryCreateOrConnectWithoutTournamentInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    create: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput>
-  }
-
-  export type tournament_chip_inventoryCreateManyTournamentInputEnvelope = {
-    data: tournament_chip_inventoryCreateManyTournamentInput | tournament_chip_inventoryCreateManyTournamentInput[]
-    skipDuplicates?: boolean
+  export type stackCreateOrConnectWithoutTournamentInput = {
+    where: stackWhereUniqueInput
+    create: XOR<stackCreateWithoutTournamentInput, stackUncheckedCreateWithoutTournamentInput>
   }
 
   export type tournament_levelCreateWithoutTournamentInput = {
@@ -90536,20 +90583,28 @@ export namespace Prisma {
     statut?: Enumregistration_statutFilter<"registration"> | $Enums.registration_statut
   }
 
-  export type tournament_chip_inventoryUpsertWithWhereUniqueWithoutTournamentInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    update: XOR<tournament_chip_inventoryUpdateWithoutTournamentInput, tournament_chip_inventoryUncheckedUpdateWithoutTournamentInput>
-    create: XOR<tournament_chip_inventoryCreateWithoutTournamentInput, tournament_chip_inventoryUncheckedCreateWithoutTournamentInput>
+  export type stackUpsertWithoutTournamentInput = {
+    update: XOR<stackUpdateWithoutTournamentInput, stackUncheckedUpdateWithoutTournamentInput>
+    create: XOR<stackCreateWithoutTournamentInput, stackUncheckedCreateWithoutTournamentInput>
+    where?: stackWhereInput
   }
 
-  export type tournament_chip_inventoryUpdateWithWhereUniqueWithoutTournamentInput = {
-    where: tournament_chip_inventoryWhereUniqueInput
-    data: XOR<tournament_chip_inventoryUpdateWithoutTournamentInput, tournament_chip_inventoryUncheckedUpdateWithoutTournamentInput>
+  export type stackUpdateToOneWithWhereWithoutTournamentInput = {
+    where?: stackWhereInput
+    data: XOR<stackUpdateWithoutTournamentInput, stackUncheckedUpdateWithoutTournamentInput>
   }
 
-  export type tournament_chip_inventoryUpdateManyWithWhereWithoutTournamentInput = {
-    where: tournament_chip_inventoryScalarWhereInput
-    data: XOR<tournament_chip_inventoryUpdateManyMutationInput, tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentInput>
+  export type stackUpdateWithoutTournamentInput = {
+    stack_name?: StringFieldUpdateOperationsInput | string
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    stack_chip?: stack_chipUpdateManyWithoutStackNestedInput
+  }
+
+  export type stackUncheckedUpdateWithoutTournamentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    stack_name?: StringFieldUpdateOperationsInput | string
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    stack_chip?: stack_chipUncheckedUpdateManyWithoutStackNestedInput
   }
 
   export type tournament_levelUpsertWithWhereUniqueWithoutTournamentInput = {
@@ -90626,134 +90681,6 @@ export namespace Prisma {
     table_capacity?: IntFilter<"tournament_table"> | number
   }
 
-  export type tournamentCreateWithoutTournament_chip_inventoryInput = {
-    id?: bigint | number
-    tournament_name: string
-    tournament_description: string
-    tournament_start_date: Date | string
-    tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
-    tournament_category: $Enums.tournament_tournament_category
-    tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
-    registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
-    tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
-    tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
-  }
-
-  export type tournamentUncheckedCreateWithoutTournament_chip_inventoryInput = {
-    id?: bigint | number
-    tournament_name: string
-    tournament_description: string
-    tournament_start_date: Date | string
-    tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
-    tournament_category: $Enums.tournament_tournament_category
-    tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
-    registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
-  }
-
-  export type tournamentCreateOrConnectWithoutTournament_chip_inventoryInput = {
-    where: tournamentWhereUniqueInput
-    create: XOR<tournamentCreateWithoutTournament_chip_inventoryInput, tournamentUncheckedCreateWithoutTournament_chip_inventoryInput>
-  }
-
-  export type chipCreateWithoutTournament_chip_inventoryInput = {
-    id?: bigint | number
-    value: number
-    chip_image: string
-    stack?: stackCreateNestedManyWithoutChipInput
-  }
-
-  export type chipUncheckedCreateWithoutTournament_chip_inventoryInput = {
-    id?: bigint | number
-    value: number
-    chip_image: string
-    stack?: stackUncheckedCreateNestedManyWithoutChipInput
-  }
-
-  export type chipCreateOrConnectWithoutTournament_chip_inventoryInput = {
-    where: chipWhereUniqueInput
-    create: XOR<chipCreateWithoutTournament_chip_inventoryInput, chipUncheckedCreateWithoutTournament_chip_inventoryInput>
-  }
-
-  export type tournamentUpsertWithoutTournament_chip_inventoryInput = {
-    update: XOR<tournamentUpdateWithoutTournament_chip_inventoryInput, tournamentUncheckedUpdateWithoutTournament_chip_inventoryInput>
-    create: XOR<tournamentCreateWithoutTournament_chip_inventoryInput, tournamentUncheckedCreateWithoutTournament_chip_inventoryInput>
-    where?: tournamentWhereInput
-  }
-
-  export type tournamentUpdateToOneWithWhereWithoutTournament_chip_inventoryInput = {
-    where?: tournamentWhereInput
-    data: XOR<tournamentUpdateWithoutTournament_chip_inventoryInput, tournamentUncheckedUpdateWithoutTournament_chip_inventoryInput>
-  }
-
-  export type tournamentUpdateWithoutTournament_chip_inventoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_name?: StringFieldUpdateOperationsInput | string
-    tournament_description?: StringFieldUpdateOperationsInput | string
-    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
-    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
-    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
-    registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
-    tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
-    tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
-  }
-
-  export type tournamentUncheckedUpdateWithoutTournament_chip_inventoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_name?: StringFieldUpdateOperationsInput | string
-    tournament_description?: StringFieldUpdateOperationsInput | string
-    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
-    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
-    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
-    registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
-  }
-
-  export type chipUpsertWithoutTournament_chip_inventoryInput = {
-    update: XOR<chipUpdateWithoutTournament_chip_inventoryInput, chipUncheckedUpdateWithoutTournament_chip_inventoryInput>
-    create: XOR<chipCreateWithoutTournament_chip_inventoryInput, chipUncheckedCreateWithoutTournament_chip_inventoryInput>
-    where?: chipWhereInput
-  }
-
-  export type chipUpdateToOneWithWhereWithoutTournament_chip_inventoryInput = {
-    where?: chipWhereInput
-    data: XOR<chipUpdateWithoutTournament_chip_inventoryInput, chipUncheckedUpdateWithoutTournament_chip_inventoryInput>
-  }
-
-  export type chipUpdateWithoutTournament_chip_inventoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    value?: IntFieldUpdateOperationsInput | number
-    chip_image?: StringFieldUpdateOperationsInput | string
-    stack?: stackUpdateManyWithoutChipNestedInput
-  }
-
-  export type chipUncheckedUpdateWithoutTournament_chip_inventoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    value?: IntFieldUpdateOperationsInput | number
-    chip_image?: StringFieldUpdateOperationsInput | string
-    stack?: stackUncheckedUpdateManyWithoutChipNestedInput
-  }
-
   export type tournamentCreateWithoutTournament_levelInput = {
     id?: bigint | number
     tournament_name: string
@@ -90766,7 +90693,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
   }
@@ -90781,9 +90708,9 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
   }
@@ -90816,7 +90743,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
   }
@@ -90831,9 +90758,9 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
   }
@@ -90875,7 +90802,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
   }
@@ -90890,9 +90817,9 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
   }
@@ -90956,7 +90883,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
   }
@@ -90971,9 +90898,9 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
   }
@@ -91016,7 +90943,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryCreateNestedManyWithoutTournamentInput
+    stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
   }
@@ -91031,9 +90958,9 @@ export namespace Prisma {
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
+    tournament_stack: number
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
   }
@@ -91082,7 +91009,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUpdateManyWithoutTournamentNestedInput
+    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
   }
@@ -91097,9 +91024,9 @@ export namespace Prisma {
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_stack?: IntFieldUpdateOperationsInput | number
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_chip_inventory?: tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
   }
@@ -91317,43 +91244,102 @@ export namespace Prisma {
     data: XOR<registrationUpdateManyMutationInput, registrationUncheckedUpdateManyWithoutWp_usersInput>
   }
 
-  export type stackCreateManyChipInput = {
+  export type chipCreateWithoutStack_chipInput = {
+    id?: bigint | number
+    value: number
+    chip_image: string
+  }
+
+  export type chipUncheckedCreateWithoutStack_chipInput = {
+    id?: bigint | number
+    value: number
+    chip_image: string
+  }
+
+  export type chipCreateOrConnectWithoutStack_chipInput = {
+    where: chipWhereUniqueInput
+    create: XOR<chipCreateWithoutStack_chipInput, chipUncheckedCreateWithoutStack_chipInput>
+  }
+
+  export type stackCreateWithoutStack_chipInput = {
+    stack_name: string
+    stack_total_player: number
+    tournament?: tournamentCreateNestedManyWithoutStackInput
+  }
+
+  export type stackUncheckedCreateWithoutStack_chipInput = {
     id?: number
     stack_name: string
+    stack_total_player: number
+    tournament?: tournamentUncheckedCreateNestedManyWithoutStackInput
   }
 
-  export type tournament_chip_inventoryCreateManyChipInput = {
-    tournament_id: bigint | number
-    chip_player_quantity: number
+  export type stackCreateOrConnectWithoutStack_chipInput = {
+    where: stackWhereUniqueInput
+    create: XOR<stackCreateWithoutStack_chipInput, stackUncheckedCreateWithoutStack_chipInput>
   }
 
-  export type stackUpdateWithoutChipInput = {
+  export type chipUpsertWithoutStack_chipInput = {
+    update: XOR<chipUpdateWithoutStack_chipInput, chipUncheckedUpdateWithoutStack_chipInput>
+    create: XOR<chipCreateWithoutStack_chipInput, chipUncheckedCreateWithoutStack_chipInput>
+    where?: chipWhereInput
+  }
+
+  export type chipUpdateToOneWithWhereWithoutStack_chipInput = {
+    where?: chipWhereInput
+    data: XOR<chipUpdateWithoutStack_chipInput, chipUncheckedUpdateWithoutStack_chipInput>
+  }
+
+  export type chipUpdateWithoutStack_chipInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    value?: IntFieldUpdateOperationsInput | number
+    chip_image?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chipUncheckedUpdateWithoutStack_chipInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    value?: IntFieldUpdateOperationsInput | number
+    chip_image?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type stackUpsertWithoutStack_chipInput = {
+    update: XOR<stackUpdateWithoutStack_chipInput, stackUncheckedUpdateWithoutStack_chipInput>
+    create: XOR<stackCreateWithoutStack_chipInput, stackUncheckedCreateWithoutStack_chipInput>
+    where?: stackWhereInput
+  }
+
+  export type stackUpdateToOneWithWhereWithoutStack_chipInput = {
+    where?: stackWhereInput
+    data: XOR<stackUpdateWithoutStack_chipInput, stackUncheckedUpdateWithoutStack_chipInput>
+  }
+
+  export type stackUpdateWithoutStack_chipInput = {
     stack_name?: StringFieldUpdateOperationsInput | string
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    tournament?: tournamentUpdateManyWithoutStackNestedInput
   }
 
-  export type stackUncheckedUpdateWithoutChipInput = {
+  export type stackUncheckedUpdateWithoutStack_chipInput = {
     id?: IntFieldUpdateOperationsInput | number
     stack_name?: StringFieldUpdateOperationsInput | string
+    stack_total_player?: IntFieldUpdateOperationsInput | number
+    tournament?: tournamentUncheckedUpdateManyWithoutStackNestedInput
   }
 
-  export type stackUncheckedUpdateManyWithoutChipInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    stack_name?: StringFieldUpdateOperationsInput | string
+  export type stack_chipCreateManyChipInput = {
+    stack_id: number
   }
 
-  export type tournament_chip_inventoryUpdateWithoutChipInput = {
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-    tournament?: tournamentUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
+  export type stack_chipUpdateWithoutChipInput = {
+    stack?: stackUpdateOneRequiredWithoutStack_chipNestedInput
   }
 
-  export type tournament_chip_inventoryUncheckedUpdateWithoutChipInput = {
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
+  export type stack_chipUncheckedUpdateWithoutChipInput = {
+    stack_id?: IntFieldUpdateOperationsInput | number
   }
 
-  export type tournament_chip_inventoryUncheckedUpdateManyWithoutChipInput = {
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
+  export type stack_chipUncheckedUpdateManyWithoutChipInput = {
+    stack_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type table_assignmentCreateManyRegistrationInput = {
@@ -91448,6 +91434,80 @@ export namespace Prisma {
     ranking_score?: IntFieldUpdateOperationsInput | number
   }
 
+  export type stack_chipCreateManyStackInput = {
+    chip_id: bigint | number
+  }
+
+  export type tournamentCreateManyStackInput = {
+    id?: bigint | number
+    tournament_name: string
+    tournament_description: string
+    tournament_start_date: Date | string
+    tournament_open_date: Date | string
+    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_category: $Enums.tournament_tournament_category
+    tournament_status: $Enums.tournament_tournament_status
+    estimate_duration: Date | string
+  }
+
+  export type stack_chipUpdateWithoutStackInput = {
+    chip?: chipUpdateOneRequiredWithoutStack_chipNestedInput
+  }
+
+  export type stack_chipUncheckedUpdateWithoutStackInput = {
+    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type stack_chipUncheckedUpdateManyWithoutStackInput = {
+    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type tournamentUpdateWithoutStackInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_name?: StringFieldUpdateOperationsInput | string
+    tournament_description?: StringFieldUpdateOperationsInput | string
+    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
+    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
+    registration?: registrationUpdateManyWithoutTournamentNestedInput
+    tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
+    tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
+    tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
+  }
+
+  export type tournamentUncheckedUpdateWithoutStackInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_name?: StringFieldUpdateOperationsInput | string
+    tournament_description?: StringFieldUpdateOperationsInput | string
+    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
+    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
+    registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
+    tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
+    tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
+    tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
+  }
+
+  export type tournamentUncheckedUpdateManyWithoutStackInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_name?: StringFieldUpdateOperationsInput | string
+    tournament_description?: StringFieldUpdateOperationsInput | string
+    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
+    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
+    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type quarter_rankingCreateManyTournamentInput = {
     id?: bigint | number
     user_id: bigint | number
@@ -91461,11 +91521,6 @@ export namespace Prisma {
     user_id: bigint | number
     inscription_date: Date | string
     statut: $Enums.registration_statut
-  }
-
-  export type tournament_chip_inventoryCreateManyTournamentInput = {
-    chip_id: bigint | number
-    chip_player_quantity: number
   }
 
   export type tournament_levelCreateManyTournamentInput = {
@@ -91542,21 +91597,6 @@ export namespace Prisma {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
-  }
-
-  export type tournament_chip_inventoryUpdateWithoutTournamentInput = {
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-    chip?: chipUpdateOneRequiredWithoutTournament_chip_inventoryNestedInput
-  }
-
-  export type tournament_chip_inventoryUncheckedUpdateWithoutTournamentInput = {
-    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type tournament_chip_inventoryUncheckedUpdateManyWithoutTournamentInput = {
-    chip_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    chip_player_quantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type tournament_levelUpdateWithoutTournamentInput = {
