@@ -7,7 +7,8 @@ import {
   Registration,
   TournamentTable,
   TableAssignment,
-  Stack
+  Stack,
+  StackChip
 } from "@/app/types";
 
 type TournamentContextType = {
@@ -16,6 +17,7 @@ type TournamentContextType = {
   registration: Registration[];
   classement: TournamentRanking[];
   assignements: TableAssignment[];
+  stacks: Stack[];
   loadTournamentData: () => Promise<void>;
 };
 
@@ -35,25 +37,27 @@ export const TournamentProvider = ({
   const [registration, setRegistration] = useState<Registration[]>([]);
   const [classement, setClassement] = useState<TournamentRanking[]>([]);
   const [assignements, setAssignements] = useState<TableAssignment[]>([]);
-  const [stack, setStack] = useState<Stack>();
+  const [stacks, setStacks] = useState<Stack[]>([]);
 
   const loadTournamentData = useCallback(async () => {
-    const [resDetails, resLevels, resTable] = await Promise.all([
+    const [resDetails, resLevels, resTable, resStack] = await Promise.all([
       fetch(`/api/tournament/${tournamentId}/details`),
       fetch(`/api/tournament/${tournamentId}/level`),
-      fetch(`/api/tournament/${tournamentId}/table`)
+      fetch(`/api/tournament/${tournamentId}/table`),
+      fetch(`/api/stack`)
     ]);
 
     const data = await resDetails.json();
     const levelData = await resLevels.json();
     const tableData = await resTable.json();
+    const stackData = await resStack.json();
 
     setTournament(data.tournament);
     setLevels(levelData);
     setRegistration(data.registrations);
     setClassement(data.classement);
     setAssignements(tableData);
-    setStack(data.stacks)
+    setStacks(stackData);
   }, [tournamentId]);
 
   return (
@@ -64,6 +68,7 @@ export const TournamentProvider = ({
         registration,
         classement,
         assignements,
+        stacks,
         loadTournamentData
       }}>
       {children}

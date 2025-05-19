@@ -7,3 +7,7 @@ export type StackChip = {
   chip?: Chip;
   stack?: Stack;
 };
+
+export type StackChipInput =
+  | { stack_id: number; chip_id: number; chip?: Chip } // existant
+  | { stack_id: number; chip: Omit<Chip, "id"> }; // nouveau (pas de chip_id)

@@ -69,7 +69,7 @@ export default function TournamentDetailPage() {
       {
         id: "4",
         label: "Jetons",
-        content: <ChipTabs tournament={tournament} classement={classement} />
+        content: <ChipTabs />
       }
     ];
   }, [tournament, registration, classement, levels]);
@@ -155,7 +155,6 @@ export default function TournamentDetailPage() {
         selectedTab={selectedTab}
         isOpen={isOpen}
         onClose={async () => {
-          await loadTournamentData();
           onClose();
         }}
       />

@@ -6,3 +6,9 @@ export type Chip = {
   chip_image: string;
   stack_chip?: StackChip[];
 };
+
+export type NewChip = {
+  value: number;
+  chip_image: string;
+};
+

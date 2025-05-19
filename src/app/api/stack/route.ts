@@ -1,19 +1,16 @@
-import { stackMock } from "@/mock/stack.mock";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
-const isMock = process.env.MOCK === "true";
-
 export async function GET(_: NextRequest) {
-  if (isMock) {
-    return NextResponse.json(JSON.parse(JSON.stringify(stackMock ?? [])));
-  }
-
   try {
     const result = await prisma.stack.findMany({
       include: {
-        chip: true
+        stack_chip: {
+          include: {
+            chip: true
+          }
+        }
       }
     });
 

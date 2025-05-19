@@ -23,7 +23,6 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
   const [date, setDate] = useState<string>("");
   const [openDate, setOpenDate] = useState<string>("");
   const [estimatedDuration, setEstimatedDuration] = useState<string>("");
-  const [stackStart, setStackStart] = useState<number>(0);
 
   useEffect(() => {
     if (tournament) {
@@ -42,7 +41,6 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
       setOpenDate(openStr);
       setQuarter(tournament.tournament_trimestry);
       setEstimatedDuration(durationStr);
-      setStackStart(0); // adapter si besoin
 
       onUpdate({
         tournament_name: tournament.tournament_name,
@@ -100,14 +98,6 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
         onChange={(e) => {
           setOpenDate(e.target.value);
           onUpdate({ tournament_open_date: new Date(e.target.value) });
-        }}
-      />
-      <NumberInputComponents
-        label="Tapis de départ"
-        type="text"
-        value={stackStart}
-        onChange={(e) => {
-          setStackStart(e.target.value);
         }}
       />
       <TimeInputComponents

@@ -13,7 +13,9 @@ export const ChipTabs: React.FC = () => {
 
   const stackChips =
     tournament?.stack?.stack_chip?.filter((sc) => sc.chip !== undefined) ?? [];
-  const chips = stackChips.map((sc) => sc.chip!);
+  const chips = stackChips
+    .map((sc) => sc.chip!)
+    .sort((a, b) => a.value - b.value);
 
   const stackPerPlayerValue = tournament?.stack?.stack_total_player ?? 0;
   const aliveAssignements = assignements.filter((a) => !a.eliminated);
@@ -52,7 +54,7 @@ export const ChipTabs: React.FC = () => {
             Stack utilisé : {tournament?.stack?.stack_name}
           </p>
           <Divider />
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-start">
             {chips.map((chip, index) => (
               <React.Fragment key={index}>
                 <div className="flex flex-col p-5 gap-2 justify-end">
@@ -61,7 +63,7 @@ export const ChipTabs: React.FC = () => {
                     alt={`Jeton ${chip.value}`}
                     className="w-32 h-32"
                   />
-                  <p className="text-end font-satoshiBlack text-4xl">
+                  <p className="text-center font-satoshiBlack text-4xl">
                     {chip.value}
                   </p>
                 </div>
