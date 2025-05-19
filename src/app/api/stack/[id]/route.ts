@@ -165,3 +165,36 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const stackId = parseInt(params.id);
+    if (isNaN(stackId)) {
+      return NextResponse.json({ error: "Invalid stack ID" }, { status: 400 });
+    }
+
+    const existing = await prisma.stack.findUnique({
+      where: { id: stackId },
+      select: { id: true }
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Stack not found" }, { status: 404 });
+    }
+
+    await prisma.stack.delete({
+      where: { id: stackId }
+    });
+
+    return NextResponse.json({ message: "Stack deleted successfully" });
+  } catch (error) {
+    console.error("❌ Error deleting stack:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
