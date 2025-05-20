@@ -1,36 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { LoadingComponent } from "@/app/error/loading/page";
-import { formatDate } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { TournamentLevel } from "@/app/types";
+import { toLocalDate } from "@/app/utils/date";
 
 export default function Game() {
-  const { tournament, levels, registration, assignements, loadTournamentData } =
-    useTournamentContext();
+  const {
+    tournament,
+    levels,
+    registration,
+    assignements,
+    stacks,
+    loadTournamentData,
+    loadTournamentOnly
+  } = useTournamentContext();
 
   const [now, setNow] = useState(new Date());
+  const [frozenNow, setFrozenNow] = useState<Date | null>(null);
   const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(
     null
   );
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
 
-  const parseTime = (iso: string) => {
-    const date = new Date(iso);
-    const time = new Date();
-    time.setHours(date.getHours(), date.getMinutes(), 0, 0);
-    return time;
-  };
+  const isPaused = tournament?.tournament_pause === true;
+  const getNow = () => (isPaused && frozenNow ? frozenNow : now);
 
   const getDurationSince = (startISO: string) => {
-    const start = new Date(startISO);
-    if (isNaN(start.getTime())) return "--:--:--";
-    const diff = now.getTime() - start.getTime();
+    const start = toLocalDate(startISO);
+    const diff = getNow().getTime() - start.getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const h = Math.floor(total / 3600);
     const m = Math.floor((total % 3600) / 60);
@@ -41,8 +43,9 @@ export default function Game() {
     )}:${String(s).padStart(2, "0")}`;
   };
 
-  const getTimeLeft = (endTime: string) => {
-    const diff = parseTime(endTime).getTime() - now.getTime();
+  const getTimeLeft = (end: string | Date) => {
+    const endDate = typeof end === "string" ? toLocalDate(end) : end;
+    const diff = endDate.getTime() - getNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
     const s = total % 60;
@@ -53,9 +56,11 @@ export default function Game() {
 
   const getTimeUntilNextPause = () => {
     if (!nextPause) return "-";
-    const diff = parseTime(nextPause.level_start).getTime() - now.getTime();
-    const m = Math.floor(diff / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
+    const pauseStart = toLocalDate(nextPause.level_start).getTime();
+    const diff = pauseStart - getNow().getTime();
+    const total = Math.max(0, Math.floor(diff / 1000));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
     return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
       m % 60
     ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
@@ -72,38 +77,67 @@ export default function Game() {
     return players === 0 ? "0" : Math.round(totalChips / players).toString();
   };
 
-  const getRemainingPlayers = () => getConfirmedPlayers().length.toString();
-  const getRemainingAlivePlayers = () => getAlivePlayers().length.toString();
-
+  // 🔄 Horloge chaque seconde
   useEffect(() => {
-    loadTournamentData();
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 🔁 Polling status (pause/active) chaque 5s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadTournamentOnly();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [loadTournamentOnly]);
+
+  // 🔁 Polling complet chaque 60s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadTournamentData();
+    }, 60000);
+    return () => clearInterval(interval);
   }, [loadTournamentData]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const nowDate = new Date();
-      setNow(nowDate);
+    loadTournamentData();
+  }, []);
 
-      const cl = levels.find((level) => {
-        const start = new Date(level.level_start);
-        const end = new Date(level.level_end);
-        return nowDate >= start && nowDate < end;
-      });
+  // ⏸️ Gèle le temps si le tournoi est en pause
+  useEffect(() => {
+    if (isPaused && !frozenNow) {
+      setFrozenNow(new Date());
+    }
+    if (!isPaused && frozenNow) {
+      setFrozenNow(null);
+    }
+  }, [isPaused, frozenNow]);
 
-      const nl = levels.find((level) => new Date(level.level_start) > nowDate);
-      const np = levels.find(
-        (level) => new Date(level.level_start) > nowDate && level.level_pause
-      );
+  // 🎯 Recalcule les niveaux à chaque tick
+  useEffect(() => {
+    const refDate = getNow();
 
-      setCurrentLevel(cl ?? null);
-      setNextLevel(nl ?? null);
-      setNextPause(np ?? null);
-    }, 1000);
+    const cl = levels.find((level) => {
+      const start = toLocalDate(level.level_start);
+      const end = toLocalDate(level.level_end);
+      return refDate >= start && refDate < end;
+    });
 
-    return () => clearInterval(interval);
-  }, [levels]);
+    const nl = levels.find((level) => new Date(level.level_start) > refDate);
+    const np = levels.find(
+      (level) => new Date(level.level_start) > refDate && level.level_pause
+    );
+
+    setCurrentLevel(cl ?? null);
+    setNextLevel(nl ?? null);
+    setNextPause(np ?? null);
+  }, [levels, now, frozenNow, isPaused]);
 
   if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
+
+  const nowTime = getNow();
 
   return (
     <div
@@ -115,14 +149,14 @@ export default function Game() {
             {tournament.tournament_name}
           </h1>
           <p className="font-satoshi text-5xl text-primary_brand-50">
-            {`${now.getDate().toString().padStart(2, "0")}/${(
-              now.getMonth() + 1
+            {`${nowTime.getDate().toString().padStart(2, "0")}/${(
+              nowTime.getMonth() + 1
             )
               .toString()
-              .padStart(2, "0")}/${now.getFullYear()} ${now
+              .padStart(2, "0")}/${nowTime.getFullYear()} ${nowTime
               .getHours()
               .toString()
-              .padStart(2, "0")}:${now
+              .padStart(2, "0")}:${nowTime
               .getMinutes()
               .toString()
               .padStart(2, "0")}`}
@@ -148,8 +182,11 @@ export default function Game() {
 
           <div className="text-center text-primary_brand-50">
             <div className="text-xl12 font-satoshiBold">
-              {currentLevel ? getTimeLeft(currentLevel.level_end) : "--:--"}
+              {currentLevel
+                ? getTimeLeft(toLocalDate(currentLevel.level_end))
+                : "--:--"}
             </div>
+
             <div className="text-xl7 font-satoshiBold">
               {currentLevel && !currentLevel.level_pause
                 ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}`
@@ -169,7 +206,9 @@ export default function Game() {
             <InfoItem label="Ante" value="-" />
             <InfoItem
               label="Joueurs"
-              value={`${getRemainingAlivePlayers()}/${getRemainingPlayers()}`}
+              value={`${getAlivePlayers().length}/${
+                getConfirmedPlayers().length
+              }`}
             />
           </div>
         </div>

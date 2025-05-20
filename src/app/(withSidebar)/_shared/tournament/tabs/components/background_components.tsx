@@ -37,7 +37,7 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
                 <ButtonComponents
                   text="Afficher"
                   onClick={() => {
-                    window.open(`/game/${tournament.id}`, "_self");
+                    window.open(`/game/${tournament.id}`);
                   }}
                   buttonClassName="bg-primary_background hover:bg-primary_hover_background"
                   textClassName="text-primary_brand-50"

@@ -24,24 +24,35 @@ export async function PATCH(
     }
 
     if (status === "in_coming") {
+      // 1. Date locale ajustée pour éviter conversion en UTC à l'enregistrement
       const now = new Date();
+      const offsetMs = now.getTimezoneOffset() * 60000;
+      const localDate = new Date(now.getTime() - offsetMs);
 
+      await prisma.tournament.update({
+        where: { id: tournamentId },
+        data: {
+          tournament_start_date: localDate,
+          tournament_status: status
+        }
+      });
+
+      // 2. Mise à jour des niveaux à partir de l'heure locale ajustée
       const levels = await prisma.tournament_level.findMany({
         where: { tournament_id: tournamentId },
         orderBy: { level_number: "asc" }
       });
 
-      let previousEnd = new Date(now);
+      let previousEnd = new Date(localDate);
 
       const updatedLevels = await Promise.all(
         levels.map((level) => {
-          const start = new Date(previousEnd);
-          const end = new Date(
-            start.getTime() +
-              (new Date(level.level_end).getTime() -
-                new Date(level.level_start).getTime())
-          );
+          const originalDuration =
+            new Date(level.level_end).getTime() -
+            new Date(level.level_start).getTime();
 
+          const start = new Date(previousEnd);
+          const end = new Date(start.getTime() + originalDuration);
           previousEnd = end;
 
           return prisma.tournament_level.update({
@@ -54,18 +65,10 @@ export async function PATCH(
         })
       );
 
-      await prisma.tournament.update({
-        where: { id: tournamentId },
-        data: {
-          tournament_start_date: now,
-          tournament_status: status
-        }
-      });
-
       return NextResponse.json(
         serializeBigInt({
-          message: "Tournament started and levels updated",
-          startDate: now,
+          message: "Tournament started and levels updated (local time)",
+          startDate: localDate,
           levels: updatedLevels
         }),
         { status: 200 }

@@ -23,3 +23,9 @@ export const formatHour = (value: string | Date) => {
 export function getDurationInMinutes(start: Date, end: Date): number {
   return Math.floor((end.getTime() - start.getTime()) / 60000);
 }
+
+export const toLocalDate = (isoDate: string) => {
+  const date = new Date(isoDate);
+  const timezoneOffsetMs = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() + timezoneOffsetMs);
+};

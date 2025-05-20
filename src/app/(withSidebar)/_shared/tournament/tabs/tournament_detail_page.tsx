@@ -151,7 +151,7 @@ export default function TournamentDetailPage() {
               )}
               <ButtonComponents
                 text="Voir l'affichage"
-                onClick={() => window.open(`/game/${id}`, "_self")}
+                onClick={() => window.open(`/game/${id}`)}
                 buttonClassName="bg-primary_background hover:bg-primary_hover_background"
                 textClassName="text-primary_brand-50"
                 icon={
@@ -226,6 +226,7 @@ export default function TournamentDetailPage() {
 
             await loadTournamentData();
             setIsLaunchModalOpen(false);
+            window.open(`/game/${id}`);
           } catch (err) {
             console.error("❌ Erreur lancement tournoi :", err);
             alert("Erreur lors du lancement du tournoi");

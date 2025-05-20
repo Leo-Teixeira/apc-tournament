@@ -169,7 +169,8 @@ exports.Prisma.TournamentScalarFieldEnum = {
   tournament_status: 'tournament_status',
   estimate_duration: 'estimate_duration',
   tournament_stack: 'tournament_stack',
-  tournament_pause: 'tournament_pause'
+  tournament_pause: 'tournament_pause',
+  tournament_pause_date: 'tournament_pause_date'
 };
 
 exports.Prisma.Tournament_levelScalarFieldEnum = {

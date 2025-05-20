@@ -11692,6 +11692,7 @@ export namespace Prisma {
     estimate_duration: Date | null
     tournament_stack: number | null
     tournament_pause: boolean | null
+    tournament_pause_date: Date | null
   }
 
   export type TournamentMaxAggregateOutputType = {
@@ -11706,6 +11707,7 @@ export namespace Prisma {
     estimate_duration: Date | null
     tournament_stack: number | null
     tournament_pause: boolean | null
+    tournament_pause_date: Date | null
   }
 
   export type TournamentCountAggregateOutputType = {
@@ -11720,6 +11722,7 @@ export namespace Prisma {
     estimate_duration: number
     tournament_stack: number
     tournament_pause: number
+    tournament_pause_date: number
     _all: number
   }
 
@@ -11746,6 +11749,7 @@ export namespace Prisma {
     estimate_duration?: true
     tournament_stack?: true
     tournament_pause?: true
+    tournament_pause_date?: true
   }
 
   export type TournamentMaxAggregateInputType = {
@@ -11760,6 +11764,7 @@ export namespace Prisma {
     estimate_duration?: true
     tournament_stack?: true
     tournament_pause?: true
+    tournament_pause_date?: true
   }
 
   export type TournamentCountAggregateInputType = {
@@ -11774,6 +11779,7 @@ export namespace Prisma {
     estimate_duration?: true
     tournament_stack?: true
     tournament_pause?: true
+    tournament_pause_date?: true
     _all?: true
   }
 
@@ -11875,6 +11881,7 @@ export namespace Prisma {
     estimate_duration: Date
     tournament_stack: number
     tournament_pause: boolean
+    tournament_pause_date: Date | null
     _count: TournamentCountAggregateOutputType | null
     _avg: TournamentAvgAggregateOutputType | null
     _sum: TournamentSumAggregateOutputType | null
@@ -11908,6 +11915,7 @@ export namespace Prisma {
     estimate_duration?: boolean
     tournament_stack?: boolean
     tournament_pause?: boolean
+    tournament_pause_date?: boolean
     quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
     stack?: boolean | stackDefaultArgs<ExtArgs>
@@ -11931,9 +11939,10 @@ export namespace Prisma {
     estimate_duration?: boolean
     tournament_stack?: boolean
     tournament_pause?: boolean
+    tournament_pause_date?: boolean
   }
 
-  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack" | "tournament_pause", ExtArgs["result"]["tournament"]>
+  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack" | "tournament_pause" | "tournament_pause_date", ExtArgs["result"]["tournament"]>
   export type tournamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
@@ -11966,6 +11975,7 @@ export namespace Prisma {
       estimate_duration: Date
       tournament_stack: number
       tournament_pause: boolean
+      tournament_pause_date: Date | null
     }, ExtArgs["result"]["tournament"]>
     composites: {}
   }
@@ -12352,6 +12362,7 @@ export namespace Prisma {
     readonly estimate_duration: FieldRef<"tournament", 'DateTime'>
     readonly tournament_stack: FieldRef<"tournament", 'Int'>
     readonly tournament_pause: FieldRef<"tournament", 'Boolean'>
+    readonly tournament_pause_date: FieldRef<"tournament", 'DateTime'>
   }
     
 
@@ -71905,7 +71916,8 @@ export namespace Prisma {
     tournament_status: 'tournament_status',
     estimate_duration: 'estimate_duration',
     tournament_stack: 'tournament_stack',
-    tournament_pause: 'tournament_pause'
+    tournament_pause: 'tournament_pause',
+    tournament_pause_date: 'tournament_pause_date'
   };
 
   export type TournamentScalarFieldEnum = (typeof TournamentScalarFieldEnum)[keyof typeof TournamentScalarFieldEnum]
@@ -73796,6 +73808,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
+    tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     stack?: XOR<StackScalarRelationFilter, stackWhereInput>
@@ -73816,6 +73829,7 @@ export namespace Prisma {
     estimate_duration?: SortOrder
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
+    tournament_pause_date?: SortOrderInput | SortOrder
     quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
     stack?: stackOrderByWithRelationInput
@@ -73840,6 +73854,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
+    tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     stack?: XOR<StackScalarRelationFilter, stackWhereInput>
@@ -73860,6 +73875,7 @@ export namespace Prisma {
     estimate_duration?: SortOrder
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
+    tournament_pause_date?: SortOrderInput | SortOrder
     _count?: tournamentCountOrderByAggregateInput
     _avg?: tournamentAvgOrderByAggregateInput
     _max?: tournamentMaxOrderByAggregateInput
@@ -73882,6 +73898,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
     tournament_stack?: IntWithAggregatesFilter<"tournament"> | number
     tournament_pause?: BoolWithAggregatesFilter<"tournament"> | boolean
+    tournament_pause_date?: DateTimeNullableWithAggregatesFilter<"tournament"> | Date | string | null
   }
 
   export type tournament_levelWhereInput = {
@@ -78786,6 +78803,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
@@ -78806,6 +78824,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -78824,6 +78843,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
@@ -78844,6 +78864,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -78863,6 +78884,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
   }
 
   export type tournamentUpdateManyMutationInput = {
@@ -78876,6 +78898,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type tournamentUncheckedUpdateManyInput = {
@@ -78890,6 +78913,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type tournament_levelCreateInput = {
@@ -84492,6 +84516,17 @@ export namespace Prisma {
     not?: NestedEnumtournament_tournament_statusFilter<$PrismaModel> | $Enums.tournament_tournament_status
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type Quarter_rankingListRelationFilter = {
     every?: quarter_rankingWhereInput
     some?: quarter_rankingWhereInput
@@ -84555,6 +84590,7 @@ export namespace Prisma {
     estimate_duration?: SortOrder
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
+    tournament_pause_date?: SortOrder
   }
 
   export type tournamentAvgOrderByAggregateInput = {
@@ -84574,6 +84610,7 @@ export namespace Prisma {
     estimate_duration?: SortOrder
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
+    tournament_pause_date?: SortOrder
   }
 
   export type tournamentMinOrderByAggregateInput = {
@@ -84588,6 +84625,7 @@ export namespace Prisma {
     estimate_duration?: SortOrder
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
+    tournament_pause_date?: SortOrder
   }
 
   export type tournamentSumOrderByAggregateInput = {
@@ -84623,6 +84661,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -84784,17 +84836,6 @@ export namespace Prisma {
     table_capacity?: SortOrder
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -84881,20 +84922,6 @@ export namespace Prisma {
     group_id?: SortOrder
     attempts?: SortOrder
     claim_id?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -88710,6 +88737,10 @@ export namespace Prisma {
     set?: $Enums.tournament_tournament_status
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type quarter_rankingUpdateManyWithoutTournamentNestedInput = {
     create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
@@ -88962,10 +88993,6 @@ export namespace Prisma {
     update?: table_assignmentUpdateWithWhereUniqueWithoutTournament_tableInput | table_assignmentUpdateWithWhereUniqueWithoutTournament_tableInput[]
     updateMany?: table_assignmentUpdateManyWithWhereWithoutTournament_tableInput | table_assignmentUpdateManyWithWhereWithoutTournament_tableInput[]
     deleteMany?: table_assignmentScalarWhereInput | table_assignmentScalarWhereInput[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -89412,6 +89439,17 @@ export namespace Prisma {
     not?: NestedEnumtournament_tournament_statusFilter<$PrismaModel> | $Enums.tournament_tournament_status
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
     in?: $Enums.tournament_tournament_trimestry[]
@@ -89442,6 +89480,20 @@ export namespace Prisma {
     _max?: NestedEnumtournament_tournament_statusFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -89458,17 +89510,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -89482,20 +89523,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -89706,6 +89733,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -89725,6 +89753,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -89801,6 +89830,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -89820,6 +89850,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -89874,6 +89905,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -89893,6 +89925,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -90045,6 +90078,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -90064,6 +90098,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90170,6 +90205,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -90188,6 +90224,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -90252,6 +90289,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
+    tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
   }
 
   export type registrationCreateWithoutTable_assignmentInput = {
@@ -90730,6 +90768,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
@@ -90749,6 +90788,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -90782,6 +90822,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
@@ -90801,6 +90842,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90843,6 +90885,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
@@ -90862,6 +90905,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -90926,6 +90970,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
@@ -90945,6 +90990,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90988,6 +91034,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
@@ -91007,6 +91054,7 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_stack: number
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
@@ -91056,6 +91104,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
@@ -91075,6 +91124,7 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -91499,6 +91549,7 @@ export namespace Prisma {
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
     tournament_pause?: boolean
+    tournament_pause_date?: Date | string | null
   }
 
   export type stack_chipUpdateWithoutStackInput = {
@@ -91524,6 +91575,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -91542,6 +91594,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
@@ -91560,6 +91613,7 @@ export namespace Prisma {
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
+    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type quarter_rankingCreateManyTournamentInput = {
