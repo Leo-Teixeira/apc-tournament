@@ -17,6 +17,7 @@ import { useDisclosure } from "@heroui/react";
 import { ModalManager } from "./components/popup_tabs_components";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
+import { GenericModal } from "@/app/components/popup";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -26,6 +27,8 @@ export default function TournamentDetailPage() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
+  const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
 
   useEffect(() => {
     loadTournamentData().finally(() => setIsLoading(false));
@@ -36,6 +39,24 @@ export default function TournamentDetailPage() {
       setIsDisabled(true);
     }
   }, [tournament]);
+
+  const togglePause = async (pause: boolean) => {
+    try {
+      const res = await fetch(`/api/tournament/${id}/pause`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pause })
+      });
+
+      if (!res.ok)
+        throw new Error("Erreur lors de la mise à jour du statut de pause");
+
+      await loadTournamentData();
+    } catch (err) {
+      console.error("❌ Erreur mise en pause / reprise :", err);
+      alert("Une erreur est survenue");
+    }
+  };
 
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
@@ -89,35 +110,61 @@ export default function TournamentDetailPage() {
             className={`font-satoshiRegular text-s ${
               tournament.tournament_status === "finish"
                 ? "bg-red-950"
-                : tournament.tournament_status === "in_coming"
+                : tournament.tournament_status === "start"
                 ? "bg-purple-950"
+                : tournament.tournament_pause
+                ? "bg-danger-500"
                 : "bg-green-950"
             }`}>
-            {STRINGS.status[tournament.tournament_status]}
+            {tournament.tournament_pause
+              ? "En pause"
+              : STRINGS.status[tournament.tournament_status]}
           </Chip>
         </div>
 
         <div className="flex flex-row gap-3">
-          <ButtonComponents
-            text="Lancer le tournoi"
-            onClick={() => {}}
-            buttonClassName="bg-primary_background hover:bg-primary_hover_background"
-            textClassName="text-primary_brand-50"
-          />
-          <ButtonComponents
-            text="Voir l'affichage"
-            onClick={() => window.open(`/game/${id}`, "_self")}
-            buttonClassName="bg-primary_background hover:bg-primary_hover_background"
-            textClassName="text-primary_brand-50"
-            icon={
-              <HugeiconsIcon
-                icon={LinkSquare02Icon}
-                size={20}
-                className="shrink-0"
-                color="white"
+          {tournament.tournament_status === "start" && (
+            <ButtonComponents
+              text="Lancer le tournoi"
+              onClick={() => setIsLaunchModalOpen(true)}
+              buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+              textClassName="text-primary_brand-50"
+            />
+          )}
+
+          {tournament.tournament_status === "in_coming" && (
+            <>
+              {tournament.tournament_pause ? (
+                <ButtonComponents
+                  text="Reprendre le tournoi"
+                  onClick={() => setIsPauseModalOpen(true)}
+                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                  textClassName="text-primary_brand-50"
+                />
+              ) : (
+                <ButtonComponents
+                  text="Mettre en pause le tournoi"
+                  onClick={() => setIsPauseModalOpen(true)}
+                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                  textClassName="text-primary_brand-50"
+                />
+              )}
+              <ButtonComponents
+                text="Voir l'affichage"
+                onClick={() => window.open(`/game/${id}`, "_self")}
+                buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                textClassName="text-primary_brand-50"
+                icon={
+                  <HugeiconsIcon
+                    icon={LinkSquare02Icon}
+                    size={20}
+                    className="shrink-0"
+                    color="white"
+                  />
+                }
               />
-            }
-          />
+            </>
+          )}
         </div>
       </div>
 
@@ -158,6 +205,61 @@ export default function TournamentDetailPage() {
           onClose();
         }}
       />
+
+      <GenericModal
+        isOpen={isLaunchModalOpen}
+        onClose={() => {
+          setIsLaunchModalOpen(false);
+        }}
+        title="Lancer le tournoi"
+        confirmLabel="Lancer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            const res = await fetch(`/api/tournament/${id}/status`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: "in_coming" })
+            });
+
+            if (!res.ok) throw new Error("Erreur lors du changement de statut");
+
+            await loadTournamentData();
+            setIsLaunchModalOpen(false);
+          } catch (err) {
+            console.error("❌ Erreur lancement tournoi :", err);
+            alert("Erreur lors du lancement du tournoi");
+          }
+        }}>
+        <p>Es-tu sûr de vouloir lancer le tournoi ?</p>
+      </GenericModal>
+      <GenericModal
+        isOpen={isPauseModalOpen}
+        onClose={() => setIsPauseModalOpen(false)}
+        title={
+          tournament.tournament_pause
+            ? "Reprendre le tournoi"
+            : "Mettre en pause le tournoi"
+        }
+        confirmLabel={
+          tournament.tournament_pause ? "Reprendre" : "Mettre en pause"
+        }
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            await togglePause(!tournament.tournament_pause);
+            setIsPauseModalOpen(false);
+          } catch (err) {
+            console.error("❌ Erreur changement pause :", err);
+            alert("Erreur lors de la mise à jour de l'état du tournoi");
+          }
+        }}>
+        <p>
+          Es-tu sûr de vouloir{" "}
+          {tournament.tournament_pause ? "reprendre" : "mettre en pause"} le
+          tournoi ?
+        </p>
+      </GenericModal>
     </div>
   );
 }

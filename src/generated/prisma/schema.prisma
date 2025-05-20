@@ -80,6 +80,7 @@ model tournament {
   tournament_status      tournament_tournament_status
   estimate_duration      DateTime                        @db.Time(0)
   tournament_stack       Int
+  tournament_pause       Boolean                         @default(false)
   quarter_ranking        quarter_ranking[]
   registration           registration[]
   stack                  stack                           @relation(fields: [tournament_stack], references: [id], onUpdate: Restrict, map: "tournament_ibfk_1")

@@ -13,6 +13,7 @@ export type Tournament = {
   tournament_open_date: Date;
   estimate_duration: Date;
   tournament_stack: number;
+  tournament_pause: boolean;
   tournament_trimestry: "T1" | "T2" | "T3";
   tournament_category: "APT" | "AG" | "Sit&Go" | "Superfinale" | "Solipoker";
   tournament_status: "in_coming" | "finish" | "start";

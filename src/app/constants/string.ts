@@ -61,6 +61,7 @@ export const STRINGS = {
   status: {
     finish: "Terminé",
     in_coming: "En cours",
-    start: "À venir"
+    start: "À venir",
+    pause: "En pause"
   }
 };

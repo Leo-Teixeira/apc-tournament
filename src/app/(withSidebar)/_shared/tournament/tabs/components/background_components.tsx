@@ -1,25 +1,24 @@
 import { ButtonComponents } from "@/app/components/button";
 import { STRINGS } from "@/app/constants/string";
+import { Tournament } from "@/app/types";
 import { Card } from "@heroui/react";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 type BackgroundProps = {
-  tournamentId: number;
-  tournamentStatus: string;
+  tournament: Tournament;
   onChangeClick?: () => void;
   onShowClick?: () => void;
 };
 
 export const BackgroundComponent: React.FC<BackgroundProps> = ({
-  tournamentId,
-  tournamentStatus,
+  tournament,
   onChangeClick,
   onShowClick
 }) => {
   return (
     <div>
-      {tournamentStatus != "finish" ? (
+      {tournament.tournament_status != "finish" ? (
         <Card className="bg-red-400 rounded-xl p-5 bg-background_card">
           <div className="flex flex-col gap-5">
             <img
@@ -34,22 +33,24 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
                 buttonClassName="bg-white/20 hover:bg-primary_brand-300"
                 textClassName="text-primary_brand-50"
               />
-              <ButtonComponents
-                text="Afficher"
-                onClick={() => {
-                  window.open(`/game/${tournamentId}`, "_self");
-                }}
-                buttonClassName="bg-primary_background hover:bg-primary_hover_background"
-                textClassName="text-primary_brand-50"
-                icon={
-                  <HugeiconsIcon
-                    icon={LinkSquare02Icon}
-                    size={20}
-                    className="shrink-0"
-                    color="white"
-                  />
-                }
-              />
+              {tournament.tournament_status === "in_coming" && (
+                <ButtonComponents
+                  text="Afficher"
+                  onClick={() => {
+                    window.open(`/game/${tournament.id}`, "_self");
+                  }}
+                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                  textClassName="text-primary_brand-50"
+                  icon={
+                    <HugeiconsIcon
+                      icon={LinkSquare02Icon}
+                      size={20}
+                      className="shrink-0"
+                      color="white"
+                    />
+                  }
+                />
+              )}
             </div>
           </div>
         </Card>

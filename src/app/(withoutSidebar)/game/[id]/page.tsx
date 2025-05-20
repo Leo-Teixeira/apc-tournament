@@ -1,110 +1,98 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { LoadingComponent } from "@/app/error/loading/page";
-import {
-  Chip,
-  Registration,
-  Tournament,
-  TournamentLevel,
-  TournamentRanking
-} from "@/app/types";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { formatDate } from "@/app/utils/date";
+import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
+import { TournamentLevel } from "@/app/types";
 
 export default function Game() {
-  const { id } = useParams();
+  const { tournament, levels, registration, assignements, loadTournamentData } =
+    useTournamentContext();
 
-  const [tournament, setTournament] = useState<Tournament>();
-  const [levels, setLevels] = useState<TournamentLevel[]>([]);
-  const [chips, setChips] = useState<Chip[]>([]);
-  const [classement, setClassement] = useState<TournamentRanking[]>([]);
-  const [registration, setRegistration] = useState<Registration[]>([]);
   const [now, setNow] = useState(new Date());
-  const [durationTotal, setDurationTotal] = useState("--:--:--");
-  const [isLoading, setIsLoading] = useState(true);
-
   const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(
     null
   );
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
 
-  const parseTime = (str: string) => {
-    const [hour, minute] = str.split("h").map(Number);
+  const parseTime = (iso: string) => {
+    const date = new Date(iso);
     const time = new Date();
-    time.setHours(hour, minute, 0, 0);
+    time.setHours(date.getHours(), date.getMinutes(), 0, 0);
     return time;
   };
 
   const getDurationSince = (startISO: string) => {
-    const startDate = new Date(startISO);
-    const localStart = new Date(
-      startDate.getTime() + startDate.getTimezoneOffset() * 60000
-    );
-
-    const diff = now.getTime() - localStart.getTime();
-    const totalSeconds = Math.max(0, Math.floor(diff / 1000));
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    const start = new Date(startISO);
+    if (isNaN(start.getTime())) return "--:--:--";
+    const diff = now.getTime() - start.getTime();
+    const total = Math.max(0, Math.floor(diff / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(
       2,
       "0"
-    )}:${String(seconds).padStart(2, "0")}`;
+    )}:${String(s).padStart(2, "0")}`;
   };
 
   const getTimeLeft = (endTime: string) => {
-    const end = parseTime(endTime);
-    const diff = end.getTime() - now.getTime();
-    const totalSeconds = Math.max(0, Math.floor(diff / 1000));
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(
-      minutes % 60
-    ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    const diff = parseTime(endTime).getTime() - now.getTime();
+    const total = Math.max(0, Math.floor(diff / 1000));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
+      m % 60
+    ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
   const getTimeUntilNextPause = () => {
     if (!nextPause) return "-";
     const diff = parseTime(nextPause.level_start).getTime() - now.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-    return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(
-      minutes % 60
-    ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    const m = Math.floor(diff / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
+      m % 60
+    ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
+
+  const getConfirmedPlayers = () =>
+    registration.filter((r) => r.statut === "Confirmed");
+
+  const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
 
   const getAverageStack = () => {
-    const totalChips = classement.length * 10000;
-    const remainingPlayers = classement.length;
-    return Math.round(totalChips / remainingPlayers).toString();
+    const players = getConfirmedPlayers().length;
+    const totalChips = players * 10000;
+    return players === 0 ? "0" : Math.round(totalChips / players).toString();
   };
 
-  const getRemainingPlayers = () => classement.length.toString();
+  const getRemainingPlayers = () => getConfirmedPlayers().length.toString();
+  const getRemainingAlivePlayers = () => getAlivePlayers().length.toString();
+
+  useEffect(() => {
+    loadTournamentData();
+  }, [loadTournamentData]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const newNow = new Date();
-      setNow(newNow);
-
-      if (tournament) {
-        console.log(
-          "Durée totale calculée :",
-          getDurationSince(tournament.tournament_start_date)
-        );
-      }
+      const nowDate = new Date();
+      setNow(nowDate);
 
       const cl = levels.find((level) => {
-        const start = parseTime(level.level_start);
-        const end = parseTime(level.level_end);
-        return newNow >= start && newNow < end;
+        const start = new Date(level.level_start);
+        const end = new Date(level.level_end);
+        return nowDate >= start && nowDate < end;
       });
 
-      const nl = levels.find((level) => parseTime(level.level_start) > newNow);
+      const nl = levels.find((level) => new Date(level.level_start) > nowDate);
       const np = levels.find(
-        (level) => parseTime(level.level_start) > newNow && level.level_pause
+        (level) => new Date(level.level_start) > nowDate && level.level_pause
       );
 
       setCurrentLevel(cl ?? null);
@@ -113,52 +101,9 @@ export default function Game() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [levels, tournament]);
+  }, [levels]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [
-          tournamentRes,
-          registrationRes,
-          classementRes,
-          levelRes,
-          chipRes
-        ] = await Promise.all([
-          fetch(`/api/tournament/${id}`),
-          fetch(`/api/registrations/${id}`),
-          fetch(`/api/tournament/${id}/classement`),
-          fetch(`/api/tournament/${id}/level`),
-          fetch(`/api/tournament/${id}/chip`)
-        ]);
-
-        const chipData = await chipRes.json();
-        setChips(chipData.chips);
-        setLevels(await levelRes.json());
-        const tournamentData = await tournamentRes.json();
-        setTournament(tournamentData);
-        setRegistration(await registrationRes.json());
-        setClassement(await classementRes.json());
-      } catch (error) {
-        console.error("Erreur lors du chargement des données :", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  if (
-    isLoading ||
-    tournament == null ||
-    tournament == undefined ||
-    !Array.isArray(chips)
-  ) {
-    return (
-      <LoadingComponent />
-    );
-  }
+  if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
 
   return (
     <div
@@ -194,11 +139,10 @@ export default function Game() {
               label="Durée totale"
               value={
                 tournament
-                  ? getDurationSince(tournament.tournament_start_date)
+                  ? getDurationSince(String(tournament.tournament_start_date))
                   : "--:--:--"
               }
             />
-
             <InfoItem label="Pause" value={getTimeUntilNextPause()} />
           </div>
 
@@ -225,12 +169,12 @@ export default function Game() {
             <InfoItem label="Ante" value="-" />
             <InfoItem
               label="Joueurs"
-              value={`${getRemainingPlayers()}/${registration.length}`}
+              value={`${getRemainingAlivePlayers()}/${getRemainingPlayers()}`}
             />
           </div>
         </div>
 
-        <ChipLegend chips={chips} />
+        <ChipLegend chips={[]} />
       </div>
     </div>
   );
