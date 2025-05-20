@@ -128,7 +128,7 @@ export const TableTabs = () => {
         title="Éliminer un joueur"
         confirmLabel="Confirmer l'élimination"
         onConfirm={() => {
-          const killerId = killerOptions[0]?.user_id;
+          const killerId = killerOptions[0]?.id;
           if (killerId) handleConfirmElimination(killerId);
         }}>
         <EliminatePlayerFormBody
