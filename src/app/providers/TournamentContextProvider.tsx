@@ -48,7 +48,7 @@ export const TournamentProvider = ({
     const [resDetails, resLevels, resTable, resStack] = await Promise.all([
       fetch(`/api/tournament/${tournamentId}/details`),
       fetch(`/api/tournament/${tournamentId}/level`),
-      fetch(`/api/tournament/${tournamentId}/table`),
+      fetch(`/api/tournament/${tournamentId}/table_assignement`),
       fetch(`/api/stack`)
     ]);
 

@@ -6,11 +6,12 @@ import { LoadingComponent } from "@/app/error/loading/page";
 import { mapAssignementsGroupedByTable } from "@/app/lib/adapter/tournament_table.adapter";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { Registration, TableAssignment, Tournament } from "@/app/types";
-import { useDisclosure } from "@heroui/react";
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { Radio, RadioGroup, useDisclosure } from "@heroui/react";
+import { Cancel01Icon, CoinsSwapIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 import { EliminatePlayerFormBody } from "./components/popup/eliminate_player_popup";
+import { MovePlayerModalBody } from "./components/popup/move_player_popup";
 
 export const TableTabs = () => {
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});
@@ -23,6 +24,19 @@ export const TableTabs = () => {
   const { tournament, assignements, loadTournamentData } =
     useTournamentContext();
 
+  const [selectedPlayerToMove, setSelectedPlayerToMove] =
+    useState<TableAssignment | null>(null);
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
+  const [moveOptions, setMoveOptions] = useState<TableAssignment[]>([]);
+  const [moveMode, setMoveMode] = useState<"swap" | "move">("swap");
+  const [selectedSwapTargetId, setSelectedSwapTargetId] = useState<
+    number | null
+  >(null);
+  const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
+  const [availableTables, setAvailableTables] = useState<
+    { id: number; table_number: number }[]
+  >([]);
+
   useEffect(() => {
     const fetchAssignements = async () => {
       if (!tournament?.id) return;
@@ -33,6 +47,22 @@ export const TableTabs = () => {
 
     fetchAssignements();
   }, [tournament?.id, assignements]);
+
+  useEffect(() => {
+    if (moveMode === "move" && tournament?.id) {
+      fetch(`/api/tournament/${tournament.id}/tables`)
+        .then((res) => res.json())
+        .then((tables) => {
+          const filtered = tables.filter(
+            (t: any) => t.id !== selectedPlayerToMove?.table_id
+          );
+          setAvailableTables(filtered);
+        })
+        .catch((err) => {
+          console.error("Erreur chargement tables :", err);
+        });
+    }
+  }, [moveMode, selectedPlayerToMove, tournament?.id]);
 
   const handleConfirmElimination = async (killerId: number) => {
     if (!selectedPlayer) return;
@@ -81,6 +111,29 @@ export const TableTabs = () => {
 
           setKillerOptions(killers);
           onOpen();
+        }
+      },
+      {
+        tooltip: "Changer de place",
+        icon: (
+          <HugeiconsIcon icon={CoinsSwapIcon} size={20} strokeWidth={1.5} />
+        ),
+        onClick: () => {
+          const assignment = assignements.find((a) => a.id === item.id);
+          if (!assignment) return;
+
+          setSelectedPlayerToMove(assignment);
+
+          const otherPlayers = assignements.filter(
+            (a) =>
+              !a.eliminated &&
+              a.id !== assignment.id &&
+              a.registration &&
+              a.tournament_table
+          );
+
+          setMoveOptions(otherPlayers);
+          setIsMoveModalOpen(true);
         }
       }
     ];
@@ -136,6 +189,69 @@ export const TableTabs = () => {
             selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""
           }
           allPlayerTable={killerOptions}
+        />
+      </GenericModal>
+
+      <GenericModal
+        isOpen={isMoveModalOpen}
+        onClose={() => {
+          setIsMoveModalOpen(false);
+          setSelectedSwapTargetId(null);
+          setSelectedTableId(null);
+          setMoveMode("swap");
+        }}
+        title="Changer de place"
+        confirmLabel="Confirmer"
+        onConfirm={async () => {
+          if (!selectedPlayerToMove || !tournament?.id) return;
+
+          const body = {
+            playerId: selectedPlayerToMove.id,
+            mode: moveMode,
+            targetId:
+              moveMode === "swap" ? selectedSwapTargetId : selectedTableId
+          };
+
+          try {
+            const res = await fetch(
+              `/api/tournament/${tournament.id}/table/move`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+              }
+            );
+
+            if (!res.ok) throw new Error("Erreur lors du déplacement");
+
+            await loadTournamentData();
+            setIsMoveModalOpen(false);
+            setSelectedSwapTargetId(null);
+            setSelectedTableId(null);
+            setMoveMode("swap");
+          } catch (err) {
+            console.error("❌ Erreur lors du déplacement :", err);
+            alert("Une erreur est survenue lors du déplacement.");
+          }
+        }}>
+        <MovePlayerModalBody
+          selectedPlayer={selectedPlayerToMove!}
+          moveOptions={moveOptions}
+          tournamentId={tournament?.id ?? 0}
+          onSelectTarget={(value: string) => {
+            if (moveMode === "swap") {
+              setSelectedSwapTargetId(parseInt(value));
+            } else {
+              setSelectedTableId(parseInt(value));
+            }
+          }}
+          onSelectMode={(mode) => setMoveMode(mode)}
+          selectedMode={moveMode}
+          selectedTarget={
+            moveMode === "swap"
+              ? selectedSwapTargetId?.toString() ?? ""
+              : selectedTableId?.toString() ?? ""
+          }
         />
       </GenericModal>
     </div>

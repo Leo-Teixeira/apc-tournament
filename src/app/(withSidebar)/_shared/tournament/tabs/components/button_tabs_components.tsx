@@ -15,7 +15,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
     case "0":
       return (
         <div>
-          {tournamentStatus !== "in_coming" ? (
+          {tournamentStatus === "start" ? (
             <ButtonComponents
               text="Modifier le tournoi"
               onClick={onClick}
@@ -36,7 +36,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
-          {tournamentStatus == "start" ? (
+          {/* {tournamentStatus == "start" ? (
             <ButtonComponents
               text="Réinitialiser les niveaux"
               onClick={onClick}
@@ -45,7 +45,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             />
           ) : (
             <></>
-          )}
+          )} */}
         </div>
       );
     case "2":
@@ -81,7 +81,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
     case "4":
       return (
         <div>
-          {tournamentStatus !== "in_coming" ? (
+          {tournamentStatus !== "finish" ? (
             <ButtonComponents
               text="Modifier le stack"
               onClick={onClick}

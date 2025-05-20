@@ -171,7 +171,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
 
   const generateTable = async () => {
     try {
-      const res = await fetch(`/api/tournament/${tournament.id}/table`, {
+      const res = await fetch(`/api/tournament/${tournament.id}/table_assignement`, {
         method: "POST"
       });
 
