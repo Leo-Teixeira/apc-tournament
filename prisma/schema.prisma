@@ -16,16 +16,14 @@ model chip {
 }
 
 model quarter_ranking {
-  id                BigInt                            @id @default(autoincrement()) @db.UnsignedBigInt
-  user_id           BigInt                            @db.UnsignedBigInt
-  tournament_id     BigInt                            @db.UnsignedBigInt
-  trimestry_ranking quarter_ranking_trimestry_ranking
-  aggregated_score  Int
-  position          Int
-  wp_users          wp_users                          @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "quarter_ranking_ibfk_1")
-  tournament        tournament                        @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "quarter_ranking_ibfk_2")
+  id                   BigInt                            @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id              BigInt                            @db.UnsignedBigInt
+  trimestry_ranking    quarter_ranking_trimestry_ranking
+  aggregated_score     Int
+  position             Int
+  quarter_ranking_year Int                               @db.Year
+  wp_users             wp_users                          @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "quarter_ranking_ibfk_1")
 
-  @@index([tournament_id], map: "tournament_id")
   @@index([user_id], map: "user_id")
 }
 
@@ -82,7 +80,6 @@ model tournament {
   tournament_stack       Int
   tournament_pause       Boolean                         @default(false)
   tournament_pause_date  DateTime?                       @db.Date
-  quarter_ranking        quarter_ranking[]
   registration           registration[]
   stack                  stack                           @relation(fields: [tournament_stack], references: [id], onUpdate: Restrict, map: "tournament_ibfk_1")
   tournament_level       tournament_level[]

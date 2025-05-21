@@ -36,6 +36,7 @@ export default function TournamentDetailPage() {
 
   useEffect(() => {
     if (tournament?.tournament_status === "finish") {
+      setSelectedTab("0");
       setIsDisabled(true);
     }
   }, [tournament]);
@@ -64,13 +65,7 @@ export default function TournamentDetailPage() {
       {
         id: "0",
         label: "Général",
-        content: (
-          <GeneralTabs
-            tournament={tournament}
-            registrations={registration}
-            classement={classement}
-          />
-        )
+        content: <GeneralTabs />
       },
       {
         id: "1",

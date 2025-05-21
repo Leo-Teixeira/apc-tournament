@@ -129,10 +129,10 @@ exports.Prisma.ChipScalarFieldEnum = {
 exports.Prisma.Quarter_rankingScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
-  tournament_id: 'tournament_id',
   trimestry_ranking: 'trimestry_ranking',
   aggregated_score: 'aggregated_score',
-  position: 'position'
+  position: 'position',
+  quarter_ranking_year: 'quarter_ranking_year'
 };
 
 exports.Prisma.RegistrationScalarFieldEnum = {

@@ -63,7 +63,20 @@ export async function GET(
         }),
 
         prisma.tournament_ranking.findMany({
-          where: { tournament_id: tournamentId }
+          where: { tournament_id: BigInt(id) },
+          orderBy: { ranking_position: "asc" },
+          include: {
+            registration: {
+              include: {
+                wp_users: {
+                  select: {
+                    ID: true,
+                    pseudo_winamax: true
+                  }
+                }
+              }
+            }
+          }
         }),
 
         prisma.stack.findMany({

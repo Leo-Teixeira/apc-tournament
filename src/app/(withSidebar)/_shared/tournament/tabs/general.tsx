@@ -7,28 +7,29 @@ import { BackgroundComponent } from "./components/background_components";
 import { Registration, Tournament, TournamentRanking } from "@/app/types";
 import { ClassementComponent } from "./components/classement_components";
 import { formatDate, formatHour, parseDateTimeLocal } from "@/app/utils/date";
+import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
-type GeneralProps = {
-  tournament: Tournament;
-  registrations: Registration[];
-  classement: TournamentRanking[];
-};
+export const GeneralTabs = () => {
+  const { tournament, levels, registration, classement, loadTournamentData } =
+    useTournamentContext();
 
-export const GeneralTabs: React.FC<GeneralProps> = ({
-  tournament,
-  registrations,
-  classement
-}) => {
-  const startDate = new Date(tournament.tournament_start_date);
-  const openDate = new Date(tournament.tournament_open_date);
+  const startDate = tournament?.tournament_start_date
+    ? new Date(tournament.tournament_start_date)
+    : null;
 
-  const startDateString = formatDate(startDate);
-  const startTimeString = formatHour(startDate);
+  const openDate = tournament?.tournament_open_date
+    ? new Date(tournament.tournament_open_date)
+    : null;
 
-  const openDateString = formatDate(openDate);
-  const openTimeString = formatHour(openDate);
+  const startDateString = startDate ? formatDate(startDate) : "";
+  const startTimeString = startDate ? formatHour(startDate) : "";
 
-  const durationFormatted = formatHour(tournament.estimate_duration);
+  const openDateString = openDate ? formatDate(openDate) : "";
+  const openTimeString = openDate ? formatHour(openDate) : "";
+
+  const durationFormatted = tournament?.estimate_duration
+    ? formatHour(tournament.estimate_duration)
+    : "";
 
   return (
     <div className="flex flex-row gap-6">
@@ -112,10 +113,10 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
               Participants
             </p>
             <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-              {registrations.length > 0 ? (
+              {registration.length > 0 ? (
                 <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                  {registrations.filter((r) => r.statut == "Confirmed").length}/
-                  {registrations.length}
+                  {registration.filter((r) => r.statut == "Confirmed").length}/
+                  {registration.length}
                 </p>
               ) : (
                 <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
@@ -126,12 +127,12 @@ export const GeneralTabs: React.FC<GeneralProps> = ({
           </Card>
         </div>
 
-        <BackgroundComponent tournament={tournament} />
+        {tournament && <BackgroundComponent tournament={tournament} />}
       </div>
 
       <div className="w-1/3">
         <ClassementComponent
-          tournament_status={tournament.tournament_status}
+          tournament_status={tournament?.tournament_status ?? "in_coming"}
           classement={classement}
         />
       </div>

@@ -11,53 +11,80 @@ export async function reequilibrateTables(tournamentId: number) {
     }
   });
 
-  const tablesWithCounts = tables.map((table) => ({
+  let changed = false;
+
+  let tablesWithPlayers = tables.map((table) => ({
     id: table.id,
     tableNumber: table.table_number,
     capacity: table.table_capacity,
     players: table.table_assignment
   }));
 
-  tablesWithCounts.sort((a, b) => a.players.length - b.players.length);
+  const underfilledPlayers = tablesWithPlayers
+    .filter((t) => t.players.length < 4)
+    .flatMap((t) => t.players);
 
-  let changed = false;
+  tablesWithPlayers = tablesWithPlayers.filter((t) => t.players.length >= 4);
+
+  for (const player of underfilledPlayers) {
+    const targetTable = tablesWithPlayers.find(
+      (t) => t.players.length < t.capacity
+    );
+    if (targetTable) {
+      await prisma.table_assignment.update({
+        where: { id: player.id },
+        data: {
+          table_id: targetTable.id,
+          table_seat_number: targetTable.players.length + 1
+        }
+      });
+      targetTable.players.push({ ...player, table_id: targetTable.id });
+      changed = true;
+    }
+  }
+
+  tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
 
   while (true) {
-    const min = tablesWithCounts[0];
-    const max = tablesWithCounts[tablesWithCounts.length - 1];
+    const min = tablesWithPlayers[0];
+    const max = tablesWithPlayers[tablesWithPlayers.length - 1];
 
-    if (
-      max.players.length - min.players.length <= 1 &&
-      tablesWithCounts.every((t) => t.players.length >= 4)
-    ) {
-      break;
-    }
+    const moreThanOneTable = tablesWithPlayers.length > 1;
+    const tooUnbalanced = max.players.length - min.players.length > 1;
 
-    if (max.players.length - min.players.length > 1) {
+    if (!moreThanOneTable) break;
+
+    if (tooUnbalanced) {
       const movedPlayer = max.players.pop();
       if (!movedPlayer) break;
-
-      const newSeatNumber = min.players.length + 1;
 
       await prisma.table_assignment.update({
         where: { id: movedPlayer.id },
         data: {
           table_id: min.id,
-          table_seat_number: newSeatNumber
+          table_seat_number: min.players.length + 1
         }
       });
 
       min.players.push({ ...movedPlayer, table_id: min.id });
       changed = true;
-      tablesWithCounts.sort((a, b) => a.players.length - b.players.length);
+      tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
     } else {
       break;
     }
   }
 
-  const toDelete = tablesWithCounts.filter((t) => t.players.length === 0);
+  const allTables = await prisma.tournament_table.findMany({
+    where: { tournament_id: BigInt(tournamentId) },
+    include: {
+      table_assignment: { where: { eliminated: false } }
+    }
+  });
+
+  const toDelete = allTables.filter((t) => t.table_assignment.length === 0);
   for (const empty of toDelete) {
     await prisma.tournament_table.delete({ where: { id: empty.id } });
+    console.log(`🗑️ Table supprimée : ${empty.table_number}`);
   }
 
   return changed;

@@ -6448,7 +6448,6 @@ export namespace Prisma {
    */
 
   export type TournamentCountOutputType = {
-    quarter_ranking: number
     registration: number
     tournament_level: number
     tournament_ranking: number
@@ -6456,7 +6455,6 @@ export namespace Prisma {
   }
 
   export type TournamentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    quarter_ranking?: boolean | TournamentCountOutputTypeCountQuarter_rankingArgs
     registration?: boolean | TournamentCountOutputTypeCountRegistrationArgs
     tournament_level?: boolean | TournamentCountOutputTypeCountTournament_levelArgs
     tournament_ranking?: boolean | TournamentCountOutputTypeCountTournament_rankingArgs
@@ -6472,13 +6470,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the TournamentCountOutputType
      */
     select?: TournamentCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TournamentCountOutputType without action
-   */
-  export type TournamentCountOutputTypeCountQuarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: quarter_rankingWhereInput
   }
 
   /**
@@ -7602,44 +7593,44 @@ export namespace Prisma {
   export type Quarter_rankingAvgAggregateOutputType = {
     id: number | null
     user_id: number | null
-    tournament_id: number | null
     aggregated_score: number | null
     position: number | null
+    quarter_ranking_year: number | null
   }
 
   export type Quarter_rankingSumAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
-    tournament_id: bigint | null
     aggregated_score: number | null
     position: number | null
+    quarter_ranking_year: number | null
   }
 
   export type Quarter_rankingMinAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
-    tournament_id: bigint | null
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking | null
     aggregated_score: number | null
     position: number | null
+    quarter_ranking_year: number | null
   }
 
   export type Quarter_rankingMaxAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
-    tournament_id: bigint | null
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking | null
     aggregated_score: number | null
     position: number | null
+    quarter_ranking_year: number | null
   }
 
   export type Quarter_rankingCountAggregateOutputType = {
     id: number
     user_id: number
-    tournament_id: number
     trimestry_ranking: number
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
     _all: number
   }
 
@@ -7647,44 +7638,44 @@ export namespace Prisma {
   export type Quarter_rankingAvgAggregateInputType = {
     id?: true
     user_id?: true
-    tournament_id?: true
     aggregated_score?: true
     position?: true
+    quarter_ranking_year?: true
   }
 
   export type Quarter_rankingSumAggregateInputType = {
     id?: true
     user_id?: true
-    tournament_id?: true
     aggregated_score?: true
     position?: true
+    quarter_ranking_year?: true
   }
 
   export type Quarter_rankingMinAggregateInputType = {
     id?: true
     user_id?: true
-    tournament_id?: true
     trimestry_ranking?: true
     aggregated_score?: true
     position?: true
+    quarter_ranking_year?: true
   }
 
   export type Quarter_rankingMaxAggregateInputType = {
     id?: true
     user_id?: true
-    tournament_id?: true
     trimestry_ranking?: true
     aggregated_score?: true
     position?: true
+    quarter_ranking_year?: true
   }
 
   export type Quarter_rankingCountAggregateInputType = {
     id?: true
     user_id?: true
-    tournament_id?: true
     trimestry_ranking?: true
     aggregated_score?: true
     position?: true
+    quarter_ranking_year?: true
     _all?: true
   }
 
@@ -7777,10 +7768,10 @@ export namespace Prisma {
   export type Quarter_rankingGroupByOutputType = {
     id: bigint
     user_id: bigint
-    tournament_id: bigint
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
     _count: Quarter_rankingCountAggregateOutputType | null
     _avg: Quarter_rankingAvgAggregateOutputType | null
     _sum: Quarter_rankingSumAggregateOutputType | null
@@ -7805,12 +7796,11 @@ export namespace Prisma {
   export type quarter_rankingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     user_id?: boolean
-    tournament_id?: boolean
     trimestry_ranking?: boolean
     aggregated_score?: boolean
     position?: boolean
+    quarter_ranking_year?: boolean
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
-    tournament?: boolean | tournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quarter_ranking"]>
 
 
@@ -7818,31 +7808,29 @@ export namespace Prisma {
   export type quarter_rankingSelectScalar = {
     id?: boolean
     user_id?: boolean
-    tournament_id?: boolean
     trimestry_ranking?: boolean
     aggregated_score?: boolean
     position?: boolean
+    quarter_ranking_year?: boolean
   }
 
-  export type quarter_rankingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "tournament_id" | "trimestry_ranking" | "aggregated_score" | "position", ExtArgs["result"]["quarter_ranking"]>
+  export type quarter_rankingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "trimestry_ranking" | "aggregated_score" | "position" | "quarter_ranking_year", ExtArgs["result"]["quarter_ranking"]>
   export type quarter_rankingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
-    tournament?: boolean | tournamentDefaultArgs<ExtArgs>
   }
 
   export type $quarter_rankingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "quarter_ranking"
     objects: {
       wp_users: Prisma.$wp_usersPayload<ExtArgs>
-      tournament: Prisma.$tournamentPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       user_id: bigint
-      tournament_id: bigint
       trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
       aggregated_score: number
       position: number
+      quarter_ranking_year: number
     }, ExtArgs["result"]["quarter_ranking"]>
     composites: {}
   }
@@ -8184,7 +8172,6 @@ export namespace Prisma {
   export interface Prisma__quarter_rankingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     wp_users<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    tournament<T extends tournamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tournamentDefaultArgs<ExtArgs>>): Prisma__tournamentClient<$Result.GetResult<Prisma.$tournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8216,10 +8203,10 @@ export namespace Prisma {
   interface quarter_rankingFieldRefs {
     readonly id: FieldRef<"quarter_ranking", 'BigInt'>
     readonly user_id: FieldRef<"quarter_ranking", 'BigInt'>
-    readonly tournament_id: FieldRef<"quarter_ranking", 'BigInt'>
     readonly trimestry_ranking: FieldRef<"quarter_ranking", 'quarter_ranking_trimestry_ranking'>
     readonly aggregated_score: FieldRef<"quarter_ranking", 'Int'>
     readonly position: FieldRef<"quarter_ranking", 'Int'>
+    readonly quarter_ranking_year: FieldRef<"quarter_ranking", 'Int'>
   }
     
 
@@ -11916,7 +11903,6 @@ export namespace Prisma {
     tournament_stack?: boolean
     tournament_pause?: boolean
     tournament_pause_date?: boolean
-    quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
     stack?: boolean | stackDefaultArgs<ExtArgs>
     tournament_level?: boolean | tournament$tournament_levelArgs<ExtArgs>
@@ -11944,7 +11930,6 @@ export namespace Prisma {
 
   export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack" | "tournament_pause" | "tournament_pause_date", ExtArgs["result"]["tournament"]>
   export type tournamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
     stack?: boolean | stackDefaultArgs<ExtArgs>
     tournament_level?: boolean | tournament$tournament_levelArgs<ExtArgs>
@@ -11956,7 +11941,6 @@ export namespace Prisma {
   export type $tournamentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "tournament"
     objects: {
-      quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
       registration: Prisma.$registrationPayload<ExtArgs>[]
       stack: Prisma.$stackPayload<ExtArgs>
       tournament_level: Prisma.$tournament_levelPayload<ExtArgs>[]
@@ -12316,7 +12300,6 @@ export namespace Prisma {
    */
   export interface Prisma__tournamentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    quarter_ranking<T extends tournament$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, tournament$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registration<T extends tournament$registrationArgs<ExtArgs> = {}>(args?: Subset<T, tournament$registrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stack<T extends stackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, stackDefaultArgs<ExtArgs>>): Prisma__stackClient<$Result.GetResult<Prisma.$stackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tournament_level<T extends tournament$tournament_levelArgs<ExtArgs> = {}>(args?: Subset<T, tournament$tournament_levelArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tournament_levelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12703,30 +12686,6 @@ export namespace Prisma {
      * Limit how many tournaments to delete.
      */
     limit?: number
-  }
-
-  /**
-   * tournament.quarter_ranking
-   */
-  export type tournament$quarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the quarter_ranking
-     */
-    select?: quarter_rankingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the quarter_ranking
-     */
-    omit?: quarter_rankingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: quarter_rankingInclude<ExtArgs> | null
-    where?: quarter_rankingWhereInput
-    orderBy?: quarter_rankingOrderByWithRelationInput | quarter_rankingOrderByWithRelationInput[]
-    cursor?: quarter_rankingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Quarter_rankingScalarFieldEnum | Quarter_rankingScalarFieldEnum[]
   }
 
   /**
@@ -71864,10 +71823,10 @@ export namespace Prisma {
   export const Quarter_rankingScalarFieldEnum: {
     id: 'id',
     user_id: 'user_id',
-    tournament_id: 'tournament_id',
     trimestry_ranking: 'trimestry_ranking',
     aggregated_score: 'aggregated_score',
-    position: 'position'
+    position: 'position',
+    quarter_ranking_year: 'quarter_ranking_year'
   };
 
   export type Quarter_rankingScalarFieldEnum = (typeof Quarter_rankingScalarFieldEnum)[keyof typeof Quarter_rankingScalarFieldEnum]
@@ -73546,23 +73505,21 @@ export namespace Prisma {
     NOT?: quarter_rankingWhereInput | quarter_rankingWhereInput[]
     id?: BigIntFilter<"quarter_ranking"> | bigint | number
     user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFilter<"quarter_ranking"> | number
     position?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
-    tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }
 
   export type quarter_rankingOrderByWithRelationInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
     wp_users?: wp_usersOrderByWithRelationInput
-    tournament?: tournamentOrderByWithRelationInput
   }
 
   export type quarter_rankingWhereUniqueInput = Prisma.AtLeast<{
@@ -73571,21 +73528,20 @@ export namespace Prisma {
     OR?: quarter_rankingWhereInput[]
     NOT?: quarter_rankingWhereInput | quarter_rankingWhereInput[]
     user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFilter<"quarter_ranking"> | number
     position?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
-    tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }, "id">
 
   export type quarter_rankingOrderByWithAggregationInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
     _count?: quarter_rankingCountOrderByAggregateInput
     _avg?: quarter_rankingAvgOrderByAggregateInput
     _max?: quarter_rankingMaxOrderByAggregateInput
@@ -73599,10 +73555,10 @@ export namespace Prisma {
     NOT?: quarter_rankingScalarWhereWithAggregatesInput | quarter_rankingScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
     user_id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
-    tournament_id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingWithAggregatesFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntWithAggregatesFilter<"quarter_ranking"> | number
     position?: IntWithAggregatesFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: IntWithAggregatesFilter<"quarter_ranking"> | number
   }
 
   export type registrationWhereInput = {
@@ -73809,7 +73765,6 @@ export namespace Prisma {
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
-    quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     stack?: XOR<StackScalarRelationFilter, stackWhereInput>
     tournament_level?: Tournament_levelListRelationFilter
@@ -73830,7 +73785,6 @@ export namespace Prisma {
     tournament_stack?: SortOrder
     tournament_pause?: SortOrder
     tournament_pause_date?: SortOrderInput | SortOrder
-    quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
     stack?: stackOrderByWithRelationInput
     tournament_level?: tournament_levelOrderByRelationAggregateInput
@@ -73855,7 +73809,6 @@ export namespace Prisma {
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
-    quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     stack?: XOR<StackScalarRelationFilter, stackWhereInput>
     tournament_level?: Tournament_levelListRelationFilter
@@ -78563,17 +78516,17 @@ export namespace Prisma {
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
     wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
-    tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
   }
 
   export type quarter_rankingUncheckedCreateInput = {
     id?: bigint | number
     user_id: bigint | number
-    tournament_id: bigint | number
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
   }
 
   export type quarter_rankingUpdateInput = {
@@ -78581,26 +78534,26 @@ export namespace Prisma {
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
     wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
-    tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
   }
 
   export type quarter_rankingUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type quarter_rankingCreateManyInput = {
     id?: bigint | number
     user_id: bigint | number
-    tournament_id: bigint | number
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
   }
 
   export type quarter_rankingUpdateManyMutationInput = {
@@ -78608,15 +78561,16 @@ export namespace Prisma {
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type quarter_rankingUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type registrationCreateInput = {
@@ -78804,7 +78758,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -78825,7 +78778,6 @@ export namespace Prisma {
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -78844,7 +78796,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -78865,7 +78816,6 @@ export namespace Prisma {
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -84192,52 +84142,47 @@ export namespace Prisma {
     isNot?: wp_usersWhereInput
   }
 
-  export type TournamentScalarRelationFilter = {
-    is?: tournamentWhereInput
-    isNot?: tournamentWhereInput
-  }
-
   export type quarter_rankingCountOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
   }
 
   export type quarter_rankingAvgOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
   }
 
   export type quarter_rankingMaxOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
   }
 
   export type quarter_rankingMinOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
   }
 
   export type quarter_rankingSumOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    tournament_id?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
+    quarter_ranking_year?: SortOrder
   }
 
   export type Enumquarter_ranking_trimestry_rankingWithAggregatesFilter<$PrismaModel = never> = {
@@ -84266,6 +84211,11 @@ export namespace Prisma {
     in?: $Enums.registration_statut[]
     notIn?: $Enums.registration_statut[]
     not?: NestedEnumregistration_statutFilter<$PrismaModel> | $Enums.registration_statut
+  }
+
+  export type TournamentScalarRelationFilter = {
+    is?: tournamentWhereInput
+    isNot?: tournamentWhereInput
   }
 
   export type Table_assignmentListRelationFilter = {
@@ -84527,12 +84477,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type Quarter_rankingListRelationFilter = {
-    every?: quarter_rankingWhereInput
-    some?: quarter_rankingWhereInput
-    none?: quarter_rankingWhereInput
-  }
-
   export type RegistrationListRelationFilter = {
     every?: registrationWhereInput
     some?: registrationWhereInput
@@ -84554,10 +84498,6 @@ export namespace Prisma {
     every?: tournament_tableWhereInput
     some?: tournament_tableWhereInput
     none?: tournament_tableWhereInput
-  }
-
-  export type quarter_rankingOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type registrationOrderByRelationAggregateInput = {
@@ -86947,6 +86887,16 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
+  export type Quarter_rankingListRelationFilter = {
+    every?: quarter_rankingWhereInput
+    some?: quarter_rankingWhereInput
+    none?: quarter_rankingWhereInput
+  }
+
+  export type quarter_rankingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type wp_usersOrderByRelevanceInput = {
     fields: wp_usersOrderByRelevanceFieldEnum | wp_usersOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -88321,12 +88271,6 @@ export namespace Prisma {
     connect?: wp_usersWhereUniqueInput
   }
 
-  export type tournamentCreateNestedOneWithoutQuarter_rankingInput = {
-    create?: XOR<tournamentCreateWithoutQuarter_rankingInput, tournamentUncheckedCreateWithoutQuarter_rankingInput>
-    connectOrCreate?: tournamentCreateOrConnectWithoutQuarter_rankingInput
-    connect?: tournamentWhereUniqueInput
-  }
-
   export type Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput = {
     set?: $Enums.quarter_ranking_trimestry_ranking
   }
@@ -88337,14 +88281,6 @@ export namespace Prisma {
     upsert?: wp_usersUpsertWithoutQuarter_rankingInput
     connect?: wp_usersWhereUniqueInput
     update?: XOR<XOR<wp_usersUpdateToOneWithWhereWithoutQuarter_rankingInput, wp_usersUpdateWithoutQuarter_rankingInput>, wp_usersUncheckedUpdateWithoutQuarter_rankingInput>
-  }
-
-  export type tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput = {
-    create?: XOR<tournamentCreateWithoutQuarter_rankingInput, tournamentUncheckedCreateWithoutQuarter_rankingInput>
-    connectOrCreate?: tournamentCreateOrConnectWithoutQuarter_rankingInput
-    upsert?: tournamentUpsertWithoutQuarter_rankingInput
-    connect?: tournamentWhereUniqueInput
-    update?: XOR<XOR<tournamentUpdateToOneWithWhereWithoutQuarter_rankingInput, tournamentUpdateWithoutQuarter_rankingInput>, tournamentUncheckedUpdateWithoutQuarter_rankingInput>
   }
 
   export type wp_usersCreateNestedOneWithoutRegistrationInput = {
@@ -88649,13 +88585,6 @@ export namespace Prisma {
     divide?: bigint | number
   }
 
-  export type quarter_rankingCreateNestedManyWithoutTournamentInput = {
-    create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
-    createMany?: quarter_rankingCreateManyTournamentInputEnvelope
-    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-  }
-
   export type registrationCreateNestedManyWithoutTournamentInput = {
     create?: XOR<registrationCreateWithoutTournamentInput, registrationUncheckedCreateWithoutTournamentInput> | registrationCreateWithoutTournamentInput[] | registrationUncheckedCreateWithoutTournamentInput[]
     connectOrCreate?: registrationCreateOrConnectWithoutTournamentInput | registrationCreateOrConnectWithoutTournamentInput[]
@@ -88688,13 +88617,6 @@ export namespace Prisma {
     connectOrCreate?: tournament_tableCreateOrConnectWithoutTournamentInput | tournament_tableCreateOrConnectWithoutTournamentInput[]
     createMany?: tournament_tableCreateManyTournamentInputEnvelope
     connect?: tournament_tableWhereUniqueInput | tournament_tableWhereUniqueInput[]
-  }
-
-  export type quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput = {
-    create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
-    createMany?: quarter_rankingCreateManyTournamentInputEnvelope
-    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
   }
 
   export type registrationUncheckedCreateNestedManyWithoutTournamentInput = {
@@ -88739,20 +88661,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type quarter_rankingUpdateManyWithoutTournamentNestedInput = {
-    create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
-    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutTournamentInput | quarter_rankingUpsertWithWhereUniqueWithoutTournamentInput[]
-    createMany?: quarter_rankingCreateManyTournamentInputEnvelope
-    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    update?: quarter_rankingUpdateWithWhereUniqueWithoutTournamentInput | quarter_rankingUpdateWithWhereUniqueWithoutTournamentInput[]
-    updateMany?: quarter_rankingUpdateManyWithWhereWithoutTournamentInput | quarter_rankingUpdateManyWithWhereWithoutTournamentInput[]
-    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
   }
 
   export type registrationUpdateManyWithoutTournamentNestedInput = {
@@ -88817,20 +88725,6 @@ export namespace Prisma {
     update?: tournament_tableUpdateWithWhereUniqueWithoutTournamentInput | tournament_tableUpdateWithWhereUniqueWithoutTournamentInput[]
     updateMany?: tournament_tableUpdateManyWithWhereWithoutTournamentInput | tournament_tableUpdateManyWithWhereWithoutTournamentInput[]
     deleteMany?: tournament_tableScalarWhereInput | tournament_tableScalarWhereInput[]
-  }
-
-  export type quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput = {
-    create?: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput> | quarter_rankingCreateWithoutTournamentInput[] | quarter_rankingUncheckedCreateWithoutTournamentInput[]
-    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTournamentInput | quarter_rankingCreateOrConnectWithoutTournamentInput[]
-    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutTournamentInput | quarter_rankingUpsertWithWhereUniqueWithoutTournamentInput[]
-    createMany?: quarter_rankingCreateManyTournamentInputEnvelope
-    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
-    update?: quarter_rankingUpdateWithWhereUniqueWithoutTournamentInput | quarter_rankingUpdateWithWhereUniqueWithoutTournamentInput[]
-    updateMany?: quarter_rankingUpdateManyWithWhereWithoutTournamentInput | quarter_rankingUpdateManyWithWhereWithoutTournamentInput[]
-    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
   }
 
   export type registrationUncheckedUpdateManyWithoutTournamentNestedInput = {
@@ -89722,49 +89616,6 @@ export namespace Prisma {
     create: XOR<wp_usersCreateWithoutQuarter_rankingInput, wp_usersUncheckedCreateWithoutQuarter_rankingInput>
   }
 
-  export type tournamentCreateWithoutQuarter_rankingInput = {
-    id?: bigint | number
-    tournament_name: string
-    tournament_description: string
-    tournament_start_date: Date | string
-    tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
-    tournament_category: $Enums.tournament_tournament_category
-    tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
-    tournament_pause?: boolean
-    tournament_pause_date?: Date | string | null
-    registration?: registrationCreateNestedManyWithoutTournamentInput
-    stack: stackCreateNestedOneWithoutTournamentInput
-    tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
-    tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
-    tournament_table?: tournament_tableCreateNestedManyWithoutTournamentInput
-  }
-
-  export type tournamentUncheckedCreateWithoutQuarter_rankingInput = {
-    id?: bigint | number
-    tournament_name: string
-    tournament_description: string
-    tournament_start_date: Date | string
-    tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
-    tournament_category: $Enums.tournament_tournament_category
-    tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
-    tournament_stack: number
-    tournament_pause?: boolean
-    tournament_pause_date?: Date | string | null
-    registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
-    tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
-  }
-
-  export type tournamentCreateOrConnectWithoutQuarter_rankingInput = {
-    where: tournamentWhereUniqueInput
-    create: XOR<tournamentCreateWithoutQuarter_rankingInput, tournamentUncheckedCreateWithoutQuarter_rankingInput>
-  }
-
   export type wp_usersUpsertWithoutQuarter_rankingInput = {
     update: XOR<wp_usersUpdateWithoutQuarter_rankingInput, wp_usersUncheckedUpdateWithoutQuarter_rankingInput>
     create: XOR<wp_usersCreateWithoutQuarter_rankingInput, wp_usersUncheckedCreateWithoutQuarter_rankingInput>
@@ -89806,55 +89657,6 @@ export namespace Prisma {
     pseudo_winamax?: StringFieldUpdateOperationsInput | string
     photo_url?: NullableStringFieldUpdateOperationsInput | string | null
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
-  }
-
-  export type tournamentUpsertWithoutQuarter_rankingInput = {
-    update: XOR<tournamentUpdateWithoutQuarter_rankingInput, tournamentUncheckedUpdateWithoutQuarter_rankingInput>
-    create: XOR<tournamentCreateWithoutQuarter_rankingInput, tournamentUncheckedCreateWithoutQuarter_rankingInput>
-    where?: tournamentWhereInput
-  }
-
-  export type tournamentUpdateToOneWithWhereWithoutQuarter_rankingInput = {
-    where?: tournamentWhereInput
-    data: XOR<tournamentUpdateWithoutQuarter_rankingInput, tournamentUncheckedUpdateWithoutQuarter_rankingInput>
-  }
-
-  export type tournamentUpdateWithoutQuarter_rankingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_name?: StringFieldUpdateOperationsInput | string
-    tournament_description?: StringFieldUpdateOperationsInput | string
-    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
-    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
-    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_pause?: BoolFieldUpdateOperationsInput | boolean
-    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    registration?: registrationUpdateManyWithoutTournamentNestedInput
-    stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
-    tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
-    tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
-    tournament_table?: tournament_tableUpdateManyWithoutTournamentNestedInput
-  }
-
-  export type tournamentUncheckedUpdateWithoutQuarter_rankingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_name?: StringFieldUpdateOperationsInput | string
-    tournament_description?: StringFieldUpdateOperationsInput | string
-    tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
-    tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
-    tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_stack?: IntFieldUpdateOperationsInput | number
-    tournament_pause?: BoolFieldUpdateOperationsInput | boolean
-    tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
-    tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
   }
 
   export type wp_usersCreateWithoutRegistrationInput = {
@@ -89906,7 +89708,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
@@ -89926,7 +89727,6 @@ export namespace Prisma {
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -90079,7 +89879,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
@@ -90099,7 +89898,6 @@ export namespace Prisma {
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90206,7 +90004,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
@@ -90225,7 +90022,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -90448,32 +90244,6 @@ export namespace Prisma {
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutRegistrationNestedInput
   }
 
-  export type quarter_rankingCreateWithoutTournamentInput = {
-    id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score: number
-    position: number
-    wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
-  }
-
-  export type quarter_rankingUncheckedCreateWithoutTournamentInput = {
-    id?: bigint | number
-    user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score: number
-    position: number
-  }
-
-  export type quarter_rankingCreateOrConnectWithoutTournamentInput = {
-    where: quarter_rankingWhereUniqueInput
-    create: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput>
-  }
-
-  export type quarter_rankingCreateManyTournamentInputEnvelope = {
-    data: quarter_rankingCreateManyTournamentInput | quarter_rankingCreateManyTournamentInput[]
-    skipDuplicates?: boolean
-  }
-
   export type registrationCreateWithoutTournamentInput = {
     id?: bigint | number
     inscription_date: Date | string
@@ -90602,34 +90372,6 @@ export namespace Prisma {
   export type tournament_tableCreateManyTournamentInputEnvelope = {
     data: tournament_tableCreateManyTournamentInput | tournament_tableCreateManyTournamentInput[]
     skipDuplicates?: boolean
-  }
-
-  export type quarter_rankingUpsertWithWhereUniqueWithoutTournamentInput = {
-    where: quarter_rankingWhereUniqueInput
-    update: XOR<quarter_rankingUpdateWithoutTournamentInput, quarter_rankingUncheckedUpdateWithoutTournamentInput>
-    create: XOR<quarter_rankingCreateWithoutTournamentInput, quarter_rankingUncheckedCreateWithoutTournamentInput>
-  }
-
-  export type quarter_rankingUpdateWithWhereUniqueWithoutTournamentInput = {
-    where: quarter_rankingWhereUniqueInput
-    data: XOR<quarter_rankingUpdateWithoutTournamentInput, quarter_rankingUncheckedUpdateWithoutTournamentInput>
-  }
-
-  export type quarter_rankingUpdateManyWithWhereWithoutTournamentInput = {
-    where: quarter_rankingScalarWhereInput
-    data: XOR<quarter_rankingUpdateManyMutationInput, quarter_rankingUncheckedUpdateManyWithoutTournamentInput>
-  }
-
-  export type quarter_rankingScalarWhereInput = {
-    AND?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
-    OR?: quarter_rankingScalarWhereInput[]
-    NOT?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
-    id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score?: IntFilter<"quarter_ranking"> | number
-    position?: IntFilter<"quarter_ranking"> | number
   }
 
   export type registrationUpsertWithWhereUniqueWithoutTournamentInput = {
@@ -90769,7 +90511,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_ranking?: tournament_rankingCreateNestedManyWithoutTournamentInput
@@ -90789,7 +90530,6 @@ export namespace Prisma {
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -90823,7 +90563,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
@@ -90843,7 +90582,6 @@ export namespace Prisma {
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -90886,7 +90624,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -90906,7 +90643,6 @@ export namespace Prisma {
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_table?: tournament_tableUncheckedCreateNestedManyWithoutTournamentInput
@@ -90971,7 +90707,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -90991,7 +90726,6 @@ export namespace Prisma {
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
@@ -91035,7 +90769,6 @@ export namespace Prisma {
     estimate_duration: Date | string
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTournamentInput
     registration?: registrationCreateNestedManyWithoutTournamentInput
     stack: stackCreateNestedOneWithoutTournamentInput
     tournament_level?: tournament_levelCreateNestedManyWithoutTournamentInput
@@ -91055,7 +90788,6 @@ export namespace Prisma {
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTournamentInput
     registration?: registrationUncheckedCreateNestedManyWithoutTournamentInput
     tournament_level?: tournament_levelUncheckedCreateNestedManyWithoutTournamentInput
     tournament_ranking?: tournament_rankingUncheckedCreateNestedManyWithoutTournamentInput
@@ -91105,7 +90837,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     stack?: stackUpdateOneRequiredWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
@@ -91125,7 +90856,6 @@ export namespace Prisma {
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -91261,15 +90991,15 @@ export namespace Prisma {
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
-    tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
+    quarter_ranking_year: number
   }
 
   export type quarter_rankingUncheckedCreateWithoutWp_usersInput = {
     id?: bigint | number
-    tournament_id: bigint | number
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
   }
 
   export type quarter_rankingCreateOrConnectWithoutWp_usersInput = {
@@ -91326,6 +91056,18 @@ export namespace Prisma {
   export type quarter_rankingUpdateManyWithWhereWithoutWp_usersInput = {
     where: quarter_rankingScalarWhereInput
     data: XOR<quarter_rankingUpdateManyMutationInput, quarter_rankingUncheckedUpdateManyWithoutWp_usersInput>
+  }
+
+  export type quarter_rankingScalarWhereInput = {
+    AND?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+    OR?: quarter_rankingScalarWhereInput[]
+    NOT?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+    id?: BigIntFilter<"quarter_ranking"> | bigint | number
+    user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
+    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
+    aggregated_score?: IntFilter<"quarter_ranking"> | number
+    position?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
   }
 
   export type registrationUpsertWithWhereUniqueWithoutWp_usersInput = {
@@ -91576,7 +91318,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUpdateManyWithoutTournamentNestedInput
     registration?: registrationUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUpdateManyWithoutTournamentNestedInput
@@ -91595,7 +91336,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTournamentNestedInput
     registration?: registrationUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_level?: tournament_levelUncheckedUpdateManyWithoutTournamentNestedInput
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
@@ -91614,14 +91354,6 @@ export namespace Prisma {
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type quarter_rankingCreateManyTournamentInput = {
-    id?: bigint | number
-    user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score: number
-    position: number
   }
 
   export type registrationCreateManyTournamentInput = {
@@ -91654,30 +91386,6 @@ export namespace Prisma {
     id?: bigint | number
     table_number: number
     table_capacity: number
-  }
-
-  export type quarter_rankingUpdateWithoutTournamentInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score?: IntFieldUpdateOperationsInput | number
-    position?: IntFieldUpdateOperationsInput | number
-    wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
-  }
-
-  export type quarter_rankingUncheckedUpdateWithoutTournamentInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score?: IntFieldUpdateOperationsInput | number
-    position?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type quarter_rankingUncheckedUpdateManyWithoutTournamentInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
-    aggregated_score?: IntFieldUpdateOperationsInput | number
-    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type registrationUpdateWithoutTournamentInput = {
@@ -91841,10 +91549,10 @@ export namespace Prisma {
 
   export type quarter_rankingCreateManyWp_usersInput = {
     id?: bigint | number
-    tournament_id: bigint | number
     trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
+    quarter_ranking_year: number
   }
 
   export type registrationCreateManyWp_usersInput = {
@@ -91859,23 +91567,23 @@ export namespace Prisma {
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type quarter_rankingUncheckedUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type quarter_rankingUncheckedUpdateManyWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type registrationUpdateWithoutWp_usersInput = {

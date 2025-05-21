@@ -65,11 +65,11 @@ export const TableTabs = () => {
   }, [moveMode, selectedPlayerToMove, tournament?.id]);
 
   const handleConfirmElimination = async (killerId: number) => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer || !tournament?.id) return;
 
     try {
       const res = await fetch(
-        `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/elimination`,
+        `/api/tournament/${tournament.id}/player/${selectedPlayer.registration_id}/elimination`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -78,7 +78,31 @@ export const TableTabs = () => {
       );
 
       if (!res.ok) throw new Error("Erreur serveur");
+
       await loadTournamentData();
+
+      const remainingAlive = assignements.filter((a) => !a.eliminated);
+      if (
+        remainingAlive.length === 1 &&
+        tournament.tournament_status !== "finish"
+      ) {
+        const finishRes = await fetch(
+          `/api/tournament/${tournament.id}/status`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "finish" })
+          }
+        );
+
+        if (!finishRes.ok) {
+          console.error("⚠️ Impossible de terminer le tournoi automatiquement");
+        } else {
+          console.log("✅ Tournoi terminé automatiquement");
+          await loadTournamentData();
+        }
+      }
+
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);

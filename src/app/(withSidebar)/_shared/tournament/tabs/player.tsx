@@ -3,7 +3,11 @@ import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
 import { mapFlatAssignementsToSeatRows } from "@/app/lib/adapter/tournament_table.adapter";
 import { Registration, TableAssignment } from "@/app/types";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon, Delete02Icon } from "@hugeicons/core-free-icons";
+import {
+  Cancel01Icon,
+  Delete02Icon,
+  Eraser01Icon
+} from "@hugeicons/core-free-icons";
 import { useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { seatsColumns } from "@/app/components/table/presets/seats.config";
@@ -75,7 +79,7 @@ export const PlayerTabs = () => {
                 tooltip: "Annuler élimination",
                 icon: (
                   <HugeiconsIcon
-                    icon={Cancel01Icon}
+                    icon={Eraser01Icon}
                     size={20}
                     strokeWidth={1.5}
                   />
@@ -124,7 +128,31 @@ export const PlayerTabs = () => {
       );
 
       if (!res.ok) throw new Error("Erreur serveur");
+
       await loadTournamentData();
+
+      const remainingAlive = assignements.filter((a) => !a.eliminated);
+      if (
+        remainingAlive.length === 1 &&
+        tournament?.tournament_status !== "finish"
+      ) {
+        const finishRes = await fetch(
+          `/api/tournament/${tournament?.id}/status`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "finish" })
+          }
+        );
+
+        if (!finishRes.ok) {
+          console.error("⚠️ Impossible de terminer le tournoi automatiquement");
+        } else {
+          console.log("✅ Tournoi terminé automatiquement");
+          await loadTournamentData();
+        }
+      }
+
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
