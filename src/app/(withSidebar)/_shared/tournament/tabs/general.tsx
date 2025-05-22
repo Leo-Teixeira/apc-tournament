@@ -6,7 +6,13 @@ import { ButtonComponents } from "@/app/components/button";
 import { BackgroundComponent } from "./components/background_components";
 import { Registration, Tournament, TournamentRanking } from "@/app/types";
 import { ClassementComponent } from "./components/classement_components";
-import { formatDate, formatHour, parseDateTimeLocal } from "@/app/utils/date";
+import {
+  formatDate,
+  formatDateFR,
+  formatHour,
+  formatHourFR,
+  parseDateTimeLocal
+} from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
 export const GeneralTabs = () => {
@@ -21,14 +27,14 @@ export const GeneralTabs = () => {
     ? new Date(tournament.tournament_open_date)
     : null;
 
-  const startDateString = startDate ? formatDate(startDate) : "";
-  const startTimeString = startDate ? formatHour(startDate) : "";
+  const startDateString = startDate ? formatDateFR(startDate) : "";
+  const startTimeString = startDate ? formatHourFR(startDate) : "";
 
-  const openDateString = openDate ? formatDate(openDate) : "";
-  const openTimeString = openDate ? formatHour(openDate) : "";
+  const openDateString = openDate ? formatDateFR(openDate) : "";
+  const openTimeString = openDate ? formatHourFR(openDate) : "";
 
   const durationFormatted = tournament?.estimate_duration
-    ? formatHour(tournament.estimate_duration)
+    ? formatHourFR(tournament.estimate_duration)
     : "";
 
   return (
@@ -113,16 +119,11 @@ export const GeneralTabs = () => {
               Participants
             </p>
             <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-              {registration.length > 0 ? (
-                <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                  {registration.filter((r) => r.statut == "Confirmed").length}/
-                  {registration.length}
-                </p>
-              ) : (
-                <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
-                  0
-                </p>
-              )}
+              {registration.length > 0
+                ? `${
+                    registration.filter((r) => r.statut == "Confirmed").length
+                  }/${registration.length}`
+                : "0"}
             </p>
           </Card>
         </div>

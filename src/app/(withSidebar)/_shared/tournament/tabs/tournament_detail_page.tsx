@@ -28,6 +28,9 @@ export default function TournamentDetailPage() {
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
+  const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
+    useState(false);
+  const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
 
   useEffect(() => {
@@ -185,7 +188,14 @@ export default function TournamentDetailPage() {
             <ButtonTabsComponents
               tournamentStatus={tournament.tournament_status}
               tabsId={selectedTab}
-              onClick={onOpen}
+              levels={levels}
+              onModify={onOpen}
+              onAddLevel={onOpen}
+              onResetLevel={() => setIsReinitialiseLevelModalOpen(true)}
+              onAddPlayer={onOpen}
+              onGenerateTables={onOpen}
+              onEditStack={onOpen}
+              onAddTable={() => setIsAddTableModalOpen(true)}
             />
           )}
         </div>
@@ -228,6 +238,34 @@ export default function TournamentDetailPage() {
           }
         }}>
         <p>Es-tu sûr de vouloir lancer le tournoi ?</p>
+      </GenericModal>
+      <GenericModal
+        isOpen={isReinitialiseLevelModalOpen}
+        onClose={() => {
+          setIsReinitialiseLevelModalOpen(false);
+        }}
+        title="Réinitialiser les niveaux"
+        confirmLabel="Réinitialiser"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            const res = await fetch(`/api/tournament/${tournament.id}/level`, {
+              method: "DELETE"
+            });
+
+            if (!res.ok) throw new Error("Erreur lors de la réinitialisation");
+
+            await loadTournamentData();
+            setIsReinitialiseLevelModalOpen(false);
+          } catch (err) {
+            console.error("❌ Erreur réinitialisation niveau :", err);
+            alert("Erreur lors de la réinitialisation des niveaux");
+          }
+        }}>
+        <p>
+          Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront
+          tous perdu
+        </p>
       </GenericModal>
       <GenericModal
         isOpen={isPauseModalOpen}

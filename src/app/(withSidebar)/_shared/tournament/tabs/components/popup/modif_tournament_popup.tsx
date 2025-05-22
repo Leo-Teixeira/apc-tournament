@@ -8,6 +8,7 @@ import { NumberInputComponents } from "@/app/components/form/number_input";
 import { TimeInputComponents } from "@/app/components/form/time_input";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { Tournament } from "@/app/types";
+import { toDateTimeLocalString } from "@/app/utils/date";
 
 export type TournamentFormBodyProps = {
   tournament?: Tournament;
@@ -26,12 +27,12 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
 
   useEffect(() => {
     if (tournament) {
-      const dateStr = new Date(tournament.tournament_start_date)
-        .toISOString()
-        .slice(0, 16);
-      const openStr = new Date(tournament.tournament_open_date)
-        .toISOString()
-        .slice(0, 16);
+      const dateStr = toDateTimeLocalString(
+        new Date(tournament.tournament_start_date)
+      );
+      const openStr = toDateTimeLocalString(
+        new Date(tournament.tournament_open_date)
+      );
       const durationStr = tournament.estimate_duration
         ? new Date(tournament.estimate_duration).toISOString().slice(11, 16)
         : "";
@@ -47,7 +48,7 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
         tournament_start_date: new Date(dateStr),
         tournament_open_date: new Date(openStr),
         tournament_trimestry: tournament.tournament_trimestry,
-        estimate_duration: new Date(`1970-01-01T${durationStr}:00Z`)
+        estimate_duration: new Date(`1970-01-01T${durationStr}:00`)
       });
     }
   }, [tournament]);
@@ -106,7 +107,7 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
         onChange={(e) => {
           setEstimatedDuration(e.target.value);
           onUpdate({
-            estimate_duration: new Date(`1970-01-01T${e.target.value}:00Z`)
+            estimate_duration: new Date(`1970-01-01T${e.target.value}:00`)
           });
         }}
       />

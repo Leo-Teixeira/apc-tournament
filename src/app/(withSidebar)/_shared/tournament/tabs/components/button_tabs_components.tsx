@@ -1,16 +1,32 @@
 import { ButtonComponents } from "@/app/components/button";
+import { TournamentLevel } from "@/app/types";
 
 type ButtonTabsProps = {
   tournamentStatus: string;
   tabsId: string;
-  onClick: () => void;
+  levels: TournamentLevel[];
+  onAddLevel?: () => void;
+  onResetLevel?: () => void;
+  onAddTable?: () => void;
+  onModify?: () => void;
+  onGenerateTables?: () => void;
+  onAddPlayer?: () => void;
+  onEditStack?: () => void;
 };
 
 export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
   tournamentStatus,
   tabsId,
-  onClick
+  levels,
+  onAddLevel,
+  onAddPlayer,
+  onEditStack,
+  onGenerateTables,
+  onModify,
+  onResetLevel,
+  onAddTable
 }) => {
+  console.log("levels pour les boutons", levels);
   switch (tabsId) {
     case "0":
       return (
@@ -18,7 +34,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
           {tournamentStatus === "start" ? (
             <ButtonComponents
               text="Modifier le tournoi"
-              onClick={onClick}
+              onClick={onModify}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
             />
@@ -32,20 +48,18 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
         <div className="flex flex-row justify-between gap-3">
           <ButtonComponents
             text="Ajouter un niveau"
-            onClick={onClick}
+            onClick={onAddLevel}
             buttonClassName="bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
-          {/* {tournamentStatus == "start" ? (
+          {tournamentStatus === "start" && levels.length > 0 && (
             <ButtonComponents
               text="Réinitialiser les niveaux"
-              onClick={onClick}
+              onClick={onResetLevel}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
             />
-          ) : (
-            <></>
-          )} */}
+          )}
         </div>
       );
     case "2":
@@ -54,7 +68,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
           {tournamentStatus !== "in_coming" ? (
             <ButtonComponents
               text="Ajouter un joueur"
-              onClick={onClick}
+              onClick={onAddPlayer}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
             />
@@ -65,17 +79,23 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
       );
     case "3":
       return (
-        <div>
+        <div className="flex flex-row justify-between gap-3">
           {tournamentStatus !== "in_coming" ? (
             <ButtonComponents
               text="Générer les tables"
-              onClick={onClick}
+              onClick={onGenerateTables}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
             />
           ) : (
             <></>
           )}{" "}
+          <ButtonComponents
+            text="Ajouter une table"
+            onClick={onAddTable}
+            buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+            textClassName="text-primary_brand-50"
+          />
         </div>
       );
     case "4":
@@ -84,7 +104,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
           {tournamentStatus !== "finish" ? (
             <ButtonComponents
               text="Modifier le stack"
-              onClick={onClick}
+              onClick={onEditStack}
               buttonClassName="bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
             />

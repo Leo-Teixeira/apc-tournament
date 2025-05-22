@@ -4,12 +4,12 @@ import { RadioGroupComponents } from "@/app/components/form/radio_group";
 import { TimeInputComponents } from "@/app/components/form/time_input";
 import { TournamentLevel } from "@/app/types";
 import { Checkbox } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type NiveauFormBodyProps = {
   isModify: boolean;
   level?: TournamentLevel;
-  tournamentStart: string;
+  tournamentStart: Date;
   onUpdate: (data: Partial<TournamentLevel>) => void;
 };
 
@@ -19,36 +19,32 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
   tournamentStart,
   onUpdate
 }) => {
-  const [isPause, setIsPause] = useState(false);
-  const [afterLevel, setAfterLevel] = useState("");
-  const [duration, setDuration] = useState("00:00");
-  const [smallBlind, setSmallBlind] = useState<number>(0);
-  const [bigBlind, setBigBlind] = useState<number>(0);
-  const [ante, setAnte] = useState<number>(0);
-  const [chipRace, setChipRace] = useState(false);
+  const initialStart = useMemo(
+    () => new Date(level?.level_end ?? tournamentStart),
+    [level, tournamentStart]
+  );
+
+  const [isPause, setIsPause] = useState(() => level?.level_pause ?? false);
+  const [afterLevel, setAfterLevel] = useState(() =>
+    String(level?.level_number ?? 0)
+  );
+  const [duration, setDuration] = useState(() =>
+    level?.level_start && level?.level_end
+      ? computeDuration(level.level_start, level.level_end)
+      : "00:00"
+  );
+  const [smallBlind, setSmallBlind] = useState(
+    () => level?.level_small_blinde ?? 0
+  );
+  const [bigBlind, setBigBlind] = useState(() => level?.level_big_blinde ?? 0);
+  const [ante, setAnte] = useState(() => level?.level_ante ?? 0);
+  const [chipRace, setChipRace] = useState(
+    () => level?.level_chip_race ?? false
+  );
 
   useEffect(() => {
-    if (level) {
-      if (isModify) {
-        setIsPause(level.level_pause);
-        setDuration(
-          level.level_start && level.level_end
-            ? computeDuration(level.level_start, level.level_end)
-            : ""
-        );
-        setSmallBlind(level.level_small_blinde);
-        setBigBlind(level.level_big_blinde);
-        setAnte(level.level_ante ?? 0);
-        setChipRace(level.level_chip_race);
-      }
-      setAfterLevel(String(level.level_number));
-    }
-  }, [level, isModify]);
-
-  useEffect(() => {
-    const baseStart = level?.level_end || tournamentStart;
-    const startDate = new Date(baseStart);
     const [durH, durM] = duration.split(":").map(Number);
+    const startDate = new Date(initialStart);
     const endDate = new Date(startDate);
     endDate.setHours(startDate.getHours() + durH);
     endDate.setMinutes(startDate.getMinutes() + durM);
@@ -73,7 +69,7 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
     bigBlind,
     ante,
     chipRace,
-    tournamentStart,
+    initialStart,
     onUpdate
   ]);
 
@@ -82,16 +78,13 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
       <RadioGroupComponents
         label="Pause"
         value={String(isPause)}
-        onChange={(e) => {
-          const v = e.target.value === "true";
-          setIsPause(v);
-        }}
+        onChange={(e) => setIsPause(e.target.value === "true")}
       />
 
       <div className="flex gap-4">
         <div className="w-full">
           <InputComponents
-            disabled={isModify ? true : false}
+            disabled={isModify}
             type="text"
             label="Après le niveau"
             value={afterLevel}
@@ -122,6 +115,7 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
             value={bigBlind}
             onChange={(value) => setBigBlind(Number(value))}
           />
+
           <NumberInputComponents
             type="number"
             label="Ante"

@@ -9,7 +9,7 @@ import {
 import { NiveauFormBody } from "./popup/add_level_popup";
 import { TournamentFormBody } from "./popup/modif_tournament_popup";
 import { PlayerFormBody } from "./popup/add_player_popup";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { formatDate } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { StackEditorForm } from "./popup/modif_stack_popup";
@@ -25,33 +25,29 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   isOpen,
   onClose
 }) => {
-  const [tournamentFormData, setTournamentFormData] = useState<
-    Partial<Tournament>
-  >({});
-  const [levelFormData, setLevelFormData] = useState<Partial<TournamentLevel>>(
-    {}
-  );
-  const [updatedStack, setUpdatedStack] = useState<EditableStack | null>(null);
+  const { tournament, levels, stacks, loadTournamentData } =
+    useTournamentContext();
 
-  const [playerFormData, setPlayerFormData] = useState<{
-    pseudo: string;
-    firstName: string;
-    lastName: string;
-  }>({
+  const levelFormRef = useRef<Partial<TournamentLevel>>({});
+  const [playerFormData, setPlayerFormData] = useState({
     pseudo: "",
     firstName: "",
     lastName: ""
   });
-  const { tournament, levels, assignements, stacks, loadTournamentData } =
-    useTournamentContext();
+  const [tournamentFormData, setTournamentFormData] = useState<
+    Partial<Tournament>
+  >({});
+  const [updatedStack, setUpdatedStack] = useState<EditableStack | null>(null);
 
-  const lastLevel = useMemo(() => {
-    return levels && levels.length > 0
-      ? levels.reduce((max, curr) =>
-          curr.level_number > max.level_number ? curr : max
-        )
-      : undefined;
-  }, [levels]);
+  const lastLevel = useMemo(
+    () =>
+      levels && levels.length > 0
+        ? levels.reduce((max, curr) =>
+            curr.level_number > max.level_number ? curr : max
+          )
+        : undefined,
+    [levels]
+  );
 
   if (!tournament) return null;
 
@@ -67,6 +63,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
 
       if (!res.ok) throw new Error("Erreur serveur");
 
+      await loadTournamentData();
       onClose();
     } catch (error) {
       console.error("Erreur modification tournoi :", error);
@@ -98,22 +95,25 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleCreateNiveau = async () => {
+    const payload = {
+      ...levelFormRef.current,
+      tournament_id: tournament.id
+    };
+    console.log("📦 Payload envoyé :", payload);
+
     try {
       const res = await fetch(`/api/tournament/${tournament.id}/level`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ...levelFormData,
-          tournament_id: tournament.id
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error("Erreur serveur");
+
+      await loadTournamentData();
       onClose();
     } catch (error) {
-      console.error("Erreur création niveau :", error);
+      console.error("❌ Erreur création niveau :", error);
       alert("Une erreur est survenue.");
     }
   };
@@ -171,9 +171,12 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
 
   const generateTable = async () => {
     try {
-      const res = await fetch(`/api/tournament/${tournament.id}/table_assignement`, {
-        method: "POST"
-      });
+      const res = await fetch(
+        `/api/tournament/${tournament.id}/table_assignement`,
+        {
+          method: "POST"
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Erreur serveur lors de la génération des tables.");
@@ -188,6 +191,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   if (selectedTab === "1") {
+    console.log("heure", tournament.tournament_start_date);
     return (
       <GenericModal
         isOpen={isOpen}
@@ -197,11 +201,11 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onConfirm={handleCreateNiveau}>
         <NiveauFormBody
           isModify={false}
-          tournamentStart={formatDate(tournament.tournament_start_date)}
+          tournamentStart={new Date(tournament.tournament_start_date)}
           level={lastLevel}
-          onUpdate={(updated) =>
-            setLevelFormData((prev) => ({ ...prev, ...updated }))
-          }
+          onUpdate={(data) => {
+            levelFormRef.current = { ...levelFormRef.current, ...data };
+          }}
         />
       </GenericModal>
     );

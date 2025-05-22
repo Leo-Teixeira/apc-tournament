@@ -1,3 +1,5 @@
+"use client";
+
 import { GenericModal } from "@/app/components/popup";
 import { GenericTable } from "@/app/components/table/generic_table";
 import { blindsColumns } from "@/app/components/table/presets/blinds.config";
@@ -142,7 +144,7 @@ export const NiveauxTabs: React.FC = () => {
         }}>
         <NiveauFormBody
           isModify={true}
-          tournamentStart={formatDate(levels[0].level_start)}
+          tournamentStart={new Date(levels?.[0]?.level_start)}
           level={levels.find((l) => l.id == levelToModify?.id)}
           onUpdate={(updated) =>
             setTournamentLevelFormData((prev) => ({ ...prev, ...updated }))

@@ -29,3 +29,26 @@ export const toLocalDate = (isoDate: string) => {
   const timezoneOffsetMs = date.getTimezoneOffset() * 60000;
   return new Date(date.getTime() + timezoneOffsetMs);
 };
+
+export const toDateTimeLocalString = (date: Date): string => {
+  const tzDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return tzDate.toISOString().slice(0, 16);
+};
+
+export const formatDateFR = (value: string | Date) => {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" });
+};
+
+export const formatHourFR = (value: string | Date) => {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "-";
+  const hours = new Intl.DateTimeFormat("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Europe/Paris"
+  }).format(date);
+  return hours;
+};

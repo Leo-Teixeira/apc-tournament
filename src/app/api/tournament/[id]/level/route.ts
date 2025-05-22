@@ -54,11 +54,12 @@ export async function GET(
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+    console.log("📨 Données reçues pour création niveau :", data);
 
     const newLevel = await prisma.tournament_level.create({
       data: {
         tournament_id: BigInt(data.tournament_id),
-        level_number: data.level_number,
+        level_number: data.level_number ?? 1,
         level_start: data.level_start,
         level_end: data.level_end,
         level_small_blinde: data.level_small_blinde,
@@ -69,11 +70,45 @@ export async function POST(req: NextRequest) {
       }
     });
 
+    console.log("✅ Niveau créé :", newLevel);
+
     return NextResponse.json(serializeBigInt(newLevel));
   } catch (error) {
-    console.error("Error creating level:", error);
+    console.error("❌ Error creating level:", error);
     return NextResponse.json(
       { error: "Failed to create level" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  _: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const tournamentId = parseInt(params.id);
+    if (isNaN(tournamentId)) {
+      return NextResponse.json(
+        { error: "Invalid tournament ID" },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await prisma.tournament_level.deleteMany({
+      where: {
+        tournament_id: BigInt(tournamentId)
+      }
+    });
+
+    return NextResponse.json({
+      message: `Deleted ${deleted.count} levels`,
+      count: deleted.count
+    });
+  } catch (error) {
+    console.error("Error deleting levels:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
