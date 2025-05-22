@@ -4,7 +4,7 @@ import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { STRINGS } from "@/app/constants/string";
 import { useParams } from "next/navigation";
 import { ButtonComponents } from "@/app/components/button";
@@ -18,6 +18,10 @@ import { ModalManager } from "./components/popup_tabs_components";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { GenericModal } from "@/app/components/popup";
+import {
+  AddTableForm,
+  AddTableFormHandle
+} from "./components/popup/add_table_popup";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -32,6 +36,12 @@ export default function TournamentDetailPage() {
     useState(false);
   const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
+  const formRef = useRef<AddTableFormHandle>(null);
+
+  const nextTableNumber =
+    tournament?.tournament_table && tournament.tournament_table.length > 0
+      ? Math.max(...tournament.tournament_table.map((t) => t.table_number)) + 1
+      : 1;
 
   useEffect(() => {
     loadTournamentData().finally(() => setIsLoading(false));
@@ -266,6 +276,43 @@ export default function TournamentDetailPage() {
           Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront
           tous perdu
         </p>
+      </GenericModal>
+      <GenericModal
+        isOpen={isAddTableModalOpen}
+        onClose={() => setIsAddTableModalOpen(false)}
+        title="Ajouter une table"
+        confirmLabel="Ajouter"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            const values = formRef.current?.getValues();
+
+            if (!values) throw new Error("Valeurs du formulaire indisponibles");
+
+            const res = await fetch(
+              `/api/tournament/${tournament.id}/table_assignement`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values)
+              }
+            );
+
+            if (!res.ok) {
+              const body = await res.json();
+              throw new Error(
+                body?.error || "Erreur lors de l'ajout de la table"
+              );
+            }
+
+            await loadTournamentData();
+            setIsAddTableModalOpen(false);
+          } catch (err) {
+            console.error("Erreur ajout table :", err);
+            alert("Erreur lors de l'ajout de la table");
+          }
+        }}>
+        <AddTableForm ref={formRef} initialNumber={nextTableNumber} />
       </GenericModal>
       <GenericModal
         isOpen={isPauseModalOpen}

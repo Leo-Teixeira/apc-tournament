@@ -63,95 +63,37 @@ export async function POST(
 ) {
   try {
     const tournamentId = parseInt(params.id);
-    console.log("Tournament ID reçu :", tournamentId);
-
     if (isNaN(tournamentId)) {
-      console.error("ID de tournoi invalide :", params.id);
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid tournament ID" }, { status: 400 });
     }
 
-    const registrations = await prisma.registration.findMany({
-      where: {
+    const body = await req.json();
+    const { table_number, table_capacity } = body;
+
+    if (
+      typeof table_number !== "number" ||
+      typeof table_capacity !== "number" ||
+      table_number <= 0 ||
+      table_capacity <= 0
+    ) {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
+
+    const newTable = await prisma.tournament_table.create({
+      data: {
         tournament_id: BigInt(tournamentId),
-        statut: "Confirmed"
+        table_number,
+        table_capacity
       }
     });
 
-    console.log("Nombre d'inscriptions confirmées :", registrations.length);
-
-    const shuffled = registrations.sort(() => Math.random() - 0.5);
-    const totalPlayers = shuffled.length;
-    const maxPerTable = 9;
-
-    const numberOfTables = Math.ceil(totalPlayers / maxPerTable);
-    const baseCapacity = Math.floor(totalPlayers / numberOfTables);
-    const extraPlayers = totalPlayers % numberOfTables;
-
-    const tableCapacities = Array(numberOfTables)
-      .fill(baseCapacity)
-      .map((cap, index) => (index < extraPlayers ? cap + 1 : cap));
-
-    console.log("Capacités calculées :", tableCapacities);
-
-    const createdTables = await prisma.$transaction(async (tx) => {
-      const tables = [];
-
-      for (let i = 0; i < numberOfTables; i++) {
-        const table = await tx.tournament_table.create({
-          data: {
-            tournament_id: BigInt(tournamentId),
-            table_number: i + 1,
-            table_capacity: tableCapacities[i]
-          }
-        });
-        console.log(`Table ${table.table_number} créée avec ID ${table.id}`);
-        tables.push(table);
-      }
-
-      let currentIndex = 0;
-
-      for (let i = 0; i < numberOfTables; i++) {
-        const table = tables[i];
-        const tablePlayers = shuffled.slice(
-          currentIndex,
-          currentIndex + tableCapacities[i]
-        );
-
-        console.log(
-          `→ Affectation de ${tablePlayers.length} joueurs à la table ${table.table_number}`
-        );
-
-        for (let j = 0; j < tablePlayers.length; j++) {
-          await tx.table_assignment.create({
-            data: {
-              registration_id: tablePlayers[j].id,
-              table_id: table.id,
-              table_seat_number: j + 1
-            }
-          });
-
-          console.log(`   - Joueur ID ${tablePlayers[j].id} → place ${j + 1}`);
-        }
-
-        currentIndex += tableCapacities[i];
-      }
-
-      return tables;
-    });
-
-    console.log("Création terminée :", createdTables.length, "tables");
-
-    return NextResponse.json(
-      serializeBigInt({
-        message: "Tables and assignments created",
-        createdTables
-      })
-    );
+    return NextResponse.json(serializeBigInt(newTable));
   } catch (error) {
-    console.error("Erreur lors de la génération des tables :", error);
+    console.error("❌ Erreur ajout table :", error);
     return NextResponse.json(
-      { error: "Failed to generate tables" },
+      { error: "Erreur interne lors de l'ajout de la table" },
       { status: 500 }
     );
   }
 }
+

@@ -172,7 +172,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   const generateTable = async () => {
     try {
       const res = await fetch(
-        `/api/tournament/${tournament.id}/table_assignement`,
+        `/api/tournament/${tournament.id}/table_assignement/generate`,
         {
           method: "POST"
         }
@@ -191,7 +191,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   if (selectedTab === "1") {
-    console.log("heure", tournament.tournament_start_date);
     return (
       <GenericModal
         isOpen={isOpen}
