@@ -5,7 +5,7 @@ import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
-import { TournamentLevel } from "@/app/types";
+import { Chip, TournamentLevel } from "@/app/types";
 import { toLocalDate } from "@/app/utils/date";
 
 export default function Game() {
@@ -14,7 +14,6 @@ export default function Game() {
     levels,
     registration,
     assignements,
-    stacks,
     loadTournamentData,
     loadTournamentOnly
   } = useTournamentContext();
@@ -29,6 +28,10 @@ export default function Game() {
 
   const isPaused = tournament?.tournament_pause === true;
   const getNow = () => (isPaused && frozenNow ? frozenNow : now);
+
+  const chips = (tournament?.stack?.stack_chip ?? [])
+    .map((sc) => sc?.chip)
+    .filter((chip): chip is Chip => chip !== undefined);
 
   const getDurationSince = (startISO: string) => {
     const start = toLocalDate(startISO);
@@ -213,7 +216,7 @@ export default function Game() {
           </div>
         </div>
 
-        <ChipLegend chips={[]} />
+        <ChipLegend chips={chips ?? []} />
       </div>
     </div>
   );
