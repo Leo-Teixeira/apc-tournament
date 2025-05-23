@@ -123,13 +123,21 @@ export default function Game() {
       return refDate >= start && refDate < end;
     });
 
-    const nl = levels.find((level) => new Date(level.level_start) > refDate);
+    let next: TournamentLevel | undefined = undefined;
+    if (currentLevel) {
+      const currentIndex = levels.findIndex(
+        (lvl) => lvl.id === currentLevel.id
+      );
+      next = levels.slice(currentIndex + 1).find((lvl) => !lvl.level_pause);
+    }
+    setNextLevel(next ?? null);
+
     const np = levels.find(
       (level) => new Date(level.level_start) > refDate && level.level_pause
     );
 
     setCurrentLevel(cl ?? null);
-    setNextLevel(nl ?? null);
+    setNextLevel(next ?? null);
     setNextPause(np ?? null);
   }, [levels, now, frozenNow, isPaused]);
 

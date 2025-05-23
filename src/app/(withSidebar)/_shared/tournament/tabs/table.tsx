@@ -25,6 +25,8 @@ export const TableTabs = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(
     null
   );
+  const [seatNumber, setSeatNumber] = useState<number>(1);
+
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { tournament, assignements } = useTournamentContext();
@@ -84,33 +86,38 @@ export const TableTabs = () => {
 
   const getConditionalActions = (
     item: SeatRow
-  ): ActionDefinition<SeatRow>[] => [
-    {
-      tooltip: "Éliminer",
-      icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
-      onClick: () => {
-        const assignment = assignements.find((a) => a.id === item.id);
-        if (!assignment?.tournament_table?.table_number) return;
+  ): ActionDefinition<SeatRow>[] => {
+    const actions: ActionDefinition<SeatRow>[] = [];
 
-        setSelectedPlayer(assignment);
+    if (tournament && tournament.tournament_status !== "start") {
+      actions.push({
+        tooltip: "Éliminer",
+        icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
+        onClick: () => {
+          const assignment = assignements.find((a) => a.id === item.id);
+          if (!assignment?.tournament_table?.table_number) return;
 
-        const killers = assignements
-          .filter(
-            (a) =>
-              !a.eliminated &&
-              a.registration &&
-              a.tournament_table?.table_number ===
-                assignment.tournament_table?.table_number &&
-              a.registration_id !== assignment.registration_id
-          )
-          .map((a) => a.registration)
-          .filter((r): r is Registration => !!r);
+          setSelectedPlayer(assignment);
 
-        setKillerOptions(killers);
-        onOpen();
-      }
-    },
-    {
+          const killers = assignements
+            .filter(
+              (a) =>
+                !a.eliminated &&
+                a.registration &&
+                a.tournament_table?.table_number ===
+                  assignment.tournament_table?.table_number &&
+                a.registration_id !== assignment.registration_id
+            )
+            .map((a) => a.registration)
+            .filter((r): r is Registration => !!r);
+
+          setKillerOptions(killers);
+          onOpen();
+        }
+      });
+    }
+
+    actions.push({
       tooltip: "Changer de place",
       icon: <HugeiconsIcon icon={CoinsSwapIcon} size={20} strokeWidth={1.5} />,
       onClick: () => {
@@ -130,8 +137,10 @@ export const TableTabs = () => {
         setMoveOptions(otherPlayers);
         setIsMoveModalOpen(true);
       }
-    }
-  ];
+    });
+
+    return actions;
+  };
 
   if (!tournament) return <LoadingComponent />;
 
@@ -150,11 +159,7 @@ export const TableTabs = () => {
                   items={rows}
                   ariaLabel={`Table ${tableNumber}`}
                   showActions
-                  actions={
-                    tournament.tournament_status === "in_coming"
-                      ? getConditionalActions
-                      : undefined
-                  }
+                  actions={getConditionalActions}
                   enableSorting={false}
                 />
               </div>
@@ -206,12 +211,18 @@ export const TableTabs = () => {
           }
 
           try {
-            await movePlayerMutation.mutateAsync({
+            const payload: any = {
               tournamentId: tournament.id,
               playerId: selectedPlayerToMove.id,
               mode: moveMode,
               targetId
-            });
+            };
+
+            if (moveMode === "move") {
+              payload.seatNumber = seatNumber;
+            }
+
+            await movePlayerMutation.mutateAsync(payload);
 
             setIsMoveModalOpen(false);
             setSelectedSwapTargetId(null);
@@ -242,6 +253,7 @@ export const TableTabs = () => {
               ? selectedSwapTargetId?.toString() ?? ""
               : selectedTableId?.toString() ?? ""
           }
+          onSeatNumberChange={setSeatNumber}
         />
       </GenericModal>
     </div>

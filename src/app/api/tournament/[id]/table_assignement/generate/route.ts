@@ -15,6 +15,20 @@ export async function POST(
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
+    const tournament = await prisma.tournament.findUnique({
+      where: { id: BigInt(tournamentId) },
+      select: { tournament_category: true }
+    });
+
+    if (!tournament) {
+      return NextResponse.json(
+        { error: "Tournament not found" },
+        { status: 404 }
+      );
+    }
+
+    const maxPerTable = tournament.tournament_category === "APT" ? 8 : 9;
+
     const existingTables = await prisma.tournament_table.findMany({
       where: {
         tournament_id: BigInt(tournamentId)
@@ -47,7 +61,6 @@ export async function POST(
 
     const shuffled = registrations.sort(() => Math.random() - 0.5);
     const totalPlayers = shuffled.length;
-    const maxPerTable = 9;
 
     const numberOfTables = Math.ceil(totalPlayers / maxPerTable);
     const baseCapacity = Math.floor(totalPlayers / numberOfTables);

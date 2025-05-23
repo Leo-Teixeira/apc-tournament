@@ -8,7 +8,7 @@ export async function POST(
   try {
     const tournamentId = BigInt(params.id);
     const body = await req.json();
-    const { playerId, mode, targetId } = body;
+    const { playerId, mode, targetId, seatNumber } = body;
 
     if (!playerId || !mode || !targetId)
       return NextResponse.json(
@@ -60,7 +60,7 @@ export async function POST(
           { status: 404 }
         );
 
-      const seatTaken = await prisma.table_assignment.findMany({
+      const assignments = await prisma.table_assignment.findMany({
         where: {
           table_id: BigInt(targetId),
           eliminated: false
@@ -68,17 +68,42 @@ export async function POST(
         orderBy: { table_seat_number: "asc" }
       });
 
-      const usedSeats = seatTaken.map((s) => s.table_seat_number);
-      let seat = 1;
-      while (usedSeats.includes(seat)) seat++;
+      const usedSeats = assignments.map((a) => a.table_seat_number);
 
-      await prisma.table_assignment.update({
-        where: { id: player.id },
-        data: {
-          table_id: BigInt(targetId),
-          table_seat_number: seat
-        }
-      });
+      let targetSeat = seatNumber ? parseInt(seatNumber) : 1;
+      if (!targetSeat || isNaN(targetSeat) || targetSeat < 1) {
+        while (usedSeats.includes(targetSeat)) targetSeat++;
+      }
+
+      const conflict = assignments.find(
+        (a) => a.table_seat_number === targetSeat
+      );
+
+      const updates = [];
+
+      if (conflict) {
+        const lastSeat = Math.max(...usedSeats) + 1;
+        updates.push(
+          prisma.table_assignment.update({
+            where: { id: conflict.id },
+            data: {
+              table_seat_number: lastSeat
+            }
+          })
+        );
+      }
+
+      updates.push(
+        prisma.table_assignment.update({
+          where: { id: player.id },
+          data: {
+            table_id: BigInt(targetId),
+            table_seat_number: targetSeat
+          }
+        })
+      );
+
+      await prisma.$transaction(updates);
 
       return NextResponse.json({ message: "Joueur déplacé avec succès" });
     }

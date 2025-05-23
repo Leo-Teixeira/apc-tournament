@@ -11,6 +11,7 @@ interface MovePlayerModalBodyProps {
   onSelectMode: (mode: "swap" | "move") => void;
   selectedMode: "swap" | "move";
   selectedTarget: string;
+  onSeatNumberChange: (value: number) => void;
 }
 
 export const MovePlayerModalBody = ({
@@ -20,7 +21,8 @@ export const MovePlayerModalBody = ({
   onSelectTarget,
   onSelectMode,
   selectedMode,
-  selectedTarget
+  selectedTarget,
+  onSeatNumberChange
 }: MovePlayerModalBodyProps) => {
   const { data: availableTables, isLoading: isLoadingTables } =
     useAvailableTables(
@@ -28,6 +30,14 @@ export const MovePlayerModalBody = ({
       selectedPlayer?.table_id,
       selectedMode === "move"
     );
+
+  const [seatNumber, setSeatNumber] = useState<number>(1);
+
+  useEffect(() => {
+    if (selectedMode === "move") {
+      setSeatNumber(1);
+    }
+  }, [selectedMode, selectedTarget]);
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
@@ -60,19 +70,35 @@ export const MovePlayerModalBody = ({
       )}
 
       {selectedMode === "move" && (
-        <select
-          className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
-          value={selectedTarget}
-          onChange={(e) => onSelectTarget(e.target.value)}>
-          <option value="" disabled>
-            Choisir une nouvelle table...
-          </option>
-          {availableTables.map((table: TournamentTable) => (
-            <option key={table.id} value={table.id}>
-              Table {table.table_number}
+        <>
+          <select
+            className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
+            value={selectedTarget}
+            onChange={(e) => onSelectTarget(e.target.value)}>
+            <option value="" disabled>
+              Choisir une nouvelle table...
             </option>
-          ))}
-        </select>
+            {Array.isArray(availableTables) &&
+              availableTables.map((table: TournamentTable) => (
+                <option key={table.id} value={table.id}>
+                  Table {table.table_number}
+                </option>
+              ))}
+          </select>
+
+          <input
+            type="number"
+            min={1}
+            className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
+            placeholder="Numéro de siège"
+            value={seatNumber}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              setSeatNumber(value);
+              onSeatNumberChange(value);
+            }}
+          />
+        </>
       )}
     </div>
   );

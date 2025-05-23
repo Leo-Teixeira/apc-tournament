@@ -9,7 +9,7 @@ export const useAvailableTables = (
   return useQuery({
     queryKey: ["tournament-tables", tournamentId],
     queryFn: async () => {
-      const res = await fetch(`/api/tournament/${tournamentId}/tables`);
+      const res = await fetch(`/api/tournament/${tournamentId}/table`);
       if (!res.ok) throw new Error("Erreur chargement des tables");
       const tables = await res.json();
 

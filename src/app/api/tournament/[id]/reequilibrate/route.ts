@@ -1,6 +1,15 @@
 import { prisma } from "@/lib/prisma";
 
 export async function reequilibrateTables(tournamentId: number) {
+  const tournament = await prisma.tournament.findUnique({
+    where: { id: BigInt(tournamentId) },
+    select: { tournament_category: true }
+  });
+
+  const isAPT = tournament?.tournament_category === "APT";
+  const aptMaxDefault = 8;
+  const aptMaxLastTable = 9;
+
   const tables = await prisma.tournament_table.findMany({
     where: { tournament_id: BigInt(tournamentId) },
     include: {
@@ -27,9 +36,12 @@ export async function reequilibrateTables(tournamentId: number) {
   tablesWithPlayers = tablesWithPlayers.filter((t) => t.players.length >= 4);
 
   for (const player of underfilledPlayers) {
-    const targetTable = tablesWithPlayers.find(
-      (t) => t.players.length < t.capacity
-    );
+    const targetTable = tablesWithPlayers.find((t) => {
+      const limit =
+        isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : t.capacity;
+      return t.players.length < limit;
+    });
+
     if (targetTable) {
       await prisma.table_assignment.update({
         where: { id: player.id },
@@ -54,7 +66,10 @@ export async function reequilibrateTables(tournamentId: number) {
 
     if (!moreThanOneTable) break;
 
-    if (tooUnbalanced) {
+    const maxAllowed =
+      isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : aptMaxLastTable;
+
+    if (tooUnbalanced && max.players.length > maxAllowed) {
       const movedPlayer = max.players.pop();
       if (!movedPlayer) break;
 
