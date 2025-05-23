@@ -128,7 +128,11 @@ export const GeneralTabs = () => {
           </Card>
         </div>
 
-        {tournament && <BackgroundComponent tournament={tournament} />}
+        {tournament && (
+          <div className="hidden sm:block">
+            <BackgroundComponent tournament={tournament} />
+          </div>
+        )}
       </div>
 
       <div className="w-full md:w-1/3">
