@@ -29,12 +29,11 @@ import { useResetLevels } from "@/app/hook/useResetLevels";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
-  const { tournament, levels, registration, classement } =
+  const { tournament, levels, registration, classement, stacks } =
     useTournamentContext();
-  const [isLoading, setIsLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
   const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
     useState(false);
@@ -45,12 +44,13 @@ export default function TournamentDetailPage() {
   const togglePauseMutation = useTogglePause(String(id));
   const launchTournamentMutation = useLaunchTournament(String(id));
   const addTableMutation = useAddTableAssignment();
-
   const resetLevelsMutation = useResetLevels();
 
   const nextTableNumber =
-    tournament?.tournament_table && tournament.tournament_table.length > 0
-      ? Math.max(...tournament.tournament_table.map((t) => t.table_number)) + 1
+    (tournament?.tournament_table?.length ?? 0) > 0
+      ? Math.max(
+          ...(tournament!.tournament_table ?? []).map((t) => t.table_number)
+        ) + 1
       : 1;
 
   useEffect(() => {
@@ -69,34 +69,19 @@ export default function TournamentDetailPage() {
     }
   };
 
+  const isLaunchable =
+    (tournament?.tournament_table?.length ?? 0) > 0 &&
+    levels.length > 0 &&
+    (tournament?.stack?.stack_chip?.length ?? 0) > 0;
+
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
     return [
-      {
-        id: "0",
-        label: "Général",
-        content: <GeneralTabs />
-      },
-      {
-        id: "1",
-        label: "Niveaux",
-        content: <NiveauxTabs />
-      },
-      {
-        id: "2",
-        label: "Joueurs",
-        content: <PlayerTabs />
-      },
-      {
-        id: "3",
-        label: "Tables",
-        content: <TableTabs />
-      },
-      {
-        id: "4",
-        label: "Jetons",
-        content: <ChipTabs />
-      }
+      { id: "0", label: "Général", content: <GeneralTabs /> },
+      { id: "1", label: "Niveaux", content: <NiveauxTabs /> },
+      { id: "2", label: "Joueurs", content: <PlayerTabs /> },
+      { id: "3", label: "Tables", content: <TableTabs /> },
+      { id: "4", label: "Jetons", content: <ChipTabs /> }
     ];
   }, [tournament, registration, classement, levels]);
 
@@ -139,21 +124,16 @@ export default function TournamentDetailPage() {
 
           {tournament.tournament_status === "in_coming" && (
             <>
-              {tournament.tournament_pause ? (
-                <ButtonComponents
-                  text="Reprendre le tournoi"
-                  onClick={() => setIsPauseModalOpen(true)}
-                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
-                  textClassName="text-primary_brand-50"
-                />
-              ) : (
-                <ButtonComponents
-                  text="Mettre en pause le tournoi"
-                  onClick={() => setIsPauseModalOpen(true)}
-                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
-                  textClassName="text-primary_brand-50"
-                />
-              )}
+              <ButtonComponents
+                text={
+                  tournament.tournament_pause
+                    ? "Reprendre le tournoi"
+                    : "Mettre en pause le tournoi"
+                }
+                onClick={() => setIsPauseModalOpen(true)}
+                buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                textClassName="text-primary_brand-50"
+              />
               <ButtonComponents
                 text="Voir l'affichage"
                 onClick={() => window.open(`/game/${id}`)}
@@ -213,9 +193,7 @@ export default function TournamentDetailPage() {
       <ModalManager
         selectedTab={selectedTab}
         isOpen={isOpen}
-        onClose={async () => {
-          onClose();
-        }}
+        onClose={onClose}
       />
 
       <GenericModal
@@ -226,6 +204,13 @@ export default function TournamentDetailPage() {
         cancelLabel="Annuler"
         onConfirm={async () => {
           try {
+            if (!isLaunchable) {
+              alert(
+                "Impossible de lancer le tournoi sans tables, niveaux et jetons."
+              );
+              return;
+            }
+
             await launchTournamentMutation.mutateAsync();
             setIsLaunchModalOpen(false);
             window.open(`/game/${id}`);
@@ -234,7 +219,11 @@ export default function TournamentDetailPage() {
             alert("Erreur lors du lancement du tournoi");
           }
         }}>
-        <p>Es-tu sûr de vouloir lancer le tournoi ?</p>
+        <p>
+          Es-tu sûr de vouloir lancer le tournoi ?
+          <br />
+          Il doit contenir au moins une table, un niveau et un jeton.
+        </p>
       </GenericModal>
 
       <GenericModal
@@ -246,7 +235,6 @@ export default function TournamentDetailPage() {
         onConfirm={async () => {
           try {
             if (!tournament) throw new Error("Tournoi non disponible");
-
             await resetLevelsMutation.mutateAsync(tournament.id);
             setIsReinitialiseLevelModalOpen(false);
           } catch (err) {
@@ -269,15 +257,12 @@ export default function TournamentDetailPage() {
         onConfirm={async () => {
           try {
             const values = formRef.current?.getValues();
-
             if (!values) throw new Error("Valeurs du formulaire indisponibles");
             if (!tournament) throw new Error("Tournoi non disponible");
-
             await addTableMutation.mutateAsync({
               tournamentId: tournament.id,
               data: values
             });
-
             setIsAddTableModalOpen(false);
           } catch (err) {
             console.error("Erreur ajout table :", err);
