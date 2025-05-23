@@ -13,6 +13,11 @@ import { useMemo, useRef, useState } from "react";
 import { formatDate } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { StackEditorForm } from "./popup/modif_stack_popup";
+import { useGenerateTables } from "@/app/hook/useGenerateTables";
+import { useUpdateStack } from "@/app/hook/useUpdateStack";
+import { useCreateLevel } from "@/app/hook/useCreateLevel";
+import { useCreatePlayer } from "@/app/hook/useCreatePlayer";
+import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
 
 interface ModalManagerProps {
   selectedTab: string;
@@ -25,8 +30,13 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   isOpen,
   onClose
 }) => {
-  const { tournament, levels, stacks, loadTournamentData } =
-    useTournamentContext();
+  const { tournament, levels, stacks } = useTournamentContext();
+
+  const generateTablesMutation = useGenerateTables();
+  const updateStackMutation = useUpdateStack();
+  const createLevelMutation = useCreateLevel();
+  const createPlayerMutation = useCreatePlayer();
+  const updateTournamentMutation = useUpdateTournament();
 
   const levelFormRef = useRef<Partial<TournamentLevel>>({});
   const [playerFormData, setPlayerFormData] = useState({
@@ -52,18 +62,14 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   if (!tournament) return null;
 
   const handleCreateTournament = async () => {
+    if (!tournament?.id) return;
+
     try {
-      const res = await fetch(`/api/tournament/${tournament.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(tournamentFormData)
+      await updateTournamentMutation.mutateAsync({
+        id: tournament.id,
+        data: tournamentFormData
       });
 
-      if (!res.ok) throw new Error("Erreur serveur");
-
-      await loadTournamentData();
       onClose();
     } catch (error) {
       console.error("Erreur modification tournoi :", error);
@@ -72,21 +78,14 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleCreatePlayer = async () => {
+    if (!tournament?.id) return;
+
     try {
-      const res = await fetch(`/api/tournament/${tournament.id}/player`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(playerFormData)
+      await createPlayerMutation.mutateAsync({
+        tournamentId: tournament.id,
+        data: playerFormData
       });
 
-      if (!res.ok) {
-        const msg = await res.json();
-        throw new Error(msg.error || "Erreur serveur");
-      }
-
-      await loadTournamentData();
       onClose();
     } catch (error) {
       console.error("Erreur ajout joueur :", error);
@@ -95,22 +94,21 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleCreateNiveau = async () => {
+    if (!tournament?.id || !levelFormRef.current) return;
+
     const payload = {
       ...levelFormRef.current,
       tournament_id: tournament.id
     };
+
     console.log("📦 Payload envoyé :", payload);
 
     try {
-      const res = await fetch(`/api/tournament/${tournament.id}/level`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      await createLevelMutation.mutateAsync({
+        tournamentId: tournament.id,
+        data: payload
       });
 
-      if (!res.ok) throw new Error("Erreur serveur");
-
-      await loadTournamentData();
       onClose();
     } catch (error) {
       console.error("❌ Erreur création niveau :", error);
@@ -119,7 +117,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleConfirmStackUpdate = async () => {
-    if (!updatedStack) {
+    if (!updatedStack || !tournament) {
       alert("Aucune modification détectée.");
       return;
     }
@@ -129,39 +127,27 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
       selected_stack_id: updatedStack.id,
       stack_total_player: updatedStack.stack_total_player,
       stack_chip:
-        updatedStack.stack_chip?.map((sc) => {
-          if ("chip_id" in sc) {
-            return {
-              stack_id: sc.stack_id,
-              chip_id: sc.chip_id
-            };
-          }
-
-          return {
-            stack_id: sc.stack_id,
-            chip: {
-              value: sc.chip?.value ?? 0,
-              chip_image: sc.chip?.chip_image ?? ""
-            }
-          };
-        }) ?? []
+        updatedStack.stack_chip?.map((sc) =>
+          "chip_id" in sc
+            ? {
+                stack_id: sc.stack_id,
+                chip_id: sc.chip_id
+              }
+            : {
+                stack_id: sc.stack_id,
+                chip: {
+                  value: sc.chip?.value ?? 0,
+                  chip_image: sc.chip?.chip_image ?? ""
+                }
+              }
+        ) ?? []
     };
 
     try {
-      const res = await fetch(`/api/stack/${tournament.tournament_stack}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+      await updateStackMutation.mutateAsync({
+        stackId: tournament.tournament_stack,
+        data: payload
       });
-
-      if (!res.ok) {
-        const msg = await res.json();
-        throw new Error(msg.error || "Erreur serveur");
-      }
-
-      await loadTournamentData();
       onClose();
     } catch (error) {
       console.error("Erreur lors de la modification du stack :", error);
@@ -170,19 +156,10 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const generateTable = async () => {
+    if (!tournament?.id) return;
+
     try {
-      const res = await fetch(
-        `/api/tournament/${tournament.id}/table_assignement/generate`,
-        {
-          method: "POST"
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Erreur serveur lors de la génération des tables.");
-      }
-
-      await loadTournamentData(); // si tu veux rafraîchir le contexte
+      await generateTablesMutation.mutateAsync(tournament.id);
       onClose();
     } catch (error) {
       console.error("Erreur lors de la génération des tables :", error);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useDisclosure } from "@heroui/react";
 import { Cancel01Icon, CoinsSwapIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -15,17 +15,23 @@ import { useTournamentContext } from "@/app/providers/TournamentContextProvider"
 import { Registration, TableAssignment } from "@/app/types";
 import { EliminatePlayerFormBody } from "./components/popup/eliminate_player_popup";
 import { MovePlayerModalBody } from "./components/popup/move_player_popup";
+import { useMovePlayer } from "@/app/hook/useMovePlayer";
+import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
+import { useFinishTournament } from "@/app/hook/useUpdateTournament";
+import { useAvailableTables } from "@/app/hook/useAvailableTables";
 
 export const TableTabs = () => {
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(
     null
   );
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements, loadTournamentData } =
-    useTournamentContext();
+  const { tournament, assignements } = useTournamentContext();
+
+  const movePlayerMutation = useMovePlayer();
+  const eliminatePlayerMutation = useEliminatePlayer();
+  const finishTournamentMutation = useFinishTournament();
 
   const [selectedPlayerToMove, setSelectedPlayerToMove] =
     useState<TableAssignment | null>(null);
@@ -36,70 +42,37 @@ export const TableTabs = () => {
     number | null
   >(null);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
-  const [availableTables, setAvailableTables] = useState<
-    { id: number; table_number: number }[]
-  >([]);
+
+  const { data: availableTables, isLoading: isLoadingTables } =
+    useAvailableTables(
+      tournament?.id,
+      selectedPlayerToMove?.table_id,
+      moveMode === "move"
+    );
 
   useEffect(() => {
-    if (!tournament?.id) return;
-    const assignementsData = mapAssignementsGroupedByTable(assignements);
-    setGroupedRows(assignementsData);
-    setIsLoading(false);
+    if (tournament?.id) {
+      setGroupedRows(mapAssignementsGroupedByTable(assignements));
+    }
   }, [tournament?.id, assignements]);
 
-  useEffect(() => {
-    if (moveMode === "move" && tournament?.id) {
-      fetch(`/api/tournament/${tournament.id}/tables`)
-        .then((res) => res.json())
-        .then((tables) => {
-          const filtered = tables.filter(
-            (t: any) => t.id !== selectedPlayerToMove?.table_id
-          );
-          setAvailableTables(filtered);
-        })
-        .catch((err) => {
-          console.error("Erreur chargement tables :", err);
-        });
-    }
-  }, [moveMode, selectedPlayerToMove, tournament?.id]);
-
   const handleConfirmElimination = async (killerId: number) => {
-    if (!selectedPlayer || !tournament?.id) return;
+    if (!selectedPlayer || !tournament) return;
 
     try {
-      const res = await fetch(
-        `/api/tournament/${tournament.id}/player/${selectedPlayer.registration_id}/elimination`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_kill_id: killerId })
-        }
-      );
-
-      if (!res.ok) throw new Error("Erreur serveur");
-
-      await loadTournamentData();
+      await eliminatePlayerMutation.mutateAsync({
+        tournamentId: tournament.id,
+        registrationId: selectedPlayer.registration_id,
+        killerId
+      });
 
       const remainingAlive = assignements.filter((a) => !a.eliminated);
       if (
         remainingAlive.length === 1 &&
         tournament.tournament_status !== "finish"
       ) {
-        const finishRes = await fetch(
-          `/api/tournament/${tournament.id}/status`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "finish" })
-          }
-        );
-
-        if (!finishRes.ok) {
-          console.error("⚠️ Impossible de terminer le tournoi automatiquement");
-        } else {
-          console.log("✅ Tournoi terminé automatiquement");
-          await loadTournamentData();
-        }
+        await finishTournamentMutation.mutateAsync(tournament.id);
+        console.log("✅ Tournoi terminé automatiquement");
       }
 
       onClose();
@@ -160,11 +133,7 @@ export const TableTabs = () => {
     }
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-full">Chargement…</div>
-    );
-  }
+  if (!tournament) return <LoadingComponent />;
 
   return (
     <div className="flex flex-col gap-6">
@@ -182,7 +151,7 @@ export const TableTabs = () => {
                   ariaLabel={`Table ${tableNumber}`}
                   showActions
                   actions={
-                    tournament?.tournament_status === "in_coming"
+                    tournament.tournament_status === "in_coming"
                       ? getConditionalActions
                       : undefined
                   }
@@ -228,26 +197,22 @@ export const TableTabs = () => {
         onConfirm={async () => {
           if (!selectedPlayerToMove || !tournament?.id) return;
 
-          const body = {
-            playerId: selectedPlayerToMove.id,
-            mode: moveMode,
-            targetId:
-              moveMode === "swap" ? selectedSwapTargetId : selectedTableId
-          };
+          const targetId =
+            moveMode === "swap" ? selectedSwapTargetId : selectedTableId;
+
+          if (!targetId) {
+            alert("Aucune cible sélectionnée");
+            return;
+          }
 
           try {
-            const res = await fetch(
-              `/api/tournament/${tournament.id}/table/move`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-              }
-            );
+            await movePlayerMutation.mutateAsync({
+              tournamentId: tournament.id,
+              playerId: selectedPlayerToMove.id,
+              mode: moveMode,
+              targetId
+            });
 
-            if (!res.ok) throw new Error("Erreur lors du déplacement");
-
-            await loadTournamentData();
             setIsMoveModalOpen(false);
             setSelectedSwapTargetId(null);
             setSelectedTableId(null);
@@ -259,8 +224,10 @@ export const TableTabs = () => {
         }}>
         <MovePlayerModalBody
           selectedPlayer={selectedPlayerToMove!}
-          moveOptions={moveOptions}
-          tournamentId={tournament?.id ?? 0}
+          moveOptions={
+            moveMode === "swap" ? moveOptions : availableTables ?? []
+          }
+          tournamentId={tournament.id}
           onSelectTarget={(value: string) => {
             if (moveMode === "swap") {
               setSelectedSwapTargetId(parseInt(value));

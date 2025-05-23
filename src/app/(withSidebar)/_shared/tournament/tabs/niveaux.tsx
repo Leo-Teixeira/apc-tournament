@@ -13,9 +13,13 @@ import { Delete02Icon, PencilEdit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 import { NiveauFormBody } from "./components/popup/add_level_popup";
+import {
+  useDeleteTournamentLevel,
+  useUpdateTournamentLevel
+} from "@/app/hook/useTournamentLevel";
 
 export const NiveauxTabs: React.FC = () => {
-  const { levels, tournament, loadTournamentData } = useTournamentContext();
+  const { levels, tournament } = useTournamentContext();
 
   const [levelsRow, setLevelsRow] = useState<BlindRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +31,8 @@ export const NiveauxTabs: React.FC = () => {
     Partial<TournamentLevel>
   >({});
 
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const updateLevelMutation = useUpdateTournamentLevel();
+  const deleteLevelMutation = useDeleteTournamentLevel();
 
   useEffect(() => {
     const rows = mapTournamentLevelsToRow(levels);
@@ -90,16 +95,10 @@ export const NiveauxTabs: React.FC = () => {
         confirmLabel="Supprimer"
         cancelLabel="Annuler"
         onConfirm={async () => {
-          if (!levelToDelete || !tournament) return;
+          if (!levelToDelete) return;
 
           try {
-            const res = await fetch(`/api/level/${levelToDelete.id}`, {
-              method: "DELETE"
-            });
-
-            if (!res.ok) throw new Error("Erreur serveur");
-
-            await loadTournamentData();
+            await deleteLevelMutation.mutateAsync(levelToDelete.id);
             setIsDeleteModalOpen(false);
             setLevelToDelete(null);
           } catch (error) {
@@ -122,20 +121,11 @@ export const NiveauxTabs: React.FC = () => {
           if (!levelToModify) return;
 
           try {
-            const res = await fetch(`/api/level/${levelToModify.id}`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                id: levelToModify.id,
-                ...tournamentLevelFormData
-              })
+            await updateLevelMutation.mutateAsync({
+              id: levelToModify.id,
+              data: tournamentLevelFormData
             });
 
-            if (!res.ok) throw new Error("Erreur serveur");
-
-            await loadTournamentData();
             setIsModifyModalOpen(false);
             setLevelToModify(null);
           } catch (error) {

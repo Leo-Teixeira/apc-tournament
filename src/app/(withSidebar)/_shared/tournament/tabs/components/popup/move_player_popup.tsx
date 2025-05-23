@@ -1,6 +1,7 @@
 import { Radio, RadioGroup } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { TableAssignment, TournamentTable } from "@/app/types";
+import { useAvailableTables } from "@/app/hook/useAvailableTables";
 
 interface MovePlayerModalBodyProps {
   selectedPlayer: TableAssignment;
@@ -21,21 +22,12 @@ export const MovePlayerModalBody = ({
   selectedMode,
   selectedTarget
 }: MovePlayerModalBodyProps) => {
-  const [availableTables, setAvailableTables] = useState<TournamentTable[]>([]);
-
-  useEffect(() => {
-    if (selectedMode === "move" && tournamentId) {
-      fetch(`/api/tournament/${tournamentId}/table`)
-        .then((res) => res.json())
-        .then((tables: TournamentTable[]) => {
-          const filtered = tables.filter(
-            (table) => table.id !== selectedPlayer.table_id
-          );
-          setAvailableTables(filtered);
-        })
-        .catch((err) => console.error("Erreur chargement tables:", err));
-    }
-  }, [selectedMode, tournamentId, selectedPlayer]);
+  const { data: availableTables, isLoading: isLoadingTables } =
+    useAvailableTables(
+      tournamentId,
+      selectedPlayer?.table_id,
+      selectedMode === "move"
+    );
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
@@ -75,7 +67,7 @@ export const MovePlayerModalBody = ({
           <option value="" disabled>
             Choisir une nouvelle table...
           </option>
-          {availableTables.map((table) => (
+          {availableTables.map((table: TournamentTable) => (
             <option key={table.id} value={table.id}>
               Table {table.table_number}
             </option>

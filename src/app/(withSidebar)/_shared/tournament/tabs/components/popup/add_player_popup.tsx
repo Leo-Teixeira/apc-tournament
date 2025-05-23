@@ -6,6 +6,7 @@ import { SearchBarComponents } from "@/app/components/form/search_bar";
 import { useEffect, useState } from "react";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { User } from "@/app/types/user.types";
+import { useUsers } from "@/app/hook/useUsers";
 
 export const PlayerFormBody = ({
   onUpdate
@@ -22,22 +23,13 @@ export const PlayerFormBody = ({
   const [firstName, setFirstName] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [availablePlayers, setAvailablePlayers] = useState<User[]>([]);
-  const [players, setPlayers] = useState<User[]>([]);
-
   const { tournament, registration } = useTournamentContext();
+
+  const { data: players, isLoading: isPlayersLoading, error } = useUsers();
 
   useEffect(() => {
     onUpdate({ pseudo, firstName, lastName });
   }, [pseudo, firstName, lastName]);
-
-  useEffect(() => {
-    const fetchPlayer = async () => {
-      const res = await fetch("/api/users");
-      const data = await res.json();
-      setPlayers(data);
-    };
-    fetchPlayer();
-  }, []);
 
   useEffect(() => {
     const searchPlayers = () => {

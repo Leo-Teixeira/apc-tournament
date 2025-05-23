@@ -22,10 +22,14 @@ import {
   AddTableForm,
   AddTableFormHandle
 } from "./components/popup/add_table_popup";
+import { useTogglePause } from "@/app/hook/useTogglePause";
+import { useLaunchTournament } from "@/app/hook/useLaunchTournament";
+import { useAddTableAssignment } from "@/app/hook/useAddTableAssignment";
+import { useResetLevels } from "@/app/hook/useResetLevels";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
-  const { tournament, levels, registration, classement, loadTournamentData } =
+  const { tournament, levels, registration, classement } =
     useTournamentContext();
   const [isLoading, setIsLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -38,14 +42,16 @@ export default function TournamentDetailPage() {
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
   const formRef = useRef<AddTableFormHandle>(null);
 
+  const togglePauseMutation = useTogglePause(String(id));
+  const launchTournamentMutation = useLaunchTournament(String(id));
+  const addTableMutation = useAddTableAssignment();
+
+  const resetLevelsMutation = useResetLevels();
+
   const nextTableNumber =
     tournament?.tournament_table && tournament.tournament_table.length > 0
       ? Math.max(...tournament.tournament_table.map((t) => t.table_number)) + 1
       : 1;
-
-  useEffect(() => {
-    loadTournamentData().finally(() => setIsLoading(false));
-  }, [loadTournamentData]);
 
   useEffect(() => {
     if (tournament?.tournament_status === "finish") {
@@ -56,16 +62,7 @@ export default function TournamentDetailPage() {
 
   const togglePause = async (pause: boolean) => {
     try {
-      const res = await fetch(`/api/tournament/${id}/pause`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pause })
-      });
-
-      if (!res.ok)
-        throw new Error("Erreur lors de la mise à jour du statut de pause");
-
-      await loadTournamentData();
+      await togglePauseMutation.mutateAsync(pause);
     } catch (err) {
       console.error("❌ Erreur mise en pause / reprise :", err);
       alert("Une erreur est survenue");
@@ -103,7 +100,7 @@ export default function TournamentDetailPage() {
     ];
   }, [tournament, registration, classement, levels]);
 
-  if (isLoading || !tournament || !registration || !classement) {
+  if (!tournament || !registration || !classement) {
     return <LoadingComponent />;
   }
 
@@ -229,15 +226,7 @@ export default function TournamentDetailPage() {
         cancelLabel="Annuler"
         onConfirm={async () => {
           try {
-            const res = await fetch(`/api/tournament/${id}/status`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ status: "in_coming" })
-            });
-
-            if (!res.ok) throw new Error("Erreur lors du changement de statut");
-
-            await loadTournamentData();
+            await launchTournamentMutation.mutateAsync();
             setIsLaunchModalOpen(false);
             window.open(`/game/${id}`);
           } catch (err) {
@@ -256,13 +245,9 @@ export default function TournamentDetailPage() {
         cancelLabel="Annuler"
         onConfirm={async () => {
           try {
-            const res = await fetch(`/api/tournament/${tournament.id}/level`, {
-              method: "DELETE"
-            });
+            if (!tournament) throw new Error("Tournoi non disponible");
 
-            if (!res.ok) throw new Error("Erreur lors de la réinitialisation");
-
-            await loadTournamentData();
+            await resetLevelsMutation.mutateAsync(tournament.id);
             setIsReinitialiseLevelModalOpen(false);
           } catch (err) {
             console.error("❌ Erreur réinitialisation niveau :", err);
@@ -286,24 +271,13 @@ export default function TournamentDetailPage() {
             const values = formRef.current?.getValues();
 
             if (!values) throw new Error("Valeurs du formulaire indisponibles");
+            if (!tournament) throw new Error("Tournoi non disponible");
 
-            const res = await fetch(
-              `/api/tournament/${tournament.id}/table_assignement`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values)
-              }
-            );
+            await addTableMutation.mutateAsync({
+              tournamentId: tournament.id,
+              data: values
+            });
 
-            if (!res.ok) {
-              const body = await res.json();
-              throw new Error(
-                body?.error || "Erreur lors de l'ajout de la table"
-              );
-            }
-
-            await loadTournamentData();
             setIsAddTableModalOpen(false);
           } catch (err) {
             console.error("Erreur ajout table :", err);

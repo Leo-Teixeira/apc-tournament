@@ -19,6 +19,10 @@ import { LoadingComponent } from "@/app/error/loading/page";
 import { mapFlatAssignementsToSeatRows } from "@/app/lib/adapter/tournament_table.adapter";
 import { Registration, TableAssignment } from "@/app/types";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
+import { useCancelTournamentPlayer } from "@/app/hook/useCancelTournamentPlayer";
+import { useCancelPlayerElimination } from "@/app/hook/useCancelPlayerElimination";
+import { useFinishTournament } from "@/app/hook/useUpdateTournament";
+import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
 
 export const PlayerTabs = () => {
   const [flatRows, setFlatRows] = useState<SeatRow[]>([]);
@@ -32,8 +36,12 @@ export const PlayerTabs = () => {
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements, loadTournamentData } =
-    useTournamentContext();
+  const { tournament, assignements } = useTournamentContext();
+
+  const cancelPlayerMutation = useCancelTournamentPlayer();
+  const cancelEliminationMutation = useCancelPlayerElimination();
+  const eliminatePlayerMutation = useEliminatePlayer();
+  const finishTournamentMutation = useFinishTournament();
 
   useEffect(() => {
     if (!tournament?.id) return;
@@ -115,40 +123,23 @@ export const PlayerTabs = () => {
   };
 
   const handleConfirmElimination = async (killerId: number) => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer || !tournament) return;
 
     try {
-      const res = await fetch(
-        `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/elimination`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_kill_id: killerId })
-        }
-      );
-
-      if (!res.ok) throw new Error("Erreur serveur");
-
-      await loadTournamentData();
+      await eliminatePlayerMutation.mutateAsync({
+        tournamentId: tournament.id,
+        registrationId: selectedPlayer.registration_id,
+        killerId
+      });
 
       const remainingAlive = assignements.filter((a) => !a.eliminated);
+
       if (
         remainingAlive.length === 1 &&
-        tournament?.tournament_status !== "finish"
+        tournament.tournament_status !== "finish"
       ) {
-        const finishRes = await fetch(
-          `/api/tournament/${tournament?.id}/status`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "finish" })
-          }
-        );
-
-        if (finishRes.ok) {
-          console.log("✅ Tournoi terminé automatiquement");
-          await loadTournamentData();
-        }
+        await finishTournamentMutation.mutateAsync(tournament.id);
+        console.log("✅ Tournoi terminé automatiquement");
       }
 
       onClose();
@@ -220,14 +211,11 @@ export const PlayerTabs = () => {
           if (!selectedPlayer || !tournament) return;
 
           try {
-            const res = await fetch(
-              `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/cancelElimination`,
-              {
-                method: "PUT"
-              }
-            );
-            if (!res.ok) throw new Error("Erreur serveur");
-            await loadTournamentData();
+            await cancelEliminationMutation.mutateAsync({
+              tournamentId: tournament.id,
+              registrationId: selectedPlayer.registration_id
+            });
+
             setSelectedPlayer(null);
             setIsCancelKillModal(false);
           } catch (error) {
@@ -251,16 +239,11 @@ export const PlayerTabs = () => {
           if (!selectedPlayer || !tournament) return;
 
           try {
-            const res = await fetch(
-              `/api/tournament/${tournament?.id}/player/${selectedPlayer.registration_id}/status`,
-              {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ newStatus: "Cancelled" })
-              }
-            );
-            if (!res.ok) throw new Error("Erreur serveur");
-            await loadTournamentData();
+            await cancelPlayerMutation.mutateAsync({
+              tournamentId: tournament.id,
+              registrationId: selectedPlayer.registration_id
+            });
+
             setSelectedPlayer(null);
             setIsCancelStatusModal(false);
           } catch (error) {

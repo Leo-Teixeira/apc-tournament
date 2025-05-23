@@ -4,19 +4,20 @@ import { useEffect, useState } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { LoadingComponent } from "@/app/error/loading/page";
-import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { Chip, TournamentLevel } from "@/app/types";
 import { toLocalDate } from "@/app/utils/date";
+import { useParams } from "next/navigation";
+import { useTournamentData } from "@/app/hook/useTournamentData";
 
 export default function Game() {
-  const {
-    tournament,
-    levels,
-    registration,
-    assignements,
-    loadTournamentData,
-    loadTournamentOnly
-  } = useTournamentContext();
+  const { id } = useParams();
+  const tournamentId = String(id);
+  const { data, refetch, refetchStatusOnly } = useTournamentData(tournamentId);
+
+  const tournament = data?.tournament;
+  const levels = data?.levels ?? [];
+  const registration = data?.registrations ?? [];
+  const assignements = data?.assignements ?? [];
 
   const [now, setNow] = useState(new Date());
   const [frozenNow, setFrozenNow] = useState<Date | null>(null);
@@ -71,7 +72,6 @@ export default function Game() {
 
   const getConfirmedPlayers = () =>
     registration.filter((r) => r.statut === "Confirmed");
-
   const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
 
   const getAverageStack = () => {
@@ -80,7 +80,6 @@ export default function Game() {
     return players === 0 ? "0" : Math.round(totalChips / players).toString();
   };
 
-  // 🔄 Horloge chaque seconde
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
@@ -88,27 +87,24 @@ export default function Game() {
     return () => clearInterval(interval);
   }, []);
 
-  // 🔁 Polling status (pause/active) chaque 5s
   useEffect(() => {
     const interval = setInterval(() => {
-      loadTournamentOnly();
+      refetchStatusOnly();
     }, 5000);
     return () => clearInterval(interval);
-  }, [loadTournamentOnly]);
+  }, [refetchStatusOnly]);
 
-  // 🔁 Polling complet chaque 60s
   useEffect(() => {
     const interval = setInterval(() => {
-      loadTournamentData();
+      refetch();
     }, 60000);
     return () => clearInterval(interval);
-  }, [loadTournamentData]);
+  }, [refetch]);
 
   useEffect(() => {
-    loadTournamentData();
-  }, []);
+    refetch();
+  }, [refetch]);
 
-  // ⏸️ Gèle le temps si le tournoi est en pause
   useEffect(() => {
     if (isPaused && !frozenNow) {
       setFrozenNow(new Date());
@@ -118,7 +114,6 @@ export default function Game() {
     }
   }, [isPaused, frozenNow]);
 
-  // 🎯 Recalcule les niveaux à chaque tick
   useEffect(() => {
     const refDate = getNow();
 

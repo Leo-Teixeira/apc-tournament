@@ -2,56 +2,33 @@
 
 import { Stack } from "@/app/types";
 import { Card, Input, useDisclosure } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ButtonComponents } from "../../components/button";
 import Link from "next/link";
 import { GenericModal } from "../../components/popup";
 import { InputComponents } from "../../components/form/input";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
+import { useCreateStack, useDeleteStack, useStacks } from "@/app/hook/useStack";
 
 export default function StackPage() {
-  const [stacks, setStacks] = useState<Stack[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [newStackName, setNewStackName] = useState("");
   const [newStackTotalPlayer, setNewStackTotalPlayer] = useState(0);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [stackToDelete, setStackToDelete] = useState<Stack | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const stackRes = await fetch(`/api/stack`);
-        const data = await stackRes.json();
-        setStacks(data);
-      } catch (error) {
-        console.error("Erreur lors du chargement des données :", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { data: stacks = [], isLoading: isStacksLoading } = useStacks();
+  const createStackMutation = useCreateStack();
+  const deleteStackMutation = useDeleteStack();
 
   const handleCreateStack = async () => {
     try {
-      const res = await fetch("/api/stack", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          stack_name: newStackName,
-          stack_total_player: newStackTotalPlayer
-        })
+      await createStackMutation.mutateAsync({
+        stack_name: newStackName,
+        stack_total_player: newStackTotalPlayer
       });
 
-      if (!res.ok) throw new Error("Erreur serveur");
-
-      const newStack = await res.json();
-      setStacks((prev) => [...prev, newStack]);
       setNewStackName("");
       setNewStackTotalPlayer(0);
       onClose();
@@ -60,6 +37,23 @@ export default function StackPage() {
       alert("Une erreur est survenue lors de la création du stack.");
     }
   };
+
+  const handleDeleteStack = async () => {
+    if (!stackToDelete) return;
+
+    try {
+      await deleteStackMutation.mutateAsync(stackToDelete.id);
+      setStackToDelete(null);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Erreur suppression stack :", error);
+      alert("Une erreur est survenue.");
+    }
+  };
+
+  if (isStacksLoading) {
+    return <div className="text-center text-white">Chargement...</div>;
+  }
 
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-10">
@@ -151,24 +145,7 @@ export default function StackPage() {
         title="Supprimer le stack"
         confirmLabel="Supprimer"
         cancelLabel="Annuler"
-        onConfirm={async () => {
-          if (!stackToDelete) return;
-
-          try {
-            const res = await fetch(`/api/stack/${stackToDelete.id}`, {
-              method: "DELETE"
-            });
-
-            if (!res.ok) throw new Error("Erreur serveur");
-
-            setStacks((prev) => prev.filter((s) => s.id !== stackToDelete.id));
-            setStackToDelete(null);
-            setIsDeleteModalOpen(false);
-          } catch (error) {
-            console.error("Erreur suppression stack :", error);
-            alert("Une erreur est survenue.");
-          }
-        }}>
+        onConfirm={handleDeleteStack}>
         <p>
           Es-tu sûr de vouloir supprimer le stack{" "}
           <span className="font-semibold">{stackToDelete?.stack_name}</span> ?

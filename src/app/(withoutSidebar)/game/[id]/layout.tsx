@@ -1,7 +1,4 @@
-// src/app/(withoutSidebar)/game/[id]/layout.tsx
-"use client";
-
-import "@/app/globals.css";
+import { use } from "react";
 import { TournamentProvider } from "@/app/providers/TournamentContextProvider";
 
 export default function GameLayout({
@@ -9,9 +6,13 @@ export default function GameLayout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const resolvedParams = use(params);
+
   return (
-    <TournamentProvider tournamentId={params.id}>{children}</TournamentProvider>
+    <TournamentProvider tournamentId={resolvedParams.id}>
+      {children}
+    </TournamentProvider>
   );
 }
