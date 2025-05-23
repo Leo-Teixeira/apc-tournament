@@ -8,10 +8,32 @@ export async function PUT(req: NextRequest) {
   try {
     const data = await req.json();
 
+    const levelId = BigInt(data.id);
+
+    const currentLevel = await prisma.tournament_level.findUnique({
+      where: { id: levelId }
+    });
+
+    if (!currentLevel) {
+      return NextResponse.json({ error: "Level not found" }, { status: 404 });
+    }
+
+    const duration = parseInt(data.duration_minutes);
+    if (isNaN(duration) || duration <= 0) {
+      return NextResponse.json(
+        { error: "Invalid duration_minutes" },
+        { status: 400 }
+      );
+    }
+
+    const levelStart = new Date(currentLevel.level_start);
+    const updatedEnd = new Date(levelStart);
+    updatedEnd.setMinutes(updatedEnd.getMinutes() + duration);
+
     const updatedLevel = await prisma.tournament_level.update({
-      where: { id: BigInt(data.id) },
+      where: { id: levelId },
       data: {
-        level_end: data.level_end,
+        level_end: updatedEnd,
         level_small_blinde: data.level_small_blinde,
         level_big_blinde: data.level_big_blinde,
         level_pause: data.level_pause,
@@ -20,11 +42,57 @@ export async function PUT(req: NextRequest) {
       }
     });
 
+    const allLevels = await prisma.tournament_level.findMany({
+      where: {
+        tournament_id: currentLevel.tournament_id
+      },
+      orderBy: { level_number: "asc" }
+    });
+
+    const updatedIndex = allLevels.findIndex(
+      (lvl) => lvl.id.toString() === data.id.toString()
+    );
+    if (updatedIndex === -1) {
+      return NextResponse.json(
+        { error: "Level index not found" },
+        { status: 500 }
+      );
+    }
+
+    let currentTime = new Date(updatedEnd);
+    const updateFollowing = [];
+
+    for (let i = updatedIndex + 1; i < allLevels.length; i++) {
+      const level = allLevels[i];
+      const duration =
+        (new Date(level.level_end).getTime() -
+          new Date(level.level_start).getTime()) /
+        60000;
+
+      const newStart = new Date(currentTime);
+      const newEnd = new Date(currentTime);
+      newEnd.setMinutes(newEnd.getMinutes() + duration);
+
+      updateFollowing.push(
+        prisma.tournament_level.update({
+          where: { id: level.id },
+          data: {
+            level_start: newStart,
+            level_end: newEnd
+          }
+        })
+      );
+
+      currentTime = newEnd;
+    }
+
+    await Promise.all(updateFollowing);
+
     return NextResponse.json(serializeBigInt(updatedLevel));
   } catch (error) {
-    console.error("Error updating level:", error);
+    console.error("Error updating level duration and rescheduling:", error);
     return NextResponse.json(
-      { error: "Failed to update level" },
+      { error: "Failed to update level and reschedule following levels" },
       { status: 500 }
     );
   }

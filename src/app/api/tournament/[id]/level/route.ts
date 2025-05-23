@@ -54,14 +54,70 @@ export async function GET(
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    console.log("📨 Données reçues pour création niveau :", data);
+    const tournamentId = BigInt(data.tournament_id);
+
+    const allLevels = await prisma.tournament_level.findMany({
+      where: { tournament_id: tournamentId },
+      orderBy: { level_number: "asc" }
+    });
+
+    const insertPosition = data.level_number ?? allLevels.length + 1;
+    const referenceLevel = allLevels[insertPosition - 1];
+
+    if (!referenceLevel) {
+      return NextResponse.json(
+        { error: "Invalid insert position" },
+        { status: 400 }
+      );
+    }
+
+    const newLevelDuration = parseInt(data.duration_minutes);
+
+    if (isNaN(newLevelDuration) || newLevelDuration <= 0) {
+      return NextResponse.json(
+        { error: "Invalid or missing duration_minutes" },
+        { status: 400 }
+      );
+    }
+
+    const newLevelStart = new Date(referenceLevel.level_start);
+    const newLevelEnd = new Date(newLevelStart);
+    newLevelEnd.setMinutes(newLevelEnd.getMinutes() + newLevelDuration);
+
+    let currentTime = new Date(newLevelEnd);
+
+    const updatedLevels = [];
+
+    for (let i = insertPosition - 1; i < allLevels.length; i++) {
+      const level = allLevels[i];
+      const originalDuration =
+        (new Date(level.level_end).getTime() -
+          new Date(level.level_start).getTime()) /
+        60000;
+
+      const shiftStart = new Date(currentTime);
+      const shiftEnd = new Date(currentTime);
+      shiftEnd.setMinutes(shiftEnd.getMinutes() + originalDuration);
+      currentTime = new Date(shiftEnd);
+
+      updatedLevels.push(
+        prisma.tournament_level.update({
+          where: { id: level.id },
+          data: {
+            level_number: level.level_number + 1,
+            level_start: shiftStart,
+            level_end: shiftEnd
+          }
+        })
+      );
+    }
 
     const newLevel = await prisma.tournament_level.create({
       data: {
-        tournament_id: BigInt(data.tournament_id),
-        level_number: data.level_number ?? 1,
-        level_start: data.level_start,
-        level_end: data.level_end,
+        tournament_id: tournamentId,
+        level_number: insertPosition,
+        level_start: newLevelStart,
+        level_end: newLevelEnd,
         level_small_blinde: data.level_small_blinde,
         level_big_blinde: data.level_big_blinde,
         level_pause: data.level_pause,
@@ -70,13 +126,13 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    console.log("✅ Niveau créé :", newLevel);
+    await Promise.all(updatedLevels);
 
     return NextResponse.json(serializeBigInt(newLevel));
   } catch (error) {
-    console.error("❌ Error creating level:", error);
+    console.error("❌ Error creating and shifting levels:", error);
     return NextResponse.json(
-      { error: "Failed to create level" },
+      { error: "Failed to create and shift levels" },
       { status: 500 }
     );
   }

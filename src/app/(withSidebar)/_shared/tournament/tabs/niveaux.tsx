@@ -75,7 +75,9 @@ export const NiveauxTabs: React.FC = () => {
             columns={blindsColumns}
             items={levelsRow}
             ariaLabel="Niveaux"
-            showActions={true}
+            showActions={
+              tournament?.tournament_status == "start" ? true : false
+            }
             actions={getConditionalActions}
           />
         </div>

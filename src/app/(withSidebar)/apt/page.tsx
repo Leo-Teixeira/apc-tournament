@@ -19,14 +19,14 @@ import {
 import { GenericModal } from "@/app/components/popup";
 import { TournamentFormBody } from "../_shared/tournament/tabs/components/popup/modif_tournament_popup";
 import { Tournament } from "@/app/types";
-import { useAPTData } from "@/app/hook/useAPTData";
 import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
 import { useDeleteTournament } from "@/app/hook/useDeleteTournament";
+import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
 
 export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
 
-  const { data, isLoading } = useAPTData();
+  const { data, isLoading } = useTournamentDataByCategory("apt");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);

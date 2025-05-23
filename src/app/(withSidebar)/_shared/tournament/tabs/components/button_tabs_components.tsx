@@ -9,6 +9,7 @@ type ButtonTabsProps = {
   levels: TournamentLevel[];
   onAddLevel?: () => void;
   onResetLevel?: () => void;
+  onGenerateLevel?: () => void;
   onAddTable?: () => void;
   onModify?: () => void;
   onGenerateTables?: () => void;
@@ -21,6 +22,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
   tabsId,
   levels,
   onAddLevel,
+  onGenerateLevel,
   onAddPlayer,
   onEditStack,
   onGenerateTables,
@@ -52,6 +54,14 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
           />
+          {tournamentStatus === "start" && levels.length == 0 && (
+            <ButtonComponents
+              text="Générer les niveaux"
+              onClick={onGenerateLevel}
+              buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
+              textClassName="text-primary_brand-50"
+            />
+          )}
           {tournamentStatus === "start" && levels.length > 0 && (
             <ButtonComponents
               text="Réinitialiser les niveaux"

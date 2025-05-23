@@ -6,15 +6,15 @@ import { StandingRow, TournamentRow } from "../components/table/table.types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
-export const useAPTData = () => {
+export const useTournamentDataByCategory = (category: string) => {
   return useQuery({
-    queryKey: ["apt-details"],
+    queryKey: ["tournament-details", category],
     queryFn: async (): Promise<{
       tournaments: Tournament[];
       tournamentRows: TournamentRow[];
       quarterRankingRows: Record<TrimestryKey, StandingRow[]>;
     }> => {
-      const res = await fetch("/api/tournaments/apt/details");
+      const res = await fetch(`/api/tournaments/${category}/details`);
       if (!res.ok) throw new Error("Erreur serveur");
 
       const data = await res.json();
@@ -27,7 +27,7 @@ export const useAPTData = () => {
         ),
         quarterRankingRows: mapQuarterRankingByTrimestry(
           data.quarterRanking,
-          "APT"
+          category
         )
       };
     }

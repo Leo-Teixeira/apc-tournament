@@ -10,7 +10,9 @@ export type NiveauFormBodyProps = {
   isModify: boolean;
   level?: TournamentLevel;
   tournamentStart: Date;
-  onUpdate: (data: Partial<TournamentLevel>) => void;
+  onUpdate: (
+    data: Partial<TournamentLevel> & { duration_minutes: number }
+  ) => void;
 };
 
 export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
@@ -20,7 +22,7 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
   onUpdate
 }) => {
   const initialStart = useMemo(
-    () => new Date(level?.level_end ?? tournamentStart),
+    () => new Date(level?.level_start ?? tournamentStart),
     [level, tournamentStart]
   );
 
@@ -44,16 +46,13 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
 
   useEffect(() => {
     const [durH, durM] = duration.split(":").map(Number);
-    const startDate = new Date(initialStart);
-    const endDate = new Date(startDate);
-    endDate.setHours(startDate.getHours() + durH);
-    endDate.setMinutes(startDate.getMinutes() + durM);
+    const durationMinutes = durH * 60 + durM;
 
-    if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+    if (!isNaN(durationMinutes)) {
       onUpdate({
         level_number: parseInt(afterLevel) + 1,
-        level_start: startDate.toISOString(),
-        level_end: endDate.toISOString(),
+        level_start: initialStart.toISOString(),
+        duration_minutes: durationMinutes,
         level_pause: isPause,
         level_small_blinde: smallBlind,
         level_big_blinde: bigBlind,
@@ -118,14 +117,15 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
           />
         </div>
       )}
-
-      <div className="mt-2">
-        <Checkbox
-          isSelected={chipRace}
-          onValueChange={() => setChipRace(!chipRace)}>
-          Chip race
-        </Checkbox>
-      </div>
+      {isPause && (
+        <div className="mt-2">
+          <Checkbox
+            isSelected={chipRace}
+            onValueChange={() => setChipRace(!chipRace)}>
+            Chip race
+          </Checkbox>
+        </div>
+      )}
     </div>
   );
 };

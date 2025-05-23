@@ -26,6 +26,7 @@ import { useTogglePause } from "@/app/hook/useTogglePause";
 import { useLaunchTournament } from "@/app/hook/useLaunchTournament";
 import { useAddTableAssignment } from "@/app/hook/useAddTableAssignment";
 import { useResetLevels } from "@/app/hook/useResetLevels";
+import { useGenerateLevels } from "@/app/hook/useGenerateLevel";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -37,6 +38,8 @@ export default function TournamentDetailPage() {
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
   const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
     useState(false);
+  const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] =
+    useState(false);
   const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
   const formRef = useRef<AddTableFormHandle>(null);
@@ -45,6 +48,7 @@ export default function TournamentDetailPage() {
   const launchTournamentMutation = useLaunchTournament(String(id));
   const addTableMutation = useAddTableAssignment();
   const resetLevelsMutation = useResetLevels();
+  const generateLevelsMutation = useGenerateLevels();
 
   const nextTableNumber =
     (tournament?.tournament_table?.length ?? 0) > 0
@@ -181,6 +185,7 @@ export default function TournamentDetailPage() {
               onResetLevel={() => setIsReinitialiseLevelModalOpen(true)}
               onAddPlayer={onOpen}
               onGenerateTables={onOpen}
+              onGenerateLevel={() => setIsGenerateLevelModalOpen(true)}
               onEditStack={onOpen}
               onAddTable={() => setIsAddTableModalOpen(true)}
             />
@@ -224,6 +229,28 @@ export default function TournamentDetailPage() {
           <br />
           Il doit contenir au moins une table, un niveau et un jeton.
         </p>
+      </GenericModal>
+
+      <GenericModal
+        isOpen={isGenerateLevelModalOpen}
+        onClose={() => setIsGenerateLevelModalOpen(false)}
+        title="Générer les niveaux"
+        confirmLabel="Générer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            if (!tournament) throw new Error("Tournoi non disponible");
+
+            await generateLevelsMutation.mutateAsync(tournament.id);
+
+            setIsGenerateLevelModalOpen(false);
+            window.location.reload(); // ou refetch ton contexte React Query
+          } catch (err) {
+            console.error("❌ Erreur génération niveaux :", err);
+            alert("Erreur lors de la génération des niveaux");
+          }
+        }}>
+        <p>Es-tu sûr de vouloir générer les niveaux automatiquement ?</p>
       </GenericModal>
 
       <GenericModal

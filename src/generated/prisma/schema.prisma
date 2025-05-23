@@ -1002,7 +1002,7 @@ model stack_chip {
 enum tournament_tournament_category {
   APT         @map("APT")
   AG          @map("AG")
-  SitAndGo    @map("Sit&Go")
+  SitAndGo    @map("SitAndGo")
   Superfinale @map("Superfinale")
   Solipoker   @map("Solipoker")
 }
