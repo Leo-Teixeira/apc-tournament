@@ -62,20 +62,20 @@ export default function StackPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between">
-        <p className="font-satoshiBlack text-4xl text-primary_brand-50">
+    <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <p className="font-satoshiBlack text-3xl sm:text-4xl text-primary_brand-50">
           Stacks
         </p>
         <ButtonComponents
           text="Nouveau Stack"
-          buttonClassName="bg-primary_brand-500"
+          buttonClassName="bg-primary_brand-500 w-full sm:w-auto"
           textClassName="text-primary_brand-50"
           onClick={onOpen}
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
         {stacks.map((stack) => {
           const sortedChips =
             stack.stack_chip
@@ -87,18 +87,18 @@ export default function StackPage() {
           return (
             <div key={stack.id} className="relative group">
               <Link href={`/malette/${stack.id}`}>
-                <Card className="flex flex-col items-center justify-center gap-4 p-6 bg-background_card rounded-2xl hover:cursor-pointer">
-                  <div className="flex flex-row -space-x-6">
+                <Card className="flex flex-col items-center justify-center gap-4 p-4 sm:p-6 bg-background_card rounded-2xl hover:cursor-pointer">
+                  <div className="flex flex-row -space-x-4 sm:-space-x-6">
                     {sortedChips.map((chip, index) => (
                       <img
                         key={index}
                         src={chip.chip_image}
                         alt={`Jeton ${chip.value}`}
-                        className="w-20 h-20 rounded-full border-1 border-black"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-1 border-black"
                       />
                     ))}
                   </div>
-                  <p className="text-neutral-50 font-satoshi text-l">
+                  <p className="text-neutral-50 font-satoshi text-m sm:text-l">
                     {stack.stack_name}
                   </p>
                   <span

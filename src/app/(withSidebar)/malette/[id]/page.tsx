@@ -63,30 +63,32 @@ export default function StackPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between">
-        <p className="font-satoshiBlack text-4xl text-primary_brand-50">
+    <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <p className="font-satoshiBlack text-3xl sm:text-4xl text-primary_brand-50">
           Stacks
         </p>
         <ButtonComponents
           text="Nouveau jeton"
-          buttonClassName="bg-primary_brand-500"
+          buttonClassName="bg-primary_brand-500 w-full sm:w-auto"
           textClassName="text-primary_brand-50"
           onClick={onOpen}
         />
       </div>
 
-      <div className="flex flex-row flex-wrap gap-6">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-6">
         {sortedChips.map((chip) => (
           <Card
             key={chip.value + chip.chip_image}
-            className="flex flex-col items-center p-4 gap-2 bg-background_card rounded-2xl">
+            className="flex flex-col items-center p-4 gap-2 bg-background_card rounded-2xl w-28 sm:w-32">
             <img
-              className="rounded-lg w-24 h-24 object-contain"
+              className="rounded-lg w-20 h-20 sm:w-24 sm:h-24 object-contain"
               src={chip.chip_image}
               alt={`jeton ${chip.value}`}
             />
-            <p className="text-neutral-50 font-satoshi text-l">{chip.value}</p>
+            <p className="text-neutral-50 font-satoshi text-m sm:text-l">
+              {chip.value}
+            </p>
             <span
               onClick={(e) => {
                 e.preventDefault();
