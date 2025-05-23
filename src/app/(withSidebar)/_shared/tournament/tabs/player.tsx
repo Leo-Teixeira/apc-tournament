@@ -179,6 +179,8 @@ export const PlayerTabs = () => {
             width={false}
             ariaLabel=""
             showActions
+            enableRowClick
+            getDetailUrl={() => ""}
             actions={getConditionalActions}
             enableSorting={false}
           />

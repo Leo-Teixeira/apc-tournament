@@ -51,7 +51,7 @@ export const ChipTabs: React.FC = () => {
       <Card>
         <div className="flex flex-col">
           <p className="p-5 font-satoshiBold text-l">
-            Stack utilisé : {tournament?.stack?.stack_name}
+            {tournament?.stack?.stack_name}
           </p>
           <Divider />
           <div className="flex flex-row justify-start">

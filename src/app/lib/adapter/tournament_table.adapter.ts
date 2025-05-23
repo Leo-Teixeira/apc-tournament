@@ -20,7 +20,9 @@ export const mapFlatAssignementsToSeatRows = (
         id: a.id,
         avatarName: user?.pseudo_winamax ?? "Inconnu",
         avatar: user?.photo_url ?? "",
-        seat: table
+        seat: a.eliminated
+          ? "Éliminer"
+          : table
           ? `Table ${table.table_number}, siège ${a.table_seat_number}`
           : "Table inconnue",
         action: "",

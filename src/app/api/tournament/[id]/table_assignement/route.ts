@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { reequilibrateTables } from "../reequilibrate/route";
 
 export async function GET(
   _: NextRequest,
@@ -64,7 +65,10 @@ export async function POST(
   try {
     const tournamentId = parseInt(params.id);
     if (isNaN(tournamentId)) {
-      return NextResponse.json({ error: "Invalid tournament ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid tournament ID" },
+        { status: 400 }
+      );
     }
 
     const body = await req.json();
@@ -87,13 +91,75 @@ export async function POST(
       }
     });
 
-    return NextResponse.json(serializeBigInt(newTable));
+    console.log(
+      `✅ Table ${table_number} ajoutée. Rééquilibrage complet en cours...`
+    );
+
+    const allAssignments = await prisma.table_assignment.findMany({
+      where: {
+        tournament_table: {
+          tournament_id: BigInt(tournamentId)
+        },
+        eliminated: false
+      },
+      orderBy: {
+        id: "asc"
+      }
+    });
+
+    const allTables = await prisma.tournament_table.findMany({
+      where: { tournament_id: BigInt(tournamentId) }
+    });
+
+    const totalPlayers = allAssignments.length;
+    const totalTables = allTables.length;
+
+    const basePlayersPerTable = Math.floor(totalPlayers / totalTables);
+    const extraPlayers = totalPlayers % totalTables;
+
+    const tableDistribution = allTables
+      .sort((a, b) => a.table_number - b.table_number)
+      .map((table, index) => ({
+        tableId: table.id,
+        capacity: table.table_capacity,
+        targetCount:
+          index < extraPlayers ? basePlayersPerTable + 1 : basePlayersPerTable
+      }));
+
+    let currentIndex = 0;
+
+    for (const dist of tableDistribution) {
+      for (let i = 0; i < dist.targetCount; i++) {
+        const player = allAssignments[currentIndex];
+        if (!player) break;
+
+        await prisma.table_assignment.update({
+          where: { id: player.id },
+          data: {
+            table_id: dist.tableId,
+            table_seat_number: i + 1
+          }
+        });
+
+        currentIndex++;
+      }
+    }
+
+    console.log(
+      `🔁 Répartition terminée : ${totalPlayers} joueurs répartis sur ${totalTables} tables`
+    );
+
+    return NextResponse.json(
+      serializeBigInt({
+        table: newTable,
+        reequilibrated: true
+      })
+    );
   } catch (error) {
-    console.error("❌ Erreur ajout table :", error);
+    console.error("❌ Erreur ajout table ou rééquilibrage :", error);
     return NextResponse.json(
       { error: "Erreur interne lors de l'ajout de la table" },
       { status: 500 }
     );
   }
 }
-

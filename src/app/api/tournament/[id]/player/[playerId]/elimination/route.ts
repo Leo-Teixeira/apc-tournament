@@ -203,7 +203,8 @@ export async function PUT(
       data: {
         registration_id: registration.id,
         tournament_id: BigInt(tournamentId),
-        ranking_position: totalRegistrations - aliveCount,
+        ranking_position:
+          totalRegistrations - (totalRegistrations - aliveCount),
         ranking_score: score
       }
     });

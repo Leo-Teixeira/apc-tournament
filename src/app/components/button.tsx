@@ -27,12 +27,12 @@ export const ButtonComponents: React.FC<ButtonProps> = ({
       variant="light"
       isIconOnly={iconOnly}
       disabled={disabled}
-      className={`flex  cursor-pointer justify-center items-center rounded-xl gap-gap-6 ${
-        iconOnly ? "p-2" : "px-4 py-2"
+      className={`flex items-center justify-center gap-gap-6 rounded-xl cursor-pointer transition-all duration-200 ${
+        iconOnly ? "p-2" : "px-3 py-2 sm:px-4 sm:py-2"
       } ${buttonClassName}`}>
       {!iconOnly && text && (
         <span
-          className={`text-s md:text-l leading-5 md:leading-7 font-satoshiRegular ${textClassName}`}>
+          className={`text-xs sm:text-s md:text-l font-satoshiRegular ${textClassName}`}>
           {text}
         </span>
       )}
