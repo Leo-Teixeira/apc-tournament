@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { reequilibrateTables } from "../../../reequilibrate/route";
 
 export async function PUT(
   req: NextRequest,
@@ -51,9 +52,18 @@ export async function PUT(
       );
     }
 
-    console.log(
-      `🎉 Statut mis à jour avec succès pour l'utilisateur ${playerId}`
-    );
+    console.log("🔍 Vérification des tables pour le tournoi...");
+    const tableCount = await prisma.tournament_table.count({
+      where: { tournament_id: BigInt(tournamentId) }
+    });
+
+    if (tableCount > 0) {
+      console.log("♟ Tables détectées → rééquilibrage lancé...");
+      await reequilibrateTables(tournamentId);
+    } else {
+      console.log("📭 Aucune table détectée → pas de rééquilibrage.");
+    }
+
     return NextResponse.json({
       message: `Status updated to ${newStatus} for player ${playerId}`
     });

@@ -1,5 +1,6 @@
 // hooks/useCancelTournamentPlayer.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TournamentTable } from "../types";
 
 export const useCancelTournamentPlayer = () => {
   const queryClient = useQueryClient();

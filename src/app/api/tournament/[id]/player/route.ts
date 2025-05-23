@@ -71,6 +71,14 @@ export async function POST(
       include: { table_assignment: true }
     });
 
+    if (tables.length === 0) {
+      return NextResponse.json(
+        serializeBigInt({
+          message: "Player registered but no tables exist yet"
+        })
+      );
+    }
+
     const hasFreeSpot = tables.some(
       (table) => table.table_assignment.length < table.table_capacity
     );
@@ -97,7 +105,6 @@ export async function POST(
       );
     }
 
-    // Ce cas n’arrive que si une table avait de la place. On ajoute manuellement.
     const newRegistration = await prisma.registration.findFirst({
       where: {
         user_id: user.ID,

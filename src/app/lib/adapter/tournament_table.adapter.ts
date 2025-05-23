@@ -8,8 +8,25 @@ import { SeatRow } from "@/app/components/table/table.types";
 import { WPUser } from "@/app/types/user.types";
 
 export const mapFlatAssignementsToSeatRows = (
-  assignements: TableAssignment[]
+  assignements: TableAssignment[] | null,
+  fallbackRegistrations: Registration[] = []
 ): SeatRow[] => {
+  if (!assignements || assignements.length === 0) {
+    return fallbackRegistrations
+      .filter((r) => r.statut !== "Cancelled")
+      .map((r) => {
+        const user = r.wp_users;
+        return {
+          id: r.id,
+          avatarName: user?.pseudo_winamax ?? "Inconnu",
+          avatar: user?.photo_url ?? "",
+          seat: "Non assigné",
+          action: "",
+          eliminated: false
+        };
+      });
+  }
+
   return assignements
     .map((a) => {
       const registration = a.registration;

@@ -36,7 +36,7 @@ export const PlayerTabs = () => {
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements } = useTournamentContext();
+  const { tournament, assignements, registration } = useTournamentContext();
 
   const cancelPlayerMutation = useCancelTournamentPlayer();
   const cancelEliminationMutation = useCancelPlayerElimination();
@@ -45,9 +45,9 @@ export const PlayerTabs = () => {
 
   useEffect(() => {
     if (!tournament?.id) return;
-    setFlatRows(mapFlatAssignementsToSeatRows(assignements));
+    setFlatRows(mapFlatAssignementsToSeatRows(assignements, registration));
     setIsLoading(false);
-  }, [tournament?.id, assignements]);
+  }, [tournament?.id, assignements, registration]);
 
   const getConditionalActions = (
     item: SeatRow
@@ -112,10 +112,31 @@ export const PlayerTabs = () => {
         tooltip: "Supprimer",
         icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
         onClick: () => {
-          const assignment = assignements.find((a) => a.id === item.id);
-          if (!assignment?.tournament_table?.table_number) return;
-          setSelectedPlayer(assignment);
-          setIsCancelStatusModal(true);
+          let assignment = assignements.find((a) => a.id === item.id);
+
+          // Fallback si le joueur vient du mapping par registration uniquement
+          if (!assignment) {
+            const fallbackReg = registration.find(
+              (r) => r.wp_users?.pseudo_winamax === item.avatarName
+            );
+
+            if (fallbackReg) {
+              assignment = {
+                id: -1,
+                tournament_id: tournament.id,
+                registration_id: fallbackReg.id,
+                eliminated: false,
+                table_seat_number: 0,
+                tournament_table: null,
+                registration: fallbackReg
+              } as unknown as TableAssignment;
+            }
+          }
+
+          if (assignment) {
+            setSelectedPlayer(assignment);
+            setIsCancelStatusModal(true);
+          }
         },
         color: "danger"
       }
@@ -151,38 +172,31 @@ export const PlayerTabs = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {isLoading ? (
-        <LoadingComponent />
-      ) : flatRows.length > 0 ? (
-        <>
-          <div className="px-1 sm:px-0">
-            <SearchBarComponents
-              label="Pseudo"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="w-full overflow-x-auto">
-            <GenericTable<SeatRow>
-              columns={seatsColumns}
-              items={flatRows.filter((row) =>
-                row.avatarName?.toLowerCase().startsWith(search.toLowerCase())
-              )}
-              width={false}
-              ariaLabel="Joueurs"
-              showActions
-              enableRowClick
-              getDetailUrl={() => ""}
-              actions={getConditionalActions}
-              enableSorting={false}
-            />
-          </div>
-        </>
-      ) : (
-        <div className="text-center text-white py-10">
-          Aucun joueur n’est assigné à une table pour ce tournoi.
+      {isLoading && <LoadingComponent />}
+      <>
+        <div className="px-1 sm:px-0">
+          <SearchBarComponents
+            label="Pseudo"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-      )}
+        <div className="w-full overflow-x-auto">
+          <GenericTable<SeatRow>
+            columns={seatsColumns}
+            items={flatRows.filter((row) =>
+              row.avatarName?.toLowerCase().startsWith(search.toLowerCase())
+            )}
+            width={false}
+            ariaLabel="Joueurs"
+            showActions
+            enableRowClick
+            getDetailUrl={() => ""}
+            actions={getConditionalActions}
+            enableSorting={false}
+          />
+        </div>
+      </>
 
       <GenericModal
         isOpen={isOpen}

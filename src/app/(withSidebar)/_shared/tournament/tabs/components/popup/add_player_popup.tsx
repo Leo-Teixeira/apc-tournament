@@ -5,8 +5,9 @@ import { RadioGroupComponents } from "@/app/components/form/radio_group";
 import { SearchBarComponents } from "@/app/components/form/search_bar";
 import { useEffect, useState } from "react";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
-import { User } from "@/app/types/user.types";
+import { User, WPUser } from "@/app/types/user.types";
 import { useUsers } from "@/app/hook/useUsers";
+import { Registration } from "@/app/types";
 
 export const PlayerFormBody = ({
   onUpdate
@@ -32,18 +33,20 @@ export const PlayerFormBody = ({
   }, [pseudo, firstName, lastName]);
 
   useEffect(() => {
-    const searchPlayers = () => {
-      const filtered = players.filter(
-        (p: any) =>
-          p.pseudo_winamax.toLowerCase().startsWith(search.toLowerCase()) &&
-          !registration.some(
-            (r) => r.wp_users?.pseudo_winamax === p.pseudo_winamax
-          )
-      );
-      setAvailablePlayers(filtered);
-    };
-    searchPlayers();
+    if (!players || !Array.isArray(players)) return;
+  
+    const filtered = players.filter(
+      (p: WPUser) =>
+        (p.pseudo_winamax.toLowerCase().startsWith(search.toLowerCase()) ||
+          p.display_name.toLowerCase().startsWith(search.toLowerCase())) &&
+        !registration.some(
+          (r) => r.wp_users?.pseudo_winamax === p.pseudo_winamax
+        )
+    );
+  
+    setAvailablePlayers(filtered);
   }, [search, isRegister, registration, players]);
+  
 
   return (
     <div className="flex flex-col gap-6 text-white w-full">
