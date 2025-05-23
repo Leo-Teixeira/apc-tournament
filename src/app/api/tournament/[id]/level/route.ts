@@ -54,17 +54,33 @@ export async function GET(
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+    console.log("📥 Reçu :", data);
+
+    if (!data.tournament_id) {
+      console.error("⛔ tournament_id manquant");
+      return NextResponse.json(
+        { error: "Missing tournament_id" },
+        { status: 400 }
+      );
+    }
+
     const tournamentId = BigInt(data.tournament_id);
 
     const allLevels = await prisma.tournament_level.findMany({
       where: { tournament_id: tournamentId },
       orderBy: { level_number: "asc" }
     });
+    console.log("📊 Nombre de niveaux existants :", allLevels.length);
 
     const insertPosition = data.level_number ?? allLevels.length + 1;
-    const referenceLevel = allLevels[insertPosition - 1];
+
+    const referenceLevel =
+      insertPosition === allLevels.length + 1
+        ? allLevels[allLevels.length - 1]
+        : allLevels[insertPosition - 1];
 
     if (!referenceLevel) {
+      console.error("⛔ Position d'insertion invalide :", insertPosition);
       return NextResponse.json(
         { error: "Invalid insert position" },
         { status: 400 }
@@ -72,45 +88,54 @@ export async function POST(req: NextRequest) {
     }
 
     const newLevelDuration = parseInt(data.duration_minutes);
+    console.log("🕒 Durée du nouveau niveau (minutes) :", newLevelDuration);
 
     if (isNaN(newLevelDuration) || newLevelDuration <= 0) {
+      console.error("⛔ Durée invalide :", data.duration_minutes);
       return NextResponse.json(
         { error: "Invalid or missing duration_minutes" },
         { status: 400 }
       );
     }
 
-    const newLevelStart = new Date(referenceLevel.level_start);
+    const isLastInsert = insertPosition === allLevels.length + 1;
+    const newLevelStart = isLastInsert
+      ? new Date(referenceLevel.level_end)
+      : new Date(referenceLevel.level_start);
+
     const newLevelEnd = new Date(newLevelStart);
     newLevelEnd.setMinutes(newLevelEnd.getMinutes() + newLevelDuration);
 
-    let currentTime = new Date(newLevelEnd);
-
     const updatedLevels = [];
 
-    for (let i = insertPosition - 1; i < allLevels.length; i++) {
-      const level = allLevels[i];
-      const originalDuration =
-        (new Date(level.level_end).getTime() -
-          new Date(level.level_start).getTime()) /
-        60000;
+    if (!isLastInsert) {
+      let currentTime = new Date(newLevelEnd);
+      for (let i = insertPosition - 1; i < allLevels.length; i++) {
+        const level = allLevels[i];
+        const originalDuration =
+          (new Date(level.level_end).getTime() -
+            new Date(level.level_start).getTime()) /
+          60000;
 
-      const shiftStart = new Date(currentTime);
-      const shiftEnd = new Date(currentTime);
-      shiftEnd.setMinutes(shiftEnd.getMinutes() + originalDuration);
-      currentTime = new Date(shiftEnd);
+        const shiftStart = new Date(currentTime);
+        const shiftEnd = new Date(currentTime);
+        shiftEnd.setMinutes(shiftEnd.getMinutes() + originalDuration);
+        currentTime = new Date(shiftEnd);
 
-      updatedLevels.push(
-        prisma.tournament_level.update({
-          where: { id: level.id },
-          data: {
-            level_number: level.level_number + 1,
-            level_start: shiftStart,
-            level_end: shiftEnd
-          }
-        })
-      );
+        updatedLevels.push(
+          prisma.tournament_level.update({
+            where: { id: level.id },
+            data: {
+              level_number: level.level_number + 1,
+              level_start: shiftStart,
+              level_end: shiftEnd
+            }
+          })
+        );
+      }
     }
+
+    console.log("✅ Création du nouveau niveau à l'index", insertPosition);
 
     const newLevel = await prisma.tournament_level.create({
       data: {
@@ -132,7 +157,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("❌ Error creating and shifting levels:", error);
     return NextResponse.json(
-      { error: "Failed to create and shift levels" },
+      { error: "Failed to create and shift levels", details: String(error) },
       { status: 500 }
     );
   }
