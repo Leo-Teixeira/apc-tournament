@@ -1,7 +1,8 @@
 // hooks/useLaunchTournament.ts
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useLaunchTournament = (tournamentId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
       const res = await fetch(`/api/tournament/${tournamentId}/status`, {
@@ -13,6 +14,11 @@ export const useLaunchTournament = (tournamentId: string) => {
       if (!res.ok) {
         throw new Error("Erreur lors du changement de statut");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tournament-data", tournamentId]
+      });
     }
   });
 };
