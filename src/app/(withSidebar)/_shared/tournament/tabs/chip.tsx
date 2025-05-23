@@ -1,3 +1,5 @@
+"use client";
+
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { Card, Divider } from "@heroui/react";
@@ -22,11 +24,9 @@ export const ChipTabs: React.FC = () => {
   const activePlayersCount = aliveAssignements.length;
 
   useEffect(() => {
-    const total = stackPerPlayerValue * aliveAssignements.length;
+    const total = stackPerPlayerValue * activePlayersCount;
     const average =
-      aliveAssignements.length > 0
-        ? Math.floor(total / aliveAssignements.length)
-        : 0;
+      activePlayersCount > 0 ? Math.floor(total / activePlayersCount) : 0;
 
     setStackPerPlayer(stackPerPlayerValue);
     setStackTotal(total);
@@ -34,9 +34,7 @@ export const ChipTabs: React.FC = () => {
     setIsLoading(false);
   }, [stackPerPlayerValue, aliveAssignements]);
 
-  if (isLoading) {
-    return <LoadingComponent />;
-  }
+  if (isLoading) return <LoadingComponent />;
 
   if (chips.length === 0) {
     return (
@@ -54,27 +52,31 @@ export const ChipTabs: React.FC = () => {
             {tournament?.stack?.stack_name}
           </p>
           <Divider />
-          <div className="flex flex-row justify-start">
+          <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-start items-center">
             {chips.map((chip, index) => (
               <React.Fragment key={index}>
-                <div className="flex flex-col p-5 gap-2 justify-end">
+                <div className="flex flex-col p-5 gap-2 items-center">
                   <img
                     src={chip.chip_image}
                     alt={`Jeton ${chip.value}`}
-                    className="w-32 h-32"
+                    className="w-20 h-20 md:w-32 md:h-32"
                   />
-                  <p className="text-center font-satoshiBlack text-4xl">
+                  <p className="text-center font-satoshiBlack text-2xl md:text-4xl">
                     {chip.value}
                   </p>
                 </div>
-                {index < chips.length - 1 && <Divider orientation="vertical" />}
+                {index < chips.length - 1 && (
+                  <div className="hidden md:block">
+                    <Divider orientation="vertical" />
+                  </div>
+                )}
               </React.Fragment>
             ))}
           </div>
         </div>
       </Card>
 
-      <div className="flex flex-row justify-between gap-6">
+      <div className="flex flex-col md:flex-row justify-between gap-6">
         {[
           { title: "Stack Total", value: stackTotal },
           { title: "Stack initial par joueur", value: stackPerPlayer },
@@ -87,7 +89,7 @@ export const ChipTabs: React.FC = () => {
               <p className="text-primary_brand-50 font-satoshiBold text-l">
                 {card.title}
               </p>
-              <p className="text-xl4 text-primary_brand-50 font-satoshiBlack text-right">
+              <p className="text-xl text-right md:text-xl4 text-primary_brand-50 font-satoshiBlack">
                 {card.value}
               </p>
             </div>

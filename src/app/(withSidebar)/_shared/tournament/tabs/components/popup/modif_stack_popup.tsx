@@ -2,11 +2,10 @@ import {
   Stack,
   StackChip,
   Chip,
-  NewChip,
   StackChipInput,
   EditableStack
 } from "@/app/types";
-import { Input, Button, Card, Divider, Select } from "@heroui/react";
+import { Input, Button, Divider } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -90,16 +89,18 @@ export const StackEditorForm: React.FC<Props> = ({
       id: stackId,
       stack_name: currentStack?.stack_name ?? "",
       stack_total_player: stackTotalPlayer,
-      stack_chip: newChips as any // ou adapte le type de updatedStack si tu veux tout tiper proprement
+      stack_chip: newChips as any
     });
   };
 
   return (
-    <div className="p-6 flex flex-col gap-4">
+    <div className="p-6 flex flex-col gap-6 w-full max-w-md mx-auto">
       <div className="flex flex-col gap-4">
-        <p>Stack utilisé</p>
+        <label className="text-primary_brand-50 font-satoshiBold">
+          Stack utilisé
+        </label>
         <select
-          className="rounded border p-2"
+          className="rounded border p-2 bg-neutral-800 text-white"
           value={stackId}
           onChange={(e) => handleStackChange(parseInt(e.target.value))}>
           {stacks.map((stack) => (
@@ -109,7 +110,9 @@ export const StackEditorForm: React.FC<Props> = ({
           ))}
         </select>
 
-        <p>Stack initial par joueur</p>
+        <label className="text-primary_brand-50 font-satoshiBold">
+          Stack initial par joueur
+        </label>
         <Input
           type="number"
           min={0}
@@ -126,8 +129,10 @@ export const StackEditorForm: React.FC<Props> = ({
           }}
         />
 
-        <p>Ajouter un jeton</p>
-        <div className="flex gap-2">
+        <label className="text-primary_brand-50 font-satoshiBold">
+          Ajouter un jeton
+        </label>
+        <div className="flex flex-col sm:flex-row gap-3">
           <Input
             type="number"
             min={1}
@@ -146,8 +151,8 @@ export const StackEditorForm: React.FC<Props> = ({
 
         <Divider />
 
-        <p>Jetons actuels</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <p className="text-primary_brand-50 font-satoshiBold">Jetons actuels</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {chips.map((sc, index) => (
             <div key={index} className="flex items-center gap-2">
               <img

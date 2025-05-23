@@ -74,48 +74,42 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
   ]);
 
   return (
-    <div className="flex flex-col gap-4 text-primary_brand-50">
+    <div className="flex flex-col gap-6 text-primary_brand-50">
       <RadioGroupComponents
         label="Pause"
         value={String(isPause)}
         onChange={(e) => setIsPause(e.target.value === "true")}
       />
 
-      <div className="flex gap-4">
-        <div className="w-full">
-          <InputComponents
-            disabled={isModify}
-            type="text"
-            label="Après le niveau"
-            value={afterLevel}
-            onChange={(e) => setAfterLevel(e.target.value)}
-          />
-        </div>
-        <div className="w-full">
-          <TimeInputComponents
-            label="Durée"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          />
-        </div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <InputComponents
+          disabled={isModify}
+          type="text"
+          label="Après le niveau"
+          value={afterLevel}
+          onChange={(e) => setAfterLevel(e.target.value)}
+        />
+        <TimeInputComponents
+          label="Durée"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+        />
       </div>
 
       {!isPause && (
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <NumberInputComponents
             type="number"
             label="Petite blinde"
             value={smallBlind}
             onChange={(value) => setSmallBlind(Number(value))}
           />
-
           <NumberInputComponents
             type="number"
             label="Grosse blinde"
             value={bigBlind}
             onChange={(value) => setBigBlind(Number(value))}
           />
-
           <NumberInputComponents
             type="number"
             label="Ante"
@@ -125,11 +119,13 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
         </div>
       )}
 
-      <Checkbox
-        isSelected={chipRace}
-        onValueChange={() => setChipRace(!chipRace)}>
-        Chip race
-      </Checkbox>
+      <div className="mt-2">
+        <Checkbox
+          isSelected={chipRace}
+          onValueChange={() => setChipRace(!chipRace)}>
+          Chip race
+        </Checkbox>
+      </div>
     </div>
   );
 };

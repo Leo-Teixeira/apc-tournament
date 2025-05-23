@@ -109,26 +109,36 @@ export default function APTHome() {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <h1 className="font-satoshiBold text-4xl">Championnat APT</h1>
+      <h1 className="font-satoshiBold text-2xl sm:text-4xl">Championnat APT</h1>
+
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshiMedium text-xl3p2 leading-10">Tournois</h2>
-        <GenericTable<TournamentRow>
-          items={tournamentRows}
-          columns={tournamentColumns}
-          ariaLabel="Liste des sièges"
-          showActions={true}
-          actions={getConditionalActions}
-          enableRowClick
-          getDetailUrl={(id) => `/apt/${id}`}
-        />
+        <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
+          Tournois
+        </h2>
+        <div className="w-full overflow-x-auto">
+          <GenericTable<TournamentRow>
+            items={tournamentRows}
+            columns={tournamentColumns}
+            ariaLabel="Liste des sièges"
+            showActions={true}
+            actions={getConditionalActions}
+            enableRowClick
+            getDetailUrl={(id) => `/apt/${id}`}
+          />
+        </div>
       </div>
+
       <div className="flex flex-col gap-3">
-        <h2 className="font-satoshiMedium text-xl3p2 leading-10">Classement</h2>
-        <div className="flex flex-row gap-6">
+        <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
+          Classement
+        </h2>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
           {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
             (trimestry) => (
-              <div key={trimestry} className="flex-1 flex flex-col gap-2">
-                <h2 className="font-satoshiRegular text-xl2p9 leading-10">
+              <div
+                key={trimestry}
+                className="flex-1 flex flex-col gap-2 overflow-x-auto">
+                <h2 className="font-satoshiRegular text-m sm:text-xl2p9 leading-8 sm:leading-10">
                   {trimestry == "T1"
                     ? STRINGS.apt.trimestry.T1
                     : trimestry == "T2"
@@ -146,6 +156,7 @@ export default function APTHome() {
           )}
         </div>
       </div>
+
       <GenericModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
@@ -186,6 +197,7 @@ export default function APTHome() {
           <b>{tournamentToDelete?.name}</b> ?
         </p>
       </GenericModal>
+
       <GenericModal
         isOpen={isModifyModalOpen}
         onClose={() => setIsModifyModalOpen(false)}

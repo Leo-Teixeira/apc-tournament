@@ -109,13 +109,13 @@ export default function TournamentDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-row items-center gap-3">
-          <h1 className="font-satoshiBlack text-xl4">
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+          <h1 className="font-satoshiBlack text-l sm:text-xl4">
             {tournament.tournament_name}
           </h1>
           <Chip
-            className={`font-satoshiRegular text-s ${
+            className={`font-satoshiRegular text-xs sm:text-s ${
               tournament.tournament_status === "finish"
                 ? "bg-red-950"
                 : tournament.tournament_status === "start"
@@ -130,7 +130,7 @@ export default function TournamentDetailPage() {
           </Chip>
         </div>
 
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-end">
           {tournament.tournament_status === "start" && (
             <ButtonComponents
               text="Lancer le tournoi"
@@ -177,10 +177,10 @@ export default function TournamentDetailPage() {
       </div>
 
       <div className="flex w-full flex-col gap-6">
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <Tabs
             isDisabled={isDisabled}
-            className="flex items-center gap-2"
+            className="flex flex-wrap items-center gap-2"
             size="lg"
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(String(key))}
@@ -190,7 +190,7 @@ export default function TournamentDetailPage() {
               <Tab
                 key={item.id}
                 title={item.label}
-                className="text-neutral-50 text-center !font-satoshiRegular !text-l"
+                className="text-neutral-50 text-center !font-satoshiRegular !text-xs sm:!text-l"
               />
             )}
           </Tabs>
@@ -223,9 +223,7 @@ export default function TournamentDetailPage() {
 
       <GenericModal
         isOpen={isLaunchModalOpen}
-        onClose={() => {
-          setIsLaunchModalOpen(false);
-        }}
+        onClose={() => setIsLaunchModalOpen(false)}
         title="Lancer le tournoi"
         confirmLabel="Lancer"
         cancelLabel="Annuler"
@@ -249,11 +247,10 @@ export default function TournamentDetailPage() {
         }}>
         <p>Es-tu sûr de vouloir lancer le tournoi ?</p>
       </GenericModal>
+
       <GenericModal
         isOpen={isReinitialiseLevelModalOpen}
-        onClose={() => {
-          setIsReinitialiseLevelModalOpen(false);
-        }}
+        onClose={() => setIsReinitialiseLevelModalOpen(false)}
         title="Réinitialiser les niveaux"
         confirmLabel="Réinitialiser"
         cancelLabel="Annuler"
@@ -274,9 +271,10 @@ export default function TournamentDetailPage() {
         }}>
         <p>
           Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront
-          tous perdu
+          tous perdus.
         </p>
       </GenericModal>
+
       <GenericModal
         isOpen={isAddTableModalOpen}
         onClose={() => setIsAddTableModalOpen(false)}
@@ -314,6 +312,7 @@ export default function TournamentDetailPage() {
         }}>
         <AddTableForm ref={formRef} initialNumber={nextTableNumber} />
       </GenericModal>
+
       <GenericModal
         isOpen={isPauseModalOpen}
         onClose={() => setIsPauseModalOpen(false)}

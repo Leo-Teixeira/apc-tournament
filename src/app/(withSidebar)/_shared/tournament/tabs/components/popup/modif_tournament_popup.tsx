@@ -1,10 +1,8 @@
-// TournamentFormBody.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { DatePickerComponents } from "@/app/components/form/date_picker";
 import { InputComponents } from "@/app/components/form/input";
-import { NumberInputComponents } from "@/app/components/form/number_input";
 import { TimeInputComponents } from "@/app/components/form/time_input";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { Tournament } from "@/app/types";
@@ -56,7 +54,7 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
   if (!tournament) return <LoadingComponent />;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
       <InputComponents
         label="Nom du tournoi"
         type="text"
@@ -66,11 +64,11 @@ export const TournamentFormBody: React.FC<TournamentFormBodyProps> = ({
           onUpdate({ tournament_name: e.target.value });
         }}
       />
-      <div className="flex justify-between bg-neutral-800 rounded-lg">
+      <div className="flex flex-col sm:flex-row justify-between gap-2 bg-neutral-800 rounded-lg p-2">
         {["T1", "T2", "T3"].map((label) => (
           <button
             key={label}
-            className={`text-primary_brand-50 px-4 py-2 font-satoshiRegular text-l rounded-lg transition-colors ${
+            className={`w-full text-primary_brand-50 px-4 py-2 font-satoshiRegular text-l rounded-lg transition-colors ${
               quarter === label ? "bg-primary_background font-bold" : ""
             }`}
             onClick={() => {

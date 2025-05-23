@@ -38,10 +38,11 @@ export const MovePlayerModalBody = ({
   }, [selectedMode, tournamentId, selectedPlayer]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
       <RadioGroup
         label="Type de déplacement"
         value={selectedMode}
+        className="flex flex-col gap-2"
         onChange={(e) => onSelectMode(e.target.value as "swap" | "move")}>
         <Radio value="swap">Échanger de place avec un joueur</Radio>
         <Radio value="move">Changer de table</Radio>
@@ -49,7 +50,7 @@ export const MovePlayerModalBody = ({
 
       {selectedMode === "swap" && (
         <select
-          className="border rounded px-2 py-1"
+          className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
           value={selectedTarget}
           onChange={(e) => onSelectTarget(e.target.value)}>
           <option value="" disabled>
@@ -68,7 +69,7 @@ export const MovePlayerModalBody = ({
 
       {selectedMode === "move" && (
         <select
-          className="border rounded px-2 py-1"
+          className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
           value={selectedTarget}
           onChange={(e) => onSelectTarget(e.target.value)}>
           <option value="" disabled>

@@ -3,8 +3,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  ModalContent,
-  Button
+  ModalContent
 } from "@heroui/react";
 import { ButtonComponents } from "./button";
 
@@ -34,22 +33,22 @@ export const GenericModal: React.FC<GenericModalProps> = ({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="text-primary_brand-50 font-satoshiBold text-xl">
+            <ModalHeader className="text-primary_brand-50 font-satoshiBold text-l sm:text-xl">
               {title}
             </ModalHeader>
-            <ModalBody className="bg-zinc-900 text-primary_brand-50 space-y-4">
+            <ModalBody className="bg-zinc-900 text-primary_brand-50 space-y-4 text-sm sm:text-base">
               {children}
             </ModalBody>
-            <ModalFooter className="bg-zinc-900 flex gap-2 justify-end">
+            <ModalFooter className="bg-zinc-900 flex flex-col sm:flex-row gap-2 justify-end sm:items-center">
               <ButtonComponents
                 onClick={onCancel || onClose}
-                buttonClassName="bg-transparent hover:bg-ligth/30"
+                buttonClassName="w-full sm:w-auto bg-transparent hover:bg-ligth/30"
                 textClassName="text-danger-500"
                 text={cancelLabel}
               />
               <ButtonComponents
                 onClick={onConfirm}
-                buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                buttonClassName="w-full sm:w-auto bg-primary_background hover:bg-primary_hover_background"
                 textClassName="text-primary_brand-50"
                 text={confirmLabel}
               />

@@ -84,140 +84,143 @@ export function GenericTable<
   }, [items, sortDescriptor, enableSorting]);
 
   return (
-    <Table
-      className="!text-l"
-      aria-label={ariaLabel}
-      fullWidth={width}
-      sortDescriptor={enableSorting ? sortDescriptor : undefined}
-      onSortChange={enableSorting ? setSortDescriptor : undefined}>
-      <TableHeader columns={visibleColumns}>
-        {(column) => (
-          <TableColumn
-            key={String(column.uid)}
-            align={column.align || "start"}
-            className="!text-s !font-satoshiLight text-neutral-300"
-            allowsSorting={enableSorting && column.uid !== "action"}>
-            {column.name.toUpperCase()}
-          </TableColumn>
-        )}
-      </TableHeader>
+    <div className="w-full overflow-x-auto">
+      <Table
+        className="!text-l"
+        aria-label={ariaLabel}
+        fullWidth={width}
+        sortDescriptor={enableSorting ? sortDescriptor : undefined}
+        onSortChange={enableSorting ? setSortDescriptor : undefined}>
+        <TableHeader columns={visibleColumns}>
+          {(column) => (
+            <TableColumn
+              key={String(column.uid)}
+              align={column.align || "start"}
+              className="!text-s !font-satoshiLight text-neutral-300 whitespace-nowrap"
+              allowsSorting={enableSorting && column.uid !== "action"}>
+              {column.name.toUpperCase()}
+            </TableColumn>
+          )}
+        </TableHeader>
 
-      <TableBody
-        items={sortedItems}
-        isLoading={false}
-        loadingContent={<Spinner label="Chargement..." />}>
-        {(item) => (
-          <TableRow
-            key={item.id}
-            onClick={() => {
-              if (enableRowClick && getDetailUrl) {
-                window.open(getDetailUrl(item.id), "_self");
-              }
-            }}
-            className={`${
-              enableRowClick && getDetailUrl
-                ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
-                : "rounded-full"
-            } !text-l !font-satoshiRegular`}>
-            {(columnKey) => {
-              if (columnKey === "action") {
-                return (
-                  <TableCell>
-                    <div className="relative flex items-center gap-2">
-                      {useEliminationStatus && item.eliminated ? (
-                        <Tooltip content="Éliminé" className="px-3xs">
-                          <span className="text-danger-500">
-                            <HugeiconsIcon
-                              icon={DeadIcon}
-                              size={20}
-                              strokeWidth={1.5}
-                            />
-                          </span>
-                        </Tooltip>
-                      ) : (
-                        actions?.(item)?.map((action, idx) => (
-                          <Tooltip
-                            key={idx}
-                            content={action.tooltip}
-                            color={
-                              action.color === "danger" ? "danger" : "default"
-                            }
-                            className="px-3xs">
-                            <span
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                action.onClick(item);
-                              }}
-                              className={`text-l px-3xs rounded-xl cursor-pointer active:opacity-50 ${
-                                action.color === "danger"
-                                  ? "text-danger-500"
-                                  : "text-white"
-                              }`}>
-                              {action.icon}
+        <TableBody
+          items={sortedItems}
+          isLoading={false}
+          loadingContent={<Spinner label="Chargement..." />}>
+          {(item) => (
+            <TableRow
+              key={item.id}
+              onClick={() => {
+                if (enableRowClick && getDetailUrl) {
+                  window.open(getDetailUrl(item.id), "_self");
+                }
+              }}
+              className={`${
+                enableRowClick && getDetailUrl
+                  ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
+                  : "rounded-full"
+              } !text-l !font-satoshiRegular`}>
+              {(columnKey) => {
+                if (columnKey === "action") {
+                  return (
+                    <TableCell>
+                      <div className="relative flex items-center gap-2">
+                        {useEliminationStatus && item.eliminated ? (
+                          <Tooltip content="Éliminé" className="px-3xs">
+                            <span className="text-danger-500">
+                              <HugeiconsIcon
+                                icon={DeadIcon}
+                                size={20}
+                                strokeWidth={1.5}
+                              />
                             </span>
                           </Tooltip>
-                        ))
-                      )}
-                    </div>
-                  </TableCell>
-                );
-              }
+                        ) : (
+                          actions?.(item)?.map((action, idx) => (
+                            <Tooltip
+                              key={idx}
+                              content={action.tooltip}
+                              color={
+                                action.color === "danger" ? "danger" : "default"
+                              }
+                              className="px-3xs">
+                              <span
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  action.onClick(item);
+                                }}
+                                className={`text-l px-3xs rounded-xl cursor-pointer active:opacity-50 ${
+                                  action.color === "danger"
+                                    ? "text-danger-500"
+                                    : "text-white"
+                                }`}>
+                                {action.icon}
+                              </span>
+                            </Tooltip>
+                          ))
+                        )}
+                      </div>
+                    </TableCell>
+                  );
+                }
 
-              const col = columns.find((c) => c.uid === columnKey);
-              const value = item[columnKey as keyof T];
-              const content = col?.render ? col.render(value, item) : value;
+                const col = columns.find((c) => c.uid === columnKey);
+                const value = item[columnKey as keyof T];
+                const content = col?.render ? col.render(value, item) : value;
 
-              if (columnKey === "status") {
+                if (columnKey === "status") {
+                  return (
+                    <TableCell>
+                      <Chip
+                        className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
+                          value === "finish"
+                            ? "bg-red-950"
+                            : value === "start"
+                            ? "bg-purple-950"
+                            : "bg-green-950"
+                        }`}
+                        size="sm"
+                        variant="flat">
+                        {content === "finish"
+                          ? STRINGS.status.finish
+                          : content === "in_coming"
+                          ? STRINGS.status.in_coming
+                          : STRINGS.status.start}
+                      </Chip>
+                    </TableCell>
+                  );
+                }
+
+                if (columnKey === "avatarName") {
+                  return (
+                    <TableCell>
+                      <div className="flex flex-col sm:flex-row items-center gap-3">
+                        <img
+                          src={
+                            (item as any).avatarUrl ||
+                            "/images/ellipseAvatar.png"
+                          }
+                          alt={(item as any).avatarName}
+                          className="w-10 h-10 rounded-full"
+                        />
+                        <span className="!font-satoshiRegular !text-l text-white text-center sm:text-left">
+                          {(item as any).avatarName}
+                        </span>
+                      </div>
+                    </TableCell>
+                  );
+                }
+
                 return (
-                  <TableCell>
-                    <Chip
-                      className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
-                        value === "finish"
-                          ? "bg-red-950"
-                          : value === "start"
-                          ? "bg-purple-950"
-                          : "bg-green-950"
-                      }`}
-                      size="sm"
-                      variant="flat">
-                      {content === "finish"
-                        ? STRINGS.status.finish
-                        : content === "in_coming"
-                        ? STRINGS.status.in_coming
-                        : STRINGS.status.start}
-                    </Chip>
+                  <TableCell className="!font-satoshiLight !text-l leading-7 whitespace-nowrap">
+                    {content as React.ReactNode}
                   </TableCell>
                 );
-              }
-
-              if (columnKey === "avatarName") {
-                return (
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={
-                          (item as any).avatarUrl || "/images/ellipseAvatar.png"
-                        }
-                        alt={(item as any).avatarName}
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <span className="!font-satoshiRegular !text-l text-white">
-                        {(item as any).avatarName}
-                      </span>
-                    </div>
-                  </TableCell>
-                );
-              }
-
-              return (
-                <TableCell className="!font-satoshiLight !text-l leading-7">
-                  {content as React.ReactNode}
-                </TableCell>
-              );
-            }}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+              }}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

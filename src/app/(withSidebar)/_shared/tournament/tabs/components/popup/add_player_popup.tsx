@@ -1,9 +1,8 @@
+"use client";
+
 import { InputComponents } from "@/app/components/form/input";
-import { NumberInputComponents } from "@/app/components/form/number_input";
 import { RadioGroupComponents } from "@/app/components/form/radio_group";
 import { SearchBarComponents } from "@/app/components/form/search_bar";
-import { TimeInputComponents } from "@/app/components/form/time_input";
-import { Checkbox } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { User } from "@/app/types/user.types";
@@ -55,53 +54,55 @@ export const PlayerFormBody = ({
   }, [search, isRegister, registration, players]);
 
   return (
-    <div className="flex flex-col gap-4 text-white">
+    <div className="flex flex-col gap-6 text-white w-full">
       <RadioGroupComponents
         label="Déjà inscrit au club ?"
         value={String(isRegister)}
         onChange={(e) => {
-          e.target.value == "true" ? setIsRegister(true) : setIsRegister(false);
+          setIsRegister(e.target.value === "true");
         }}
       />
+
       {isRegister ? (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SearchBarComponents
             label="Rechercher un joueur"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {search.length > 0 && (
-            <ul className="bg-default-100 text-primary_brand-50 rounded-lg p-2 hover:bg-default-200 cursor-pointer">
+            <ul className="bg-default-100 text-primary_brand-50 rounded-lg p-2 max-h-48 overflow-y-auto shadow-md">
               {availablePlayers.map((player) => (
                 <li
                   key={player.ID}
+                  className="py-1 px-2 rounded hover:bg-default-200 cursor-pointer transition-colors"
                   onClick={() => {
                     setPseudo(player.pseudo_winamax);
                     setSearch(player.pseudo_winamax);
                   }}>
-                  {player.pseudo_winamax} - {player.display_name}
+                  {player.pseudo_winamax} – {player.display_name}
                 </li>
               ))}
             </ul>
           )}
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <InputComponents
             label="Nom"
-            type={"text"}
+            type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
           <InputComponents
             label="Prénom"
-            type={"text"}
+            type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
           <InputComponents
             label="Pseudo"
-            type={"text"}
+            type="text"
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
           />

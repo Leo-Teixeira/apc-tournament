@@ -1,3 +1,5 @@
+"use client";
+
 import { ButtonComponents } from "@/app/components/button";
 import { STRINGS } from "@/app/constants/string";
 import { Tournament } from "@/app/types";
@@ -17,20 +19,20 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
   onShowClick
 }) => {
   return (
-    <div>
-      {tournament.tournament_status != "finish" ? (
-        <Card className="bg-red-400 rounded-xl p-5 bg-background_card">
+    <div className="w-full">
+      {tournament.tournament_status !== "finish" ? (
+        <Card className="bg-background_card rounded-xl p-5">
           <div className="flex flex-col gap-5">
             <img
-              className="w-full h-full rounded-lg "
+              className="w-full max-w-full rounded-lg object-cover"
               src="/images/wallpaper.svg"
               alt="background"
             />
-            <div className="flex flex-row gap-5 justify-center ">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <ButtonComponents
                 text="Changer de fond"
-                onClick={() => {}}
-                buttonClassName="bg-white/20 hover:bg-primary_brand-300"
+                onClick={onChangeClick}
+                buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
                 textClassName="text-primary_brand-50"
               />
               {tournament.tournament_status === "in_coming" && (
@@ -39,7 +41,7 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
                   onClick={() => {
                     window.open(`/game/${tournament.id}`);
                   }}
-                  buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+                  buttonClassName="w-full sm:w-auto bg-primary_background hover:bg-primary_hover_background"
                   textClassName="text-primary_brand-50"
                   icon={
                     <HugeiconsIcon
@@ -55,13 +57,13 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({
           </div>
         </Card>
       ) : (
-        <div className="flex flex-col gap-6 justify-center">
+        <div className="flex flex-col items-center gap-6 py-6 px-2 text-center">
           <img
-            className="rounded-lg"
+            className="rounded-lg w-full max-w-xl object-contain"
             src="/images/background_finish_image.svg"
             alt="background svg"
           />
-          <p className="text-center text-primary_brand-300 font-satoshiBold text-l leading-7">
+          <p className="text-primary_brand-300 font-satoshiBold text-base sm:text-l leading-7 px-2">
             Les cartes ont parlé, les jetons sont rangés… Découvrez le
             classement final et félicitez les champions !
           </p>

@@ -13,7 +13,6 @@ import { Delete02Icon, PencilEdit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 import { NiveauFormBody } from "./components/popup/add_level_popup";
-import { formatDate } from "@/app/utils/date";
 
 export const NiveauxTabs: React.FC = () => {
   const { levels, tournament, loadTournamentData } = useTournamentContext();
@@ -62,24 +61,25 @@ export const NiveauxTabs: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="items-center">
-        {isLoading ? (
-          <LoadingComponent />
-        ) : levelsRow && levelsRow.length > 0 ? (
+    <div className="flex flex-col gap-4">
+      {isLoading ? (
+        <LoadingComponent />
+      ) : levelsRow && levelsRow.length > 0 ? (
+        <div className="w-full overflow-x-auto">
           <GenericTable<BlindRow>
             columns={blindsColumns}
             items={levelsRow}
-            ariaLabel=""
+            ariaLabel="Niveaux"
             showActions={true}
             actions={getConditionalActions}
           />
-        ) : (
-          <div className="text-center text-white mt-10">
-            Aucun niveau défini pour ce tournoi.
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="text-center text-white py-10">
+          Aucun niveau défini pour ce tournoi.
+        </div>
+      )}
+
       <GenericModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
@@ -112,6 +112,7 @@ export const NiveauxTabs: React.FC = () => {
           ?
         </p>
       </GenericModal>
+
       <GenericModal
         isOpen={isModifyModalOpen}
         onClose={() => setIsModifyModalOpen(false)}

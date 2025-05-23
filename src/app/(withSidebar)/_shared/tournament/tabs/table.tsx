@@ -1,3 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useDisclosure } from "@heroui/react";
+import { Cancel01Icon, CoinsSwapIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+
 import { GenericModal } from "@/app/components/popup";
 import { GenericTable } from "@/app/components/table/generic_table";
 import { seatsColumns } from "@/app/components/table/presets/seats.config";
@@ -5,11 +12,7 @@ import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
 import { LoadingComponent } from "@/app/error/loading/page";
 import { mapAssignementsGroupedByTable } from "@/app/lib/adapter/tournament_table.adapter";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
-import { Registration, TableAssignment, Tournament } from "@/app/types";
-import { Radio, RadioGroup, useDisclosure } from "@heroui/react";
-import { Cancel01Icon, CoinsSwapIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useState } from "react";
+import { Registration, TableAssignment } from "@/app/types";
 import { EliminatePlayerFormBody } from "./components/popup/eliminate_player_popup";
 import { MovePlayerModalBody } from "./components/popup/move_player_popup";
 
@@ -38,14 +41,10 @@ export const TableTabs = () => {
   >([]);
 
   useEffect(() => {
-    const fetchAssignements = async () => {
-      if (!tournament?.id) return;
-      const assignementsData = mapAssignementsGroupedByTable(assignements);
-      setGroupedRows(assignementsData);
-      setIsLoading(false);
-    };
-
-    fetchAssignements();
+    if (!tournament?.id) return;
+    const assignementsData = mapAssignementsGroupedByTable(assignements);
+    setGroupedRows(assignementsData);
+    setIsLoading(false);
   }, [tournament?.id, assignements]);
 
   useEffect(() => {
@@ -110,59 +109,56 @@ export const TableTabs = () => {
     }
   };
 
-  const getConditionalActions = (item: SeatRow) => {
-    const actions: ActionDefinition<SeatRow>[] = [
-      {
-        tooltip: "Éliminer",
-        icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
-        onClick: () => {
-          const assignment = assignements.find((a) => a.id === item.id);
-          if (!assignment?.tournament_table?.table_number) return;
+  const getConditionalActions = (
+    item: SeatRow
+  ): ActionDefinition<SeatRow>[] => [
+    {
+      tooltip: "Éliminer",
+      icon: <HugeiconsIcon icon={Cancel01Icon} size={20} strokeWidth={1.5} />,
+      onClick: () => {
+        const assignment = assignements.find((a) => a.id === item.id);
+        if (!assignment?.tournament_table?.table_number) return;
 
-          setSelectedPlayer(assignment);
+        setSelectedPlayer(assignment);
 
-          const killers = assignements
-            .filter(
-              (a) =>
-                !a.eliminated &&
-                a.registration &&
-                a.tournament_table?.table_number ===
-                  assignment.tournament_table?.table_number &&
-                a.registration_id !== assignment.registration_id
-            )
-            .map((a) => a.registration)
-            .filter((r): r is Registration => !!r);
-
-          setKillerOptions(killers);
-          onOpen();
-        }
-      },
-      {
-        tooltip: "Changer de place",
-        icon: (
-          <HugeiconsIcon icon={CoinsSwapIcon} size={20} strokeWidth={1.5} />
-        ),
-        onClick: () => {
-          const assignment = assignements.find((a) => a.id === item.id);
-          if (!assignment) return;
-
-          setSelectedPlayerToMove(assignment);
-
-          const otherPlayers = assignements.filter(
+        const killers = assignements
+          .filter(
             (a) =>
               !a.eliminated &&
-              a.id !== assignment.id &&
               a.registration &&
-              a.tournament_table
-          );
+              a.tournament_table?.table_number ===
+                assignment.tournament_table?.table_number &&
+              a.registration_id !== assignment.registration_id
+          )
+          .map((a) => a.registration)
+          .filter((r): r is Registration => !!r);
 
-          setMoveOptions(otherPlayers);
-          setIsMoveModalOpen(true);
-        }
+        setKillerOptions(killers);
+        onOpen();
       }
-    ];
-    return actions;
-  };
+    },
+    {
+      tooltip: "Changer de place",
+      icon: <HugeiconsIcon icon={CoinsSwapIcon} size={20} strokeWidth={1.5} />,
+      onClick: () => {
+        const assignment = assignements.find((a) => a.id === item.id);
+        if (!assignment) return;
+
+        setSelectedPlayerToMove(assignment);
+
+        const otherPlayers = assignements.filter(
+          (a) =>
+            !a.eliminated &&
+            a.id !== assignment.id &&
+            a.registration &&
+            a.tournament_table
+        );
+
+        setMoveOptions(otherPlayers);
+        setIsMoveModalOpen(true);
+      }
+    }
+  ];
 
   if (isLoading) {
     return (
@@ -171,26 +167,28 @@ export const TableTabs = () => {
   }
 
   return (
-    <div>
-      {isLoading ? (
-        <LoadingComponent />
-      ) : Object.keys(groupedRows).length > 0 ? (
+    <div className="flex flex-col gap-6">
+      {Object.keys(groupedRows).length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {Object.entries(groupedRows).map(([tableNumber, rows]) => (
             <div key={tableNumber} className="flex flex-col gap-2">
-              <h2 className="text-xl font-bold">TABLE {tableNumber}</h2>
-              <GenericTable<SeatRow>
-                columns={seatsColumns}
-                items={rows}
-                ariaLabel={`Table ${tableNumber}`}
-                showActions={true}
-                actions={
-                  tournament?.tournament_status === "in_coming"
-                    ? getConditionalActions
-                    : undefined
-                }
-                enableSorting={false}
-              />
+              <h2 className="text-center sm:text-left text-base sm:text-xl font-bold">
+                TABLE {tableNumber}
+              </h2>
+              <div className="w-full overflow-x-auto">
+                <GenericTable<SeatRow>
+                  columns={seatsColumns}
+                  items={rows}
+                  ariaLabel={`Table ${tableNumber}`}
+                  showActions
+                  actions={
+                    tournament?.tournament_status === "in_coming"
+                      ? getConditionalActions
+                      : undefined
+                  }
+                  enableSorting={false}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -199,6 +197,7 @@ export const TableTabs = () => {
           Aucun joueur assigné à une table pour ce tournoi.
         </div>
       )}
+
       <GenericModal
         isOpen={isOpen}
         onClose={onClose}

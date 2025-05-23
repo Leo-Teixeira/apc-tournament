@@ -28,20 +28,24 @@ export const AddTableForm = forwardRef<AddTableFormHandle, AddTableFormProps>(
     }));
 
     return (
-      <div className="flex flex-col gap-6">
-        <Input
-          type="number"
-          label="Numéro de table"
-          value={String(tableNumber)}
-          onChange={(e) => setTableNumber(Number(e.target.value))}
-        />
+      <div className="flex flex-col gap-6 w-full">
+        <div className="w-full">
+          <Input
+            type="number"
+            label="Numéro de table"
+            value={String(tableNumber)}
+            onChange={(e) => setTableNumber(Number(e.target.value))}
+          />
+        </div>
 
-        <Input
-          type="number"
-          label="Capacité de la table"
-          value={String(tableCapacity)}
-          onChange={(e) => setTableCapacity(Number(e.target.value))}
-        />
+        <div className="w-full">
+          <Input
+            type="number"
+            label="Capacité de la table"
+            value={String(tableCapacity)}
+            onChange={(e) => setTableCapacity(Number(e.target.value))}
+          />
+        </div>
       </div>
     );
   }

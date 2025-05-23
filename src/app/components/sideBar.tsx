@@ -108,9 +108,11 @@ export default function Sidebar() {
                 : "text-neutral-200"
             }`}>
             <HugeiconsIcon icon={icon} size={20} />
-            <span className="text-2xs">{label}</span>
           </Link>
         ))}
+        <Link href="/">
+          <HugeiconsIcon icon={Logout02Icon} size={20} strokeWidth={1.5} />
+        </Link>
       </div>
     </>
   );
