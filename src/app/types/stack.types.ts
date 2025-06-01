@@ -15,4 +15,3 @@ export type EditableStack = {
   stack_total_player: number;
   stack_chip: StackChipInput[];
 };
-
