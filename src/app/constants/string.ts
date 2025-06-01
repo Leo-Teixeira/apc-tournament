@@ -33,7 +33,7 @@ export const STRINGS = {
         icon: Cards02Icon,
         href: "/sitandgo"
       },
-      { label: "Super finale", icon: RankingIcon, href: "/super_finale" },
+      { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
       { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
       { label: "Mallettes", icon: Briefcase09Icon, href: "/malette" }

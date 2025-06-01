@@ -6,7 +6,7 @@ import { tournament_tournament_category } from "@/generated/prisma";
 const categoryMap: Record<string, tournament_tournament_category> = {
   apt: tournament_tournament_category.APT,
   ag: tournament_tournament_category.AG,
-  sit_and_go: tournament_tournament_category.SitAndGo,
+  sitandgo: tournament_tournament_category.SitAndGo,
   superfinale: tournament_tournament_category.Superfinale,
   solipoker: tournament_tournament_category.Solipoker
 };

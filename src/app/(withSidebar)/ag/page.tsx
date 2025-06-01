@@ -1,17 +1,173 @@
 "use client";
-import { Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
-import { STRINGS } from "../../constants/string";
 
-export default function DashboardHome() {
+import { useState } from "react";
+import { GenericTable } from "../../components/table/generic_table";
+import { STRINGS } from "../../constants/string";
+import { standingsColumns } from "../../components/table/presets/standings.config";
+import {
+  ActionDefinition,
+  StandingRow,
+  TournamentRow
+} from "../../components/table/table.types";
+import { tournamentColumns } from "../../components/table/presets/tournament.config";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Delete02Icon,
+  PencilEdit02Icon,
+  ViewIcon
+} from "@hugeicons/core-free-icons";
+import { GenericModal } from "@/app/components/popup";
+import { TournamentFormBody } from "../_shared/tournament/tabs/components/popup/modif_tournament_popup";
+import { Tournament } from "@/app/types";
+import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
+import { useDeleteTournament } from "@/app/hook/useDeleteTournament";
+import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
+
+export default function APTHome() {
+  type TrimestryKey = "T1" | "T2" | "T3";
+
+  const { data, isLoading } = useTournamentDataByCategory("ag");
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [tournamentFormData, setTournamentFormData] = useState<
+    Partial<Tournament>
+  >({});
+  const [tournamentToDelete, setTournamentToDelete] =
+    useState<TournamentRow | null>(null);
+  const [itemSelected, setItemSelected] = useState<TournamentRow | null>(null);
+
+  const updateTournamentMutation = useUpdateTournament();
+  const deleteTournamentMutation = useDeleteTournament();
+
+  const tournamentRows = data?.tournamentRows ?? [];
+  const tournaments = data?.tournaments ?? [];
+  const quarterRankingRows = data?.quarterRankingRows ?? {
+    T1: [],
+    T2: [],
+    T3: []
+  };
+
+  const getConditionalActions = (item: TournamentRow) => {
+    const actions: ActionDefinition<TournamentRow>[] = [
+      {
+        tooltip: "Voir",
+        icon: <HugeiconsIcon icon={ViewIcon} size={20} strokeWidth={1.5} />,
+        onClick: () => window.open(`/ag/${item.id}`, "_self")
+      }
+    ];
+
+    if (item.status !== "finish") {
+      actions.push({
+        tooltip: "Éditer",
+        icon: (
+          <HugeiconsIcon icon={PencilEdit02Icon} size={20} strokeWidth={1.5} />
+        ),
+        onClick: () => {
+          setItemSelected(item);
+          setIsDeleteModalOpen(false);
+          setIsModifyModalOpen(true);
+        }
+      });
+
+      actions.push({
+        tooltip: "Supprimer",
+        icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
+        onClick: () => {
+          setItemSelected(item);
+          setTournamentToDelete(item);
+          setIsDeleteModalOpen(true);
+        },
+        color: "danger"
+      });
+    }
+
+    return actions;
+  };
+
   return (
-    <div className="flex flex-col gap-6">
-      <h1>{STRINGS.apt.title}</h1>
-      <div className="flex flex-col gap-3">
-        <h2>{STRINGS.common.tournament_title}</h2>
-      </div>
-      <div className="flex flex-col gap-3">
-        <h2>{STRINGS.common.classement_title}</h2>
-      </div>
+    <div className="flex flex-col gap-6 w-full">
+      <h1 className="font-satoshiBold text-2xl sm:text-4xl">Championnat APT</h1>
+
+      {isLoading ? (
+        <div>Chargement...</div>
+      ) : (
+        <>
+          <div className="flex flex-col gap-3">
+            <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
+              Tournois
+            </h2>
+            <div className="w-full overflow-x-auto">
+              <GenericTable<TournamentRow>
+                items={tournamentRows}
+                columns={tournamentColumns}
+                ariaLabel="Liste des sièges"
+                showActions={true}
+                actions={getConditionalActions}
+                enableRowClick
+                getDetailUrl={(id) => `/apt/${id}`}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      <GenericModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setTournamentToDelete(null);
+          setItemSelected(null);
+        }}
+        title="Supprimer le tournoi"
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          if (!tournamentToDelete) return;
+
+          try {
+            await deleteTournamentMutation.mutateAsync(tournamentToDelete.id);
+            setIsDeleteModalOpen(false);
+            setTournamentToDelete(null);
+            setItemSelected(null);
+          } catch (error) {
+            console.error("Erreur suppression tournoi :", error);
+            alert("Une erreur est survenue.");
+          }
+        }}>
+        <p>
+          Es-tu sûr de vouloir supprimer le tournoi{" "}
+          <b>{tournamentToDelete?.name}</b> ?
+        </p>
+      </GenericModal>
+
+      <GenericModal
+        isOpen={isModifyModalOpen}
+        onClose={() => setIsModifyModalOpen(false)}
+        title="Modifier tournoi"
+        confirmLabel="Modifier le tournoi"
+        onConfirm={async () => {
+          if (!itemSelected) return;
+
+          try {
+            await updateTournamentMutation.mutateAsync({
+              id: Number(itemSelected.id),
+              data: tournamentFormData
+            });
+
+            setIsModifyModalOpen(false);
+          } catch (error) {
+            console.error("Erreur modification tournoi :", error);
+            alert("Une erreur est survenue.");
+          }
+        }}>
+        <TournamentFormBody
+          tournament={tournaments.find((t) => t.id == Number(itemSelected?.id))}
+          onUpdate={(updatedFields) => {
+            setTournamentFormData((prev) => ({ ...prev, ...updatedFields }));
+          }}
+        />
+      </GenericModal>
     </div>
   );
 }
