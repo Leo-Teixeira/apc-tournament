@@ -50,3 +50,5 @@ export const AddTableForm = forwardRef<AddTableFormHandle, AddTableFormProps>(
     );
   }
 );
+
+AddTableForm.displayName = "AddTableForm";

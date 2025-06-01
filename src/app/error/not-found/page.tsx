@@ -8,8 +8,9 @@ export default function NotFound() {
           404
         </h1>
         <p className="text-xl text-primary_brand-300 mb-6">
-          Oups, cette page n'existe pas !
+          Oups, cette page n&apos;existe pas !
         </p>
+
         <Link
           href="/"
           className="inline-block bg-primary_brand-100 hover:bg-primary_brand-200 text-white font-satoshiBold px-6 py-3 rounded-xl transition">

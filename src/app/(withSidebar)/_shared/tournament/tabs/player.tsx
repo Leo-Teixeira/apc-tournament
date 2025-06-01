@@ -238,7 +238,7 @@ export const PlayerTabs = () => {
           }
         }}>
         <p>
-          Es-tu sûr de vouloir annuler l'élimination de{" "}
+          Es-tu sûr de vouloir annuler l&apos;élimination de{" "}
           <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
         </p>
       </GenericModal>
@@ -266,7 +266,7 @@ export const PlayerTabs = () => {
           }
         }}>
         <p>
-          Es-tu sûr de vouloir supprimer l'invitation du joueur{" "}
+          Es-tu sûr de vouloir supprimer l&apos;invitation du joueur{" "}
           <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
         </p>
       </GenericModal>
