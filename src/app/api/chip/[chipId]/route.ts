@@ -1,24 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
 export async function DELETE(request: NextRequest) {
   try {
-    const chipIdParam = request.nextUrl.pathname.split("/").pop(); // récupère le chipId
-    if (!chipIdParam) {
+    const { chip } = extractParamsFromPath(request, ["chip"]);
+
+    if (!chip) {
       return NextResponse.json(
         { error: "Chip ID is required" },
         { status: 400 }
       );
     }
 
-    const chipId = BigInt(chipIdParam);
+    const chipIdBigInt = BigInt(chip);
 
     await prisma.stack_chip.deleteMany({
-      where: { chip_id: chipId }
+      where: { chip_id: chipIdBigInt }
     });
 
     await prisma.chip.delete({
-      where: { id: chipId }
+      where: { id: chipIdBigInt }
     });
 
     return NextResponse.json({ message: "Chip deleted successfully" });

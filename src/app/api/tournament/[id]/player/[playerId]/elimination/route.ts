@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { reequilibrateTables } from "../../../reequilibrate/route";
 import { tournament_tournament_status } from "@/generated/prisma";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
 async function updateQuarterRanking(tournamentId: number) {
   const tournament = await prisma.tournament.findUnique({
@@ -71,21 +72,22 @@ async function updateQuarterRanking(tournamentId: number) {
   await prisma.quarter_ranking.createMany({ data: sorted });
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string; playerId: string } }
-) {
+export async function PUT(req: NextRequest) {
+  const { tournament, player } = extractParamsFromPath(req, [
+    "tournament",
+    "player"
+  ]);
+
+  if (!tournament || !player) {
+    return NextResponse.json({ error: "Missing params" }, { status: 400 });
+  }
+
   try {
-    const tournamentId = parseInt(params.id);
-    const registrationId = parseInt(params.playerId);
+    const tournamentId = parseInt(tournament);
+    const registrationId = parseInt(player);
     const { user_kill_id } = await req.json();
 
-    console.log("→ tournamentId:", tournamentId);
-    console.log("→ registrationId:", registrationId);
-    console.log("→ user_kill_id (killer):", user_kill_id);
-
     if (isNaN(registrationId) || !user_kill_id) {
-      console.warn("⛔ Données invalides");
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
@@ -96,22 +98,9 @@ export async function PUT(
       include: { registration: true }
     });
 
-    if (!assignment) {
-      console.warn(
-        "⛔ Aucune assignation trouvée pour registration_id:",
-        registrationId
-      );
+    if (!assignment || !assignment.registration) {
       return NextResponse.json(
-        { error: "Assignment not found" },
-        { status: 404 }
-      );
-    }
-
-    const registration = assignment.registration;
-    if (!registration) {
-      console.warn("⛔ Aucune inscription liée à l'assignement");
-      return NextResponse.json(
-        { error: "Registration not found" },
+        { error: "Assignment or registration not found" },
         { status: 404 }
       );
     }
@@ -142,14 +131,14 @@ export async function PUT(
       }
     });
 
-    const tournament = await prisma.tournament.findUnique({
+    const tournamentData = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) }
     });
 
     const totalRegistrations = eliminatedCount + aliveCount;
     let score = 0;
 
-    if (tournament?.tournament_category === "APT") {
+    if (tournamentData?.tournament_category === "APT") {
       const aptScoreRanges = [
         { min: 0, max: 15, scores: [26, 18, 12, 8, 6, 5] },
         { min: 16, max: 20, scores: [28, 20, 15, 11, 8, 5, 3] },
@@ -194,17 +183,11 @@ export async function PUT(
       score = range?.scores[positionFromTop - 1] ?? 0;
     }
 
-    console.log("🎯 Total players:", totalRegistrations);
-    console.log("🎯 Joueurs encore en vie:", aliveCount);
-    console.log("🎯 Position calculée:", totalRegistrations - eliminatedCount);
-    console.log("🎯 Score attribué:", score);
-
     await prisma.tournament_ranking.create({
       data: {
-        registration_id: registration.id,
+        registration_id: assignment.registration.id,
         tournament_id: BigInt(tournamentId),
-        ranking_position:
-          totalRegistrations - (totalRegistrations - aliveCount),
+        ranking_position: totalRegistrations - aliveCount,
         ranking_score: score
       }
     });
@@ -221,8 +204,6 @@ export async function PUT(
     if (tablesWithAlive.length > 1) {
       const rebalanced = await reequilibrateTables(tournamentId);
       console.log("♻️ Rééquilibrage effectué ?", rebalanced);
-    } else {
-      console.log("⛔ Rééquilibrage ignoré (1 seule table restante)");
     }
 
     if (aliveCount === 1) {
@@ -230,12 +211,8 @@ export async function PUT(
         where: { id: BigInt(tournamentId) },
         data: { tournament_status: tournament_tournament_status.finish }
       });
-      console.log(
-        "🏁 Tournoi terminé automatiquement – plus qu’un joueur vivant."
-      );
 
       await updateQuarterRanking(tournamentId);
-      console.log("📊 Classement trimestriel mis à jour.");
     }
 
     return NextResponse.json(

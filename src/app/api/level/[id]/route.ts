@@ -3,17 +3,24 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { getDurationInMinutes } from "@/app/utils/date";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
 export async function PUT(req: NextRequest) {
   try {
-    const data = await req.json();
+    const { level } = extractParamsFromPath(req, ["level"]);
+    if (!level) {
+      return NextResponse.json(
+        { error: "Level ID is required" },
+        { status: 400 }
+      );
+    }
 
-    const levelId = BigInt(data.id);
+    const levelId = BigInt(level);
+    const data = await req.json();
 
     const currentLevel = await prisma.tournament_level.findUnique({
       where: { id: levelId }
     });
-
     if (!currentLevel) {
       return NextResponse.json({ error: "Level not found" }, { status: 404 });
     }
@@ -43,14 +50,12 @@ export async function PUT(req: NextRequest) {
     });
 
     const allLevels = await prisma.tournament_level.findMany({
-      where: {
-        tournament_id: currentLevel.tournament_id
-      },
+      where: { tournament_id: currentLevel.tournament_id },
       orderBy: { level_number: "asc" }
     });
 
     const updatedIndex = allLevels.findIndex(
-      (lvl) => lvl.id.toString() === data.id.toString()
+      (lvl) => lvl.id.toString() === levelId.toString()
     );
     if (updatedIndex === -1) {
       return NextResponse.json(
@@ -100,16 +105,15 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const levelIdParam = request.nextUrl.pathname.split("/").pop();
-    if (!levelIdParam) {
+    const { level } = extractParamsFromPath(request, ["level"]);
+    if (!level) {
       return NextResponse.json(
         { error: "Level ID is required" },
         { status: 400 }
       );
     }
 
-    const levelId = parseInt(levelIdParam);
-
+    const levelId = parseInt(level);
     const deletedLevel = await prisma.tournament_level.findUnique({
       where: { id: levelId }
     });

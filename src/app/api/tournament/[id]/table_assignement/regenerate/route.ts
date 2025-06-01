@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const tournamentId = parseInt(params.id);
+    const { tournament } = extractParamsFromPath(req, ["tournament"]);
+    const tournamentId = parseInt(tournament ?? "");
+
     if (isNaN(tournamentId)) {
       return NextResponse.json(
         { error: "Invalid tournament ID" },

@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
-import { reequilibrateTables } from "../reequilibrate/route";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function GET(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
-    const tournamentId = parseInt(params.id);
+    const { tournament } = extractParamsFromPath(req, ["tournament"]);
+    console.log("📥 Paramètre extrait :", tournament);
+
+    const tournamentId = parseInt(tournament ?? "");
+    console.log("🎯 tournamentId après parse :", tournamentId);
+
     if (isNaN(tournamentId)) {
+      console.error("⛔ tournamentId invalide ou non fourni");
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
@@ -48,22 +51,25 @@ export async function GET(
       }
     });
 
+    console.log("✅ Affectations récupérées :", assignements.length);
     return NextResponse.json(serializeBigInt(assignements));
   } catch (error) {
-    console.error("Error fetching table assignments:", error);
+    console.error("🔥 Erreur lors du GET /assignments :", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const tournamentId = parseInt(params.id);
+    const { tournament } = extractParamsFromPath(req, ["tournament"]);
+    const tournamentId = parseInt(tournament ?? "");
+
     if (isNaN(tournamentId)) {
       return NextResponse.json(
         { error: "Invalid tournament ID" },
@@ -90,10 +96,6 @@ export async function POST(
         table_capacity
       }
     });
-
-    console.log(
-      `✅ Table ${table_number} ajoutée. Rééquilibrage complet en cours...`
-    );
 
     const allAssignments = await prisma.table_assignment.findMany({
       where: {
@@ -144,10 +146,6 @@ export async function POST(
         currentIndex++;
       }
     }
-
-    console.log(
-      `🔁 Répartition terminée : ${totalPlayers} joueurs répartis sur ${totalTables} tables`
-    );
 
     return NextResponse.json(
       serializeBigInt({

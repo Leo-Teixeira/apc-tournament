@@ -1,16 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function GET(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function GET(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
 
   let tournamentId: bigint;
   try {
-    tournamentId = BigInt(id);
+    tournamentId = BigInt(tournament);
   } catch {
     return NextResponse.json(
       { error: "Invalid tournament ID" },
@@ -19,7 +24,7 @@ export async function GET(
   }
 
   try {
-    const [tournament, levels, tables, registrations, rankings, stacks] =
+    const [tournamentData, levels, tables, registrations, rankings, stacks] =
       await Promise.all([
         prisma.tournament.findUnique({
           where: { id: tournamentId },
@@ -63,7 +68,7 @@ export async function GET(
         }),
 
         prisma.tournament_ranking.findMany({
-          where: { tournament_id: BigInt(id) },
+          where: { tournament_id: tournamentId },
           orderBy: { ranking_position: "asc" },
           include: {
             registration: {
@@ -90,7 +95,7 @@ export async function GET(
         })
       ]);
 
-    if (!tournament) {
+    if (!tournamentData) {
       return NextResponse.json(
         { error: "Tournament not found" },
         { status: 404 }
@@ -100,7 +105,7 @@ export async function GET(
     return NextResponse.json(
       serializeBigInt({
         tournament: {
-          ...tournament,
+          ...tournamentData,
           tournament_level: levels,
           tournament_table: tables,
           registration: registrations,

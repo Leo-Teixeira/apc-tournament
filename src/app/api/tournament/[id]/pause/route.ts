@@ -1,12 +1,19 @@
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const tournamentId = BigInt(params.id);
+export async function PATCH(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
+
+  const tournamentId = BigInt(tournament);
 
   try {
     const { pause } = await req.json();
@@ -17,12 +24,12 @@ export async function PATCH(
 
     const now = new Date();
 
-    const tournament = await prisma.tournament.findUnique({
+    const tournamentData = await prisma.tournament.findUnique({
       where: { id: tournamentId },
       include: { tournament_level: { orderBy: { level_number: "asc" } } }
     });
 
-    if (!tournament) {
+    if (!tournamentData) {
       return NextResponse.json(
         { error: "Tournament not found" },
         { status: 404 }
@@ -41,17 +48,17 @@ export async function PATCH(
       return NextResponse.json(serializeBigInt(updated));
     }
 
-    if (!tournament.tournament_pause_date) {
+    if (!tournamentData.tournament_pause_date) {
       return NextResponse.json({ error: "No pause date set" }, { status: 400 });
     }
 
-    const pauseDate = new Date(tournament.tournament_pause_date);
+    const pauseDate = new Date(tournamentData.tournament_pause_date);
 
     const updatedLevels = [];
     let found = false;
     let offset = now;
 
-    for (const level of tournament.tournament_level) {
+    for (const level of tournamentData.tournament_level) {
       const levelStart = new Date(level.level_start);
       const levelEnd = new Date(level.level_end);
 

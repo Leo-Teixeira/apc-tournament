@@ -1,20 +1,28 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const tournamentId = BigInt(params.id);
+    const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+    if (!tournament) {
+      return NextResponse.json(
+        { error: "Missing tournament ID" },
+        { status: 400 }
+      );
+    }
+
+    const tournamentId = BigInt(tournament);
     const body = await req.json();
     const { playerId, mode, targetId, seatNumber } = body;
 
-    if (!playerId || !mode || !targetId)
+    if (!playerId || !mode || !targetId) {
       return NextResponse.json(
         { error: "Données manquantes" },
         { status: 400 }
       );
+    }
 
     if (mode === "swap") {
       const [playerA, playerB] = await prisma.table_assignment.findMany({
@@ -23,11 +31,12 @@ export async function POST(
         }
       });
 
-      if (!playerA || !playerB)
+      if (!playerA || !playerB) {
         return NextResponse.json(
           { error: "Joueurs non trouvés" },
           { status: 404 }
         );
+      }
 
       await prisma.$transaction([
         prisma.table_assignment.update({
@@ -54,11 +63,12 @@ export async function POST(
         where: { id: BigInt(playerId) }
       });
 
-      if (!player)
+      if (!player) {
         return NextResponse.json(
           { error: "Joueur non trouvé" },
           { status: 404 }
         );
+      }
 
       const assignments = await prisma.table_assignment.findMany({
         where: {

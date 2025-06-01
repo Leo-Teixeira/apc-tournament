@@ -1,33 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const tournamentId = parseInt(params.id);
+    const { tournament } = extractParamsFromPath(req, ["tournament"]);
+    const tournamentId = parseInt(tournament ?? "");
     console.log("🎯 Tournament ID reçu :", tournamentId);
 
     if (isNaN(tournamentId)) {
-      console.error("⛔ ID de tournoi invalide :", params.id);
+      console.error("⛔ ID de tournoi invalide :", tournament);
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
-    const tournament = await prisma.tournament.findUnique({
+    const t = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) },
       select: { tournament_category: true }
     });
 
-    if (!tournament) {
+    if (!t) {
       return NextResponse.json(
         { error: "Tournament not found" },
         { status: 404 }
       );
     }
 
-    const maxPerTable = tournament.tournament_category === "APT" ? 8 : 9;
+    const maxPerTable = t.tournament_category === "APT" ? 8 : 9;
 
     const existingTables = await prisma.tournament_table.findMany({
       where: {

@@ -1,13 +1,20 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
+
   try {
-    const tournamentId = parseInt(params.id);
+    const tournamentId = parseInt(tournament);
     const body = await req.json();
     const { pseudo, firstName, lastName } = body;
 

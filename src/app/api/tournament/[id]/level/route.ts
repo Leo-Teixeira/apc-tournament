@@ -2,26 +2,31 @@ import { tournamentLevelMocks } from "@/mock";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
 const MOCK = process.env.MOCK === "true";
 
-export async function GET(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function GET(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
 
   if (MOCK) {
     const result = tournamentLevelMocks.filter((level) =>
       typeof level.tournament_id === "string"
-        ? level.tournament_id === id
-        : level.tournament_id.id === id
+        ? level.tournament_id === tournament
+        : level.tournament_id.id === tournament
     );
     return NextResponse.json(result);
   }
 
   try {
-    const tournamentId = parseInt(id);
+    const tournamentId = parseInt(tournament);
     if (isNaN(tournamentId)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -54,10 +59,8 @@ export async function GET(
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    console.log("📥 Reçu :", data);
 
     if (!data.tournament_id) {
-      console.error("⛔ tournament_id manquant");
       return NextResponse.json(
         { error: "Missing tournament_id" },
         { status: 400 }
@@ -70,7 +73,6 @@ export async function POST(req: NextRequest) {
       where: { tournament_id: tournamentId },
       orderBy: { level_number: "asc" }
     });
-    console.log("📊 Nombre de niveaux existants :", allLevels.length);
 
     const insertPosition = data.level_number ?? allLevels.length + 1;
 
@@ -80,7 +82,6 @@ export async function POST(req: NextRequest) {
         : allLevels[insertPosition - 1];
 
     if (!referenceLevel) {
-      console.error("⛔ Position d'insertion invalide :", insertPosition);
       return NextResponse.json(
         { error: "Invalid insert position" },
         { status: 400 }
@@ -88,10 +89,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newLevelDuration = parseInt(data.duration_minutes);
-    console.log("🕒 Durée du nouveau niveau (minutes) :", newLevelDuration);
-
     if (isNaN(newLevelDuration) || newLevelDuration <= 0) {
-      console.error("⛔ Durée invalide :", data.duration_minutes);
       return NextResponse.json(
         { error: "Invalid or missing duration_minutes" },
         { status: 400 }
@@ -109,7 +107,7 @@ export async function POST(req: NextRequest) {
     const updatedLevels = [];
 
     if (!isLastInsert) {
-      let currentTime = new Date(newLevelEnd);
+      let currentTime = newLevelEnd;
       for (let i = insertPosition - 1; i < allLevels.length; i++) {
         const level = allLevels[i];
         const originalDuration =
@@ -120,7 +118,7 @@ export async function POST(req: NextRequest) {
         const shiftStart = new Date(currentTime);
         const shiftEnd = new Date(currentTime);
         shiftEnd.setMinutes(shiftEnd.getMinutes() + originalDuration);
-        currentTime = new Date(shiftEnd);
+        currentTime = shiftEnd;
 
         updatedLevels.push(
           prisma.tournament_level.update({
@@ -134,8 +132,6 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-
-    console.log("✅ Création du nouveau niveau à l'index", insertPosition);
 
     const newLevel = await prisma.tournament_level.create({
       data: {
@@ -163,17 +159,18 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  try {
-    const idParam = request.nextUrl.pathname.split("/").pop();
-    if (!idParam) {
-      return NextResponse.json(
-        { error: "Tournament ID is required" },
-        { status: 400 }
-      );
-    }
+export async function DELETE(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
-    const tournamentId = parseInt(idParam);
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const tournamentId = parseInt(tournament);
     if (isNaN(tournamentId)) {
       return NextResponse.json(
         { error: "Invalid tournament ID" },

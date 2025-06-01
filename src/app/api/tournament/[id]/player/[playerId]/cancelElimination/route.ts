@@ -1,25 +1,28 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string; playerId: string } }
-) {
+export async function PUT(req: NextRequest) {
+  const { tournament, player } = extractParamsFromPath(req, [
+    "tournament",
+    "player"
+  ]);
+
+  if (!tournament || !player) {
+    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+  }
+
   try {
-    const tournamentId = parseInt(params.id);
-    const playerId = parseInt(params.playerId);
+    const tournamentId = parseInt(tournament);
+    const registrationId = parseInt(player);
 
-    console.log("→ tournamentId:", tournamentId);
-    console.log("→ playerId (registration_id):", playerId);
-
-    if (isNaN(tournamentId) || isNaN(playerId)) {
-      console.warn("⛔ Identifiants invalides");
+    if (isNaN(tournamentId) || isNaN(registrationId)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
     const assignment = await prisma.table_assignment.findFirst({
       where: {
-        registration_id: BigInt(playerId),
+        registration_id: BigInt(registrationId),
         registration: {
           tournament_id: BigInt(tournamentId)
         }
@@ -27,16 +30,11 @@ export async function PUT(
     });
 
     if (!assignment) {
-      console.warn(
-        `⛔ Aucune assignation trouvée pour registration_id=${playerId} et tournament_id=${tournamentId}`
-      );
       return NextResponse.json(
         { error: "Assignment not found" },
         { status: 404 }
       );
     }
-
-    console.log("✅ Assignement trouvé:", assignment);
 
     await prisma.table_assignment.update({
       where: { id: assignment.id },
@@ -46,16 +44,12 @@ export async function PUT(
       }
     });
 
-    console.log("✅ Assignement mis à jour (eliminated: false)");
-
-    const deleted = await prisma.tournament_ranking.deleteMany({
+    await prisma.tournament_ranking.deleteMany({
       where: {
-        registration_id: BigInt(playerId),
+        registration_id: BigInt(registrationId),
         tournament_id: BigInt(tournamentId)
       }
     });
-
-    console.log(`🗑️ Rankings supprimés: ${deleted.count}`);
 
     return NextResponse.json({ message: "Elimination cancelled" });
   } catch (error) {

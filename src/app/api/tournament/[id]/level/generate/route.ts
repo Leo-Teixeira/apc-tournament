@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
+
   try {
-    const tournamentId = parseInt(params.id);
+    const tournamentId = parseInt(tournament);
     if (isNaN(tournamentId)) {
       return NextResponse.json(
         { error: "Invalid tournament ID" },
@@ -15,19 +22,19 @@ export async function POST(
       );
     }
 
-    const tournament = await prisma.tournament.findUnique({
+    const tournamentData = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) }
     });
 
-    if (!tournament) {
+    if (!tournamentData) {
       return NextResponse.json(
         { error: "Tournament not found" },
         { status: 404 }
       );
     }
 
-    const startDate = new Date(tournament.tournament_start_date);
-    const estimateDuration = new Date(tournament.estimate_duration);
+    const startDate = new Date(tournamentData.tournament_start_date);
+    const estimateDuration = new Date(tournamentData.estimate_duration);
     const totalMinutes =
       estimateDuration.getUTCHours() * 60 + estimateDuration.getUTCMinutes();
 
@@ -48,7 +55,7 @@ export async function POST(
       levelEnd.setMinutes(levelEnd.getMinutes() + duration);
 
       levels.push({
-        tournament_id: tournament.id,
+        tournament_id: tournamentData.id,
         level_number: levelNumber,
         level_start: levelStart,
         level_end: levelEnd,

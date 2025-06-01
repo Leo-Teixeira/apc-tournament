@@ -21,9 +21,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(serializeBigInt(users));
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
-    return NextResponse.json(
-      { error: "Erreur serveur" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

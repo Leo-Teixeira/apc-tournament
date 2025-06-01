@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { tournamentMocks } from "@/mock";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = await params;
-  const tournamentId = parseInt(id);
+export async function GET(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+  const tournamentId = parseInt(tournament ?? "");
 
   if (isNaN(tournamentId)) {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -17,12 +15,12 @@ export async function GET(
   const isMock = process.env.MOCK === "true";
 
   if (isMock) {
-    return NextResponse.json({ ...tournamentMocks, id });
+    return NextResponse.json({ ...tournamentMocks, tournament });
   }
 
   try {
     const tournament = await prisma.tournament.findUnique({
-      where: { id: BigInt(id) },
+      where: { id: BigInt(tournamentId) },
       include: {
         tournament_level: true,
         stack: true,
@@ -67,15 +65,14 @@ export async function GET(
   }
 }
 
-export async function PUT(req: Request, context: { params: { id: string } }) {
-  const { params } = context;
-  const { id } = params;
+export async function PUT(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
   try {
     const data = await req.json();
 
     const updated = await prisma.tournament.update({
-      where: { id: BigInt(id) },
+      where: { id: BigInt(tournament as string) },
       data: {
         tournament_name: data.tournament_name,
         tournament_description: data.tournament_description,
@@ -96,16 +93,17 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
 }
 
 export async function DELETE(request: NextRequest) {
-  try {
-    const idParam = request.nextUrl.pathname.split("/").pop();
-    if (!idParam) {
-      return NextResponse.json(
-        { error: "Tournament ID is required" },
-        { status: 400 }
-      );
-    }
+  const { tournament } = extractParamsFromPath(request, ["tournament"]);
 
-    const tournamentId = BigInt(idParam);
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Tournament ID is required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const tournamentId = BigInt(tournament);
 
     await prisma.tournament.delete({
       where: { id: tournamentId }

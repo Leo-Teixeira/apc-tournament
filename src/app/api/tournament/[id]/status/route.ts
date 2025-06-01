@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { tournament_tournament_status } from "@/generated/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const tournamentId = BigInt(params.id);
+export async function PATCH(req: NextRequest) {
+  const { tournament } = extractParamsFromPath(req, ["tournament"]);
+
+  if (!tournament) {
+    return NextResponse.json(
+      { error: "Missing tournament ID" },
+      { status: 400 }
+    );
+  }
+
+  const tournamentId = BigInt(tournament);
 
   try {
     const body = await req.json();
@@ -24,7 +31,6 @@ export async function PATCH(
     }
 
     if (status === "in_coming") {
-      // 1. Date locale ajustée pour éviter conversion en UTC à l'enregistrement
       const now = new Date();
       const offsetMs = now.getTimezoneOffset() * 60000;
       const localDate = new Date(now.getTime() - offsetMs);
@@ -37,7 +43,6 @@ export async function PATCH(
         }
       });
 
-      // 2. Mise à jour des niveaux à partir de l'heure locale ajustée
       const levels = await prisma.tournament_level.findMany({
         where: { tournament_id: tournamentId },
         orderBy: { level_number: "asc" }
