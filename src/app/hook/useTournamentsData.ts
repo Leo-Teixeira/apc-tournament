@@ -20,9 +20,9 @@ export const useTournamentDataByCategory = (category: string) => {
       const data = await res.json();
 
       return {
-        tournaments: data.tournaments,
+        tournaments: data.tournamentss,
         tournamentRows: mapTournamentsToRow(
-          data.tournaments,
+          data.tournamentss,
           data.registrations
         ),
         quarterRankingRows: mapQuarterRankingByTrimestry(
