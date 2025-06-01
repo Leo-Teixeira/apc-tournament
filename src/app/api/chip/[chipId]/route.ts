@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
-  _: NextRequest,
-  { params }: { params: { chipId: string } }
+  request: NextRequest,
+  context: { params: { chipId: string } }
 ) {
   try {
-    const chipId = BigInt(params.chipId);
+    const chipId = BigInt(context.params.chipId);
     if (!chipId) {
       return NextResponse.json({ error: "Invalid chip ID" }, { status: 400 });
     }
