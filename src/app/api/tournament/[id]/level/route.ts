@@ -163,12 +163,17 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const tournamentId = parseInt(params.id);
+    const idParam = request.nextUrl.pathname.split("/").pop();
+    if (!idParam) {
+      return NextResponse.json(
+        { error: "Tournament ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const tournamentId = parseInt(idParam);
     if (isNaN(tournamentId)) {
       return NextResponse.json(
         { error: "Invalid tournament ID" },
@@ -177,9 +182,7 @@ export async function DELETE(
     }
 
     const deleted = await prisma.tournament_level.deleteMany({
-      where: {
-        tournament_id: BigInt(tournamentId)
-      }
+      where: { tournament_id: BigInt(tournamentId) }
     });
 
     return NextResponse.json({
@@ -187,7 +190,7 @@ export async function DELETE(
       count: deleted.count
     });
   } catch (error) {
-    console.error("Error deleting levels:", error);
+    console.error("❌ Error deleting tournament levels:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

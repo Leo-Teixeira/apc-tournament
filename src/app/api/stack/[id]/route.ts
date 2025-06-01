@@ -166,14 +166,19 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const stackId = parseInt(params.id);
+    const idParam = request.nextUrl.pathname.split("/").pop();
+    if (!idParam) {
+      return NextResponse.json(
+        { error: "Stack ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const stackId = parseInt(idParam);
     if (isNaN(stackId)) {
-      return NextResponse.json({ error: "Invalid stack ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid Stack ID" }, { status: 400 });
     }
 
     const existing = await prisma.stack.findUnique({
@@ -185,9 +190,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Stack not found" }, { status: 404 });
     }
 
-    await prisma.stack.delete({
-      where: { id: stackId }
-    });
+    await prisma.stack.delete({ where: { id: stackId } });
 
     return NextResponse.json({ message: "Stack deleted successfully" });
   } catch (error) {

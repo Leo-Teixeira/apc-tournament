@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { tournamentMocks } from "@/mock";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
@@ -95,17 +95,28 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
+    const idParam = request.nextUrl.pathname.split("/").pop();
+    if (!idParam) {
+      return NextResponse.json(
+        { error: "Tournament ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const tournamentId = BigInt(idParam);
+
     await prisma.tournament.delete({
-      where: { id: BigInt(params.id) }
+      where: { id: tournamentId }
     });
 
-    return NextResponse.json({ message: "Deleted" });
+    return NextResponse.json({ message: "Tournament deleted successfully" });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+    console.error("❌ Error deleting tournament:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

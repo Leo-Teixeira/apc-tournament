@@ -98,12 +98,17 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const levelId = parseInt(params.id);
+    const levelIdParam = request.nextUrl.pathname.split("/").pop();
+    if (!levelIdParam) {
+      return NextResponse.json(
+        { error: "Level ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const levelId = parseInt(levelIdParam);
 
     const deletedLevel = await prisma.tournament_level.findUnique({
       where: { id: levelId }
@@ -117,9 +122,7 @@ export async function DELETE(
     const levelNumber = deletedLevel.level_number;
 
     await prisma.$transaction(async (tx) => {
-      await tx.tournament_level.delete({
-        where: { id: levelId }
-      });
+      await tx.tournament_level.delete({ where: { id: levelId } });
 
       const previousLevel = await tx.tournament_level.findFirst({
         where: {

@@ -84,26 +84,32 @@ export async function POST(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } } // id = stack_id
-) {
-  const stack_id = parseInt(params.id);
-
-  if (isNaN(stack_id)) {
-    console.log("❌ stack_id invalide :", params.id);
-    return NextResponse.json({ error: "Invalid stack_id" }, { status: 400 });
-  }
-
+export async function DELETE(request: NextRequest) {
   try {
-    const body = await req.json();
+    const stackIdParam = request.nextUrl.pathname.split("/").pop();
+    if (!stackIdParam) {
+      return NextResponse.json(
+        { error: "Stack ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const stack_id = parseInt(stackIdParam);
+    if (isNaN(stack_id)) {
+      console.log("❌ Invalid stack_id:", stackIdParam);
+      return NextResponse.json({ error: "Invalid stack_id" }, { status: 400 });
+    }
+
+    const body = await request.json();
     const { chip_id } = body;
 
     if (!chip_id || isNaN(Number(chip_id))) {
       return NextResponse.json({ error: "Invalid chip_id" }, { status: 400 });
     }
 
-    console.log(`🗑 Suppression du lien chip_id ${chip_id} du stack ${stack_id}...`);
+    console.log(
+      `🗑 Suppression du lien chip_id ${chip_id} du stack ${stack_id}...`
+    );
 
     const result = await prisma.stack_chip.delete({
       where: {
@@ -124,4 +130,3 @@ export async function DELETE(
     );
   }
 }
-
