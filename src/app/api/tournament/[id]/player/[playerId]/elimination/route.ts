@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
-import { reequilibrateTables } from "../../../reequilibrate/route";
 import { tournament_tournament_status } from "@/generated/prisma";
 import { extractParamsFromPath } from "@/app/utils/api-params";
+import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
 async function updateQuarterRanking(tournamentId: number) {
   const tournament = await prisma.tournament.findUnique({

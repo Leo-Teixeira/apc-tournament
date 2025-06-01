@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { reequilibrateTables } from "../../../reequilibrate/route";
 import { extractParamsFromPath } from "@/app/utils/api-params";
+import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, [
