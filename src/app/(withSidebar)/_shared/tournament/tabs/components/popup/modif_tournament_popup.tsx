@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { DatePickerComponents } from "@/app/components/form/date_picker";
 import { InputComponents } from "@/app/components/form/input";
 import { TimeInputComponents } from "@/app/components/form/time_input";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { Tournament } from "@/app/types";
 import { toDateTimeLocalString } from "@/app/utils/date";
+import LoadingComponent from "@/app/error/loading/page";
 
 export type TournamentFormBodyProps = {
   tournament?: Tournament;

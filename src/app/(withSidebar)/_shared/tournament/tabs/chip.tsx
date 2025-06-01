@@ -1,7 +1,7 @@
 "use client";
 
+import LoadingComponent from "@/app/error/loading/page";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { Card, Divider } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 

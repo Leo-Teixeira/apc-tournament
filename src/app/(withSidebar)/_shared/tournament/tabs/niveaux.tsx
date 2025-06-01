@@ -4,7 +4,6 @@ import { GenericModal } from "@/app/components/popup";
 import { GenericTable } from "@/app/components/table/generic_table";
 import { blindsColumns } from "@/app/components/table/presets/blinds.config";
 import { ActionDefinition, BlindRow } from "@/app/components/table/table.types";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { mapTournamentLevelsToRow } from "@/app/lib/adapter/tournament_level.adapter";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { TournamentLevel } from "@/app/types";
@@ -17,6 +16,7 @@ import {
   useDeleteTournamentLevel,
   useUpdateTournamentLevel
 } from "@/app/hook/useTournamentLevel";
+import LoadingComponent from "@/app/error/loading/page";
 
 export const NiveauxTabs: React.FC = () => {
   const { levels, tournament } = useTournamentContext();

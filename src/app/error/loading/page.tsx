@@ -1,4 +1,4 @@
-export const LoadingComponent = () => {
+const LoadingComponent = () => {
   return (
     <div className="flex items-center h-screen justify-center text-white">
       <div className="flex flex-col items-center gap-4">
@@ -10,3 +10,5 @@ export const LoadingComponent = () => {
     </div>
   );
 };
+
+export default LoadingComponent;

@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { Chip, TournamentLevel } from "@/app/types";
 import { toLocalDate } from "@/app/utils/date";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
+import LoadingComponent from "@/app/error/loading/page";
 
 export default function Game() {
   const { id } = useParams();

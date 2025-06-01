@@ -9,7 +9,6 @@ import { GenericModal } from "@/app/components/popup";
 import { GenericTable } from "@/app/components/table/generic_table";
 import { seatsColumns } from "@/app/components/table/presets/seats.config";
 import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { mapAssignementsGroupedByTable } from "@/app/lib/adapter/tournament_table.adapter";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { Registration, TableAssignment } from "@/app/types";
@@ -19,6 +18,7 @@ import { useMovePlayer } from "@/app/hook/useMovePlayer";
 import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
 import { useFinishTournament } from "@/app/hook/useUpdateTournament";
 import { useAvailableTables } from "@/app/hook/useAvailableTables";
+import LoadingComponent from "@/app/error/loading/page";
 
 export const TableTabs = () => {
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});

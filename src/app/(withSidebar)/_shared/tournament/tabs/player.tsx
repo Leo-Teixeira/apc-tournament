@@ -15,7 +15,6 @@ import { ActionDefinition, SeatRow } from "@/app/components/table/table.types";
 import { SearchBarComponents } from "@/app/components/form/search_bar";
 import { GenericModal } from "@/app/components/popup";
 import { EliminatePlayerFormBody } from "./components/popup/eliminate_player_popup";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { mapFlatAssignementsToSeatRows } from "@/app/lib/adapter/tournament_table.adapter";
 import { Registration, TableAssignment } from "@/app/types";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
@@ -23,6 +22,7 @@ import { useCancelTournamentPlayer } from "@/app/hook/useCancelTournamentPlayer"
 import { useCancelPlayerElimination } from "@/app/hook/useCancelPlayerElimination";
 import { useFinishTournament } from "@/app/hook/useUpdateTournament";
 import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
+import LoadingComponent from "@/app/error/loading/page";
 
 export const PlayerTabs = () => {
   const [flatRows, setFlatRows] = useState<SeatRow[]>([]);

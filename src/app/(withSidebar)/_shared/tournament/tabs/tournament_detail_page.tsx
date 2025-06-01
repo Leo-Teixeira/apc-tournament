@@ -15,7 +15,6 @@ import { TableTabs } from "./table";
 import { ChipTabs } from "./chip";
 import { useDisclosure } from "@heroui/react";
 import { ModalManager } from "./components/popup_tabs_components";
-import { LoadingComponent } from "@/app/error/loading/page";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 import { GenericModal } from "@/app/components/popup";
 import {
@@ -27,6 +26,7 @@ import { useLaunchTournament } from "@/app/hook/useLaunchTournament";
 import { useAddTableAssignment } from "@/app/hook/useAddTableAssignment";
 import { useResetLevels } from "@/app/hook/useResetLevels";
 import { useGenerateLevels } from "@/app/hook/useGenerateLevel";
+import LoadingComponent from "@/app/error/loading/page";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
