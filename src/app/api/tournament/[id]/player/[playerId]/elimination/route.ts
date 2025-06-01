@@ -59,9 +59,9 @@ async function updateQuarterRanking(tournamentId: number) {
       aggregated_score: entry.score,
       position: i + 1,
       trimestry_ranking: tournament_trimestry,
-      quarter_ranking_year: year
+      quarter_ranking_year: year,
+      tournament_id: relatedIds[0] // ou une autre logique
     }));
-
   await prisma.quarter_ranking.deleteMany({
     where: {
       trimestry_ranking: tournament_trimestry,
