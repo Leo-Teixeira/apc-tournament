@@ -2,15 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
-function parseTimeToDate(time: string): Date {
-  const [hours, minutes, seconds] = time.split(":").map(Number);
-  const base = new Date(0);
-  base.setUTCHours(hours);
-  base.setUTCMinutes(minutes);
-  base.setUTCSeconds(seconds || 0);
-  return base;
-}
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -27,13 +18,24 @@ export async function POST(req: NextRequest) {
       tournament_stack = 1
     } = body;
 
+    // On s'assure que estimate_duration est bien une string de type HH:MM:SS
+    const isValidDuration =
+      typeof estimate_duration === "string" &&
+      /^\d{2}:\d{2}:\d{2}$/.test(estimate_duration);
+    if (!isValidDuration) {
+      return NextResponse.json(
+        { error: "estimate_duration must be a string in HH:MM:SS format" },
+        { status: 400 }
+      );
+    }
+
     const createdTournament = await prisma.tournament.create({
       data: {
         tournament_name,
         tournament_description,
         tournament_start_date: new Date(tournament_start_date),
         tournament_open_date: new Date(tournament_open_date),
-        estimate_duration: parseTimeToDate(estimate_duration),
+        estimate_duration,
         tournament_trimestry,
         tournament_category,
         tournament_status,
