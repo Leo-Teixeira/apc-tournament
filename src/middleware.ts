@@ -56,5 +56,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|error).*)"]
+  matcher: [
+    "/((?!_next/|favicon.ico|error/unauthorized|api/sync-wordpress-tournament|api/public/).*)"
+  ]
 };
