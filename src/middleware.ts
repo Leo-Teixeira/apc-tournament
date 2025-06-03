@@ -56,5 +56,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!unauthorized|_next|favicon.ico).*)"]
+  matcher: ["/((?!_next|favicon.ico|error).*)"]
 };
