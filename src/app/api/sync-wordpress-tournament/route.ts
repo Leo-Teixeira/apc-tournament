@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
+      wordpress_post_id,
       tournament_name,
       tournament_description,
       tournament_start_date,
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
 
     const createdTournament = await prisma.tournament.create({
       data: {
+        wordpress_post_id: wordpress_post_id, // <= ici
         tournament_name,
         tournament_description,
         tournament_start_date: new Date(tournament_start_date),
