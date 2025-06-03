@@ -1436,7 +1436,7 @@ export namespace Prisma {
   ? False
   : T extends Uint8Array
   ? False
-  : T extends bigint
+  : T extends BigInt
   ? False
   : T extends object
   ? True
@@ -11687,16 +11687,19 @@ export namespace Prisma {
 
   export type TournamentAvgAggregateOutputType = {
     id: number | null
+    wordpress_post_id: number | null
     tournament_stack: number | null
   }
 
   export type TournamentSumAggregateOutputType = {
     id: bigint | null
+    wordpress_post_id: bigint | null
     tournament_stack: number | null
   }
 
   export type TournamentMinAggregateOutputType = {
     id: bigint | null
+    wordpress_post_id: bigint | null
     tournament_name: string | null
     tournament_description: string | null
     tournament_start_date: Date | null
@@ -11712,6 +11715,7 @@ export namespace Prisma {
 
   export type TournamentMaxAggregateOutputType = {
     id: bigint | null
+    wordpress_post_id: bigint | null
     tournament_name: string | null
     tournament_description: string | null
     tournament_start_date: Date | null
@@ -11727,6 +11731,7 @@ export namespace Prisma {
 
   export type TournamentCountAggregateOutputType = {
     id: number
+    wordpress_post_id: number
     tournament_name: number
     tournament_description: number
     tournament_start_date: number
@@ -11744,16 +11749,19 @@ export namespace Prisma {
 
   export type TournamentAvgAggregateInputType = {
     id?: true
+    wordpress_post_id?: true
     tournament_stack?: true
   }
 
   export type TournamentSumAggregateInputType = {
     id?: true
+    wordpress_post_id?: true
     tournament_stack?: true
   }
 
   export type TournamentMinAggregateInputType = {
     id?: true
+    wordpress_post_id?: true
     tournament_name?: true
     tournament_description?: true
     tournament_start_date?: true
@@ -11769,6 +11777,7 @@ export namespace Prisma {
 
   export type TournamentMaxAggregateInputType = {
     id?: true
+    wordpress_post_id?: true
     tournament_name?: true
     tournament_description?: true
     tournament_start_date?: true
@@ -11784,6 +11793,7 @@ export namespace Prisma {
 
   export type TournamentCountAggregateInputType = {
     id?: true
+    wordpress_post_id?: true
     tournament_name?: true
     tournament_description?: true
     tournament_start_date?: true
@@ -11886,6 +11896,7 @@ export namespace Prisma {
 
   export type TournamentGroupByOutputType = {
     id: bigint
+    wordpress_post_id: bigint
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date
@@ -11920,6 +11931,7 @@ export namespace Prisma {
 
   export type tournamentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    wordpress_post_id?: boolean
     tournament_name?: boolean
     tournament_description?: boolean
     tournament_start_date?: boolean
@@ -11944,6 +11956,7 @@ export namespace Prisma {
 
   export type tournamentSelectScalar = {
     id?: boolean
+    wordpress_post_id?: boolean
     tournament_name?: boolean
     tournament_description?: boolean
     tournament_start_date?: boolean
@@ -11957,7 +11970,7 @@ export namespace Prisma {
     tournament_pause_date?: boolean
   }
 
-  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack" | "tournament_pause" | "tournament_pause_date", ExtArgs["result"]["tournament"]>
+  export type tournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "wordpress_post_id" | "tournament_name" | "tournament_description" | "tournament_start_date" | "tournament_open_date" | "tournament_trimestry" | "tournament_category" | "tournament_status" | "estimate_duration" | "tournament_stack" | "tournament_pause" | "tournament_pause_date", ExtArgs["result"]["tournament"]>
   export type tournamentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | tournament$quarter_rankingArgs<ExtArgs>
     registration?: boolean | tournament$registrationArgs<ExtArgs>
@@ -11980,6 +11993,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      wordpress_post_id: bigint
       tournament_name: string
       tournament_description: string
       tournament_start_date: Date
@@ -12367,6 +12381,7 @@ export namespace Prisma {
    */
   interface tournamentFieldRefs {
     readonly id: FieldRef<"tournament", 'BigInt'>
+    readonly wordpress_post_id: FieldRef<"tournament", 'BigInt'>
     readonly tournament_name: FieldRef<"tournament", 'String'>
     readonly tournament_description: FieldRef<"tournament", 'String'>
     readonly tournament_start_date: FieldRef<"tournament", 'DateTime'>
@@ -71923,6 +71938,7 @@ export namespace Prisma {
 
   export const TournamentScalarFieldEnum: {
     id: 'id',
+    wordpress_post_id: 'wordpress_post_id',
     tournament_name: 'tournament_name',
     tournament_description: 'tournament_description',
     tournament_start_date: 'tournament_start_date',
@@ -73819,6 +73835,7 @@ export namespace Prisma {
     OR?: tournamentWhereInput[]
     NOT?: tournamentWhereInput | tournamentWhereInput[]
     id?: BigIntFilter<"tournament"> | bigint | number
+    wordpress_post_id?: BigIntFilter<"tournament"> | bigint | number
     tournament_name?: StringFilter<"tournament"> | string
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
@@ -73840,6 +73857,7 @@ export namespace Prisma {
 
   export type tournamentOrderByWithRelationInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_name?: SortOrder
     tournament_description?: SortOrder
     tournament_start_date?: SortOrder
@@ -73865,6 +73883,7 @@ export namespace Prisma {
     AND?: tournamentWhereInput | tournamentWhereInput[]
     OR?: tournamentWhereInput[]
     NOT?: tournamentWhereInput | tournamentWhereInput[]
+    wordpress_post_id?: BigIntFilter<"tournament"> | bigint | number
     tournament_name?: StringFilter<"tournament"> | string
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
@@ -73886,6 +73905,7 @@ export namespace Prisma {
 
   export type tournamentOrderByWithAggregationInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_name?: SortOrder
     tournament_description?: SortOrder
     tournament_start_date?: SortOrder
@@ -73909,6 +73929,7 @@ export namespace Prisma {
     OR?: tournamentScalarWhereWithAggregatesInput[]
     NOT?: tournamentScalarWhereWithAggregatesInput | tournamentScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"tournament"> | bigint | number
+    wordpress_post_id?: BigIntWithAggregatesFilter<"tournament"> | bigint | number
     tournament_name?: StringWithAggregatesFilter<"tournament"> | string
     tournament_description?: StringWithAggregatesFilter<"tournament"> | string
     tournament_start_date?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
@@ -78822,6 +78843,7 @@ export namespace Prisma {
 
   export type tournamentCreateInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -78842,6 +78864,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -78862,6 +78885,7 @@ export namespace Prisma {
 
   export type tournamentUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78882,6 +78906,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78902,6 +78927,7 @@ export namespace Prisma {
 
   export type tournamentCreateManyInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -78917,6 +78943,7 @@ export namespace Prisma {
 
   export type tournamentUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78931,6 +78958,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -84613,6 +84641,7 @@ export namespace Prisma {
 
   export type tournamentCountOrderByAggregateInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_name?: SortOrder
     tournament_description?: SortOrder
     tournament_start_date?: SortOrder
@@ -84628,11 +84657,13 @@ export namespace Prisma {
 
   export type tournamentAvgOrderByAggregateInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_stack?: SortOrder
   }
 
   export type tournamentMaxOrderByAggregateInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_name?: SortOrder
     tournament_description?: SortOrder
     tournament_start_date?: SortOrder
@@ -84648,6 +84679,7 @@ export namespace Prisma {
 
   export type tournamentMinOrderByAggregateInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_name?: SortOrder
     tournament_description?: SortOrder
     tournament_start_date?: SortOrder
@@ -84663,6 +84695,7 @@ export namespace Prisma {
 
   export type tournamentSumOrderByAggregateInput = {
     id?: SortOrder
+    wordpress_post_id?: SortOrder
     tournament_stack?: SortOrder
   }
 
@@ -89757,6 +89790,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutQuarter_rankingInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -89776,6 +89810,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutQuarter_rankingInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -89854,6 +89889,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutQuarter_rankingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89873,6 +89909,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutQuarter_rankingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89929,6 +89966,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutRegistrationInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -89948,6 +89986,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutRegistrationInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90102,6 +90141,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutRegistrationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90121,6 +90161,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutRegistrationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90229,6 +90270,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutStackInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90248,6 +90290,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutStackInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90312,6 +90355,7 @@ export namespace Prisma {
     OR?: tournamentScalarWhereInput[]
     NOT?: tournamentScalarWhereInput | tournamentScalarWhereInput[]
     id?: BigIntFilter<"tournament"> | bigint | number
+    wordpress_post_id?: BigIntFilter<"tournament"> | bigint | number
     tournament_name?: StringFilter<"tournament"> | string
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
@@ -90795,6 +90839,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutTournament_levelInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90814,6 +90859,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutTournament_levelInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90849,6 +90895,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutTournament_levelInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90868,6 +90915,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutTournament_levelInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90912,6 +90960,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutTournament_rankingInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90931,6 +90980,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutTournament_rankingInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -90997,6 +91047,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutTournament_rankingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91016,6 +91067,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutTournament_rankingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91061,6 +91113,7 @@ export namespace Prisma {
 
   export type tournamentCreateWithoutTournament_tableInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -91080,6 +91133,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedCreateWithoutTournament_tableInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -91131,6 +91185,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutTournament_tableInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91150,6 +91205,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutTournament_tableInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91578,6 +91634,7 @@ export namespace Prisma {
 
   export type tournamentCreateManyStackInput = {
     id?: bigint | number
+    wordpress_post_id: bigint | number
     tournament_name: string
     tournament_description: string
     tournament_start_date: Date | string
@@ -91604,6 +91661,7 @@ export namespace Prisma {
 
   export type tournamentUpdateWithoutStackInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91623,6 +91681,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateWithoutStackInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91642,6 +91701,7 @@ export namespace Prisma {
 
   export type tournamentUncheckedUpdateManyWithoutStackInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wordpress_post_id?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_name?: StringFieldUpdateOperationsInput | string
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -161,6 +161,7 @@ exports.Prisma.Table_assignmentScalarFieldEnum = {
 
 exports.Prisma.TournamentScalarFieldEnum = {
   id: 'id',
+  wordpress_post_id: 'wordpress_post_id',
   tournament_name: 'tournament_name',
   tournament_description: 'tournament_description',
   tournament_start_date: 'tournament_start_date',

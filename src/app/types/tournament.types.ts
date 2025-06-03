@@ -7,6 +7,7 @@ import { TournamentTable } from "./tournament_table.types";
 
 export type Tournament = {
   id: number;
+  wordpress_post_id: number;
   tournament_name: string;
   tournament_description: string;
   tournament_start_date: Date;
