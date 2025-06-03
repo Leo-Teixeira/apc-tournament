@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
+function parseTimeToDateObject(time: string): Date {
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+  const now = new Date();
+  now.setHours(hours);
+  now.setMinutes(minutes);
+  now.setSeconds(seconds || 0);
+  now.setMilliseconds(0);
+  return now;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -13,7 +23,7 @@ export async function POST(req: NextRequest) {
       tournament_open_date,
       tournament_trimestry,
       tournament_category,
-      estimate_duration, // <-- directement sous forme "HH:MM:SS"
+      estimate_duration,
       tournament_status = "in_coming",
       tournament_stack = 1
     } = body;
@@ -24,7 +34,7 @@ export async function POST(req: NextRequest) {
         tournament_description,
         tournament_start_date: new Date(tournament_start_date),
         tournament_open_date: new Date(tournament_open_date),
-        estimate_duration, // <-- directement
+        estimate_duration: parseTimeToDateObject(estimate_duration),
         tournament_trimestry,
         tournament_category,
         tournament_status,
