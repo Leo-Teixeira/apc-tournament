@@ -13,21 +13,10 @@ export async function POST(req: NextRequest) {
       tournament_open_date,
       tournament_trimestry,
       tournament_category,
-      estimate_duration,
+      estimate_duration, // <-- directement sous forme "HH:MM:SS"
       tournament_status = "in_coming",
       tournament_stack = 1
     } = body;
-
-    // On s'assure que estimate_duration est bien une string de type HH:MM:SS
-    const isValidDuration =
-      typeof estimate_duration === "string" &&
-      /^\d{2}:\d{2}:\d{2}$/.test(estimate_duration);
-    if (!isValidDuration) {
-      return NextResponse.json(
-        { error: "estimate_duration must be a string in HH:MM:SS format" },
-        { status: 400 }
-      );
-    }
 
     const createdTournament = await prisma.tournament.create({
       data: {
@@ -35,7 +24,7 @@ export async function POST(req: NextRequest) {
         tournament_description,
         tournament_start_date: new Date(tournament_start_date),
         tournament_open_date: new Date(tournament_open_date),
-        estimate_duration,
+        estimate_duration, // <-- directement
         tournament_trimestry,
         tournament_category,
         tournament_status,
