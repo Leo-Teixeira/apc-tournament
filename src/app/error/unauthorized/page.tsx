@@ -4,7 +4,7 @@ export default function UnauthorizedPage() {
       <h1 className="text-2xl font-bold text-red-500">Accès refusé</h1>
       <p>Vous devez être administrateur pour accéder à cette application.</p>
       <a
-        href="https://ton-site-wordpress.com"
+        href="https://aqua-bat-544144.hostingersite.com"
         className="mt-4 underline text-blue-500">
         Revenir au site
       </a>
