@@ -84,7 +84,7 @@ export default function Sidebar() {
 
         <div className="p-4">
           <Link
-            href="/"
+            href="https://aqua-bat-544144.hostingersite.com/"
             className="flex justify-between items-center bg-white/5 rounded p-2 hover:bg-primary_brand-500">
             {!collapsed && (
               <span className="text-s font-satoshiRegular leading-4">
