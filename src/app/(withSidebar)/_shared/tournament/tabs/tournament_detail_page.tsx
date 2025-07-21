@@ -36,6 +36,7 @@ export default function TournamentDetailPage() {
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
+  const [isShowTableModalOpen, setIsShowTableModalOpen] = useState(false);
   const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
     useState(false);
   const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] =
@@ -121,6 +122,22 @@ export default function TournamentDetailPage() {
             <ButtonComponents
               text="Lancer le tournoi"
               onClick={() => setIsLaunchModalOpen(true)}
+              buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+              textClassName="text-primary_brand-50"
+            />
+          )}
+          {tournament.tournament_table?.length != 0 && selectedTab == "3" && (
+            <ButtonComponents
+              text="Tables des joueurs"
+              onClick={() => window.open(`/showTableFullScreen/${id}`)}
+              icon={
+                <HugeiconsIcon
+                  icon={LinkSquare02Icon}
+                  size={20}
+                  className="shrink-0"
+                  color="white"
+                />
+              }
               buttonClassName="bg-primary_background hover:bg-primary_hover_background"
               textClassName="text-primary_brand-50"
             />
