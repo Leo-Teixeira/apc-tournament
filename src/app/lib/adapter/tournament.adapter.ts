@@ -25,8 +25,8 @@ export const mapTournamentsToRow = (
       trimestry: parseInt(
         tournament.tournament_trimestry.replace("T", "") || "0"
       ),
-      tournament_date: formatDate(tournament.tournament_start_date),
-      open_tournament_date: formatDate(tournament.tournament_open_date),
+      tournament_date: new Date(tournament.tournament_start_date).toISOString(),
+      open_tournament_date: new Date(tournament.tournament_open_date).toISOString(),
       status: tournament.tournament_status,
       action: ""
     };
@@ -53,8 +53,8 @@ export const mapTournamentToRow = (
     trimestry: parseInt(
       tournament.tournament_trimestry.replace("T", "") || "0"
     ),
-    tournament_date: formatDate(tournament.tournament_start_date),
-    open_tournament_date: formatDate(openDate),
+    tournament_date: new Date(tournament.tournament_start_date).toISOString(),
+    open_tournament_date: openDate.toISOString(),
     status: tournament.tournament_status,
     action: ""
   };

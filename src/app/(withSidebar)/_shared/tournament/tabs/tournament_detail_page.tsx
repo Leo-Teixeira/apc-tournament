@@ -2,11 +2,11 @@
 
 import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
-import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
+import { LinkSquare02Icon, ArrowLeft01Icon, Home01Icon, Table01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { STRINGS } from "@/app/constants/string";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ButtonComponents } from "@/app/components/button";
 import { NiveauxTabs } from "./niveaux";
 import { ButtonTabsComponents } from "./components/button_tabs_components";
@@ -30,6 +30,7 @@ import LoadingComponent from "@/app/error/loading/page";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const { tournament, levels, registration, classement, stacks } =
     useTournamentContext();
   const [isDisabled, setIsDisabled] = useState(false);
@@ -98,23 +99,40 @@ export default function TournamentDetailPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-          <h1 className="font-satoshiBlack text-l sm:text-xl4">
-            {tournament.tournament_name}
-          </h1>
-          <Chip
-            className={`font-satoshiRegular text-xs sm:text-s ${
-              tournament.tournament_status === "finish"
-                ? "bg-red-950"
-                : tournament.tournament_status === "start"
-                ? "bg-purple-950"
-                : tournament.tournament_pause
-                ? "bg-danger-500"
-                : "bg-green-950"
-            }`}>
-            {tournament.tournament_pause
-              ? "En pause"
-              : STRINGS.status[tournament.tournament_status]}
-          </Chip>
+          <div className="flex items-center gap-3">
+            {/* Bouton retour - visible uniquement en mobile */}
+            <button
+              onClick={() => router.back()}
+              className="md:hidden flex items-center gap-2 p-0 m-0 bg-transparent border-none shadow-none focus:outline-none active:outline-none"
+              aria-label="Retour"
+              style={{ color: 'white', fontWeight: 400, fontSize: '18px', lineHeight: '24px' }}
+            >
+              <HugeiconsIcon
+                icon={ArrowLeft01Icon}
+                size={20}
+                className="text-white"
+              />
+              <span className="text-white font-satoshiRegular text-base">Menu principal</span>
+            </button>
+          </div>
+          {/* Nom du tournoi + status en mobile, juste en dessous du bouton retour */}
+          <div className="md:hidden w-full flex flex-row justify-between items-center mt-3">
+            <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">{tournament.tournament_name}</h1>
+            <Chip
+              className={`font-satoshiRegular text-xs ml-2 ${
+                tournament.tournament_status === "finish"
+                  ? "bg-red-950"
+                  : tournament.tournament_status === "start"
+                  ? "bg-purple-950"
+                  : tournament.tournament_pause
+                  ? "bg-danger-500"
+                  : "bg-green-950"
+              }`}>
+              {tournament.tournament_pause
+                ? "En pause"
+                : STRINGS.status[tournament.tournament_status]}
+            </Chip>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-end">
@@ -175,7 +193,8 @@ export default function TournamentDetailPage() {
       </div>
 
       <div className="flex w-full flex-col gap-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        {/* Tabs desktop */}
+        <div className="hidden md:flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <Tabs
             isDisabled={isDisabled}
             className="flex flex-wrap items-center gap-2"
@@ -208,8 +227,29 @@ export default function TournamentDetailPage() {
             />
           )}
         </div>
-
-        <div>{tabs.find((tab) => tab.id === selectedTab)?.content}</div>
+        {/* Bottom bar mobile */}
+        <div className="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pb-4 z-50 gap-2 bg-transparent">
+          {[
+            { id: "0", label: "Général", icon: Home01Icon },
+            { id: "1", label: "Niveaux", icon: Home01Icon },
+            { id: "2", label: "Joueurs", icon: Home01Icon },
+            { id: "3", label: "Tables", icon: Table01Icon }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedTab(tab.id)}
+              className={`flex flex-col items-center justify-center px-6 py-2 rounded-xl gap-1 transition-colors ${selectedTab === tab.id ? "bg-ligth/10" : "bg-transparent"}`}
+              style={{ minWidth: 64 }}
+            >
+              <HugeiconsIcon icon={tab.icon} size={24} className="mb-1 text-white" />
+              <span className={`text-xs ${selectedTab === tab.id ? "text-white" : "text-neutral-400"}`}>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+        {/* Contenu de l'onglet sélectionné */}
+        <div className="pb-20 md:pb-0">{/* pb-20 pour ne pas cacher le contenu sous la bottom bar mobile */}
+          {tabs.find((tab) => tab.id === selectedTab)?.content}
+        </div>
       </div>
 
       <ModalManager

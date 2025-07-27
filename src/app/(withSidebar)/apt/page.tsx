@@ -22,6 +22,8 @@ import { Tournament } from "@/app/types";
 import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
 import { useDeleteTournament } from "@/app/hook/useDeleteTournament";
 import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
+import TabBar from "../../components/tabBar";
+import { TournamentMobileCards } from "../../components/tournament-mobile-cards";
 
 export default function APTHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
@@ -85,15 +87,30 @@ export default function APTHome() {
     return actions;
   };
 
-  return (
-    <div className="flex flex-col gap-6 w-full">
-      <h1 className="font-satoshiBold text-2xl sm:text-4xl">Championnat APT</h1>
+  const handleViewTournament = (id: string) => {
+    window.open(`/apt/${id}`, "_self");
+  };
 
+  return (
+    <div className="flex flex-col gap-2 md:gap-6  w-full">
+      {/* TabBar mobile en haut, sert de titre/navigation */}
+      <div className="block md:hidden mb-2">
+        <TabBar />
+      </div>
       {isLoading ? (
         <div>Chargement...</div>
       ) : (
         <>
-          <div className="flex flex-col gap-3">
+          {/* Version mobile avec cartes */}
+          <div className="block md:hidden">
+            <TournamentMobileCards 
+              tournaments={tournamentRows}
+              onViewTournament={handleViewTournament}
+            />
+          </div>
+
+          {/* Version desktop avec tableau */}
+          <div className="hidden md:flex flex-col gap-3">
             <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
               Tournois
             </h2>
@@ -110,7 +127,8 @@ export default function APTHome() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
+          {/* Section classement - cachée en mobile pour l'instant */}
+          <div className="hidden md:flex flex-col gap-3">
             <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
               Classement
             </h2>

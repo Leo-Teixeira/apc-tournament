@@ -10,6 +10,7 @@ import { InputComponents } from "../../components/form/input";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { useCreateStack, useDeleteStack, useStacks } from "@/app/hook/useStack";
+import TabBar from "../../components/tabBar";
 
 export default function StackPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,10 +58,13 @@ export default function StackPage() {
 
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-10">
+      {/* TabBar mobile en haut, sert de titre/navigation */}
+      <div className="block md:hidden mb-2">
+        <TabBar />
+      </div>
+      {/* Ancien titre supprimé */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <p className="font-satoshiBlack text-3xl sm:text-4xl text-primary_brand-50">
-          Stacks
-        </p>
+        {/* Ancien <p> titre supprimé */}
         <ButtonComponents
           text="Nouveau Stack"
           buttonClassName="bg-primary_brand-500 w-full sm:w-auto"

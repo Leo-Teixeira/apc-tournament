@@ -52,3 +52,19 @@ export const formatHourFR = (value: string | Date) => {
   }).format(date);
   return hours;
 };
+
+export function formatDateFr(dateString: string): string {
+  const date = new Date(dateString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Europe/Paris"
+  };
+  const formatted = date.toLocaleDateString("fr-FR", options);
+  return formatted.replace(":", "h");
+}

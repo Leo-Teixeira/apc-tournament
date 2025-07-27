@@ -39,6 +39,23 @@ export const STRINGS = {
       { label: "Mallettes", icon: Briefcase09Icon, href: "/malette" }
     ]
   },
+  sidebar_mobile: {
+    menu_item: [
+      {
+        label: "Championnat APT",
+        icon: Cards01Icon,
+        href: "/apt"
+      },
+      {
+        label: "Championnat Sit&Go",
+        icon: Cards02Icon,
+        href: "/sitandgo"
+      },
+      { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
+      { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
+      { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" }
+    ]
+  },
   apt: {
     title: "Championnat APT",
     trimestry: {
