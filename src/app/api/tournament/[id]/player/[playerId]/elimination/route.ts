@@ -181,6 +181,18 @@ export async function PUT(req: NextRequest) {
         (r) => totalRegistrations >= r.min && totalRegistrations <= r.max
       );
       score = range?.scores[positionFromTop - 1] ?? 0;
+    } else if (tournamentData?.tournament_category === "SitAndGo") {
+      const sitAndGoScores = {
+        5: [5, 2, 0, 0, 0],
+        6: [6, 3, 0, 0, 0, 0],
+        7: [7, 4, 2, 0, 0, 0, 0],
+        8: [8, 5, 3, 0, 0, 0, 0, 0],
+        9: [9, 6, 4, 2, 0, 0, 0, 0, 0]
+      };
+
+      const positionFromTop = totalRegistrations - eliminatedCount;
+      const scores = sitAndGoScores[totalRegistrations as keyof typeof sitAndGoScores];
+      score = scores ? scores[positionFromTop - 1] ?? 0 : 0;
     }
 
     await prisma.tournament_ranking.create({

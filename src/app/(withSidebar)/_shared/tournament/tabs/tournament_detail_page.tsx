@@ -100,7 +100,7 @@ export default function TournamentDetailPage() {
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-3">
-            {/* Bouton retour - visible uniquement en mobile */}
+            <h1 className="font-satoshiBlack text-xl4 max-sm:hidden">{tournament.tournament_name}</h1>
             <button
               onClick={() => router.back()}
               className="md:hidden flex items-center gap-2 p-0 m-0 bg-transparent border-none shadow-none focus:outline-none active:outline-none"
@@ -115,7 +115,6 @@ export default function TournamentDetailPage() {
               <span className="text-white font-satoshiRegular text-base">Menu principal</span>
             </button>
           </div>
-          {/* Nom du tournoi + status en mobile, juste en dessous du bouton retour */}
           <div className="md:hidden w-full flex flex-row justify-between items-center mt-3">
             <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">{tournament.tournament_name}</h1>
             <Chip
@@ -247,7 +246,7 @@ export default function TournamentDetailPage() {
           ))}
         </div>
         {/* Contenu de l'onglet sélectionné */}
-        <div className="pb-20 md:pb-0">{/* pb-20 pour ne pas cacher le contenu sous la bottom bar mobile */}
+        <div className="pb-20 md:pb-0">
           {tabs.find((tab) => tab.id === selectedTab)?.content}
         </div>
       </div>
