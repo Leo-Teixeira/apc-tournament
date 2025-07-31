@@ -9,8 +9,19 @@ import { TournamentProvider, useTournamentContext } from "@/app/providers/Tourna
 import LoadingComponent from "@/app/error/loading/page";
 import { SeatRow } from "@/app/components/table/table.types";
 
-export default async function ShowTableFullScreenPage({ params }: { params: { id: string } }) {
-  const { id } = await params;
+export default function ShowTableFullScreenPage({ params }: { params: Promise<{ id: string }> }) {
+  const [id, setId] = useState<string>("");
+
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setId(resolvedParams.id);
+    });
+  }, [params]);
+
+  if (!id) {
+    return <LoadingComponent />;
+  }
+
   return (
     <TournamentProvider tournamentId={id}>
       <ShowTableFullScreen />
@@ -41,7 +52,7 @@ function ShowTableFullScreen() {
                 TABLE {tableNumber}
               </h2>
               <div className="w-full overflow-x-auto">
-                <GenericTable<SeatRow>
+                <GenericTable
                   columns={seatsColumns}
                   items={rows}
                   ariaLabel={`Table ${tableNumber}`}
