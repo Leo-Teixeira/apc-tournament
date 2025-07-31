@@ -18,8 +18,8 @@ export const mapFlatAssignementsToSeatRows = (
         const user = r.wp_users;
         return {
           id: r.id,
-          avatarName: user?.pseudo_winamax ?? "Inconnu",
-          avatar: user?.photo_url ?? "",
+          avatarName: user?.pseudo_winamax || user?.display_name || "Inconnu",
+          avatar: user?.photo_url || "/images/ellipseAvatar.png",
           seat: "Non assigné",
           action: "",
           eliminated: false
@@ -33,12 +33,24 @@ export const mapFlatAssignementsToSeatRows = (
       const user = registration?.wp_users;
       const table = a.tournament_table;
 
+      // Amélioration : Meilleure gestion des noms d'utilisateur
+      let avatarName = "Inconnu";
+      if (user?.pseudo_winamax) {
+        avatarName = user.pseudo_winamax;
+      } else if (user?.display_name) {
+        avatarName = user.display_name;
+      } else if (registration?.wp_users?.pseudo_winamax) {
+        avatarName = registration.wp_users.pseudo_winamax;
+      } else if (registration?.wp_users?.display_name) {
+        avatarName = registration.wp_users.display_name;
+      }
+
       return {
         id: a.id,
-        avatarName: user?.pseudo_winamax ?? "Inconnu",
-        avatar: user?.photo_url ?? "",
+        avatarName: avatarName,
+        avatar: user?.photo_url || registration?.wp_users?.photo_url || "/images/ellipseAvatar.png",
         seat: a.eliminated
-          ? "Éliminer"
+          ? "Éliminé"
           : table
           ? `Table ${table.table_number}, siège ${a.table_seat_number}`
           : "Table inconnue",
@@ -65,10 +77,22 @@ export const mapAssignementsGroupedByTable = (
     const table = a.tournament_table;
     const tableNumber = table?.table_number ?? "0";
 
+    // Amélioration : Meilleure gestion des noms d'utilisateur
+    let avatarName = "Inconnu";
+    if (user?.pseudo_winamax) {
+      avatarName = user.pseudo_winamax;
+    } else if (user?.display_name) {
+      avatarName = user.display_name;
+    } else if (registration?.wp_users?.pseudo_winamax) {
+      avatarName = registration.wp_users.pseudo_winamax;
+    } else if (registration?.wp_users?.display_name) {
+      avatarName = registration.wp_users.display_name;
+    }
+
     const seatRow: SeatRow = {
       id: a.id,
-      avatarName: user?.pseudo_winamax ?? "Inconnu",
-      avatar: user?.photo_url ?? "",
+      avatarName: avatarName,
+      avatar: user?.photo_url || registration?.wp_users?.photo_url || "/images/ellipseAvatar.png",
       seat: `Siège ${a.table_seat_number}`,
       action: "",
       eliminated: false

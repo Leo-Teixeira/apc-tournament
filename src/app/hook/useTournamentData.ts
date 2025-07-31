@@ -20,34 +20,36 @@ export const useTournamentData = (tournamentId: string) => {
       assignements: TableAssignment[];
       stacks: Stack[];
     }> => {
-      const [resDetails, resLevels, resTable, resStack] = await Promise.all([
-        fetch(`/api/tournament/${tournamentId}/details`),
-        fetch(`/api/tournament/${tournamentId}/level`),
-        fetch(`/api/tournament/${tournamentId}/table_assignement`),
-        fetch(`/api/stack`)
-      ]);
-
-      if (!resDetails.ok || !resLevels.ok || !resTable.ok || !resStack.ok) {
+      // Une seule requête optimisée au lieu de 4
+      const res = await fetch(`/api/tournament/${tournamentId}/details`);
+      
+      if (!res.ok) {
         throw new Error("Erreur lors du chargement des données");
       }
 
-      const detailData = await resDetails.json();
-      const levelData = await resLevels.json();
-      const tableData = await resTable.json();
-      const stackData = await resStack.json();
+      const data = await res.json();
 
       return {
-        tournament: detailData.tournament,
-        registrations: detailData.registrations,
-        classement: detailData.classement,
-        levels: levelData,
-        assignements: tableData,
-        stacks: stackData
+        tournament: data.tournament,
+        registrations: data.registrations,
+        classement: data.classement,
+        levels: data.tournament.tournament_level || [],
+        assignements: data.tournament.registration?.flatMap(r => r.table_assignment) || [],
+        stacks: data.stacks
       };
     },
-    staleTime: 1000 * 60 * 5,
+    // Cache plus long pour les données de tournoi
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
     refetchOnWindowFocus: false,
-    retry: 1
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 1,
+    retryDelay: 2000,
+    // Optimisations de performance
+    structuralSharing: true,
+    // Suspense pour le chargement
+    suspense: false
   });
 
   const statusQuery = useQuery({
@@ -58,11 +60,17 @@ export const useTournamentData = (tournamentId: string) => {
       const data = await res.json();
       return { tournament: data.tournament };
     },
-    enabled: false
+    enabled: false,
+    staleTime: 1000 * 60 * 2, // 2 minutes pour le status
+    gcTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1
   });
 
   return {
     data: fullQuery.data,
+    isLoading: fullQuery.isLoading,
+    isError: fullQuery.isError,
+    error: fullQuery.error,
     refetch: fullQuery.refetch,
     refetchStatusOnly: statusQuery.refetch
   };

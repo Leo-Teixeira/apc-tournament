@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useDisclosure } from "@heroui/react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -23,13 +23,12 @@ import { useCancelPlayerElimination } from "@/app/hook/useCancelPlayerEliminatio
 import { useFinishTournament } from "@/app/hook/useUpdateTournament";
 import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
 import LoadingComponent from "@/app/error/loading/page";
+import React from "react";
 
-export const PlayerTabs = () => {
+export const PlayerTabs = React.memo(() => {
   const [flatRows, setFlatRows] = useState<SeatRow[]>([]);
   const [search, setSearch] = useState("");
-  const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(
-    null
-  );
+  const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(null);
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelKillModal, setIsCancelKillModal] = useState(false);
@@ -43,13 +42,26 @@ export const PlayerTabs = () => {
   const eliminatePlayerMutation = useEliminatePlayer();
   const finishTournamentMutation = useFinishTournament();
 
-  useEffect(() => {
-    if (!tournament?.id) return;
-    setFlatRows(mapFlatAssignementsToSeatRows(assignements, registration));
-    setIsLoading(false);
+  // Optimisation : Mémoisation des données transformées
+  const transformedRows = useMemo(() => {
+    if (!tournament?.id) return [];
+    return mapFlatAssignementsToSeatRows(assignements, registration);
   }, [tournament?.id, assignements, registration]);
 
-  const getConditionalActions = (
+  useEffect(() => {
+    setFlatRows(transformedRows);
+    setIsLoading(false);
+  }, [transformedRows]);
+
+  // Optimisation : Filtrage des données avec useMemo
+  const filteredRows = useMemo(() => {
+    if (!search) return flatRows;
+    return flatRows.filter((row) =>
+      row.avatarName?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [flatRows, search]);
+
+  const getConditionalActions = useCallback((
     item: SeatRow
   ): ActionDefinition<SeatRow>[] => {
     if (tournament?.tournament_status !== "start") {
@@ -99,7 +111,8 @@ export const PlayerTabs = () => {
               ),
               onClick: () => {
                 const assignment = assignements.find((a) => a.id === item.id);
-                if (!assignment?.tournament_table?.table_number) return;
+                if (!assignment) return;
+
                 setSelectedPlayer(assignment);
                 setIsCancelKillModal(true);
               }
@@ -141,9 +154,9 @@ export const PlayerTabs = () => {
         color: "danger"
       }
     ];
-  };
+  }, [tournament?.tournament_status, assignements, onOpen, registration, tournament?.id]);
 
-  const handleConfirmElimination = async (killerId: number) => {
+  const handleConfirmElimination = useCallback(async (killerId: number) => {
     if (!selectedPlayer || !tournament) return;
 
     try {
@@ -168,25 +181,24 @@ export const PlayerTabs = () => {
       console.error("Erreur élimination joueur:", error);
       alert("Une erreur est survenue lors de l'élimination du joueur.");
     }
-  };
+  }, [selectedPlayer, tournament, eliminatePlayerMutation, assignements, finishTournamentMutation, onClose]);
+
+  if (isLoading) return <LoadingComponent />;
 
   return (
     <div className="flex flex-col gap-6">
-      {isLoading && <LoadingComponent />}
-      <>
-        <div className="px-1 sm:px-0">
-          <SearchBarComponents
-            label="Pseudo"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="w-full overflow-x-auto">
-          <GenericTable<SeatRow>
+      <div className="px-1 sm:px-0">
+        <SearchBarComponents
+          label="Pseudo"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      <div className="w-full overflow-x-auto">
+        <div className="max-w-4xl mx-auto">
+          <GenericTable
             columns={seatsColumns}
-            items={flatRows.filter((row) =>
-              row.avatarName?.toLowerCase().startsWith(search.toLowerCase())
-            )}
+            items={filteredRows}
             width={false}
             ariaLabel="Joueurs"
             showActions
@@ -196,7 +208,7 @@ export const PlayerTabs = () => {
             enableSorting={false}
           />
         </div>
-      </>
+      </div>
 
       <GenericModal
         isOpen={isOpen}
@@ -234,7 +246,7 @@ export const PlayerTabs = () => {
             setIsCancelKillModal(false);
           } catch (error) {
             console.error("Erreur annulation élimination:", error);
-            alert("Une erreur est survenue lors de l’annulation.");
+            alert("Une erreur est survenue lors de l'annulation.");
           }
         }}>
         <p>
@@ -272,4 +284,6 @@ export const PlayerTabs = () => {
       </GenericModal>
     </div>
   );
-};
+});
+
+PlayerTabs.displayName = 'PlayerTabs';

@@ -19,7 +19,7 @@ import {
   ViewIcon
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { getKeyValue } from "@heroui/react";
 import { STRINGS } from "@/app/constants/string";
 import { ActionDefinition } from "./table.types";
@@ -44,7 +44,8 @@ export type GenericTableProps<T extends { id: string | number }> = {
   useEliminationStatus?: boolean;
 };
 
-export function GenericTable<
+// Composant optimisé avec React.memo
+export const GenericTable = React.memo(<
   T extends { id: string | number; eliminated?: boolean }
 >({
   columns,
@@ -57,20 +58,24 @@ export function GenericTable<
   getDetailUrl,
   actions,
   useEliminationStatus = false
-}: GenericTableProps<T>) {
-  const visibleColumns = showActions
-    ? columns
-    : columns.filter((col) => col.uid !== "action");
+}: GenericTableProps<T>) => {
+  const visibleColumns = useMemo(() => 
+    showActions
+      ? columns
+      : columns.filter((col) => col.uid !== "action"),
+    [showActions, columns]
+  );
 
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: String(columns[0]?.uid || "id"),
     direction: "ascending"
   });
 
-  const sortedItems = React.useMemo(() => {
+  const sortedItems = useMemo(() => {
     if (!enableSorting) return items;
     const { column, direction } = sortDescriptor;
     if (!column || column === "action") return items;
+    
     const sorted = [...items].sort((a, b) => {
       const aVal = getKeyValue(a, column);
       const bVal = getKeyValue(b, column);
@@ -82,6 +87,113 @@ export function GenericTable<
     });
     return sorted;
   }, [items, sortDescriptor, enableSorting]);
+
+  const handleRowClick = useCallback((id: T["id"]) => {
+    if (enableRowClick && getDetailUrl) {
+      window.open(getDetailUrl(id), "_self");
+    }
+  }, [enableRowClick, getDetailUrl]);
+
+  const handleActionClick = useCallback((e: React.MouseEvent, action: ActionDefinition<T>, item: T) => {
+    e.stopPropagation();
+    action.onClick(item);
+  }, []);
+
+  const renderCell = useCallback((columnKey: React.Key, item: T) => {
+    if (columnKey === "action") {
+      return (
+        <TableCell>
+          <div className="relative flex items-center gap-2">
+            {useEliminationStatus && item.eliminated ? (
+              <Tooltip content="Éliminé" className="px-3xs">
+                <span className="text-danger-500">
+                  <HugeiconsIcon
+                    icon={DeadIcon}
+                    size={20}
+                    strokeWidth={1.5}
+                  />
+                </span>
+              </Tooltip>
+            ) : (
+              actions?.(item)?.map((action, idx) => (
+                <Tooltip
+                  key={idx}
+                  content={action.tooltip}
+                  color={
+                    action.color === "danger" ? "danger" : "default"
+                  }
+                  className="px-3xs">
+                  <span
+                    onClick={(e) => handleActionClick(e, action, item)}
+                    className={`text-l px-3xs rounded-xl cursor-pointer active:opacity-50 ${
+                      action.color === "danger"
+                        ? "text-danger-500"
+                        : "text-white"
+                    }`}>
+                    {action.icon}
+                  </span>
+                </Tooltip>
+              ))
+            )}
+          </div>
+        </TableCell>
+      );
+    }
+
+    const col = columns.find((c) => c.uid === columnKey);
+    const value = item[columnKey as keyof T];
+    const content = col?.render ? col.render(value, item) : value;
+
+    if (columnKey === "status") {
+      return (
+        <TableCell>
+          <Chip
+            className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
+              value === "finish"
+                ? "bg-red-950"
+                : value === "start"
+                ? "bg-purple-950"
+                : "bg-green-950"
+            }`}
+            size="sm"
+            variant="flat">
+            {content === "finish"
+              ? STRINGS.status.finish
+              : content === "in_coming"
+              ? STRINGS.status.in_coming
+              : STRINGS.status.start}
+          </Chip>
+        </TableCell>
+      );
+    }
+
+    if (columnKey === "avatarName") {
+      return (
+        <TableCell>
+          <div className="flex items-center gap-3">
+            <img
+              src={
+                (item as any).avatarUrl ||
+                "/images/ellipseAvatar.png"
+              }
+              alt={(item as any).avatarName}
+              className="w-10 h-10 rounded-full hidden md:block"
+              loading="lazy"
+            />
+            <span className="!font-satoshiRegular !text-l text-white text-left">
+              {(item as any).avatarName}
+            </span>
+          </div>
+        </TableCell>
+      );
+    }
+
+    return (
+      <TableCell className="!font-satoshiLight !text-l leading-7 whitespace-nowrap">
+        {content as React.ReactNode}
+      </TableCell>
+    );
+  }, [columns, useEliminationStatus, actions, handleActionClick]);
 
   return (
     <div className="w-full overflow-x-auto">
@@ -110,117 +222,19 @@ export function GenericTable<
           {(item) => (
             <TableRow
               key={item.id}
-              onClick={() => {
-                if (enableRowClick && getDetailUrl) {
-                  window.open(getDetailUrl(item.id), "_self");
-                }
-              }}
+              onClick={() => handleRowClick(item.id)}
               className={`${
                 enableRowClick && getDetailUrl
                   ? "hover:bg-white/10 hover:rounded-full cursor-pointer rounded-full"
                   : "rounded-full"
               } !text-l !font-satoshiRegular`}>
-              {(columnKey) => {
-                if (columnKey === "action") {
-                  return (
-                    <TableCell>
-                      <div className="relative flex items-center gap-2">
-                        {useEliminationStatus && item.eliminated ? (
-                          <Tooltip content="Éliminé" className="px-3xs">
-                            <span className="text-danger-500">
-                              <HugeiconsIcon
-                                icon={DeadIcon}
-                                size={20}
-                                strokeWidth={1.5}
-                              />
-                            </span>
-                          </Tooltip>
-                        ) : (
-                          actions?.(item)?.map((action, idx) => (
-                            <Tooltip
-                              key={idx}
-                              content={action.tooltip}
-                              color={
-                                action.color === "danger" ? "danger" : "default"
-                              }
-                              className="px-3xs">
-                              <span
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  action.onClick(item);
-                                }}
-                                className={`text-l px-3xs rounded-xl cursor-pointer active:opacity-50 ${
-                                  action.color === "danger"
-                                    ? "text-danger-500"
-                                    : "text-white"
-                                }`}>
-                                {action.icon}
-                              </span>
-                            </Tooltip>
-                          ))
-                        )}
-                      </div>
-                    </TableCell>
-                  );
-                }
-
-                const col = columns.find((c) => c.uid === columnKey);
-                const value = item[columnKey as keyof T];
-                const content = col?.render ? col.render(value, item) : value;
-
-                if (columnKey === "status") {
-                  return (
-                    <TableCell>
-                      <Chip
-                        className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
-                          value === "finish"
-                            ? "bg-red-950"
-                            : value === "start"
-                            ? "bg-purple-950"
-                            : "bg-green-950"
-                        }`}
-                        size="sm"
-                        variant="flat">
-                        {content === "finish"
-                          ? STRINGS.status.finish
-                          : content === "in_coming"
-                          ? STRINGS.status.in_coming
-                          : STRINGS.status.start}
-                      </Chip>
-                    </TableCell>
-                  );
-                }
-
-                if (columnKey === "avatarName") {
-                  return (
-                    <TableCell>
-                      <div className="flex flex-col sm:flex-row items-center gap-3">
-                        <img
-                          src={
-                            (item as any).avatarUrl ||
-                            "/images/ellipseAvatar.png"
-                          }
-                          alt={(item as any).avatarName}
-                          className="w-10 h-10 rounded-full"
-                        />
-                        <span className="!font-satoshiRegular !text-l text-white text-center sm:text-left">
-                          {(item as any).avatarName}
-                        </span>
-                      </div>
-                    </TableCell>
-                  );
-                }
-
-                return (
-                  <TableCell className="!font-satoshiLight !text-l leading-7 whitespace-nowrap">
-                    {content as React.ReactNode}
-                  </TableCell>
-                );
-              }}
+              {(columnKey) => renderCell(columnKey, item)}
             </TableRow>
           )}
         </TableBody>
       </Table>
     </div>
   );
-}
+});
+
+GenericTable.displayName = 'GenericTable';

@@ -96,7 +96,7 @@ export default function TournamentDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 px-2 md:px-0">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-3">
@@ -115,23 +115,23 @@ export default function TournamentDetailPage() {
               <span className="text-white font-satoshiRegular text-base">Menu principal</span>
             </button>
           </div>
-          <div className="md:hidden w-full flex flex-row justify-between items-center mt-3">
-            <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">{tournament.tournament_name}</h1>
-            <Chip
-              className={`font-satoshiRegular text-xs ml-2 ${
-                tournament.tournament_status === "finish"
-                  ? "bg-red-950"
-                  : tournament.tournament_status === "start"
-                  ? "bg-purple-950"
-                  : tournament.tournament_pause
-                  ? "bg-danger-500"
-                  : "bg-green-950"
-              }`}>
-              {tournament.tournament_pause
-                ? "En pause"
-                : STRINGS.status[tournament.tournament_status]}
-            </Chip>
-          </div>
+                     <div className="md:hidden w-full flex flex-col items-start mt-3">
+             <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">{tournament.tournament_name}</h1>
+             <Chip
+               className={`font-satoshiRegular text-xs mt-2 ${
+                 tournament.tournament_status === "finish"
+                   ? "bg-red-950"
+                   : tournament.tournament_status === "start"
+                   ? "bg-purple-950"
+                   : tournament.tournament_pause
+                   ? "bg-danger-500"
+                   : "bg-green-950"
+               }`}>
+               {tournament.tournament_pause
+                 ? "En pause"
+                 : STRINGS.status[tournament.tournament_status]}
+             </Chip>
+           </div>
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-end">
@@ -226,8 +226,8 @@ export default function TournamentDetailPage() {
             />
           )}
         </div>
-        {/* Bottom bar mobile */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pb-4 z-50 gap-2 bg-transparent">
+                 {/* Bottom bar mobile */}
+         <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] flex justify-between items-center p-3 rounded-3xl gap-2 bg-dark/20 backdrop-blur-md shadow-2xl z-50">
           {[
             { id: "0", label: "Général", icon: Home01Icon },
             { id: "1", label: "Niveaux", icon: Home01Icon },
@@ -237,7 +237,7 @@ export default function TournamentDetailPage() {
             <button
               key={tab.id}
               onClick={() => setSelectedTab(tab.id)}
-              className={`flex flex-col items-center justify-center px-6 py-2 rounded-xl gap-1 transition-colors ${selectedTab === tab.id ? "bg-ligth/10" : "bg-transparent"}`}
+              className={`flex flex-col items-center justify-center px-4 py-2 rounded-xl gap-1 transition-all duration-200 ${selectedTab === tab.id ? "bg-ligth/10 scale-105" : "bg-transparent hover:bg-neutral-800/50"}`}
               style={{ minWidth: 64 }}
             >
               <HugeiconsIcon icon={tab.icon} size={24} className="mb-1 text-white" />

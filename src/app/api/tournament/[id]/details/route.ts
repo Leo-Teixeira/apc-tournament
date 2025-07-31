@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
+// Cache en mémoire pour les données statiques
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export async function GET(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
@@ -23,32 +27,35 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // Vérifier le cache
+  const cacheKey = `tournament-${tournamentId}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return NextResponse.json(cached.data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'X-Cache': 'HIT'
+      }
+    });
+  }
+
   try {
-    const [tournamentData, levels, tables, registrations, rankings, stacks] =
-      await Promise.all([
-        prisma.tournament.findUnique({
-          where: { id: tournamentId },
+    // Optimisation : Requête unique avec toutes les relations
+    const tournamentData = await prisma.tournament.findUnique({
+      where: { id: tournamentId },
+      include: {
+        stack: {
           include: {
-            stack: {
+            stack_chip: {
               include: {
-                stack_chip: {
-                  include: { chip: true }
-                }
+                chip: true
               }
             }
           }
-        }),
-
-        prisma.tournament_level.findMany({
-          where: { tournament_id: tournamentId }
-        }),
-
-        prisma.tournament_table.findMany({
-          where: { tournament_id: tournamentId }
-        }),
-
-        prisma.registration.findMany({
-          where: { tournament_id: tournamentId },
+        },
+        tournament_level: true,
+        tournament_table: true,
+        registration: {
           include: {
             wp_users: {
               select: {
@@ -63,12 +70,27 @@ export async function GET(req: NextRequest) {
                 user_login: true
               }
             },
-            table_assignment: true
+            table_assignment: {
+              include: {
+                tournament_table: true,
+                registration: {
+                  include: {
+                    wp_users: {
+                      select: {
+                        ID: true,
+                        pseudo_winamax: true,
+                        photo_url: true,
+                        display_name: true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            tournament_ranking: true
           }
-        }),
-
-        prisma.tournament_ranking.findMany({
-          where: { tournament_id: tournamentId },
+        },
+        tournament_ranking: {
           orderBy: { ranking_position: "asc" },
           include: {
             registration: {
@@ -82,18 +104,9 @@ export async function GET(req: NextRequest) {
               }
             }
           }
-        }),
-
-        prisma.stack.findMany({
-          include: {
-            stack_chip: {
-              include: {
-                chip: true
-              }
-            }
-          }
-        })
-      ]);
+        }
+      }
+    });
 
     if (!tournamentData) {
       return NextResponse.json(
@@ -102,19 +115,44 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Récupérer les stacks séparément car ils sont statiques
+    const stacks = await prisma.stack.findMany({
+      include: {
+        stack_chip: {
+          include: {
+            chip: true
+          }
+        }
+      }
+    });
+
+    const result = {
+      tournament: {
+        ...tournamentData,
+        tournament_level: tournamentData.tournament_level,
+        tournament_table: tournamentData.tournament_table,
+        registration: tournamentData.registration,
+        tournament_ranking: tournamentData.tournament_ranking
+      },
+      registrations: tournamentData.registration,
+      classement: tournamentData.tournament_ranking,
+      stacks
+    };
+
+    // Mettre en cache
+    cache.set(cacheKey, {
+      data: serializeBigInt(result),
+      timestamp: Date.now()
+    });
+
     return NextResponse.json(
-      serializeBigInt({
-        tournament: {
-          ...tournamentData,
-          tournament_level: levels,
-          tournament_table: tables,
-          registration: registrations,
-          tournament_ranking: rankings
-        },
-        registrations,
-        classement: rankings,
-        stacks
-      })
+      serializeBigInt(result),
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          'X-Cache': 'MISS'
+        }
+      }
     );
   } catch (error) {
     console.error("Error fetching tournament details:", error);

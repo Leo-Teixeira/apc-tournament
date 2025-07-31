@@ -12,18 +12,16 @@ const categoryMap: Record<string, tournament_tournament_category> = {
   solipoker: tournament_tournament_category.Solipoker
 };
 
+// Cache en mémoire pour les données par catégorie
+const cache = new Map();
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
 export async function GET(req: NextRequest) {
   try {
     const tournaments = extractParamsFromPath(req, ["tournaments"]);
     const categoryParam = tournaments.tournaments;
     const normalizedCategory = categoryParam?.toLowerCase() ?? "";
     const mappedCategory = categoryMap[normalizedCategory];
-
-    console.log("📥 Requête reçue :");
-    console.log("→ URL path:", req.nextUrl.pathname);
-    console.log("→ Paramètre brut 'category':", categoryParam);
-    console.log("→ Catégorie normalisée :", normalizedCategory);
-    console.log("→ Catégorie mappée :", mappedCategory);
 
     if (!mappedCategory) {
       console.warn(`⚠️ Catégorie invalide reçue : '${categoryParam}'`);
@@ -33,23 +31,23 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const [tournamentss, registrations, quarterRanking] =
-      await prisma.$transaction([
-        prisma.tournament.findMany({
-          where: { tournament_category: mappedCategory }
-        }),
-        prisma.registration.findMany({
-          where: {
-            tournament: { tournament_category: mappedCategory }
-          },
-          include: {
-            tournament: true
-          }
-        }),
-        prisma.quarter_ranking.findMany({
-          where: {
-            tournament: { tournament_category: mappedCategory }
-          },
+    // Vérifier le cache
+    const cacheKey = `category-${mappedCategory}`;
+    const cached = cache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return NextResponse.json(cached.data, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
+
+    // Optimisation : Requête unique avec toutes les relations
+    const result = await prisma.tournament.findMany({
+      where: { tournament_category: mappedCategory },
+      include: {
+        registration: {
           include: {
             wp_users: {
               select: {
@@ -58,19 +56,45 @@ export async function GET(req: NextRequest) {
                 display_name: true,
                 user_email: true
               }
-            },
-            tournament: true
+            }
           }
-        })
-      ]);
+        },
+        quarter_ranking: {
+          include: {
+            wp_users: {
+              select: {
+                ID: true,
+                pseudo_winamax: true,
+                display_name: true,
+                user_email: true
+              }
+            }
+          }
+        }
+      }
+    });
 
-    console.log(
-      `✅ Données récupérées avec succès pour la catégorie : ${mappedCategory}`
-    );
+    // Séparer les données
+    const tournamentss = result;
+    const registrations = result.flatMap(t => t.registration);
+    const quarterRanking = result.flatMap(t => t.quarter_ranking);
 
-    return NextResponse.json(
-      serializeBigInt({ tournamentss, registrations, quarterRanking })
-    );
+    const responseData = serializeBigInt({ tournamentss, registrations, quarterRanking });
+
+    // Mettre en cache
+    cache.set(cacheKey, {
+      data: responseData,
+      timestamp: Date.now()
+    });
+
+    console.log(`✅ Données récupérées avec succès pour la catégorie : ${mappedCategory}`);
+
+    return NextResponse.json(responseData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
+        'X-Cache': 'MISS'
+      }
+    });
   } catch (error: any) {
     console.error("❌ Erreur lors de la récupération des données :", error);
     return NextResponse.json(
