@@ -9,8 +9,8 @@ import { TournamentProvider, useTournamentContext } from "@/app/providers/Tourna
 import LoadingComponent from "@/app/error/loading/page";
 import { SeatRow } from "@/app/components/table/table.types";
 
-export default function ShowTableFullScreenPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function ShowTableFullScreenPage({ params }: { params: { id: string } }) {
+  const { id } = await params;
   return (
     <TournamentProvider tournamentId={id}>
       <ShowTableFullScreen />
