@@ -34,11 +34,10 @@ export const useTournamentData = (tournamentId: string) => {
         registrations: data.registrations,
         classement: data.classement,
         levels: data.tournament.tournament_level || [],
-        assignements: data.tournament.registration?.flatMap(r => r.table_assignment) || [],
+        assignements: data.tournament.registration?.flatMap((r: Registration) => r.table_assignment) || [],
         stacks: data.stacks
       };
     },
-    // Cache plus long pour les données de tournoi
     staleTime: 1000 * 60 * 10, // 10 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes
     refetchOnWindowFocus: false,
@@ -46,10 +45,7 @@ export const useTournamentData = (tournamentId: string) => {
     refetchOnMount: false,
     retry: 1,
     retryDelay: 2000,
-    // Optimisations de performance
     structuralSharing: true,
-    // Suspense pour le chargement
-    suspense: false
   });
 
   const statusQuery = useQuery({

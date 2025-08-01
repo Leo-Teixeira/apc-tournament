@@ -23,8 +23,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         networkMode: 'online',
         // Optimisations de performance
         structuralSharing: true,
-        // Suspense pour le SSR
-        suspense: false
       },
       mutations: {
         // Retry pour les mutations

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
-import { Chip, TournamentLevel } from "@/app/types";
+import { Chip, Tournament, TournamentLevel } from "@/app/types";
 import { toLocalDate } from "@/app/utils/date";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
@@ -196,7 +196,7 @@ export default function Game() {
             />
             <InfoItem
               label="Durée totale"
-              value={getDurationSince(tournament.tournament_start_date)}
+              value={getDurationSince(tournament.tournament_start_date.toISOString())}
             />
             <InfoItem
               label="Temps restant"
