@@ -45,20 +45,20 @@ export type GenericTableProps<T extends { id: string | number }> = {
 };
 
 // Composant optimisé avec React.memo
-export const GenericTable = React.memo(<
-  T extends { id: string | number; eliminated?: boolean }
->({
-  columns,
-  items,
-  width = true,
-  ariaLabel,
-  showActions = false,
-  enableRowClick = false,
-  enableSorting = true,
-  getDetailUrl,
-  actions,
-  useEliminationStatus = false
-}: GenericTableProps<T>) => {
+export function GenericTable<T extends { id: string | number; eliminated?: boolean }>(
+  {
+    columns,
+    items,
+    width = true,
+    ariaLabel,
+    showActions = false,
+    enableRowClick = false,
+    enableSorting = true,
+    getDetailUrl,
+    actions,
+    useEliminationStatus = false,
+  }: GenericTableProps<T>
+) {
   const visibleColumns = useMemo(() => 
     showActions
       ? columns
@@ -235,6 +235,6 @@ export const GenericTable = React.memo(<
       </Table>
     </div>
   );
-});
+};
 
 GenericTable.displayName = 'GenericTable';
