@@ -117,6 +117,8 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleConfirmStackUpdate = async () => {
+    console.log(updatedStack);
+    console.log(tournament);
     if (!updatedStack || !tournament) {
       alert("Aucune modification détectée.");
       return;
@@ -142,10 +144,11 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
               }
         ) ?? []
     };
+    console.log(payload);
 
     try {
       await updateStackMutation.mutateAsync({
-        stackId: tournament.tournament_stack,
+        stackId: updatedStack.id,
         data: payload
       });
       await refetchAll();

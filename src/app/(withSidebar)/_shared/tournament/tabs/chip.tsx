@@ -6,7 +6,7 @@ import { Card, Divider } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 
 export const ChipTabs: React.FC = () => {
-  const { tournament, assignements, refetchAll } = useTournamentContext();
+  const { tournament, assignements } = useTournamentContext();
 
   const [stackTotal, setStackTotal] = useState(0);
   const [stackPerPlayer, setStackPerPlayer] = useState(0);

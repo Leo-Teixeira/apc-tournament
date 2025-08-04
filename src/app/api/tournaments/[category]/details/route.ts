@@ -12,10 +12,6 @@ const categoryMap: Record<string, tournament_tournament_category> = {
   solipoker: tournament_tournament_category.Solipoker
 };
 
-// Cache en mémoire pour les données par catégorie
-const cache = new Map();
-const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
-
 export async function GET(req: NextRequest) {
   try {
     const tournaments = extractParamsFromPath(req, ["tournaments"]);
@@ -29,18 +25,6 @@ export async function GET(req: NextRequest) {
         { error: `Invalid category '${categoryParam}'` },
         { status: 400 }
       );
-    }
-
-    // Vérifier le cache
-    const cacheKey = `category-${mappedCategory}`;
-    const cached = cache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      return NextResponse.json(cached.data, {
-        headers: {
-          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
-          'X-Cache': 'HIT'
-        }
-      });
     }
 
     // Optimisation : Requête unique avec toutes les relations
@@ -81,19 +65,10 @@ export async function GET(req: NextRequest) {
 
     const responseData = serializeBigInt({ tournamentss, registrations, quarterRanking });
 
-    // Mettre en cache
-    cache.set(cacheKey, {
-      data: responseData,
-      timestamp: Date.now()
-    });
 
     console.log(`✅ Données récupérées avec succès pour la catégorie : ${mappedCategory}`);
 
     return NextResponse.json(responseData, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
-        'X-Cache': 'MISS'
-      }
     });
   } catch (error: any) {
     console.error("❌ Erreur lors de la récupération des données :", error);

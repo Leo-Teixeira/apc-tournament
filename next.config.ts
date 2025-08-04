@@ -1,27 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Optimisations de performance
   experimental: {
-    // Optimisations du serveur
     serverComponentsExternalPackages: ['@prisma/client']
   },
-  
-  // Optimisations de build
+
   swcMinify: true,
-  
-  // Optimisations d'images
+
   images: {
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 jours
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  
-  // Optimisations de compression
+
   compress: true,
-  
-  // Optimisations de headers
+
   async headers() {
     return [
       {
@@ -41,17 +35,28 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Cache-Control supprimé pour /api/*
+      // Tu peux garder cache sur images/fonts par ex
       {
-        source: '/api/(.*)',
+        source: '/images/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=300, stale-while-revalidate=600',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
     ];
-  }
+  },
 };
 
 export default nextConfig;

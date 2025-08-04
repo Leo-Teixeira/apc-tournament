@@ -10,11 +10,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, s-maxage=300, stale-while-revalidate=600"
-        },
-        {
-          "key": "X-Cache-Control",
-          "value": "public, max-age=300"
+          "value": "no-store"
         }
       ]
     },
@@ -67,4 +63,4 @@
   "env": {
     "NODE_ENV": "production"
   }
-} 
+}

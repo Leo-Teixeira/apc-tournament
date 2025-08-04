@@ -38,14 +38,6 @@ export const useTournamentData = (tournamentId: string) => {
         stacks: data.stacks
       };
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    retry: 1,
-    retryDelay: 2000,
-    structuralSharing: true,
   });
 
   const statusQuery = useQuery({
@@ -57,9 +49,6 @@ export const useTournamentData = (tournamentId: string) => {
       return { tournament: data.tournament };
     },
     enabled: false,
-    staleTime: 1000 * 60 * 2, // 2 minutes pour le status
-    gcTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
   });
 
   return {

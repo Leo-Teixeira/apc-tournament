@@ -3,10 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
-// Cache en mémoire pour les données statiques
-const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
 export async function GET(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
@@ -25,18 +21,6 @@ export async function GET(req: NextRequest) {
       { error: "Invalid tournament ID" },
       { status: 400 }
     );
-  }
-
-  // Vérifier le cache
-  const cacheKey = `tournament-${tournamentId}`;
-  const cached = cache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return NextResponse.json(cached.data, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-        'X-Cache': 'HIT'
-      }
-    });
   }
 
   try {
@@ -139,20 +123,8 @@ export async function GET(req: NextRequest) {
       stacks
     };
 
-    // Mettre en cache
-    cache.set(cacheKey, {
-      data: serializeBigInt(result),
-      timestamp: Date.now()
-    });
-
     return NextResponse.json(
       serializeBigInt(result),
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-          'X-Cache': 'MISS'
-        }
-      }
     );
   } catch (error) {
     console.error("Error fetching tournament details:", error);

@@ -69,7 +69,7 @@ export async function PATCH(req: NextRequest) {
 
     const updates: Promise<any>[] = [];
 
-    if (tournament_id && selected_stack_id && selected_stack_id !== stackId) {
+    if (tournament_id && selected_stack_id) {
       updates.push(
         prisma.tournament.update({
           where: { id: BigInt(tournament_id) },
