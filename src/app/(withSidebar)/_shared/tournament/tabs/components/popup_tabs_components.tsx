@@ -69,7 +69,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         id: tournament.id,
         data: tournamentFormData
       });
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("Erreur modification tournoi :", error);
@@ -85,7 +85,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         tournamentId: tournament.id,
         data: playerFormData
       });
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("Erreur ajout joueur :", error);
@@ -108,7 +108,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         tournamentId: tournament.id,
         data: payload
       });
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("❌ Erreur création niveau :", error);
@@ -151,7 +151,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         stackId: updatedStack.id,
         data: payload
       });
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("Erreur lors de la modification du stack :", error);
@@ -164,7 +164,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
 
     try {
       await generateTablesMutation.mutateAsync(tournament.id);
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("Erreur lors de la génération des tables :", error);

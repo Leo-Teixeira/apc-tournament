@@ -99,7 +99,7 @@ export const NiveauxTabs: React.FC = () => {
 
           try {
             await deleteLevelMutation.mutateAsync(levelToDelete.id);
-            await refetchAll();
+            
             setIsDeleteModalOpen(false);
             setLevelToDelete(null);
           } catch (error) {
@@ -127,7 +127,7 @@ export const NiveauxTabs: React.FC = () => {
               data: tournamentLevelFormData
             });
 
-            await refetchAll();
+            
             setIsModifyModalOpen(false);
             setLevelToModify(null);
           } catch (error) {

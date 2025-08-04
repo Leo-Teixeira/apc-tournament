@@ -77,7 +77,7 @@ export const TableTabs = () => {
         console.log("✅ Tournoi terminé automatiquement");
       }
 
-      await refetchAll();
+      
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
@@ -225,7 +225,7 @@ export const TableTabs = () => {
 
             await movePlayerMutation.mutateAsync(payload);
 
-            await refetchAll();
+            
             setIsMoveModalOpen(false);
             setSelectedSwapTargetId(null);
             setSelectedTableId(null);

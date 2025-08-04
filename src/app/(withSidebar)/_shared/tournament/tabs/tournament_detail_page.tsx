@@ -69,7 +69,7 @@ export default function TournamentDetailPage() {
   const togglePause = async (pause: boolean) => {
     try {
       await togglePauseMutation.mutateAsync(pause);
-      await refetchAll();
+      
     } catch (err) {
       console.error("❌ Erreur mise en pause / reprise :", err);
       alert("Une erreur est survenue");
@@ -274,7 +274,7 @@ export default function TournamentDetailPage() {
             }
 
             await launchTournamentMutation.mutateAsync();
-            await refetchAll();
+            
             setIsLaunchModalOpen(false);
             window.open(`/game/${id}`);
           } catch (err) {
@@ -301,7 +301,7 @@ export default function TournamentDetailPage() {
 
             await generateLevelsMutation.mutateAsync(tournament.id);
 
-            await refetchAll();
+            
             setIsGenerateLevelModalOpen(false);
             window.location.reload(); // ou refetch ton contexte React Query
           } catch (err) {
@@ -322,7 +322,7 @@ export default function TournamentDetailPage() {
           try {
             if (!tournament) throw new Error("Tournoi non disponible");
             await resetLevelsMutation.mutateAsync(tournament.id);
-            await refetchAll();
+            
             setIsReinitialiseLevelModalOpen(false);
           } catch (err) {
             console.error("❌ Erreur réinitialisation niveau :", err);
@@ -350,7 +350,7 @@ export default function TournamentDetailPage() {
               tournamentId: tournament.id,
               data: values
             });
-            await refetchAll();
+            
             setIsAddTableModalOpen(false);
           } catch (err) {
             console.error("Erreur ajout table :", err);
@@ -375,7 +375,7 @@ export default function TournamentDetailPage() {
         onConfirm={async () => {
           try {
             await togglePause(!tournament.tournament_pause);
-            await refetchAll();
+            
             setIsPauseModalOpen(false);
           } catch (err) {
             console.error("❌ Erreur changement pause :", err);
