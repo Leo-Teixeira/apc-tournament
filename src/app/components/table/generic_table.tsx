@@ -44,7 +44,6 @@ export type GenericTableProps<T extends { id: string | number }> = {
   useEliminationStatus?: boolean;
 };
 
-// Composant optimisé avec React.memo
 export function GenericTable<T extends { id: string | number; eliminated?: boolean }>(
   {
     columns,

@@ -91,69 +91,84 @@ export default function APTHome() {
     window.open(`/apt/${id}`, "_self");
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <p className="text-white text-xl font-semibold">Chargement...</p>
+      </div>
+    );
+  }
+
+  // Vérification si data est vide (ici tournamentRows)
+  if (!tournamentRows || tournamentRows.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[80vh] px-4">
+        <p className="text-white text-xl font-semibold text-center">
+          Aucun tournoi disponible pour le moment.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-2 md:gap-6  w-full">
+    <div className="flex flex-col gap-2 md:gap-6 w-full">
       {/* TabBar mobile en haut, sert de titre/navigation */}
       <div className="block md:hidden mb-2">
         <TabBar />
       </div>
-      {isLoading ? (
-        <div>Chargement...</div>
-      ) : (
-        <>
-          {/* Version mobile avec cartes */}
-          <div className="block md:hidden">
-            <TournamentMobileCards 
-              tournaments={tournamentRows}
-              onViewTournament={handleViewTournament}
-            />
-          </div>
 
-          {/* Version desktop avec tableau */}
-          <div className="hidden md:flex flex-col gap-3">
-            <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
-              Tournois
-            </h2>
-            <div className="w-full overflow-x-auto">
-              <GenericTable<TournamentRow>
-                items={tournamentRows}
-                columns={tournamentColumns}
-                ariaLabel="Liste des sièges"
-                showActions={true}
-                actions={getConditionalActions}
-                enableRowClick
-                getDetailUrl={(id) => `/apt/${id}`}
-              />
-            </div>
-          </div>
+      {/* Version mobile avec cartes */}
+      <div className="block md:hidden">
+        <TournamentMobileCards
+          tournaments={tournamentRows}
+          onViewTournament={handleViewTournament}
+        />
+      </div>
 
-          {/* Section classement - cachée en mobile pour l'instant */}
-          <div className="hidden md:flex flex-col gap-3">
-            <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
-              Classement
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-              {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
-                (trimestry) => (
-                  <div
-                    key={trimestry}
-                    className="flex-1 flex flex-col gap-2 overflow-x-auto">
-                    <h2 className="font-satoshiRegular text-m sm:text-xl2p9 leading-8 sm:leading-10">
-                      {STRINGS.apt.trimestry[trimestry]}
-                    </h2>
-                    <GenericTable<StandingRow>
-                      items={quarterRankingRows[trimestry]}
-                      columns={standingsColumns}
-                      ariaLabel={`Classement ${trimestry}`}
-                      showActions={false}
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        </>
-      )}
+      {/* Version desktop avec tableau */}
+      <div className="hidden md:flex flex-col gap-3">
+        <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
+          Tournois
+        </h2>
+        <div className="w-full overflow-x-auto">
+          <GenericTable<TournamentRow>
+            items={tournamentRows}
+            columns={tournamentColumns}
+            ariaLabel="Liste des sièges"
+            showActions={true}
+            actions={getConditionalActions}
+            enableRowClick
+            getDetailUrl={(id) => `/apt/${id}`}
+          />
+        </div>
+      </div>
+
+      {/* Section classement - cachée en mobile pour l'instant */}
+      <div className="hidden md:flex flex-col gap-3">
+        <h2 className="font-satoshiMedium text-l sm:text-xl3p2 leading-8 sm:leading-10">
+          Classement
+        </h2>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
+            (trimestry) => (
+              <div
+                key={trimestry}
+                className="flex-1 flex flex-col gap-2 overflow-x-auto"
+              >
+                <h2 className="font-satoshiRegular text-m sm:text-xl2p9 leading-8 sm:leading-10">
+                  {STRINGS.apt.trimestry[trimestry]}
+                </h2>
+                <GenericTable<StandingRow>
+                  items={quarterRankingRows[trimestry]}
+                  columns={standingsColumns}
+                  ariaLabel={`Classement ${trimestry}`}
+                  showActions={false}
+                />
+              </div>
+            )
+          )}
+        </div>
+      </div>
 
       <GenericModal
         isOpen={isDeleteModalOpen}
@@ -177,7 +192,8 @@ export default function APTHome() {
             console.error("Erreur suppression tournoi :", error);
             alert("Une erreur est survenue.");
           }
-        }}>
+        }}
+      >
         <p>
           Es-tu sûr de vouloir supprimer le tournoi{" "}
           <b>{tournamentToDelete?.name}</b> ?
@@ -203,7 +219,8 @@ export default function APTHome() {
             console.error("Erreur modification tournoi :", error);
             alert("Une erreur est survenue.");
           }
-        }}>
+        }}
+      >
         <TournamentFormBody
           tournament={tournaments.find((t) => t.id == Number(itemSelected?.id))}
           onUpdate={(updatedFields) => {

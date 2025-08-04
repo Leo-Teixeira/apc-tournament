@@ -35,7 +35,7 @@ export const PlayerTabs = React.memo(() => {
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements, registration } = useTournamentContext();
+  const { tournament, assignements, registration, refetchAll, refetchOnly } = useTournamentContext();
 
   const cancelPlayerMutation = useCancelTournamentPlayer();
   const cancelEliminationMutation = useCancelPlayerElimination();
@@ -176,6 +176,7 @@ export const PlayerTabs = React.memo(() => {
         console.log("✅ Tournoi terminé automatiquement");
       }
 
+      await refetchAll();
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
@@ -215,9 +216,10 @@ export const PlayerTabs = React.memo(() => {
         onClose={onClose}
         title="Éliminer un joueur"
         confirmLabel="Confirmer l'élimination"
-        onConfirm={() => {
+        onConfirm={async () => {
           const killerId = killerOptions[0]?.id;
           if (killerId) handleConfirmElimination(killerId);
+          await refetchAll();
         }}>
         <EliminatePlayerFormBody
           eliminatePlayer={
@@ -242,6 +244,7 @@ export const PlayerTabs = React.memo(() => {
               registrationId: selectedPlayer.registration_id
             });
 
+            await refetchAll();
             setSelectedPlayer(null);
             setIsCancelKillModal(false);
           } catch (error) {
@@ -270,6 +273,7 @@ export const PlayerTabs = React.memo(() => {
               registrationId: selectedPlayer.registration_id
             });
 
+            await refetchAll();
             setSelectedPlayer(null);
             setIsCancelStatusModal(false);
           } catch (error) {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
-import { Chip, Tournament, TournamentLevel } from "@/app/types";
+import { Chip, TournamentLevel } from "@/app/types";
 import { toLocalDate } from "@/app/utils/date";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
@@ -21,69 +21,65 @@ export default function Game() {
 
   const [now, setNow] = useState(new Date());
   const [frozenNow, setFrozenNow] = useState<Date | null>(null);
-  const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(null);
+  const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(
+    null
+  );
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
 
   const isPaused = tournament?.tournament_pause === true;
-  
-  // Optimisation : Mémoisation des valeurs calculées
-  const getNow = useCallback(() => (isPaused && frozenNow ? frozenNow : now), [isPaused, frozenNow, now]);
+  const getNow = () => (isPaused && frozenNow ? frozenNow : now);
 
-  const chips = useMemo(() => 
-    (tournament?.stack?.stack_chip ?? [])
-      .map((sc) => sc?.chip)
-      .filter((chip): chip is Chip => chip !== undefined),
-    [tournament?.stack?.stack_chip]
-  );
+  const chips = (tournament?.stack?.stack_chip ?? [])
+    .map((sc) => sc?.chip)
+    .filter((chip): chip is Chip => chip !== undefined);
 
-  const getDurationSince = useCallback((startISO: string) => {
+  const getDurationSince = (startISO: string) => {
     const start = toLocalDate(startISO);
     const diff = getNow().getTime() - start.getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const h = Math.floor(total / 3600);
     const m = Math.floor((total % 3600) / 60);
     const s = total % 60;
-    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }, [getNow]);
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(
+      2,
+      "0"
+    )}:${String(s).padStart(2, "0")}`;
+  };
 
-  const getTimeLeft = useCallback((end: string | Date) => {
+  const getTimeLeft = (end: string | Date) => {
     const endDate = typeof end === "string" ? toLocalDate(end) : end;
     const diff = endDate.getTime() - getNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
     const s = total % 60;
-    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }, [getNow]);
+    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
+      m % 60
+    ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
 
-  const getTimeUntilNextPause = useCallback(() => {
+  const getTimeUntilNextPause = () => {
     if (!nextPause) return "-";
     const pauseStart = toLocalDate(nextPause.level_start).getTime();
     const diff = pauseStart - getNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
     const s = total % 60;
-    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }, [nextPause, getNow]);
+    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
+      m % 60
+    ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
 
-  // Optimisation : Mémoisation des calculs coûteux
-  const confirmedPlayers = useMemo(() => 
-    registration.filter((r) => r.statut === "Confirmed"),
-    [registration]
-  );
+  const getConfirmedPlayers = () =>
+    registration.filter((r) => r.statut === "Confirmed");
+  const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
 
-  const alivePlayers = useMemo(() => 
-    assignements.filter((r) => !r.eliminated),
-    [assignements]
-  );
-
-  const averageStack = useMemo(() => {
-    const players = confirmedPlayers.length;
+  const getAverageStack = () => {
+    const players = getConfirmedPlayers().length;
     const totalChips = players * 10000;
     return players === 0 ? "0" : Math.round(totalChips / players).toString();
-  }, [confirmedPlayers]);
+  };
 
-  // Optimisation : Un seul timer pour la mise à jour du temps
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
@@ -91,32 +87,24 @@ export default function Game() {
     return () => clearInterval(interval);
   }, []);
 
-  // Optimisation : Timer pour le status seulement si nécessaire
   useEffect(() => {
-    if (tournament?.tournament_status !== "start") return;
-    
     const interval = setInterval(() => {
       refetchStatusOnly();
-    }, 10000); // Réduit de 5s à 10s
+    }, 5000);
     return () => clearInterval(interval);
-  }, [refetchStatusOnly, tournament?.tournament_status]);
+  }, [refetchStatusOnly]);
 
-  // Optimisation : Timer pour le refetch complet moins fréquent
   useEffect(() => {
     const interval = setInterval(() => {
       refetch();
-    }, 120000); // Réduit de 60s à 120s
+    }, 60000);
     return () => clearInterval(interval);
   }, [refetch]);
 
-  // Optimisation : Refetch initial seulement si nécessaire
   useEffect(() => {
-    if (!data) {
-      refetch();
-    }
-  }, [refetch, data]);
+    refetch();
+  }, [refetch]);
 
-  // Optimisation : Gestion de la pause
   useEffect(() => {
     if (isPaused && !frozenNow) {
       setFrozenNow(new Date());
@@ -126,10 +114,9 @@ export default function Game() {
     }
   }, [isPaused, frozenNow]);
 
-  // Optimisation : Calcul des niveaux avec useMemo
-  const levelCalculations = useMemo(() => {
+  useEffect(() => {
     const refDate = getNow();
-    
+
     const cl = levels.find((level) => {
       const start = toLocalDate(level.level_start);
       const end = toLocalDate(level.level_end);
@@ -137,28 +124,22 @@ export default function Game() {
     });
 
     let next: TournamentLevel | undefined = undefined;
-    if (cl) {
-      const currentIndex = levels.findIndex((lvl) => lvl.id === cl.id);
+    if (currentLevel) {
+      const currentIndex = levels.findIndex(
+        (lvl) => lvl.id === currentLevel.id
+      );
       next = levels.slice(currentIndex + 1).find((lvl) => !lvl.level_pause);
     }
+    setNextLevel(next ?? null);
 
     const np = levels.find(
       (level) => new Date(level.level_start) > refDate && level.level_pause
     );
 
-    return {
-      currentLevel: cl ?? null,
-      nextLevel: next ?? null,
-      nextPause: np ?? null
-    };
-  }, [levels, getNow]);
-
-  // Mise à jour des états avec les calculs optimisés
-  useEffect(() => {
-    setCurrentLevel(levelCalculations.currentLevel);
-    setNextLevel(levelCalculations.nextLevel);
-    setNextPause(levelCalculations.nextPause);
-  }, [levelCalculations]);
+    setCurrentLevel(cl ?? null);
+    setNextLevel(next ?? null);
+    setNextPause(np ?? null);
+  }, [levels, now, frozenNow, isPaused]);
 
   if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
 
@@ -196,57 +177,49 @@ export default function Game() {
             />
             <InfoItem
               label="Durée totale"
-              value={getDurationSince(tournament.tournament_start_date.toISOString())}
-            />
-            <InfoItem
-              label="Temps restant"
               value={
-                currentLevel
-                  ? getTimeLeft(currentLevel.level_end)
-                  : "-"
+                tournament
+                  ? getDurationSince(String(tournament.tournament_start_date))
+                  : "--:--:--"
               }
             />
-            <InfoItem
-              label="Prochain niveau"
-              value={
-                nextLevel
-                  ? `${nextLevel.level_number} (${getTimeLeft(nextLevel.level_start)})`
-                  : "-"
-              }
-            />
-            <InfoItem
-              label="Prochaine pause"
-              value={getTimeUntilNextPause()}
-            />
+            <InfoItem label="Pause" value={getTimeUntilNextPause()} />
           </div>
 
-          <div className="space-y-4">
+          <div className="text-center text-primary_brand-50">
+            <div className="text-xl12 font-satoshiBold">
+              {currentLevel
+                ? getTimeLeft(toLocalDate(currentLevel.level_end))
+                : "--:--"}
+            </div>
+
+            <div className="text-xl7 font-satoshiBold">
+              {currentLevel && !currentLevel.level_pause
+                ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}`
+                : nextLevel
+                ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
+                : "-/-"}
+            </div>
+            <div className="text-xl6 font-satoshiBold">
+              {nextLevel
+                ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
+                : "-/-"}
+            </div>
+          </div>
+
+          <div className="space-y-4 text-right">
+            <InfoItem label="Stack moyen" value={getAverageStack()} />
+            <InfoItem label="Ante" value="-" />
             <InfoItem
-              label="Joueurs confirmés"
-              value={confirmedPlayers.length.toString()}
-            />
-            <InfoItem
-              label="Joueurs en vie"
-              value={alivePlayers.length.toString()}
-            />
-            <InfoItem
-              label="Stack moyen"
-              value={averageStack}
-            />
-            <InfoItem
-              label="Petite blinde"
-              value={currentLevel?.level_small_blinde.toString() ?? "-"}
-            />
-            <InfoItem
-              label="Grosse blinde"
-              value={currentLevel?.level_big_blinde.toString() ?? "-"}
+              label="Joueurs"
+              value={`${getAlivePlayers().length}/${
+                getConfirmedPlayers().length
+              }`}
             />
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <ChipLegend chips={chips} />
-        </div>
+        <ChipLegend chips={chips ?? []} />
       </div>
     </div>
   );

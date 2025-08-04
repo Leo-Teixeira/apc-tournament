@@ -19,7 +19,7 @@ import {
 import LoadingComponent from "@/app/error/loading/page";
 
 export const NiveauxTabs: React.FC = () => {
-  const { levels, tournament } = useTournamentContext();
+  const { levels, tournament, refetchAll, refetchOnly } = useTournamentContext();
 
   const [levelsRow, setLevelsRow] = useState<BlindRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -99,6 +99,7 @@ export const NiveauxTabs: React.FC = () => {
 
           try {
             await deleteLevelMutation.mutateAsync(levelToDelete.id);
+            await refetchAll();
             setIsDeleteModalOpen(false);
             setLevelToDelete(null);
           } catch (error) {
@@ -126,6 +127,7 @@ export const NiveauxTabs: React.FC = () => {
               data: tournamentLevelFormData
             });
 
+            await refetchAll();
             setIsModifyModalOpen(false);
             setLevelToModify(null);
           } catch (error) {

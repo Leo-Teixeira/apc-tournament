@@ -29,7 +29,7 @@ export const TableTabs = () => {
 
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements } = useTournamentContext();
+  const { tournament, assignements, refetchAll, refetchOnly } = useTournamentContext();
 
   const movePlayerMutation = useMovePlayer();
   const eliminatePlayerMutation = useEliminatePlayer();
@@ -77,6 +77,7 @@ export const TableTabs = () => {
         console.log("✅ Tournoi terminé automatiquement");
       }
 
+      await refetchAll();
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
@@ -224,6 +225,7 @@ export const TableTabs = () => {
 
             await movePlayerMutation.mutateAsync(payload);
 
+            await refetchAll();
             setIsMoveModalOpen(false);
             setSelectedSwapTargetId(null);
             setSelectedTableId(null);
