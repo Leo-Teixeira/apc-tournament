@@ -7,13 +7,14 @@ import {
 import { SeatRow } from "@/app/components/table/table.types";
 import { WPUser } from "@/app/types/user.types";
 
+// Fonction pour les joueurs non assignés ("Non assigné"), uniquement Confirmed
 export const mapFlatAssignementsToSeatRows = (
   assignements: TableAssignment[] | null,
   fallbackRegistrations: Registration[] = []
 ): SeatRow[] => {
   if (!assignements || assignements.length === 0) {
     return fallbackRegistrations
-      .filter((r) => r.statut !== "Cancelled")
+      .filter((r) => r.statut === "Confirmed") // On filtre uniquement les Confirmed
       .map((r) => {
         const user = r.wp_users;
         return {
@@ -27,13 +28,14 @@ export const mapFlatAssignementsToSeatRows = (
       });
   }
 
+  // On ne garde que les assignements liés à une registration Confirmed
   return assignements
+    .filter(a => a.registration?.statut === "Confirmed")
     .map((a) => {
       const registration = a.registration;
       const user = registration?.wp_users;
       const table = a.tournament_table;
 
-      // Amélioration : Meilleure gestion des noms d'utilisateur
       let avatarName = "Inconnu";
       if (user?.pseudo_winamax) {
         avatarName = user.pseudo_winamax;
@@ -64,12 +66,18 @@ export const mapFlatAssignementsToSeatRows = (
     });
 };
 
+// Fonction de regroupement par table, uniquement Confirmed
 export const mapAssignementsGroupedByTable = (
   assignements: TableAssignment[]
 ) => {
   const groups: Record<string, SeatRow[]> = {};
 
-  assignements.forEach((a) => {
+  // On ne garde que les assignements liés à une registration Confirmed
+  const confirmedAssignements = assignements.filter(
+    (a) => a.registration?.statut === "Confirmed"
+  );
+
+  confirmedAssignements.forEach((a) => {
     if (a.eliminated) return;
 
     const registration = a.registration;
@@ -77,7 +85,6 @@ export const mapAssignementsGroupedByTable = (
     const table = a.tournament_table;
     const tableNumber = table?.table_number ?? "0";
 
-    // Amélioration : Meilleure gestion des noms d'utilisateur
     let avatarName = "Inconnu";
     if (user?.pseudo_winamax) {
       avatarName = user.pseudo_winamax;
