@@ -113,29 +113,40 @@ export async function PUT(req: NextRequest) {
       }
     });
 
+    // Compter les joueurs éliminés uniquement parmi les registrations Confirmed
     const eliminatedCount = await prisma.table_assignment.count({
       where: {
         tournament_table: {
           tournament_id: BigInt(tournamentId)
         },
-        eliminated: true
+        eliminated: true,
+        registration: {
+          statut: "Confirmed"
+        }
       }
     });
 
+    // Compter les joueurs vivants uniquement parmi les registrations Confirmed
     const aliveCount = await prisma.table_assignment.count({
       where: {
         tournament_table: {
           tournament_id: BigInt(tournamentId)
         },
-        eliminated: false
+        eliminated: false,
+        registration: {
+          statut: "Confirmed"
+        }
       }
     });
+
+    // Total des joueurs Confirmed inscrits au tournoi
+    const totalRegistrations = eliminatedCount + aliveCount;
+
 
     const tournamentData = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) }
     });
 
-    const totalRegistrations = eliminatedCount + aliveCount;
     let score = 0;
 
     if (tournamentData?.tournament_category === "APT") {
@@ -199,7 +210,7 @@ export async function PUT(req: NextRequest) {
       data: {
         registration_id: assignment.registration.id,
         tournament_id: BigInt(tournamentId),
-        ranking_position: totalRegistrations - aliveCount,
+        ranking_position: totalRegistrations - eliminatedCount + 1,
         ranking_score: score
       }
     });
