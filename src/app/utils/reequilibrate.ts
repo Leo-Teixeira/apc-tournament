@@ -10,11 +10,15 @@ export async function reequilibrateTables(tournamentId: number) {
   const aptMaxDefault = 8;
   const aptMaxLastTable = 9;
 
+  // Inclure uniquement les joueurs non éliminés & Confirmed
   const tables = await prisma.tournament_table.findMany({
     where: { tournament_id: BigInt(tournamentId) },
     include: {
       table_assignment: {
-        where: { eliminated: false },
+        where: {
+          eliminated: false,
+          registration: { statut: "Confirmed" }
+        },
         include: { registration: true }
       }
     }
@@ -22,21 +26,64 @@ export async function reequilibrateTables(tournamentId: number) {
 
   let changed = false;
 
-  let tablesWithPlayers = tables.map((table) => ({
+  // Extraire tous les joueurs (non éliminés)
+  const allRemainingPlayers = tables.flatMap(t => t.table_assignment);
+
+  // ------------- FUSION EN TABLE UNIQUE LORSQU'IL RESTE 8 JOUEURS ----------- //
+  if (allRemainingPlayers.length === 8) {
+    // Trouver (ou créer) la table n°1
+    const mainTable = tables.find(t => t.table_number === 1) || tables[0];
+
+    // Vider les autres tables sauf mainTable
+    for (const player of allRemainingPlayers) {
+      await prisma.table_assignment.update({
+        where: { id: player.id },
+        data: {
+          table_id: mainTable.id,
+          table_seat_number: undefined // les redistribuer proprement ensuite
+        }
+      });
+    }
+    // Réattribuer des numéros de siège 1 à 8 à tous les joueurs de la mainTable
+    const newAssignments = allRemainingPlayers.map((p, i) =>
+      prisma.table_assignment.update({
+        where: { id: p.id },
+        data: { table_seat_number: i + 1 }
+      })
+    );
+    await Promise.all(newAssignments);
+
+    // Supprimer toutes les autres tables vides
+    const allTables = await prisma.tournament_table.findMany({
+      where: { tournament_id: BigInt(tournamentId) },
+      include: { table_assignment: { where: { eliminated: false } } }
+    });
+    const toDelete = allTables.filter(t => t.id !== mainTable.id);
+    for (const empty of toDelete) {
+      await prisma.tournament_table.delete({ where: { id: empty.id } });
+      console.log(`🗑️ Table supprimée : ${empty.table_number}`);
+    }
+
+    return true;
+  }
+
+  // ------------- RÉ-ÉQUILIBRAGE CLASSIQUE ----------- //
+  let tablesWithPlayers = tables.map(table => ({
     id: table.id,
     tableNumber: table.table_number,
     capacity: table.table_capacity,
     players: table.table_assignment
   }));
 
+  //  Pour ne jamais laisser une table < 4 joueurs
   const underfilledPlayers = tablesWithPlayers
-    .filter((t) => t.players.length < 4)
-    .flatMap((t) => t.players);
+    .filter(t => t.players.length < 4)
+    .flatMap(t => t.players);
 
-  tablesWithPlayers = tablesWithPlayers.filter((t) => t.players.length >= 4);
+  tablesWithPlayers = tablesWithPlayers.filter(t => t.players.length >= 4);
 
   for (const player of underfilledPlayers) {
-    const targetTable = tablesWithPlayers.find((t) => {
+    const targetTable = tablesWithPlayers.find(t => {
       const limit =
         isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : t.capacity;
       return t.players.length < limit;
@@ -57,19 +104,13 @@ export async function reequilibrateTables(tournamentId: number) {
 
   tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
 
-  while (true) {
+  // Tant qu'écart max/min > 1, déplacer un joueur de la plus grosse à la plus petite table
+  while (tablesWithPlayers.length > 1) {
     const min = tablesWithPlayers[0];
     const max = tablesWithPlayers[tablesWithPlayers.length - 1];
 
-    const moreThanOneTable = tablesWithPlayers.length > 1;
-    const tooUnbalanced = max.players.length - min.players.length > 1;
-
-    if (!moreThanOneTable) break;
-
-    const maxAllowed =
-      isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : aptMaxLastTable;
-
-    if (tooUnbalanced && max.players.length > maxAllowed) {
+    if (max.players.length - min.players.length > 1) {
+      // On déplace UN joueur de max vers min (pas besoin de tester maxAllowed ici)
       const movedPlayer = max.players.pop();
       if (!movedPlayer) break;
 
@@ -83,20 +124,27 @@ export async function reequilibrateTables(tournamentId: number) {
 
       min.players.push({ ...movedPlayer, table_id: min.id });
       changed = true;
+
+      // On retrie APRÈS déplacement, l’ordre a changé !
       tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
-    } else {
-      break;
+
+      // → on continue la boucle pour rééquilibrer à fond
+      continue;
     }
+
+    // Si l’écart n’est plus > 1, tout est équilibré
+    break;
   }
 
+
+  // Supprimer les tables vides après rééquilibrage
   const allTables = await prisma.tournament_table.findMany({
     where: { tournament_id: BigInt(tournamentId) },
     include: {
-      table_assignment: { where: { eliminated: false } }
+      table_assignment: { where: { eliminated: false, registration: { statut: "Confirmed" } } }
     }
   });
-
-  const toDelete = allTables.filter((t) => t.table_assignment.length === 0);
+  const toDelete = allTables.filter(t => t.table_assignment.length === 0);
   for (const empty of toDelete) {
     await prisma.tournament_table.delete({ where: { id: empty.id } });
     console.log(`🗑️ Table supprimée : ${empty.table_number}`);
