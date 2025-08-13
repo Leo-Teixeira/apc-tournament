@@ -1,3 +1,4 @@
+// hooks/useTournamentDataByCategory.ts
 import { useQuery } from "@tanstack/react-query";
 import { mapTournamentsToRow } from "@/app/lib/adapter/tournament.adapter";
 import { mapQuarterRankingByTrimestry } from "@/app/lib/adapter/quarter_ranking.adapter";
@@ -6,21 +7,25 @@ import { StandingRow, TournamentRow } from "../components/table/table.types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
+type TournamentDataByCategory = {
+  tournaments: Tournament[];
+  tournamentRows: TournamentRow[];
+  quarterRankingRows: Record<TrimestryKey, StandingRow[]>;
+};
+
 export const useTournamentDataByCategory = (category: string) => {
-  return useQuery({
+  const query = useQuery<TournamentDataByCategory>({
     queryKey: ["tournament-details", category],
-    queryFn: async (): Promise<{
-      tournaments: Tournament[];
-      tournamentRows: TournamentRow[];
-      quarterRankingRows: Record<TrimestryKey, StandingRow[]>;
-    }> => {
+    queryFn: async (): Promise<TournamentDataByCategory> => {
       const res = await fetch(`/api/tournaments/${category}/details`);
       if (!res.ok) throw new Error("Erreur serveur");
 
       const data = await res.json();
 
+      // Attention : data.tournamentss doit être data.tournaments ?
+      // Sinon corrige l’API ou le mapping ici :
       return {
-        tournaments: data.tournamentss,
+        tournaments: data.tournamentss, // ou data.tournaments selon ton backend
         tournamentRows: mapTournamentsToRow(
           data.tournamentss,
           data.registrations
@@ -28,8 +33,16 @@ export const useTournamentDataByCategory = (category: string) => {
         quarterRankingRows: mapQuarterRankingByTrimestry(
           data.quarterRanking,
           category
-        )
+        ),
       };
-    }
+    },
   });
+
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 };

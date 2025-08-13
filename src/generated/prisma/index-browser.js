@@ -172,7 +172,9 @@ exports.Prisma.TournamentScalarFieldEnum = {
   estimate_duration: 'estimate_duration',
   tournament_stack: 'tournament_stack',
   tournament_pause: 'tournament_pause',
-  tournament_pause_date: 'tournament_pause_date'
+  tournament_pause_date: 'tournament_pause_date',
+  tournament_background_1: 'tournament_background_1',
+  tournament_background_2: 'tournament_background_2'
 };
 
 exports.Prisma.Tournament_levelScalarFieldEnum = {
@@ -263,70 +265,6 @@ exports.Prisma.Wp_commentsScalarFieldEnum = {
   user_id: 'user_id'
 };
 
-exports.Prisma.Wp_em_price_optionsScalarFieldEnum = {
-  id: 'id',
-  event_id: 'event_id',
-  name: 'name',
-  description: 'description',
-  start_date: 'start_date',
-  end_date: 'end_date',
-  price: 'price',
-  special_price: 'special_price',
-  capacity: 'capacity',
-  is_default: 'is_default',
-  is_event_price: 'is_event_price',
-  icon: 'icon',
-  priority: 'priority',
-  capacity_progress_bar: 'capacity_progress_bar',
-  status: 'status',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  variation_color: 'variation_color',
-  seat_data: 'seat_data',
-  parent_price_option_id: 'parent_price_option_id',
-  category_id: 'category_id',
-  additional_fees: 'additional_fees',
-  allow_cancellation: 'allow_cancellation',
-  show_remaining_tickets: 'show_remaining_tickets',
-  show_ticket_booking_dates: 'show_ticket_booking_dates',
-  min_ticket_no: 'min_ticket_no',
-  max_ticket_no: 'max_ticket_no',
-  visibility: 'visibility',
-  offers: 'offers',
-  booking_starts: 'booking_starts',
-  booking_ends: 'booking_ends',
-  multiple_offers_option: 'multiple_offers_option',
-  multiple_offers_max_discount: 'multiple_offers_max_discount',
-  ticket_template_id: 'ticket_template_id'
-};
-
-exports.Prisma.Wp_eventprime_checkout_fieldsScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  label: 'label',
-  option_data: 'option_data',
-  priority: 'priority',
-  status: 'status',
-  created_by: 'created_by',
-  last_updated_by: 'last_updated_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Wp_eventprime_ticket_categoriesScalarFieldEnum = {
-  id: 'id',
-  event_id: 'event_id',
-  parent_id: 'parent_id',
-  name: 'name',
-  capacity: 'capacity',
-  priority: 'priority',
-  status: 'status',
-  created_by: 'created_by',
-  last_updated_by: 'last_updated_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.Wp_linksScalarFieldEnum = {
   link_id: 'link_id',
   link_url: 'link_url',
@@ -341,107 +279,6 @@ exports.Prisma.Wp_linksScalarFieldEnum = {
   link_rel: 'link_rel',
   link_notes: 'link_notes',
   link_rss: 'link_rss'
-};
-
-exports.Prisma.Wp_litespeed_urlScalarFieldEnum = {
-  id: 'id',
-  url: 'url',
-  cache_tags: 'cache_tags'
-};
-
-exports.Prisma.Wp_litespeed_url_fileScalarFieldEnum = {
-  id: 'id',
-  url_id: 'url_id',
-  vary: 'vary',
-  filename: 'filename',
-  type: 'type',
-  mobile: 'mobile',
-  webp: 'webp',
-  expired: 'expired'
-};
-
-exports.Prisma.Wp_mec_attendeesScalarFieldEnum = {
-  attendee_id: 'attendee_id',
-  post_id: 'post_id',
-  event_id: 'event_id',
-  occurrence: 'occurrence',
-  email: 'email',
-  first_name: 'first_name',
-  last_name: 'last_name',
-  data: 'data',
-  count: 'count',
-  verification: 'verification',
-  confirmation: 'confirmation'
-};
-
-exports.Prisma.Wp_mec_booking_attendeesScalarFieldEnum = {
-  id: 'id',
-  mec_booking_id: 'mec_booking_id',
-  user_id: 'user_id',
-  ticket_id: 'ticket_id'
-};
-
-exports.Prisma.Wp_mec_bookingsScalarFieldEnum = {
-  id: 'id',
-  booking_id: 'booking_id',
-  user_id: 'user_id',
-  transaction_id: 'transaction_id',
-  event_id: 'event_id',
-  ticket_ids: 'ticket_ids',
-  seats: 'seats',
-  status: 'status',
-  confirmed: 'confirmed',
-  verified: 'verified',
-  all_occurrences: 'all_occurrences',
-  date: 'date',
-  timestamp: 'timestamp'
-};
-
-exports.Prisma.Wp_mec_datesScalarFieldEnum = {
-  id: 'id',
-  post_id: 'post_id',
-  dstart: 'dstart',
-  dend: 'dend',
-  tstart: 'tstart',
-  tend: 'tend',
-  status: 'status',
-  public: 'public'
-};
-
-exports.Prisma.Wp_mec_eventsScalarFieldEnum = {
-  id: 'id',
-  post_id: 'post_id',
-  start: 'start',
-  end: 'end',
-  repeat: 'repeat',
-  rinterval: 'rinterval',
-  year: 'year',
-  month: 'month',
-  day: 'day',
-  week: 'week',
-  weekday: 'weekday',
-  weekdays: 'weekdays',
-  days: 'days',
-  not_in_days: 'not_in_days',
-  time_start: 'time_start',
-  time_end: 'time_end'
-};
-
-exports.Prisma.Wp_mec_occurrencesScalarFieldEnum = {
-  id: 'id',
-  post_id: 'post_id',
-  occurrence: 'occurrence',
-  params: 'params'
-};
-
-exports.Prisma.Wp_mec_usersScalarFieldEnum = {
-  id: 'id',
-  first_name: 'first_name',
-  last_name: 'last_name',
-  email: 'email',
-  reg: 'reg',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
 };
 
 exports.Prisma.Wp_optionsScalarFieldEnum = {
@@ -484,23 +321,6 @@ exports.Prisma.Wp_postsScalarFieldEnum = {
   comment_count: 'comment_count'
 };
 
-exports.Prisma.Wp_rtec_registrationsScalarFieldEnum = {
-  id: 'id',
-  user_id: 'user_id',
-  event_id: 'event_id',
-  registration_date: 'registration_date',
-  last_name: 'last_name',
-  first_name: 'first_name',
-  email: 'email',
-  venue: 'venue',
-  phone: 'phone',
-  other: 'other',
-  guests: 'guests',
-  custom: 'custom',
-  status: 'status',
-  action_key: 'action_key'
-};
-
 exports.Prisma.Wp_tec_eventsScalarFieldEnum = {
   event_id: 'event_id',
   post_id: 'post_id',
@@ -524,37 +344,6 @@ exports.Prisma.Wp_tec_occurrencesScalarFieldEnum = {
   end_date_utc: 'end_date_utc',
   duration: 'duration',
   hash: 'hash',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Wp_tec_order_modifier_relationshipsScalarFieldEnum = {
-  id: 'id',
-  modifier_id: 'modifier_id',
-  post_id: 'post_id',
-  post_type: 'post_type'
-};
-
-exports.Prisma.Wp_tec_order_modifiersScalarFieldEnum = {
-  id: 'id',
-  modifier_type: 'modifier_type',
-  sub_type: 'sub_type',
-  raw_amount: 'raw_amount',
-  slug: 'slug',
-  display_name: 'display_name',
-  status: 'status',
-  created_at: 'created_at',
-  start_time: 'start_time',
-  end_time: 'end_time',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Wp_tec_order_modifiers_metaScalarFieldEnum = {
-  id: 'id',
-  order_modifier_id: 'order_modifier_id',
-  meta_key: 'meta_key',
-  meta_value: 'meta_value',
-  priority: 'priority',
-  created_at: 'created_at',
   updated_at: 'updated_at'
 };
 
@@ -648,268 +437,89 @@ exports.Prisma.Wp_usersScalarFieldEnum = {
   photo_url: 'photo_url'
 };
 
-exports.Prisma.Wp_bookingScalarFieldEnum = {
-  booking_id: 'booking_id',
-  booking_options: 'booking_options',
-  trash: 'trash',
-  is_trash: 'is_trash',
-  sync_gid: 'sync_gid',
-  is_new: 'is_new',
-  status: 'status',
-  sort_date: 'sort_date',
-  modification_date: 'modification_date',
-  creation_date: 'creation_date',
-  form: 'form',
-  hash: 'hash',
-  booking_type: 'booking_type'
-};
-
-exports.Prisma.Wp_booking_dates_propsScalarFieldEnum = {
-  booking_dates_prop_id: 'booking_dates_prop_id',
-  resource_id: 'resource_id',
-  calendar_date: 'calendar_date',
-  prop_name: 'prop_name',
-  prop_value: 'prop_value'
-};
-
-exports.Prisma.Wp_bookingdatesScalarFieldEnum = {
-  booking_dates_id: 'booking_dates_id',
-  booking_id: 'booking_id',
-  booking_date: 'booking_date',
-  approved: 'approved'
-};
-
-exports.Prisma.Wp_em_bookingsScalarFieldEnum = {
-  booking_id: 'booking_id',
-  booking_uuid: 'booking_uuid',
-  event_id: 'event_id',
-  person_id: 'person_id',
-  booking_spaces: 'booking_spaces',
-  booking_comment: 'booking_comment',
-  booking_date: 'booking_date',
-  booking_status: 'booking_status',
-  booking_rsvp_status: 'booking_rsvp_status',
-  booking_price: 'booking_price',
-  booking_tax_rate: 'booking_tax_rate',
-  booking_taxes: 'booking_taxes',
-  booking_meta: 'booking_meta'
-};
-
-exports.Prisma.Wp_em_bookings_metaScalarFieldEnum = {
-  meta_id: 'meta_id',
-  booking_id: 'booking_id',
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
-};
-
-exports.Prisma.Wp_em_eventsScalarFieldEnum = {
-  event_id: 'event_id',
-  post_id: 'post_id',
-  event_parent: 'event_parent',
-  event_slug: 'event_slug',
-  event_owner: 'event_owner',
-  event_status: 'event_status',
-  event_active_status: 'event_active_status',
-  event_name: 'event_name',
-  event_start_date: 'event_start_date',
-  event_end_date: 'event_end_date',
-  event_start_time: 'event_start_time',
-  event_end_time: 'event_end_time',
-  event_all_day: 'event_all_day',
-  event_start: 'event_start',
-  event_end: 'event_end',
-  event_timezone: 'event_timezone',
-  post_content: 'post_content',
-  event_rsvp: 'event_rsvp',
-  event_rsvp_date: 'event_rsvp_date',
-  event_rsvp_time: 'event_rsvp_time',
-  event_rsvp_spaces: 'event_rsvp_spaces',
-  event_spaces: 'event_spaces',
-  event_private: 'event_private',
-  location_id: 'location_id',
-  event_location_type: 'event_location_type',
-  recurrence_id: 'recurrence_id',
-  event_date_created: 'event_date_created',
-  event_date_modified: 'event_date_modified',
-  recurrence: 'recurrence',
-  recurrence_interval: 'recurrence_interval',
-  recurrence_freq: 'recurrence_freq',
-  recurrence_byday: 'recurrence_byday',
-  recurrence_byweekno: 'recurrence_byweekno',
-  recurrence_days: 'recurrence_days',
-  recurrence_rsvp_days: 'recurrence_rsvp_days',
-  blog_id: 'blog_id',
-  group_id: 'group_id',
-  event_language: 'event_language',
-  event_translation: 'event_translation'
-};
-
-exports.Prisma.Wp_em_locationsScalarFieldEnum = {
-  location_id: 'location_id',
-  post_id: 'post_id',
-  blog_id: 'blog_id',
-  location_parent: 'location_parent',
-  location_slug: 'location_slug',
-  location_name: 'location_name',
-  location_owner: 'location_owner',
-  location_address: 'location_address',
-  location_town: 'location_town',
-  location_state: 'location_state',
-  location_postcode: 'location_postcode',
-  location_region: 'location_region',
-  location_country: 'location_country',
-  location_latitude: 'location_latitude',
-  location_longitude: 'location_longitude',
-  post_content: 'post_content',
-  location_status: 'location_status',
-  location_private: 'location_private',
-  location_language: 'location_language',
-  location_translation: 'location_translation'
-};
-
-exports.Prisma.Wp_em_metaScalarFieldEnum = {
-  meta_id: 'meta_id',
-  object_id: 'object_id',
-  meta_key: 'meta_key',
-  meta_value: 'meta_value',
-  meta_date: 'meta_date'
-};
-
-exports.Prisma.Wp_em_ticketsScalarFieldEnum = {
-  ticket_id: 'ticket_id',
-  event_id: 'event_id',
-  ticket_name: 'ticket_name',
-  ticket_description: 'ticket_description',
-  ticket_price: 'ticket_price',
-  ticket_start: 'ticket_start',
-  ticket_end: 'ticket_end',
-  ticket_min: 'ticket_min',
-  ticket_max: 'ticket_max',
-  ticket_spaces: 'ticket_spaces',
-  ticket_members: 'ticket_members',
-  ticket_members_roles: 'ticket_members_roles',
-  ticket_guests: 'ticket_guests',
-  ticket_required: 'ticket_required',
-  ticket_parent: 'ticket_parent',
-  ticket_order: 'ticket_order',
-  ticket_meta: 'ticket_meta'
-};
-
-exports.Prisma.Wp_em_tickets_bookingsScalarFieldEnum = {
-  ticket_booking_id: 'ticket_booking_id',
-  ticket_uuid: 'ticket_uuid',
-  booking_id: 'booking_id',
-  ticket_id: 'ticket_id',
-  ticket_booking_spaces: 'ticket_booking_spaces',
-  ticket_booking_price: 'ticket_booking_price',
-  ticket_booking_order: 'ticket_booking_order'
-};
-
-exports.Prisma.Wp_em_tickets_bookings_metaScalarFieldEnum = {
-  meta_id: 'meta_id',
-  ticket_booking_id: 'ticket_booking_id',
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
-};
-
-exports.Prisma.Wp_my_calendarScalarFieldEnum = {
-  event_id: 'event_id',
-  event_begin: 'event_begin',
-  event_end: 'event_end',
-  event_title: 'event_title',
-  event_desc: 'event_desc',
-  event_short: 'event_short',
-  event_registration: 'event_registration',
-  event_tickets: 'event_tickets',
-  event_time: 'event_time',
-  event_endtime: 'event_endtime',
-  event_recur: 'event_recur',
-  event_repeats: 'event_repeats',
-  event_status: 'event_status',
-  event_author: 'event_author',
-  event_host: 'event_host',
-  event_category: 'event_category',
-  event_link: 'event_link',
-  event_post: 'event_post',
-  event_link_expires: 'event_link_expires',
-  event_location: 'event_location',
-  event_label: 'event_label',
-  event_street: 'event_street',
-  event_street2: 'event_street2',
-  event_city: 'event_city',
-  event_state: 'event_state',
-  event_postcode: 'event_postcode',
-  event_region: 'event_region',
-  event_country: 'event_country',
-  event_url: 'event_url',
-  event_longitude: 'event_longitude',
-  event_latitude: 'event_latitude',
-  event_zoom: 'event_zoom',
-  event_phone: 'event_phone',
-  event_phone2: 'event_phone2',
-  event_access: 'event_access',
-  event_group_id: 'event_group_id',
-  event_span: 'event_span',
-  event_approved: 'event_approved',
-  event_flagged: 'event_flagged',
-  event_hide_end: 'event_hide_end',
-  event_holiday: 'event_holiday',
-  event_fifth_week: 'event_fifth_week',
-  event_image: 'event_image',
-  event_added: 'event_added'
-};
-
-exports.Prisma.Wp_my_calendar_categoriesScalarFieldEnum = {
-  category_id: 'category_id',
-  category_name: 'category_name',
-  category_color: 'category_color',
-  category_icon: 'category_icon',
-  category_private: 'category_private',
-  category_term: 'category_term'
-};
-
-exports.Prisma.Wp_my_calendar_category_relationshipsScalarFieldEnum = {
-  relationship_id: 'relationship_id',
-  event_id: 'event_id',
-  category_id: 'category_id'
-};
-
-exports.Prisma.Wp_my_calendar_eventsScalarFieldEnum = {
-  occur_id: 'occur_id',
-  occur_event_id: 'occur_event_id',
-  occur_begin: 'occur_begin',
-  occur_end: 'occur_end',
-  occur_group_id: 'occur_group_id'
-};
-
-exports.Prisma.Wp_my_calendar_location_relationshipsScalarFieldEnum = {
-  relationship_id: 'relationship_id',
-  location_id: 'location_id',
-  post_id: 'post_id'
-};
-
-exports.Prisma.Wp_my_calendar_locationsScalarFieldEnum = {
-  location_id: 'location_id',
-  location_label: 'location_label',
-  location_street: 'location_street',
-  location_street2: 'location_street2',
-  location_city: 'location_city',
-  location_state: 'location_state',
-  location_postcode: 'location_postcode',
-  location_region: 'location_region',
-  location_url: 'location_url',
-  location_country: 'location_country',
-  location_longitude: 'location_longitude',
-  location_latitude: 'location_latitude',
-  location_zoom: 'location_zoom',
-  location_phone: 'location_phone',
-  location_phone2: 'location_phone2',
-  location_access: 'location_access'
-};
-
 exports.Prisma.Stack_chipScalarFieldEnum = {
   stack_id: 'stack_id',
   chip_id: 'chip_id'
+};
+
+exports.Prisma.Wp_fbvScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  parent: 'parent',
+  type: 'type',
+  ord: 'ord',
+  created_by: 'created_by'
+};
+
+exports.Prisma.Wp_fbv_attachment_folderScalarFieldEnum = {
+  folder_id: 'folder_id',
+  attachment_id: 'attachment_id'
+};
+
+exports.Prisma.Wp_rank_math_analytics_gscScalarFieldEnum = {
+  id: 'id',
+  created: 'created',
+  query: 'query',
+  page: 'page',
+  clicks: 'clicks',
+  impressions: 'impressions',
+  position: 'position',
+  ctr: 'ctr'
+};
+
+exports.Prisma.Wp_rank_math_analytics_inspectionsScalarFieldEnum = {
+  id: 'id',
+  page: 'page',
+  created: 'created',
+  index_verdict: 'index_verdict',
+  indexing_state: 'indexing_state',
+  coverage_state: 'coverage_state',
+  page_fetch_state: 'page_fetch_state',
+  robots_txt_state: 'robots_txt_state',
+  rich_results_verdict: 'rich_results_verdict',
+  rich_results_items: 'rich_results_items',
+  last_crawl_time: 'last_crawl_time',
+  crawled_as: 'crawled_as',
+  google_canonical: 'google_canonical',
+  user_canonical: 'user_canonical',
+  sitemap: 'sitemap',
+  referring_urls: 'referring_urls',
+  raw_api_response: 'raw_api_response'
+};
+
+exports.Prisma.Wp_rank_math_analytics_objectsScalarFieldEnum = {
+  id: 'id',
+  created: 'created',
+  title: 'title',
+  page: 'page',
+  object_type: 'object_type',
+  object_subtype: 'object_subtype',
+  object_id: 'object_id',
+  primary_key: 'primary_key',
+  seo_score: 'seo_score',
+  page_score: 'page_score',
+  is_indexable: 'is_indexable',
+  schemas_in_use: 'schemas_in_use',
+  desktop_interactive: 'desktop_interactive',
+  desktop_pagescore: 'desktop_pagescore',
+  mobile_interactive: 'mobile_interactive',
+  mobile_pagescore: 'mobile_pagescore',
+  pagespeed_refreshed: 'pagespeed_refreshed'
+};
+
+exports.Prisma.Wp_rank_math_internal_linksScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  post_id: 'post_id',
+  target_post_id: 'target_post_id',
+  type: 'type'
+};
+
+exports.Prisma.Wp_rank_math_internal_metaScalarFieldEnum = {
+  object_id: 'object_id',
+  internal_link_count: 'internal_link_count',
+  external_link_count: 'external_link_count',
+  incoming_link_count: 'incoming_link_count'
 };
 
 exports.Prisma.SortOrder = {
@@ -932,7 +542,9 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.tournamentOrderByRelevanceFieldEnum = {
   tournament_name: 'tournament_name',
-  tournament_description: 'tournament_description'
+  tournament_description: 'tournament_description',
+  tournament_background_1: 'tournament_background_1',
+  tournament_background_2: 'tournament_background_2'
 };
 
 exports.Prisma.wp_actionscheduler_actionsOrderByRelevanceFieldEnum = {
@@ -967,35 +579,6 @@ exports.Prisma.wp_commentsOrderByRelevanceFieldEnum = {
   comment_type: 'comment_type'
 };
 
-exports.Prisma.wp_em_price_optionsOrderByRelevanceFieldEnum = {
-  name: 'name',
-  description: 'description',
-  price: 'price',
-  special_price: 'special_price',
-  icon: 'icon',
-  variation_color: 'variation_color',
-  seat_data: 'seat_data',
-  additional_fees: 'additional_fees',
-  min_ticket_no: 'min_ticket_no',
-  max_ticket_no: 'max_ticket_no',
-  visibility: 'visibility',
-  offers: 'offers',
-  booking_starts: 'booking_starts',
-  booking_ends: 'booking_ends',
-  multiple_offers_option: 'multiple_offers_option',
-  multiple_offers_max_discount: 'multiple_offers_max_discount'
-};
-
-exports.Prisma.wp_eventprime_checkout_fieldsOrderByRelevanceFieldEnum = {
-  type: 'type',
-  label: 'label',
-  option_data: 'option_data'
-};
-
-exports.Prisma.wp_eventprime_ticket_categoriesOrderByRelevanceFieldEnum = {
-  name: 'name'
-};
-
 exports.Prisma.wp_linksOrderByRelevanceFieldEnum = {
   link_url: 'link_url',
   link_name: 'link_name',
@@ -1006,56 +589,6 @@ exports.Prisma.wp_linksOrderByRelevanceFieldEnum = {
   link_rel: 'link_rel',
   link_notes: 'link_notes',
   link_rss: 'link_rss'
-};
-
-exports.Prisma.wp_litespeed_urlOrderByRelevanceFieldEnum = {
-  url: 'url',
-  cache_tags: 'cache_tags'
-};
-
-exports.Prisma.wp_litespeed_url_fileOrderByRelevanceFieldEnum = {
-  vary: 'vary',
-  filename: 'filename'
-};
-
-exports.Prisma.wp_mec_attendeesOrderByRelevanceFieldEnum = {
-  email: 'email',
-  first_name: 'first_name',
-  last_name: 'last_name',
-  data: 'data'
-};
-
-exports.Prisma.wp_mec_bookingsOrderByRelevanceFieldEnum = {
-  transaction_id: 'transaction_id',
-  ticket_ids: 'ticket_ids',
-  status: 'status'
-};
-
-exports.Prisma.wp_mec_datesOrderByRelevanceFieldEnum = {
-  status: 'status'
-};
-
-exports.Prisma.wp_mec_eventsOrderByRelevanceFieldEnum = {
-  rinterval: 'rinterval',
-  year: 'year',
-  month: 'month',
-  day: 'day',
-  week: 'week',
-  weekday: 'weekday',
-  weekdays: 'weekdays',
-  days: 'days',
-  not_in_days: 'not_in_days'
-};
-
-exports.Prisma.wp_mec_occurrencesOrderByRelevanceFieldEnum = {
-  params: 'params'
-};
-
-exports.Prisma.wp_mec_usersOrderByRelevanceFieldEnum = {
-  first_name: 'first_name',
-  last_name: 'last_name',
-  email: 'email',
-  reg: 'reg'
 };
 
 exports.Prisma.wp_optionsOrderByRelevanceFieldEnum = {
@@ -1086,18 +619,6 @@ exports.Prisma.wp_postsOrderByRelevanceFieldEnum = {
   post_mime_type: 'post_mime_type'
 };
 
-exports.Prisma.wp_rtec_registrationsOrderByRelevanceFieldEnum = {
-  last_name: 'last_name',
-  first_name: 'first_name',
-  email: 'email',
-  venue: 'venue',
-  phone: 'phone',
-  other: 'other',
-  custom: 'custom',
-  status: 'status',
-  action_key: 'action_key'
-};
-
 exports.Prisma.wp_tec_eventsOrderByRelevanceFieldEnum = {
   start_date: 'start_date',
   end_date: 'end_date',
@@ -1109,23 +630,6 @@ exports.Prisma.wp_tec_eventsOrderByRelevanceFieldEnum = {
 
 exports.Prisma.wp_tec_occurrencesOrderByRelevanceFieldEnum = {
   hash: 'hash'
-};
-
-exports.Prisma.wp_tec_order_modifier_relationshipsOrderByRelevanceFieldEnum = {
-  post_type: 'post_type'
-};
-
-exports.Prisma.wp_tec_order_modifiersOrderByRelevanceFieldEnum = {
-  modifier_type: 'modifier_type',
-  sub_type: 'sub_type',
-  slug: 'slug',
-  display_name: 'display_name',
-  status: 'status'
-};
-
-exports.Prisma.wp_tec_order_modifiers_metaOrderByRelevanceFieldEnum = {
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
 };
 
 exports.Prisma.wp_tec_slr_layoutsOrderByRelevanceFieldEnum = {
@@ -1189,118 +693,44 @@ exports.Prisma.wp_usersOrderByRelevanceFieldEnum = {
   photo_url: 'photo_url'
 };
 
-exports.Prisma.wp_bookingOrderByRelevanceFieldEnum = {
-  booking_options: 'booking_options',
-  sync_gid: 'sync_gid',
-  status: 'status',
-  form: 'form',
-  hash: 'hash'
+exports.Prisma.wp_fbvOrderByRelevanceFieldEnum = {
+  name: 'name'
 };
 
-exports.Prisma.wp_booking_dates_propsOrderByRelevanceFieldEnum = {
-  prop_name: 'prop_name',
-  prop_value: 'prop_value'
+exports.Prisma.wp_rank_math_analytics_gscOrderByRelevanceFieldEnum = {
+  query: 'query',
+  page: 'page'
 };
 
-exports.Prisma.wp_em_bookingsOrderByRelevanceFieldEnum = {
-  booking_uuid: 'booking_uuid',
-  booking_comment: 'booking_comment',
-  booking_meta: 'booking_meta'
+exports.Prisma.wp_rank_math_analytics_inspectionsOrderByRelevanceFieldEnum = {
+  page: 'page',
+  index_verdict: 'index_verdict',
+  indexing_state: 'indexing_state',
+  coverage_state: 'coverage_state',
+  page_fetch_state: 'page_fetch_state',
+  robots_txt_state: 'robots_txt_state',
+  rich_results_verdict: 'rich_results_verdict',
+  rich_results_items: 'rich_results_items',
+  crawled_as: 'crawled_as',
+  google_canonical: 'google_canonical',
+  user_canonical: 'user_canonical',
+  sitemap: 'sitemap',
+  referring_urls: 'referring_urls',
+  raw_api_response: 'raw_api_response'
 };
 
-exports.Prisma.wp_em_bookings_metaOrderByRelevanceFieldEnum = {
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
+exports.Prisma.wp_rank_math_analytics_objectsOrderByRelevanceFieldEnum = {
+  title: 'title',
+  page: 'page',
+  object_type: 'object_type',
+  object_subtype: 'object_subtype',
+  primary_key: 'primary_key',
+  schemas_in_use: 'schemas_in_use'
 };
 
-exports.Prisma.wp_em_eventsOrderByRelevanceFieldEnum = {
-  event_slug: 'event_slug',
-  event_name: 'event_name',
-  event_timezone: 'event_timezone',
-  post_content: 'post_content',
-  event_location_type: 'event_location_type',
-  recurrence_freq: 'recurrence_freq',
-  recurrence_byday: 'recurrence_byday',
-  event_language: 'event_language'
-};
-
-exports.Prisma.wp_em_locationsOrderByRelevanceFieldEnum = {
-  location_slug: 'location_slug',
-  location_name: 'location_name',
-  location_address: 'location_address',
-  location_town: 'location_town',
-  location_state: 'location_state',
-  location_postcode: 'location_postcode',
-  location_region: 'location_region',
-  location_country: 'location_country',
-  post_content: 'post_content',
-  location_language: 'location_language'
-};
-
-exports.Prisma.wp_em_metaOrderByRelevanceFieldEnum = {
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
-};
-
-exports.Prisma.wp_em_ticketsOrderByRelevanceFieldEnum = {
-  ticket_name: 'ticket_name',
-  ticket_description: 'ticket_description',
-  ticket_members_roles: 'ticket_members_roles',
-  ticket_meta: 'ticket_meta'
-};
-
-exports.Prisma.wp_em_tickets_bookingsOrderByRelevanceFieldEnum = {
-  ticket_uuid: 'ticket_uuid'
-};
-
-exports.Prisma.wp_em_tickets_bookings_metaOrderByRelevanceFieldEnum = {
-  meta_key: 'meta_key',
-  meta_value: 'meta_value'
-};
-
-exports.Prisma.wp_my_calendarOrderByRelevanceFieldEnum = {
-  event_title: 'event_title',
-  event_desc: 'event_desc',
-  event_short: 'event_short',
-  event_registration: 'event_registration',
-  event_tickets: 'event_tickets',
-  event_recur: 'event_recur',
-  event_repeats: 'event_repeats',
-  event_link: 'event_link',
-  event_label: 'event_label',
-  event_street: 'event_street',
-  event_street2: 'event_street2',
-  event_city: 'event_city',
-  event_state: 'event_state',
-  event_postcode: 'event_postcode',
-  event_region: 'event_region',
-  event_country: 'event_country',
-  event_url: 'event_url',
-  event_phone: 'event_phone',
-  event_phone2: 'event_phone2',
-  event_access: 'event_access',
-  event_image: 'event_image'
-};
-
-exports.Prisma.wp_my_calendar_categoriesOrderByRelevanceFieldEnum = {
-  category_name: 'category_name',
-  category_color: 'category_color',
-  category_icon: 'category_icon'
-};
-
-exports.Prisma.wp_my_calendar_locationsOrderByRelevanceFieldEnum = {
-  location_label: 'location_label',
-  location_street: 'location_street',
-  location_street2: 'location_street2',
-  location_city: 'location_city',
-  location_state: 'location_state',
-  location_postcode: 'location_postcode',
-  location_region: 'location_region',
-  location_url: 'location_url',
-  location_country: 'location_country',
-  location_phone: 'location_phone',
-  location_phone2: 'location_phone2',
-  location_access: 'location_access'
+exports.Prisma.wp_rank_math_internal_linksOrderByRelevanceFieldEnum = {
+  url: 'url',
+  type: 'type'
 };
 exports.quarter_ranking_trimestry_ranking = exports.$Enums.quarter_ranking_trimestry_ranking = {
   T1: 'T1',
@@ -1350,28 +780,12 @@ exports.Prisma.ModelName = {
   wp_actionscheduler_logs: 'wp_actionscheduler_logs',
   wp_commentmeta: 'wp_commentmeta',
   wp_comments: 'wp_comments',
-  wp_em_price_options: 'wp_em_price_options',
-  wp_eventprime_checkout_fields: 'wp_eventprime_checkout_fields',
-  wp_eventprime_ticket_categories: 'wp_eventprime_ticket_categories',
   wp_links: 'wp_links',
-  wp_litespeed_url: 'wp_litespeed_url',
-  wp_litespeed_url_file: 'wp_litespeed_url_file',
-  wp_mec_attendees: 'wp_mec_attendees',
-  wp_mec_booking_attendees: 'wp_mec_booking_attendees',
-  wp_mec_bookings: 'wp_mec_bookings',
-  wp_mec_dates: 'wp_mec_dates',
-  wp_mec_events: 'wp_mec_events',
-  wp_mec_occurrences: 'wp_mec_occurrences',
-  wp_mec_users: 'wp_mec_users',
   wp_options: 'wp_options',
   wp_postmeta: 'wp_postmeta',
   wp_posts: 'wp_posts',
-  wp_rtec_registrations: 'wp_rtec_registrations',
   wp_tec_events: 'wp_tec_events',
   wp_tec_occurrences: 'wp_tec_occurrences',
-  wp_tec_order_modifier_relationships: 'wp_tec_order_modifier_relationships',
-  wp_tec_order_modifiers: 'wp_tec_order_modifiers',
-  wp_tec_order_modifiers_meta: 'wp_tec_order_modifiers_meta',
   wp_tec_slr_layouts: 'wp_tec_slr_layouts',
   wp_tec_slr_maps: 'wp_tec_slr_maps',
   wp_tec_slr_seat_types: 'wp_tec_slr_seat_types',
@@ -1383,24 +797,14 @@ exports.Prisma.ModelName = {
   wp_um_metadata: 'wp_um_metadata',
   wp_usermeta: 'wp_usermeta',
   wp_users: 'wp_users',
-  wp_booking: 'wp_booking',
-  wp_booking_dates_props: 'wp_booking_dates_props',
-  wp_bookingdates: 'wp_bookingdates',
-  wp_em_bookings: 'wp_em_bookings',
-  wp_em_bookings_meta: 'wp_em_bookings_meta',
-  wp_em_events: 'wp_em_events',
-  wp_em_locations: 'wp_em_locations',
-  wp_em_meta: 'wp_em_meta',
-  wp_em_tickets: 'wp_em_tickets',
-  wp_em_tickets_bookings: 'wp_em_tickets_bookings',
-  wp_em_tickets_bookings_meta: 'wp_em_tickets_bookings_meta',
-  wp_my_calendar: 'wp_my_calendar',
-  wp_my_calendar_categories: 'wp_my_calendar_categories',
-  wp_my_calendar_category_relationships: 'wp_my_calendar_category_relationships',
-  wp_my_calendar_events: 'wp_my_calendar_events',
-  wp_my_calendar_location_relationships: 'wp_my_calendar_location_relationships',
-  wp_my_calendar_locations: 'wp_my_calendar_locations',
-  stack_chip: 'stack_chip'
+  stack_chip: 'stack_chip',
+  wp_fbv: 'wp_fbv',
+  wp_fbv_attachment_folder: 'wp_fbv_attachment_folder',
+  wp_rank_math_analytics_gsc: 'wp_rank_math_analytics_gsc',
+  wp_rank_math_analytics_inspections: 'wp_rank_math_analytics_inspections',
+  wp_rank_math_analytics_objects: 'wp_rank_math_analytics_objects',
+  wp_rank_math_internal_links: 'wp_rank_math_internal_links',
+  wp_rank_math_internal_meta: 'wp_rank_math_internal_meta'
 };
 
 /**

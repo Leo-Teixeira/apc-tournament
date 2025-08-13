@@ -6,27 +6,26 @@ import {
   TournamentRanking,
   Registration,
   TableAssignment,
-  Stack
+  Stack,
 } from "@/app/types";
 
+type TournamentData = {
+  tournament: Tournament;
+  registrations: Registration[];
+  classement: TournamentRanking[];
+  levels: TournamentLevel[];
+  assignements: TableAssignment[];
+  stacks: Stack[];
+};
+
 export const useTournamentData = (tournamentId: string) => {
-  const fullQuery = useQuery({
+  const fullQuery = useQuery<TournamentData>({
     queryKey: ["tournament-data", tournamentId],
-    queryFn: async (): Promise<{
-      tournament: Tournament;
-      registrations: Registration[];
-      classement: TournamentRanking[];
-      levels: TournamentLevel[];
-      assignements: TableAssignment[];
-      stacks: Stack[];
-    }> => {
-      // Une seule requête optimisée au lieu de 4
+    queryFn: async (): Promise<TournamentData> => {
       const res = await fetch(`/api/tournament/${tournamentId}/details`);
-      
       if (!res.ok) {
         throw new Error("Erreur lors du chargement des données");
       }
-
       const data = await res.json();
 
       return {
@@ -34,13 +33,17 @@ export const useTournamentData = (tournamentId: string) => {
         registrations: data.registrations,
         classement: data.classement,
         levels: data.tournament.tournament_level || [],
-        assignements: data.tournament.registration?.flatMap((r: Registration) => r.table_assignment) || [],
-        stacks: data.stacks
+        assignements:
+          data.tournament.registration?.flatMap(
+            (r: Registration) => r.table_assignment
+          ) || [],
+        stacks: data.stacks,
       };
     },
   });
 
-  const statusQuery = useQuery({
+  // Pour ne charger que le status du tournoi, si besoin
+  const statusQuery = useQuery<{ tournament: Tournament }>({
     queryKey: ["tournament-status", tournamentId],
     queryFn: async () => {
       const res = await fetch(`/api/tournament/${tournamentId}/details`);
@@ -48,7 +51,7 @@ export const useTournamentData = (tournamentId: string) => {
       const data = await res.json();
       return { tournament: data.tournament };
     },
-    enabled: false,
+    enabled: false, // que sur action
   });
 
   return {
@@ -57,6 +60,6 @@ export const useTournamentData = (tournamentId: string) => {
     isError: fullQuery.isError,
     error: fullQuery.error,
     refetch: fullQuery.refetch,
-    refetchStatusOnly: statusQuery.refetch
+    refetchStatusOnly: statusQuery.refetch,
   };
 };

@@ -19,6 +19,7 @@ export default function StackPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [stackToDelete, setStackToDelete] = useState<Stack | null>(null);
 
+  // Hooks React Query
   const { data: stacks = [], isLoading: isStacksLoading } = useStacks();
   const createStackMutation = useCreateStack();
   const deleteStackMutation = useDeleteStack();
@@ -58,21 +59,23 @@ export default function StackPage() {
 
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-10">
-      {/* TabBar mobile en haut, sert de titre/navigation */}
+      {/* TabBar mobile */}
       <div className="block md:hidden mb-2">
         <TabBar />
       </div>
-      {/* Ancien titre supprimé */}
+
+      {/* Bouton création stack */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        {/* Ancien <p> titre supprimé */}
         <ButtonComponents
           text="Nouveau Stack"
           buttonClassName="bg-primary_brand-500 w-full sm:w-auto"
           textClassName="text-primary_brand-50"
           onClick={onOpen}
+          // Ici pas de mutation → pas de loading direct
         />
       </div>
 
+      {/* Grid des stacks */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
         {stacks.map((stack) => {
           const sortedChips =
@@ -106,7 +109,8 @@ export default function StackPage() {
                       setStackToDelete(stack);
                       setIsDeleteModalOpen(true);
                     }}
-                    className="absolute top-2 right-2 text-lg p-1 rounded-full bg-danger-500 cursor-pointer active:opacity-50 text-white z-10 hover:bg-danger-700">
+                    className="absolute top-2 right-2 text-lg p-1 rounded-full bg-danger-500 cursor-pointer active:opacity-50 text-white z-10 hover:bg-danger-700"
+                  >
                     <HugeiconsIcon
                       icon={Delete02Icon}
                       size={20}
@@ -120,12 +124,15 @@ export default function StackPage() {
         })}
       </div>
 
+      {/* Modal création */}
       <GenericModal
         isOpen={isOpen}
         onClose={onClose}
         title="Nouveau stack"
         confirmLabel="Créer le stack"
-        onConfirm={handleCreateStack}>
+        onConfirm={handleCreateStack}
+        loading={createStackMutation.isLoading} // ✅ Loader activé sur le bouton de confirmation
+      >
         <div className="flex flex-col gap-4">
           <InputComponents
             label="Nom du stack"
@@ -137,19 +144,24 @@ export default function StackPage() {
             label="Stack par joueur"
             type="number"
             value={String(newStackTotalPlayer)}
-            onChange={(e) => setNewStackTotalPlayer(parseInt(e.target.value))}
+            onChange={(e) =>
+              setNewStackTotalPlayer(parseInt(e.target.value) || 0)
+            }
             min={0}
           />
         </div>
       </GenericModal>
 
+      {/* Modal suppression */}
       <GenericModal
         isOpen={isDeleteModalOpen}
         onClose={() => setStackToDelete(null)}
         title="Supprimer le stack"
         confirmLabel="Supprimer"
         cancelLabel="Annuler"
-        onConfirm={handleDeleteStack}>
+        onConfirm={handleDeleteStack}
+        loading={deleteStackMutation.isLoading} // ✅ Loader suppression
+      >
         <p>
           Es-tu sûr de vouloir supprimer le stack{" "}
           <span className="font-semibold">{stackToDelete?.stack_name}</span> ?

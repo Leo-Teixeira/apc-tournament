@@ -24,5 +24,7 @@ export type Tournament = {
   tournament_level?: TournamentLevel[];
   tournament_ranking?: TournamentRanking[];
   tournament_table?: TournamentTable[];
+  tournament_background_1: string;
+  tournament_background_2: string;
   stack?: Stack;
 };

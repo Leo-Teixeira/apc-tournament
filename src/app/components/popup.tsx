@@ -16,7 +16,10 @@ type GenericModalProps = {
   onConfirm?: () => void;
   onCancel?: () => void;
   children: React.ReactNode;
+  loading?: boolean;
+  disabled?: boolean;
 };
+
 
 export const GenericModal: React.FC<GenericModalProps> = ({
   isOpen,
@@ -26,7 +29,9 @@ export const GenericModal: React.FC<GenericModalProps> = ({
   cancelLabel = "Annuler",
   onConfirm,
   onCancel,
-  children
+  children,
+  loading = false,    // par défaut false
+  disabled = false,   // par défaut false
 }) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="md">
@@ -45,12 +50,15 @@ export const GenericModal: React.FC<GenericModalProps> = ({
                 buttonClassName="w-full sm:w-auto bg-transparent hover:bg-ligth/30"
                 textClassName="text-danger-500"
                 text={cancelLabel}
+                disabled={loading || disabled}      // Empêche fermeture pendant chargement
               />
               <ButtonComponents
                 onClick={onConfirm}
                 buttonClassName="w-full sm:w-auto bg-primary_background hover:bg-primary_hover_background"
                 textClassName="text-primary_brand-50"
                 text={confirmLabel}
+                loading={loading}                 // LE LOADER EST BRANCHÉ ICI
+                disabled={loading || disabled}    // Empêche double clic/fermeture
               />
             </ModalFooter>
           </>
@@ -59,3 +67,4 @@ export const GenericModal: React.FC<GenericModalProps> = ({
     </Modal>
   );
 };
+

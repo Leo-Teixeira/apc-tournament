@@ -19,38 +19,35 @@ import { useEliminatePlayer } from "@/app/hook/useEliminatePlayer";
 import { useFinishTournament } from "@/app/hook/useUpdateTournament";
 import { useAvailableTables } from "@/app/hook/useAvailableTables";
 import LoadingComponent from "@/app/error/loading/page";
+import { useNotification } from "@/app/providers/NotificationProvider";
 
 export const TableTabs = () => {
+  const { notify } = useNotification();
+
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});
-  const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(
-    null
-  );
+  const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(null);
   const [seatNumber, setSeatNumber] = useState<number>(1);
 
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { tournament, assignements, refetchAll, refetchOnly } = useTournamentContext();
+  const { tournament, assignements } = useTournamentContext();
 
   const movePlayerMutation = useMovePlayer();
   const eliminatePlayerMutation = useEliminatePlayer();
   const finishTournamentMutation = useFinishTournament();
 
-  const [selectedPlayerToMove, setSelectedPlayerToMove] =
-    useState<TableAssignment | null>(null);
+  const [selectedPlayerToMove, setSelectedPlayerToMove] = useState<TableAssignment | null>(null);
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
   const [moveOptions, setMoveOptions] = useState<TableAssignment[]>([]);
   const [moveMode, setMoveMode] = useState<"swap" | "move">("swap");
-  const [selectedSwapTargetId, setSelectedSwapTargetId] = useState<
-    number | null
-  >(null);
+  const [selectedSwapTargetId, setSelectedSwapTargetId] = useState<number | null>(null);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
 
-  const { data: availableTables, isLoading: isLoadingTables } =
-    useAvailableTables(
-      tournament?.id,
-      selectedPlayerToMove?.table_id,
-      moveMode === "move"
-    );
+  const { data: availableTables } = useAvailableTables(
+    tournament?.id,
+    selectedPlayerToMove?.table_id,
+    moveMode === "move"
+  );
 
   useEffect(() => {
     if (tournament?.id) {
@@ -58,36 +55,70 @@ export const TableTabs = () => {
     }
   }, [tournament?.id, assignements]);
 
+  // ✅ Elimination avec notifs killer + mouvements rééquilibrage détaillés
   const handleConfirmElimination = async (killerId: number) => {
     if (!selectedPlayer || !tournament) return;
 
     try {
-      await eliminatePlayerMutation.mutateAsync({
+      const killer =
+        assignements.find((a) => a.registration_id === killerId)?.registration?.wp_users
+          ?.pseudo_winamax ?? "??";
+
+      // Appel API => retour { rebalanced, moves }
+      const res = await eliminatePlayerMutation.mutateAsync({
         tournamentId: tournament.id,
         registrationId: selectedPlayer.registration_id,
         killerId
       });
 
+      notify(
+        "error",
+        `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killer}`
+      );
+
+      // 🔹 Notifications pour chaque joueur déplacé
+      if (res?.moves?.length) {
+        res.moves.forEach((move) => {
+          if (move.toTableNumber && move.toSeatNumber) {
+            notify(
+              "info",
+              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}, siège ${move.toSeatNumber}`
+            );
+          } else if (move.toTableNumber) {
+            notify(
+              "info",
+              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`
+            );
+          } else {
+            notify(
+              "info",
+              `♻️ ${move.playerName} a été déplacé`
+            );
+          }
+        });
+      } else if (res?.rebalanced) {
+        // Rééquilibrage sans détails
+        notify("info", "♻️ Rééquilibrage des tables effectué");
+      }
+
+      // Fin auto si dernier vivant
       const remainingAlive = assignements.filter((a) => !a.eliminated);
       if (
         remainingAlive.length === 1 &&
         tournament.tournament_status !== "finish"
       ) {
         await finishTournamentMutation.mutateAsync(tournament.id);
-        console.log("✅ Tournoi terminé automatiquement");
+        notify("success", "🏆 Le tournoi est terminé !");
       }
 
-      
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
-      alert("Une erreur est survenue lors de l'élimination du joueur.");
+      notify("error", "❌ Une erreur est survenue lors de l'élimination.");
     }
   };
 
-  const getConditionalActions = (
-    item: SeatRow
-  ): ActionDefinition<SeatRow>[] => {
+  const getConditionalActions = (item: SeatRow): ActionDefinition<SeatRow>[] => {
     const actions: ActionDefinition<SeatRow>[] = [];
 
     if (tournament && tournament.tournament_status !== "start") {
@@ -225,14 +256,31 @@ export const TableTabs = () => {
 
             await movePlayerMutation.mutateAsync(payload);
 
-            
+            let tableDest = "";
+            if (moveMode === "swap") {
+              const targetPlayer = assignements.find((a) => a.id === targetId);
+              tableDest = targetPlayer?.tournament_table?.table_number
+                ? `Table ${targetPlayer.tournament_table.table_number}`
+                : "une autre table";
+            } else {
+              const targetTable = availableTables?.find((t) => t.id === targetId);
+              tableDest = targetTable
+                ? `Table ${targetTable.table_number}`
+                : "une autre table";
+            }
+
+            notify(
+              "info",
+              `🔄 ${selectedPlayerToMove?.registration?.wp_users?.pseudo_winamax} est maintenant à ${tableDest}`
+            );
+
             setIsMoveModalOpen(false);
             setSelectedSwapTargetId(null);
             setSelectedTableId(null);
             setMoveMode("swap");
           } catch (err) {
             console.error("❌ Erreur lors du déplacement :", err);
-            alert("Une erreur est survenue lors du déplacement.");
+            notify("error", "❌ Une erreur est survenue lors du déplacement.");
           }
         }}>
         <MovePlayerModalBody

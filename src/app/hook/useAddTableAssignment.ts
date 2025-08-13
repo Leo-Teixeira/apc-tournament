@@ -12,7 +12,7 @@ type AddTablePayload = {
 export const useAddTableAssignment = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ tournamentId, data }: AddTablePayload) => {
       const res = await fetch(
         `/api/tournament/${tournamentId}/table_assignement`,
@@ -34,4 +34,12 @@ export const useAddTableAssignment = () => {
       });
     }
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
 };
+

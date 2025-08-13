@@ -31,32 +31,38 @@ import LoadingComponent from "@/app/error/loading/page";
 export default function TournamentDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { tournament, levels, registration, classement, stacks, refetchAll, refetchOnly } =
-    useTournamentContext();
+  const {
+    tournament,
+    levels,
+    registration,
+    classement,
+    stacks,
+    refetchAll,
+    refetchOnly
+  } = useTournamentContext();
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
   const [isShowTableModalOpen, setIsShowTableModalOpen] = useState(false);
-  const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
-    useState(false);
-  const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] =
-    useState(false);
+  const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] = useState(false);
+  const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] = useState(false);
   const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
   const formRef = useRef<AddTableFormHandle>(null);
 
+  // Mutation hooks
   const togglePauseMutation = useTogglePause(String(id));
   const launchTournamentMutation = useLaunchTournament(String(id));
   const addTableMutation = useAddTableAssignment();
   const resetLevelsMutation = useResetLevels();
   const generateLevelsMutation = useGenerateLevels();
 
+  // Example: you can also add future mutations for add level, generate tables, etc.
+
   const nextTableNumber =
     (tournament?.tournament_table?.length ?? 0) > 0
-      ? Math.max(
-          ...(tournament!.tournament_table ?? []).map((t) => t.table_number)
-        ) + 1
+      ? Math.max(...(tournament!.tournament_table ?? []).map((t) => t.table_number)) + 1
       : 1;
 
   useEffect(() => {
@@ -69,7 +75,6 @@ export default function TournamentDetailPage() {
   const togglePause = async (pause: boolean) => {
     try {
       await togglePauseMutation.mutateAsync(pause);
-      
     } catch (err) {
       console.error("❌ Erreur mise en pause / reprise :", err);
       alert("Une erreur est survenue");
@@ -101,38 +106,50 @@ export default function TournamentDetailPage() {
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="font-satoshiBlack text-xl4 max-sm:hidden">{tournament.tournament_name}</h1>
+            <h1 className="font-satoshiBlack text-xl4 max-sm:hidden">
+              {tournament.tournament_name} - {tournament.tournament_trimestry}
+            </h1>
             <button
               onClick={() => router.back()}
               className="md:hidden flex items-center gap-2 p-0 m-0 bg-transparent border-none shadow-none focus:outline-none active:outline-none"
               aria-label="Retour"
-              style={{ color: 'white', fontWeight: 400, fontSize: '18px', lineHeight: '24px' }}
+              style={{
+                color: "white",
+                fontWeight: 400,
+                fontSize: "18px",
+                lineHeight: "24px"
+              }}
             >
               <HugeiconsIcon
                 icon={ArrowLeft01Icon}
                 size={20}
                 className="text-white"
               />
-              <span className="text-white font-satoshiRegular text-base">Menu principal</span>
+              <span className="text-white font-satoshiRegular text-base">
+                Menu principal
+              </span>
             </button>
           </div>
-                     <div className="md:hidden w-full flex flex-col items-start mt-3">
-             <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">{tournament.tournament_name}</h1>
-             <Chip
-               className={`font-satoshiRegular text-xs mt-2 ${
-                 tournament.tournament_status === "finish"
-                   ? "bg-red-950"
-                   : tournament.tournament_status === "start"
-                   ? "bg-purple-950"
-                   : tournament.tournament_pause
-                   ? "bg-danger-500"
-                   : "bg-green-950"
-               }`}>
-               {tournament.tournament_pause
-                 ? "En pause"
-                 : STRINGS.status[tournament.tournament_status]}
-             </Chip>
-           </div>
+          <div className="md:hidden w-full flex flex-col items-start mt-3">
+            <h1 className="font-satoshiBlack text-base text-white truncate max-w-[60vw]">
+              {tournament.tournament_name}
+            </h1>
+            <Chip
+              className={`font-satoshiRegular text-xs mt-2 ${
+                tournament.tournament_status === "finish"
+                  ? "bg-red-950"
+                  : tournament.tournament_status === "start"
+                  ? "bg-purple-950"
+                  : tournament.tournament_pause
+                  ? "bg-danger-500"
+                  : "bg-green-950"
+              }`}
+            >
+              {tournament.tournament_pause
+                ? "En pause"
+                : STRINGS.status[tournament.tournament_status]}
+            </Chip>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-end">
@@ -160,7 +177,6 @@ export default function TournamentDetailPage() {
               textClassName="text-primary_brand-50"
             />
           )}
-
           {tournament.tournament_status === "in_coming" && (
             <>
               <ButtonComponents
@@ -172,6 +188,8 @@ export default function TournamentDetailPage() {
                 onClick={() => setIsPauseModalOpen(true)}
                 buttonClassName="bg-primary_background hover:bg-primary_hover_background"
                 textClassName="text-primary_brand-50"
+                loading={togglePauseMutation.isLoading}
+                disabled={togglePauseMutation.isLoading}
               />
               <ButtonComponents
                 text="Voir l'affichage"
@@ -202,7 +220,8 @@ export default function TournamentDetailPage() {
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(String(key))}
             aria-label="Dynamic tabs"
-            items={tabs}>
+            items={tabs}
+          >
             {(item) => (
               <Tab
                 key={item.id}
@@ -212,23 +231,39 @@ export default function TournamentDetailPage() {
             )}
           </Tabs>
           {tournament.tournament_status !== "finish" && (
+            //! revoir ça demain
             <ButtonTabsComponents
               tournamentStatus={tournament.tournament_status}
               tabsId={selectedTab}
               levels={levels}
               onModify={onOpen}
+              isModifyLoading={false}
+
               onAddLevel={onOpen}
+              isAddLevelLoading={false}
+
               onResetLevel={() => setIsReinitialiseLevelModalOpen(true)}
-              onAddPlayer={onOpen}
-              onGenerateTables={onOpen}
+              isResetLevelLoading={resetLevelsMutation.isLoading}
+
               onGenerateLevel={() => setIsGenerateLevelModalOpen(true)}
+              isGenerateLevelLoading={generateLevelsMutation.isLoading}
+
+              onAddPlayer={onOpen}
+              isAddPlayerLoading={false}
+
               onEditStack={onOpen}
+              isEditStackLoading={false}
+
               onAddTable={() => setIsAddTableModalOpen(true)}
+              isAddTableLoading={addTableMutation.isLoading}
+
+              onGenerateTables={onOpen}
+              isGenerateTablesLoading={false}
             />
           )}
         </div>
-                 {/* Bottom bar mobile */}
-         <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] flex justify-between items-center p-3 rounded-3xl gap-2 bg-dark/20 backdrop-blur-md shadow-2xl z-50">
+        {/* Bottom bar mobile */}
+        <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] flex justify-between items-center p-3 rounded-3xl gap-2 bg-dark/20 backdrop-blur-md shadow-2xl z-50">
           {[
             { id: "0", label: "Général", icon: Home01Icon },
             { id: "1", label: "Niveaux", icon: Home01Icon },
@@ -238,11 +273,21 @@ export default function TournamentDetailPage() {
             <button
               key={tab.id}
               onClick={() => setSelectedTab(tab.id)}
-              className={`flex flex-col items-center justify-center px-4 py-2 rounded-xl gap-1 transition-all duration-200 ${selectedTab === tab.id ? "bg-ligth/10 scale-105" : "bg-transparent hover:bg-neutral-800/50"}`}
+              className={`flex flex-col items-center justify-center px-4 py-2 rounded-xl gap-1 transition-all duration-200 ${
+                selectedTab === tab.id
+                  ? "bg-ligth/10 scale-105"
+                  : "bg-transparent hover:bg-neutral-800/50"
+              }`}
               style={{ minWidth: 64 }}
             >
               <HugeiconsIcon icon={tab.icon} size={24} className="mb-1 text-white" />
-              <span className={`text-xs ${selectedTab === tab.id ? "text-white" : "text-neutral-400"}`}>{tab.label}</span>
+              <span
+                className={`text-xs ${
+                  selectedTab === tab.id ? "text-white" : "text-neutral-400"
+                }`}
+              >
+                {tab.label}
+              </span>
             </button>
           ))}
         </div>
@@ -252,11 +297,7 @@ export default function TournamentDetailPage() {
         </div>
       </div>
 
-      <ModalManager
-        selectedTab={selectedTab}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <ModalManager selectedTab={selectedTab} isOpen={isOpen} onClose={onClose} />
 
       <GenericModal
         isOpen={isLaunchModalOpen}
@@ -272,16 +313,16 @@ export default function TournamentDetailPage() {
               );
               return;
             }
-
             await launchTournamentMutation.mutateAsync();
-            
             setIsLaunchModalOpen(false);
             window.open(`/game/${id}`);
           } catch (err) {
             console.error("❌ Erreur lancement tournoi :", err);
             alert("Erreur lors du lancement du tournoi");
           }
-        }}>
+        }}
+        loading={launchTournamentMutation.isLoading}
+      >
         <p>
           Es-tu sûr de vouloir lancer le tournoi ?
           <br />
@@ -298,17 +339,16 @@ export default function TournamentDetailPage() {
         onConfirm={async () => {
           try {
             if (!tournament) throw new Error("Tournoi non disponible");
-
             await generateLevelsMutation.mutateAsync(tournament.id);
-
-            
             setIsGenerateLevelModalOpen(false);
-            window.location.reload(); // ou refetch ton contexte React Query
+            window.location.reload();
           } catch (err) {
             console.error("❌ Erreur génération niveaux :", err);
             alert("Erreur lors de la génération des niveaux");
           }
-        }}>
+        }}
+        loading={generateLevelsMutation.isLoading}
+      >
         <p>Es-tu sûr de vouloir générer les niveaux automatiquement ?</p>
       </GenericModal>
 
@@ -322,16 +362,16 @@ export default function TournamentDetailPage() {
           try {
             if (!tournament) throw new Error("Tournoi non disponible");
             await resetLevelsMutation.mutateAsync(tournament.id);
-            
             setIsReinitialiseLevelModalOpen(false);
           } catch (err) {
             console.error("❌ Erreur réinitialisation niveau :", err);
             alert("Erreur lors de la réinitialisation des niveaux");
           }
-        }}>
+        }}
+        loading={resetLevelsMutation.isLoading}
+      >
         <p>
-          Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront
-          tous perdus.
+          Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront tous perdus.
         </p>
       </GenericModal>
 
@@ -350,13 +390,14 @@ export default function TournamentDetailPage() {
               tournamentId: tournament.id,
               data: values
             });
-            
             setIsAddTableModalOpen(false);
           } catch (err) {
             console.error("Erreur ajout table :", err);
             alert("Erreur lors de l'ajout de la table");
           }
-        }}>
+        }}
+        loading={addTableMutation.isLoading}
+      >
         <AddTableForm ref={formRef} initialNumber={nextTableNumber} />
       </GenericModal>
 
@@ -364,9 +405,7 @@ export default function TournamentDetailPage() {
         isOpen={isPauseModalOpen}
         onClose={() => setIsPauseModalOpen(false)}
         title={
-          tournament.tournament_pause
-            ? "Reprendre le tournoi"
-            : "Mettre en pause le tournoi"
+          tournament.tournament_pause ? "Reprendre le tournoi" : "Mettre en pause le tournoi"
         }
         confirmLabel={
           tournament.tournament_pause ? "Reprendre" : "Mettre en pause"
@@ -375,17 +414,17 @@ export default function TournamentDetailPage() {
         onConfirm={async () => {
           try {
             await togglePause(!tournament.tournament_pause);
-            
             setIsPauseModalOpen(false);
           } catch (err) {
             console.error("❌ Erreur changement pause :", err);
             alert("Erreur lors de la mise à jour de l'état du tournoi");
           }
-        }}>
+        }}
+        loading={togglePauseMutation.isLoading}
+      >
         <p>
           Es-tu sûr de vouloir{" "}
-          {tournament.tournament_pause ? "reprendre" : "mettre en pause"} le
-          tournoi ?
+          {tournament.tournament_pause ? "reprendre" : "mettre en pause"} le tournoi ?
         </p>
       </GenericModal>
     </div>

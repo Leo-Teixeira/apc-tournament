@@ -1,5 +1,4 @@
 import { Card, Divider } from "@heroui/react";
-import { ButtonComponents } from "@/app/components/button";
 import { BackgroundComponent } from "./components/background_components";
 import { ClassementComponent } from "./components/classement_components";
 import { formatDateFR, formatHourFR } from "@/app/utils/date";

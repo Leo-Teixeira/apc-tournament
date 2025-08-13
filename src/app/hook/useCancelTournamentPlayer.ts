@@ -1,15 +1,16 @@
 // hooks/useCancelTournamentPlayer.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { TournamentTable } from "../types";
+
+type CancelTournamentPlayerParams = {
+  tournamentId: number | string;
+  registrationId: number;
+};
 
 export const useCancelTournamentPlayer = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (params: {
-      tournamentId: number | string;
-      registrationId: number;
-    }) => {
+  const mutation = useMutation({
+    mutationFn: async (params: CancelTournamentPlayerParams) => {
       const res = await fetch(
         `/api/tournament/${params.tournamentId}/player/${params.registrationId}/status`,
         {
@@ -29,4 +30,12 @@ export const useCancelTournamentPlayer = () => {
       });
     }
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };

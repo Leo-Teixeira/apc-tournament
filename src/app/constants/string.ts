@@ -34,9 +34,9 @@ export const STRINGS = {
         href: "/sitandgo"
       },
       { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
-      { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
+      { label: "Tournoi Spéciaux", icon: ChampionIcon, href: "/special" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
-      { label: "Mallettes", icon: Briefcase09Icon, href: "/malette" }
+      { label: "Stack", icon: Briefcase09Icon, href: "/malette" }
     ]
   },
   sidebar_mobile: {

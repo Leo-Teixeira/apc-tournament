@@ -1,6 +1,7 @@
 import { Divider } from "@heroui/react";
 import Sidebar from "../components/sideBar";
 import "../globals.css";
+import { NotificationProvider } from "../providers/NotificationProvider";
 
 export default function CommonLayout({
   children
@@ -16,7 +17,9 @@ export default function CommonLayout({
         <Divider orientation="vertical" className="border-2 hidden md:block" />
         <div className="flex-1 min-w-0 min-h-0 overflow-y-auto p-0 bg-apt-gradient flex flex-col">
           <div className="p-2 md:p-6">
-            {children}
+            <NotificationProvider>
+              {children}
+            </NotificationProvider>
           </div>
         </div>
       </div>

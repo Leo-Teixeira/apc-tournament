@@ -1,14 +1,17 @@
+// hooks/useGenerateLevels.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+type GenerateLevelsPayload = string | number;
 
 export const useGenerateLevels = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (tournamentId: string | number) => {
+  const mutation = useMutation<void, Error, GenerateLevelsPayload>({
+    mutationFn: async (tournamentId) => {
       const res = await fetch(
         `/api/tournament/${tournamentId}/level/generate`,
         {
-          method: "POST"
+          method: "POST",
         }
       );
 
@@ -17,10 +20,18 @@ export const useGenerateLevels = () => {
         throw new Error(error?.error || "Erreur serveur");
       }
     },
-    onSuccess: (tournamentId) => {
+    onSuccess: (_, tournamentId) => {
       queryClient.invalidateQueries({
-        queryKey: ["tournament-data", tournamentId]
+        queryKey: ["tournament-data", tournamentId],
       });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };

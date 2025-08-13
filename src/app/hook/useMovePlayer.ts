@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type MoveMode = "swap" | "move";
 
-type MovePlayerPayload = {
+export type MovePlayerPayload = {
   tournamentId: number | string;
   playerId: number;
   mode: MoveMode;
@@ -13,21 +13,12 @@ type MovePlayerPayload = {
 export const useMovePlayer = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({
-      tournamentId,
-      playerId,
-      mode,
-      targetId
-    }: MovePlayerPayload) => {
+  const mutation = useMutation<void, Error, MovePlayerPayload>({
+    mutationFn: async ({ tournamentId, playerId, mode, targetId }) => {
       const res = await fetch(`/api/tournament/${tournamentId}/table/move`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          playerId,
-          mode,
-          targetId
-        })
+        body: JSON.stringify({ playerId, mode, targetId }),
       });
 
       if (!res.ok) {
@@ -36,8 +27,16 @@ export const useMovePlayer = () => {
     },
     onSuccess: (_, { tournamentId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["tournament-data", tournamentId]
+        queryKey: ["tournament-data", tournamentId],
       });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync, // lancer la mutation
+    isLoading: mutation.isPending,     // pour afficher un loader
+    isError: mutation.isError,         // booléen erreur
+    error: mutation.error,             // objet/détail erreur
+    reset: mutation.reset,             // reset état mutation
+  };
 };

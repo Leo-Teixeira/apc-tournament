@@ -3,18 +3,35 @@
 import { ButtonComponents } from "@/app/components/button";
 import { TournamentLevel } from "@/app/types";
 
+// Tu peux ajouter le typage prop complet ici pour loader/disabled
 type ButtonTabsProps = {
   tournamentStatus: string;
   tabsId: string;
   levels: TournamentLevel[];
+
   onAddLevel?: () => void;
+  isAddLevelLoading?: boolean;
+
   onResetLevel?: () => void;
+  isResetLevelLoading?: boolean;
+
   onGenerateLevel?: () => void;
+  isGenerateLevelLoading?: boolean;
+
   onAddTable?: () => void;
+  isAddTableLoading?: boolean;
+
   onModify?: () => void;
+  isModifyLoading?: boolean;
+
   onGenerateTables?: () => void;
+  isGenerateTablesLoading?: boolean;
+
   onAddPlayer?: () => void;
+  isAddPlayerLoading?: boolean;
+
   onEditStack?: () => void;
+  isEditStackLoading?: boolean;
 };
 
 export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
@@ -22,13 +39,21 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
   tabsId,
   levels,
   onAddLevel,
+  isAddLevelLoading,
   onGenerateLevel,
-  onAddPlayer,
-  onEditStack,
-  onGenerateTables,
-  onModify,
+  isGenerateLevelLoading,
   onResetLevel,
-  onAddTable
+  isResetLevelLoading,
+  onAddTable,
+  isAddTableLoading,
+  onModify,
+  isModifyLoading,
+  onGenerateTables,
+  isGenerateTablesLoading,
+  onAddPlayer,
+  isAddPlayerLoading,
+  onEditStack,
+  isEditStackLoading,
 }) => {
   switch (tabsId) {
     case "0":
@@ -40,6 +65,8 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
               onClick={onModify}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isModifyLoading}
+              disabled={isModifyLoading}
             />
           )}
         </div>
@@ -53,13 +80,17 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
             onClick={onAddLevel}
             buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
             textClassName="text-primary_brand-50"
+            loading={isAddLevelLoading}
+            disabled={isAddLevelLoading}
           />
-          {tournamentStatus === "start" && levels.length == 0 && (
+          {tournamentStatus === "start" && levels.length === 0 && (
             <ButtonComponents
               text="Générer les niveaux"
               onClick={onGenerateLevel}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isGenerateLevelLoading}
+              disabled={isGenerateLevelLoading}
             />
           )}
           {tournamentStatus === "start" && levels.length > 0 && (
@@ -68,6 +99,8 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
               onClick={onResetLevel}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isResetLevelLoading}
+              disabled={isResetLevelLoading}
             />
           )}
         </div>
@@ -82,6 +115,8 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
               onClick={onAddPlayer}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isAddPlayerLoading}
+              disabled={isAddPlayerLoading}
             />
           )}
         </div>
@@ -90,20 +125,24 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
     case "3":
       return (
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+          <ButtonComponents
+            text="Ajouter une table"
+            onClick={onAddTable}
+            buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
+            textClassName="text-primary_brand-50"
+            loading={isAddTableLoading}
+            disabled={isAddTableLoading}
+          />
           {tournamentStatus !== "in_coming" && (
             <ButtonComponents
               text="Générer les tables"
               onClick={onGenerateTables}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isGenerateTablesLoading}
+              disabled={isGenerateTablesLoading}
             />
           )}
-          <ButtonComponents
-            text="Ajouter une table"
-            onClick={onAddTable}
-            buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
-            textClassName="text-primary_brand-50"
-          />
         </div>
       );
 
@@ -116,6 +155,8 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
               onClick={onEditStack}
               buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
               textClassName="text-primary_brand-50"
+              loading={isEditStackLoading}
+              disabled={isEditStackLoading}
             />
           )}
         </div>

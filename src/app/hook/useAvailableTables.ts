@@ -6,7 +6,7 @@ export const useAvailableTables = (
   currentTableId?: number,
   enabled = false
 ) => {
-  return useQuery({
+  const query = useQuery({
     queryKey: ["tournament-tables", tournamentId],
     queryFn: async () => {
       const res = await fetch(`/api/tournament/${tournamentId}/table`);
@@ -17,4 +17,12 @@ export const useAvailableTables = (
     },
     enabled: !!tournamentId && enabled
   });
+
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 };

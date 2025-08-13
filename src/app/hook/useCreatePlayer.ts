@@ -9,12 +9,12 @@ type CreatePlayerPayload = {
 export const useCreatePlayer = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ tournamentId, data }: CreatePlayerPayload) => {
       const res = await fetch(`/api/tournament/${tournamentId}/player`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) {
@@ -24,8 +24,16 @@ export const useCreatePlayer = () => {
     },
     onSuccess: (_, { tournamentId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["tournament-data", tournamentId]
+        queryKey: ["tournament-data", tournamentId],
       });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };

@@ -3,22 +3,51 @@ import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
+function getBalancedCapacities(totalPlayers: number, maxPerTable: number): number[] {
+  const nTables = Math.ceil(totalPlayers / maxPerTable);
+  const minPerTable = Math.floor(totalPlayers / nTables);
+  const remainder = totalPlayers % nTables;
+  const capacities = Array(nTables).fill(minPerTable);
+  for (let i = 0; i < remainder; i++) {
+    capacities[i]++;
+  }
+  return capacities;
+}
+
+function getTableCapacities(totalPlayers: number, category: string): number[] {
+  if (category === "APT") {
+    if (totalPlayers <= 9) {
+      return [totalPlayers];
+    }
+    return getBalancedCapacities(totalPlayers, 8);
+  } else if (category === "SitAndGo") {
+    return getBalancedCapacities(totalPlayers, 9);
+  } else {
+    return getBalancedCapacities(totalPlayers, 9);
+  }
+}
+
 export async function POST(req: NextRequest) {
+  function shuffleArray<T>(array: T[]): T[] {
+    const arr = [...array]; // copier pour ne pas muter l'original
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]]; // swap
+    }
+    return arr;
+  }
+  
+
   try {
     const { tournament } = extractParamsFromPath(req, ["tournament"]);
     const tournamentId = parseInt(tournament ?? "");
-    console.log("🎯 Tournament ID reçu :", tournamentId);
-
     if (isNaN(tournamentId)) {
-      console.error("⛔ ID de tournoi invalide :", tournament);
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
-
     const t = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) },
       select: { tournament_category: true }
     });
-
     if (!t) {
       return NextResponse.json(
         { error: "Tournament not found" },
@@ -26,19 +55,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const maxPerTable = t.tournament_category === "APT" ? 8 : 9;
-
+    // Suppression des anciennes tables comme avant
     const existingTables = await prisma.tournament_table.findMany({
-      where: {
-        tournament_id: BigInt(tournamentId)
-      },
+      where: { tournament_id: BigInt(tournamentId) },
       select: { id: true }
     });
-
     if (existingTables.length > 0) {
       const tableIds = existingTables.map((t) => t.id);
-      console.log("🧹 Suppression des anciennes tables :", tableIds);
-
       await prisma.$transaction([
         prisma.table_assignment.deleteMany({
           where: { table_id: { in: tableIds } }
@@ -47,34 +70,25 @@ export async function POST(req: NextRequest) {
           where: { id: { in: tableIds } }
         })
       ]);
-
-      console.log("✅ Anciennes affectations et tables supprimées");
     }
 
+    // Obtention des joueurs et mélange aléatoire
     const registrations = await prisma.registration.findMany({
       where: {
         tournament_id: BigInt(tournamentId),
         statut: "Confirmed"
       }
     });
-
-    const shuffled = registrations.sort(() => Math.random() - 0.5);
+    const shuffled = shuffleArray(registrations);
     const totalPlayers = shuffled.length;
 
-    const numberOfTables = Math.ceil(totalPlayers / maxPerTable);
-    const baseCapacity = Math.floor(totalPlayers / numberOfTables);
-    const extraPlayers = totalPlayers % numberOfTables;
+    // Ici, le nouveau calcul équilibré !
+    const tableCapacities = getTableCapacities(totalPlayers, t.tournament_category);
 
-    const tableCapacities = Array(numberOfTables)
-      .fill(baseCapacity)
-      .map((cap, index) => (index < extraPlayers ? cap + 1 : cap));
-
-    console.log("🪑 Capacités calculées :", tableCapacities);
-
+    // Création des tables & affectations comme avant...
     const createdTables = await prisma.$transaction(async (tx) => {
       const tables = [];
-
-      for (let i = 0; i < numberOfTables; i++) {
+      for (let i = 0; i < tableCapacities.length; i++) {
         const table = await tx.tournament_table.create({
           data: {
             tournament_id: BigInt(tournamentId),
@@ -84,16 +98,12 @@ export async function POST(req: NextRequest) {
         });
         tables.push(table);
       }
-
-      let currentIndex = 0;
-
-      for (let i = 0; i < numberOfTables; i++) {
+      // Répartition des joueurs sur les tables
+      let playerIndex = 0;
+      for (let i = 0; i < tables.length; i++) {
         const table = tables[i];
-        const players = shuffled.slice(
-          currentIndex,
-          currentIndex + tableCapacities[i]
-        );
-
+        const capacity = tableCapacities[i];
+        const players = shuffled.slice(playerIndex, playerIndex + capacity);
         for (let j = 0; j < players.length; j++) {
           await tx.table_assignment.create({
             data: {
@@ -103,14 +113,10 @@ export async function POST(req: NextRequest) {
             }
           });
         }
-
-        currentIndex += tableCapacities[i];
+        playerIndex += capacity;
       }
-
       return tables;
     });
-
-    console.log("🏁 Création terminée :", createdTables.length, "tables");
 
     return NextResponse.json(
       serializeBigInt({
@@ -126,3 +132,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

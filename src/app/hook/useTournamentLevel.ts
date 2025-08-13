@@ -2,20 +2,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TournamentLevel } from "@/app/types";
 
+// -----------------------------
+// Hook : Mise à jour d'un niveau
+// -----------------------------
+type UpdateTournamentLevelParams = {
+  id: number;
+  data: Partial<TournamentLevel>;
+};
+
 export const useUpdateTournamentLevel = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (params: {
-      id: number;
-      data: Partial<TournamentLevel>;
-    }) => {
-      const res = await fetch(`/api/level/${params.id}`, {
+  const mutation = useMutation<void, Error, UpdateTournamentLevelParams>({
+    mutationFn: async ({ id, data }) => {
+      const res = await fetch(`/api/level/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id: params.id, ...params.data })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...data }),
       });
 
       if (!res.ok) {
@@ -24,17 +27,30 @@ export const useUpdateTournamentLevel = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tournament-data"] });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync, // pour lancer la mutation
+    isLoading: mutation.isPending,     // pour afficher un loader
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };
+
+// -----------------------------
+// Hook : Suppression d'un niveau
+// -----------------------------
+type DeleteTournamentLevelParams = number;
 
 export const useDeleteTournamentLevel = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (levelId: number) => {
+  const mutation = useMutation<void, Error, DeleteTournamentLevelParams>({
+    mutationFn: async (levelId) => {
       const res = await fetch(`/api/level/${levelId}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
 
       if (!res.ok) {
@@ -43,6 +59,14 @@ export const useDeleteTournamentLevel = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tournament-data"] });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,     // loader
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };

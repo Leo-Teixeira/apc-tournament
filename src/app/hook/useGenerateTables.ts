@@ -1,15 +1,17 @@
 // hooks/useGenerateTables.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+type GenerateTablesPayload = number | string;
+
 export const useGenerateTables = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (tournamentId: number | string) => {
+  const mutation = useMutation<void, Error, GenerateTablesPayload>({
+    mutationFn: async (tournamentId) => {
       const res = await fetch(
         `/api/tournament/${tournamentId}/table_assignement/generate`,
         {
-          method: "POST"
+          method: "POST",
         }
       );
 
@@ -19,8 +21,16 @@ export const useGenerateTables = () => {
     },
     onSuccess: (_, tournamentId) => {
       queryClient.invalidateQueries({
-        queryKey: ["tournament-data", tournamentId]
+        queryKey: ["tournament-data", tournamentId],
       });
-    }
+    },
   });
+
+  return {
+    mutateAsync: mutation.mutateAsync,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset,
+  };
 };
