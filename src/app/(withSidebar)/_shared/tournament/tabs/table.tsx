@@ -76,7 +76,6 @@ export const TableTabs = () => {
         `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killer}`
       );
 
-      // 🔹 Notifications pour chaque joueur déplacé
       if (res?.moves?.length) {
         res.moves.forEach((move) => {
           if (move.toTableNumber && move.toSeatNumber) {

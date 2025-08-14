@@ -2,7 +2,7 @@
 
 import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
-import { LinkSquare02Icon, ArrowLeft01Icon, Home01Icon, Table01Icon } from "@hugeicons/core-free-icons";
+import { LinkSquare02Icon, ArrowLeft01Icon, Home01Icon, Table01Icon, Home11Icon, Layers01Icon, UserGroup03Icon, Table02Icon, TableRoundIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { STRINGS } from "@/app/constants/string";
@@ -265,10 +265,10 @@ export default function TournamentDetailPage() {
         {/* Bottom bar mobile */}
         <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] flex justify-between items-center p-3 rounded-3xl gap-2 bg-dark/20 backdrop-blur-md shadow-2xl z-50">
           {[
-            { id: "0", label: "Général", icon: Home01Icon },
-            { id: "1", label: "Niveaux", icon: Home01Icon },
-            { id: "2", label: "Joueurs", icon: Home01Icon },
-            { id: "3", label: "Tables", icon: Table01Icon }
+            { id: "0", label: "Général", icon: Home11Icon },
+            { id: "1", label: "Niveaux", icon: Layers01Icon },
+            { id: "2", label: "Joueurs", icon: UserGroup03Icon },
+            { id: "3", label: "Tables", icon: TableRoundIcon }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -292,7 +292,7 @@ export default function TournamentDetailPage() {
           ))}
         </div>
         {/* Contenu de l'onglet sélectionné */}
-        <div className="pb-20 md:pb-0">
+        <div className="pb-32 md:pb-0">
           {tabs.find((tab) => tab.id === selectedTab)?.content}
         </div>
       </div>
