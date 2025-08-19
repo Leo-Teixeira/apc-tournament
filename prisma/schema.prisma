@@ -19,18 +19,21 @@ model chip {
 model quarter_ranking {
   id                   BigInt                            @id @default(autoincrement()) @db.UnsignedBigInt
   user_id              BigInt                            @db.UnsignedBigInt
-  trimestry_ranking    quarter_ranking_trimestry_ranking
+  trimestry_ranking    BigInt
   aggregated_score     Int
   position             Int
-  quarter_ranking_year Int                               @db.Year
+  quarter_ranking_year BigInt
   tournament_id        BigInt                            @db.UnsignedBigInt
   wp_users             wp_users                          @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "quarter_ranking_ibfk_1")
   tournament           tournament                        @relation(fields: [tournament_id], references: [id], onUpdate: Restrict, map: "quarter_ranking_ibfk_2")
+  trimester            trimester  @relation(fields: [trimestry_ranking], references: [id], onUpdate: Restrict, map: "quarter_ranking_ibfk_3")
+  season               season     @relation(fields: [quarter_ranking_year], references: [id], onUpdate: Restrict, map: "quarter_ranking_ibfk_4")
 
   @@index([user_id], map: "user_id")
   @@index([tournament_id], map: "tournament_id")
   @@index([position], map: "position_idx")
   @@index([quarter_ranking_year, trimestry_ranking], map: "year_trimestry_idx")
+  @@index([trimestry_ranking], map: "trimestry_ranking")
 }
 
 model registration {
@@ -43,7 +46,7 @@ model registration {
   wp_users                                                     wp_users            @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "registration_ibfk_1")
   table_assignment                                             table_assignment[]
   table_assignment_table_assignment_user_kill_idToregistration table_assignment[]  @relation("table_assignment_user_kill_idToregistration")
-  tournament_ranking                                           tournament_ranking[]
+    tournament_ranking                                           tournament_ranking[]
 
   @@index([tournament_id], map: "tournament_id")
   @@index([user_id], map: "user_id")
@@ -84,7 +87,7 @@ model tournament {
   tournament_description String                          @db.VarChar(255)
   tournament_start_date  DateTime                        @db.DateTime(0)
   tournament_open_date   DateTime                        @db.DateTime(0)
-  tournament_trimestry   tournament_tournament_trimestry
+  tournament_trimestry    BigInt
   tournament_category    tournament_tournament_category
   tournament_status      tournament_tournament_status
   estimate_duration      DateTime                        @db.Time(0)
@@ -447,6 +450,7 @@ model wp_users {
   photo_url           String            @db.VarChar(255)
   quarter_ranking     quarter_ranking[]
   registration        registration[]
+  repechage           repechage[]
 
   @@index([user_email], map: "user_email")
   @@index([user_login], map: "user_login_key")
@@ -562,18 +566,39 @@ model wp_rank_math_internal_meta {
   incoming_link_count Int?   @default(0) @db.UnsignedInt
 }
 
-enum tournament_tournament_category {
-  APT         @map("APT")
-  AG          @map("AG")
-  SitAndGo    @map("SitAndGo")
-  Superfinale @map("Superfinale")
-  Solipoker   @map("Solipoker")
+model repechage {
+  id           BigInt    @id @default(autoincrement())
+  trimester_id BigInt
+  user_id      BigInt    @db.UnsignedBigInt
+  trimester    trimester @relation(fields: [trimester_id], references: [id], onUpdate: Restrict, map: "repechage_ibfk_1")
+  wp_users     wp_users  @relation(fields: [user_id], references: [ID], onUpdate: Restrict, map: "repechage_ibfk_2")
+
+  @@index([trimester_id], map: "trimester_id")
+  @@index([user_id], map: "user_id")
 }
 
-enum quarter_ranking_trimestry_ranking {
-  T1
-  T2
-  T3
+model season {
+  id              BigInt            @id @default(autoincrement())
+  name            String            @db.VarChar(255)
+  start_date      DateTime          @db.Date
+  end_date        DateTime          @db.Date
+  status          season_status
+  quarter_ranking quarter_ranking[]
+  trimester       trimester[]
+}
+
+model trimester {
+  id              BigInt            @id @default(autoincrement())
+  season_id       BigInt
+  number          Int
+  start_date      DateTime          @db.Date
+  end_date        DateTime          @db.Date
+  quarter_ranking quarter_ranking[]
+  repechage       repechage[]
+  tournament      tournament[]
+  season          season            @relation(fields: [season_id], references: [id], onUpdate: Restrict, map: "trimester_ibfk_1")
+
+  @@index([season_id], map: "season_id")
 }
 
 enum registration_statut {
@@ -582,14 +607,22 @@ enum registration_statut {
   Cancelled
 }
 
-enum tournament_tournament_trimestry {
-  T1
-  T2
-  T3
-}
-
 enum tournament_tournament_status {
   in_coming
   finish
   start
+}
+
+enum season_status {
+  draft
+  start
+  past
+}
+
+enum tournament_tournament_category {
+  APT
+  Special
+  SitAndGo
+  Superfinale
+  Solipoker
 }
