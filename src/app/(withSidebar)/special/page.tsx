@@ -25,7 +25,7 @@ import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
 import TabBar from "../../components/tabBar";
 import { TournamentMobileCards } from "../../components/tournament-mobile-cards";
 
-export default function AGHome() {
+export default function SpecialHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
 
   const { data, isLoading } = useTournamentDataByCategory("ag");
@@ -55,7 +55,7 @@ export default function AGHome() {
       {
         tooltip: "Voir",
         icon: <HugeiconsIcon icon={ViewIcon} size={20} strokeWidth={1.5} />,
-        onClick: () => window.open(`/ag/${item.id}`, "_self")
+        onClick: () => window.open(`/special/${item.id}`, "_self")
       }
     ];
 
@@ -88,7 +88,7 @@ export default function AGHome() {
   };
 
   const handleViewTournament = (id: string) => {
-    window.open(`/ag/${id}`, "_self");
+    window.open(`/special/${id}`, "_self");
   };
 
   if (isLoading) {
@@ -137,7 +137,7 @@ export default function AGHome() {
             showActions={true}
             actions={getConditionalActions}
             enableRowClick
-            getDetailUrl={(id) => `/ag/${id}`}
+            getDetailUrl={(id) => `/special/${id}`}
           />
         </div>
       </div>

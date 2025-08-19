@@ -17,7 +17,7 @@ export type Tournament = {
   tournament_pause: boolean;
   tournament_pause_date?: Date;
   tournament_trimestry: "T1" | "T2" | "T3";
-  tournament_category: "APT" | "AG" | "Sit&Go" | "Superfinale" | "Solipoker";
+  tournament_category: "APT" | "Special" | "Sit&Go" | "Superfinale" | "Solipoker";
   tournament_status: "in_coming" | "finish" | "start";
   quarter_ranking?: QuarterRanking[];
   registration?: Registration[];

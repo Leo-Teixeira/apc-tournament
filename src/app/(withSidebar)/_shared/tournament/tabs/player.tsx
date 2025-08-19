@@ -178,15 +178,15 @@ export const PlayerTabs = React.memo(() => {
       // 🔹 Notifications pour chaque joueur déplacé
       if (res?.moves?.length) {
         res.moves.forEach((move) => {
-          if (move.toTableNumber && move.toSeatNumber) {
+          if (move.to && move.from) {
             notify(
               "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}, siège ${move.toSeatNumber}`
+              `♻️ ${move.playerName} déplacé à la Table ${move.to}, siège ${move.from}`
             );
-          } else if (move.toTableNumber) {
+          } else if (move.to) {
             notify(
               "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`
+              `♻️ ${move.playerName} déplacé à la Table ${move.to}`
             );
           } else {
             notify(

@@ -142,10 +142,10 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
         {!isLoading && !error && (
           <div className="flex flex-wrap gap-2 max-h-80 overflow-auto mt-3">
             {wpImages.map((img) => {
-              const imageUrl = img.guid.replace(
+              const imageUrl = img.url.replace(
                 "angers-poker-club.local",
                 "aqua-bat-544144.hostingersite.com"
-              );
+              );              
               // Pour la sélection visuelle dans la popup
               const isSelected = editingBackgroundIndex !== null
                 ? pendingBackgrounds[editingBackgroundIndex] === imageUrl
@@ -153,9 +153,9 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
 
               return (
                 <img
-                  key={img.ID}
+                  key={img.id}
                   src={imageUrl}
-                  alt={`fond ${img.post_title ?? img.ID}`}
+                  alt={`fond ${img.title ?? img.id}`}
                   className={`cursor-pointer rounded border-4 ${
                     isSelected
                       ? "border-primary_brand-500"

@@ -1,11 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
-import { tournament_tournament_status } from "@/generated/prisma";
+import { Prisma, tournament_tournament_status } from "@/generated/prisma";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
-// ----------- HELPERS SCORE -----------
 function getAptScore(total: number, rank: number): number {
   const aptScoreRanges = [
     { min: 0,  max: 15, scores: [26, 18, 12, 8, 6, 5] },
@@ -36,7 +35,7 @@ function getSitAndGoScore(total: number, rank: number): number {
 }
 
 async function getScoreAndRankingPosition(
-  tx: typeof prisma,
+  tx: Prisma.TransactionClient, // Type spécial de client transactionnel
   tournamentId: number | bigint,
   ranking_position: number
 ) {
@@ -64,11 +63,20 @@ async function getScoreAndRankingPosition(
 }
 
 async function updateQuarterRanking(tournamentId: number) {
+  // Seul APT et SitAndGo ont un classement agrégé
   const tournament = await prisma.tournament.findUnique({
     where: { id: BigInt(tournamentId) },
     select: { tournament_category: true, tournament_trimestry: true, tournament_start_date: true }
   });
   if (!tournament) return;
+
+  if (
+    tournament.tournament_category !== "APT" &&
+    tournament.tournament_category !== "SitAndGo"
+  ) {
+    // Aucun classement stocké pour les autres
+    return;
+  }
 
   const year = tournament.tournament_start_date.getFullYear();
   const { tournament_category, tournament_trimestry } = tournament;
@@ -85,7 +93,7 @@ async function updateQuarterRanking(tournamentId: number) {
     select: { id: true }
   });
 
-  const relatedIds = relatedTournaments.map(t => t.id);
+  const relatedIds = relatedTournaments.map((t) => t.id);
   const rankings = await prisma.tournament_ranking.findMany({
     where: { tournament_id: { in: relatedIds } },
     select: { registration: { select: { user_id: true } }, ranking_score: true }
@@ -106,11 +114,11 @@ async function updateQuarterRanking(tournamentId: number) {
       position: i + 1,
       trimestry_ranking: tournament_trimestry,
       quarter_ranking_year: year,
-      tournament_id: relatedIds[0]
+      tournament_id: relatedIds[0],
     }));
 
   await prisma.quarter_ranking.deleteMany({
-    where: { trimestry_ranking: tournament_trimestry, quarter_ranking_year: year }
+    where: { trimestry_ranking: tournament_trimestry, quarter_ranking_year: year },
   });
   await prisma.quarter_ranking.createMany({ data: sorted });
 }
@@ -118,65 +126,111 @@ async function updateQuarterRanking(tournamentId: number) {
 // ----------- API PUT ELIMINATION -----------
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
-  if (!tournament || !player)
+  if (!tournament || !player) {
     return NextResponse.json({ error: "Missing params" }, { status: 400 });
+  }
 
   try {
     const tournamentId = parseInt(tournament);
     const registrationId = parseInt(player);
     const { user_kill_id } = await req.json();
 
-    if (isNaN(registrationId) || !user_kill_id)
+    if (isNaN(registrationId) || !user_kill_id) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    }
 
     const tournamentData = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) },
-      select: { tournament_category: true }
+      select: { tournament_category: true },
     });
-    if (!tournamentData)
+    if (!tournamentData) {
       return NextResponse.json({ error: "Tournament not found" }, { status: 404 });
+    }
 
     const { tournament_category } = tournamentData;
+    const needReequilibrage = tournament_category !== "SitAndGo";
+    const hasRanking = tournament_category === "APT" || tournament_category === "SitAndGo";
+    const isSitAndGo = tournament_category === "SitAndGo";
 
     const assignment = await prisma.table_assignment.findFirst({
       where: { registration_id: BigInt(registrationId) },
-      include: { registration: true }
+      include: { registration: true },
     });
 
-    if (!assignment?.registration)
+    if (!assignment?.registration) {
       return NextResponse.json({ error: "Assignment or registration not found" }, { status: 404 });
+    }
 
     // --- Transaction : élimination + MAJ classement ---
     const result = await prisma.$transaction(async (tx) => {
       await tx.table_assignment.update({
         where: { id: assignment.id },
-        data: { eliminated: true, user_kill_id: BigInt(user_kill_id) }
+        data: { eliminated: true, user_kill_id: BigInt(user_kill_id) },
       });
 
+      // Calcul du ranking uniquement pour APT et SitAndGo
+      let ranking_position: number = 0;
+      let score: number = 0;
+      let tableId: bigint | null = null;
+
+      if (hasRanking) {
+        if (isSitAndGo) {
+          tableId = assignment.table_id ?? null;
+          const aliveOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              eliminated: false,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          ranking_position = aliveOnThisTable + 1;
+
+          const totalOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          score = getSitAndGoScore(totalOnThisTable, ranking_position);
+        } else {
+          // APT
+          const aliveCount = await tx.table_assignment.count({
+            where: {
+              tournament_table: { tournament_id: BigInt(tournamentId) },
+              eliminated: false,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          ranking_position = aliveCount + 1;
+          const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
+          score = res.score;
+        }
+
+        // --- Insertion ranking uniquement pour APT et SitAndGo ---
+        await tx.tournament_ranking.deleteMany({
+          where: {
+            registration_id: assignment.registration.id,
+            tournament_id: BigInt(tournamentId),
+          },
+        });
+        await tx.tournament_ranking.create({
+          data: {
+            registration_id: assignment.registration.id,
+            tournament_id: BigInt(tournamentId),
+            ranking_position,
+            ranking_score: score,
+            ...(isSitAndGo && tableId ? { table_id: tableId } : {}),
+          },
+        });
+      }
+
+      // Compte total des vivants à renvoyer pour la gestion de la fin
       const aliveCount = await tx.table_assignment.count({
         where: {
           tournament_table: { tournament_id: BigInt(tournamentId) },
           eliminated: false,
-          registration: { statut: "Confirmed" }
-        }
-      });
-
-      const ranking_position = aliveCount + 1;
-      const { score } = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
-
-      await tx.tournament_ranking.deleteMany({
-        where: {
-          registration_id: assignment.registration.id,
-          tournament_id: BigInt(tournamentId)
-        }
-      });
-      await tx.tournament_ranking.create({
-        data: {
-          registration_id: assignment.registration.id,
-          tournament_id: BigInt(tournamentId),
-          ranking_position,
-          ranking_score: score
-        }
+          registration: { statut: "Confirmed" },
+        },
       });
 
       return { ranking_position, score, aliveCount };
@@ -193,13 +247,13 @@ export async function PUT(req: NextRequest) {
       toTableNumber?: number;
     }[] = [];
 
-    if (tournament_category !== "SitAndGo") {
+    if (needReequilibrage) {
       const tables = await prisma.tournament_table.findMany({
         where: { tournament_id: BigInt(tournamentId) },
-        include: { table_assignment: { where: { eliminated: false } } }
+        include: { table_assignment: { where: { eliminated: false } } },
       });
 
-      if (tables.filter(t => t.table_assignment.length > 0).length > 1) {
+      if (tables.filter((t) => t.table_assignment.length > 0).length > 1) {
         const rebalancedData = await reequilibrateTables(tournamentId);
         if (typeof rebalancedData === "boolean") {
           rebalanced = rebalancedData;
@@ -210,38 +264,99 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // --- Dernier joueur vivant => fin tournoi ---
-    if (result.aliveCount === 1) {
-      const lastAssignment = await prisma.table_assignment.findFirst({
-        where: {
-          tournament_table: { tournament_id: BigInt(tournamentId) },
-          eliminated: false
+    // --- Fin du tournoi ---
+    let tournamentFinished = false;
+    if (isSitAndGo) {
+      // Sit&Go : le tournoi se termine s'il reste <=1 joueur sur chaque table
+      const tables = await prisma.tournament_table.findMany({
+        where: { tournament_id: BigInt(tournamentId) },
+        include: {
+          table_assignment: {
+            where: { eliminated: false, registration: { statut: "Confirmed" } },
+          },
         },
-        include: { registration: true }
       });
+      tournamentFinished = tables.every((t) => t.table_assignment.length <= 1);
+    } else {
+      // Tous les autres (APT y compris) : le tournoi se termine quand il reste un joueur vivant
+      tournamentFinished = result.aliveCount === 1;
+    }
 
-      if (lastAssignment?.registration) {
-        const { score: lastScore } = await getScoreAndRankingPosition(prisma, tournamentId, 1);
-
-        await prisma.tournament_ranking.deleteMany({
+    if (tournamentFinished && hasRanking) {
+      // Classement final uniquement pour APT et Sit&Go
+      if (isSitAndGo) {
+        // Tous les derniers survivants sur chaque table
+        const lastAssignments = await prisma.table_assignment.findMany({
           where: {
-            registration_id: lastAssignment.registration.id,
-            tournament_id: BigInt(tournamentId)
-          }
+            tournament_table: { tournament_id: BigInt(tournamentId) },
+            eliminated: false,
+          },
+          include: { registration: true },
         });
-        await prisma.tournament_ranking.create({
-          data: {
-            registration_id: lastAssignment.registration.id,
-            tournament_id: BigInt(tournamentId),
-            ranking_position: 1,
-            ranking_score: lastScore
-          }
-        });
-      }
 
+        for (const survivor of lastAssignments) {
+          const tableId = survivor.table_id;
+          const totalOnThisTable = await prisma.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          const finalScore = getSitAndGoScore(totalOnThisTable, 1);
+
+          await prisma.tournament_ranking.deleteMany({
+            where: {
+              registration_id: survivor.registration.id,
+              tournament_id: BigInt(tournamentId),
+            },
+          });
+
+          await prisma.tournament_ranking.create({
+            data: {
+              registration_id: survivor.registration.id,
+              tournament_id: BigInt(tournamentId),
+              ranking_position: 1,
+              ranking_score: finalScore,
+            },
+          });
+        }
+      } else {
+        // APT : champion unique
+        const lastAssignment = await prisma.table_assignment.findFirst({
+          where: {
+            tournament_table: { tournament_id: BigInt(tournamentId) },
+            eliminated: false,
+          },
+          include: { registration: true },
+        });
+
+        if (lastAssignment?.registration) {
+          const { score: lastScore } = await getScoreAndRankingPosition(prisma, tournamentId, 1);
+
+          await prisma.tournament_ranking.deleteMany({
+            where: {
+              registration_id: lastAssignment.registration.id,
+              tournament_id: BigInt(tournamentId),
+            },
+          });
+
+          await prisma.tournament_ranking.create({
+            data: {
+              registration_id: lastAssignment.registration.id,
+              tournament_id: BigInt(tournamentId),
+              ranking_position: 1,
+              ranking_score: lastScore,
+            },
+          });
+        }
+      }
+    }
+
+    // Fin du tournoi quel que soit le type
+    if (tournamentFinished) {
       await prisma.tournament.update({
         where: { id: BigInt(tournamentId) },
-        data: { tournament_status: tournament_tournament_status.finish }
+        data: { tournament_status: tournament_tournament_status.finish },
       });
 
       await updateQuarterRanking(tournamentId);
@@ -252,10 +367,9 @@ export async function PUT(req: NextRequest) {
         message: "Player eliminated and ranking recorded",
         ...result,
         rebalanced,
-        moves
+        moves,
       })
     );
-
   } catch (error) {
     console.error("🔥 Error in eliminate route:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

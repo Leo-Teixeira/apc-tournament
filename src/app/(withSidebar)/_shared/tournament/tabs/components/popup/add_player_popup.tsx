@@ -35,14 +35,20 @@ export const PlayerFormBody = ({
   useEffect(() => {
     if (!players || !Array.isArray(players)) return;
   
-    const filtered = players.filter(
-      (p: WPUser) =>
-        (p.pseudo_winamax.toLowerCase().startsWith(search.toLowerCase()) ||
-          p.display_name.toLowerCase().startsWith(search.toLowerCase())) &&
+    const filtered = players.filter((p): p is WPUser => {
+      // ici p est de type User, mais la fonction sert à affirmer que p est un WPUser si condition vraie
+      return (
+        "pseudo_winamax" in p &&
+        "display_name" in p &&
+        (
+          (p as WPUser).pseudo_winamax.toLowerCase().startsWith(search.toLowerCase()) ||
+          (p as WPUser).display_name.toLowerCase().startsWith(search.toLowerCase())
+        ) &&
         !registration.some(
-          (r) => r.wp_users?.pseudo_winamax === p.pseudo_winamax
-        )
-    );
+          (r) => r.wp_users?.pseudo_winamax === p.pseudo_winamax)
+      );
+    });
+    
   
     setAvailablePlayers(filtered);
   }, [search, isRegister, registration, players]);

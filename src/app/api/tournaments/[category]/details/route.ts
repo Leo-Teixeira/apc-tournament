@@ -6,7 +6,7 @@ import { extractParamsFromPath } from "@/app/utils/api-params";
 
 const categoryMap: Record<string, tournament_tournament_category> = {
   apt: tournament_tournament_category.APT,
-  ag: tournament_tournament_category.AG,
+  ag: tournament_tournament_category.Special,
   sitandgo: tournament_tournament_category.SitAndGo,
   superfinale: tournament_tournament_category.Superfinale,
   solipoker: tournament_tournament_category.Solipoker

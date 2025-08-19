@@ -148,9 +148,9 @@ export function GenericTable<T extends { id: string | number; eliminated?: boole
         <TableCell>
           <Chip
             className={`py-0 px-1 items-center justify-center !text-m !font-satoshiLight ${
-              value === "finish"
+              value === "finish" || value === "past"
                 ? "bg-red-950"
-                : value === "start"
+                : value === "start" || value === "in_progress"
                 ? "bg-purple-950"
                 : "bg-green-950"
             }`}
@@ -159,8 +159,7 @@ export function GenericTable<T extends { id: string | number; eliminated?: boole
             {content === "finish"
               ? STRINGS.status.finish
               : content === "in_coming"
-              ? STRINGS.status.in_coming
-              : STRINGS.status.start}
+              ? STRINGS.status.in_coming : content === "start" ? STRINGS.status.start : content === "draft" ? STRINGS.statusLabel.draft : content === "in_progress" ? STRINGS.statusLabel.in_progress : content === "past" ? STRINGS.statusLabel.past : STRINGS.statutUndefined}
           </Chip>
         </TableCell>
       );

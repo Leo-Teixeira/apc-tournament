@@ -78,15 +78,15 @@ export const TableTabs = () => {
 
       if (res?.moves?.length) {
         res.moves.forEach((move) => {
-          if (move.toTableNumber && move.toSeatNumber) {
+          if (move.to && move.from) {
             notify(
               "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}, siège ${move.toSeatNumber}`
+              `♻️ ${move.playerName} déplacé à la Table ${move.to}, siège ${move.from}`
             );
-          } else if (move.toTableNumber) {
+          } else if (move.to) {
             notify(
               "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`
+              `♻️ ${move.playerName} déplacé à la Table ${move.to}`
             );
           } else {
             notify(
@@ -262,7 +262,7 @@ export const TableTabs = () => {
                 ? `Table ${targetPlayer.tournament_table.table_number}`
                 : "une autre table";
             } else {
-              const targetTable = availableTables?.find((t) => t.id === targetId);
+              const targetTable = availableTables?.find((t: any) => t.id === targetId);
               tableDest = targetTable
                 ? `Table ${targetTable.table_number}`
                 : "une autre table";

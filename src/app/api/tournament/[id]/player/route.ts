@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
           user_email: `${pseudo}@external.com`,
           display_name: `${firstName} ${lastName}`,
           pseudo_winamax: pseudo,
-          user_registered: new Date()
+          user_registered: new Date(),
+          photo_url: "",
         }
       });
 

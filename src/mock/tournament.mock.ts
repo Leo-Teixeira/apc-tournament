@@ -66,7 +66,7 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-07T19:00:00",
     tournament_end_date: "2025-01-08T23:30:00",
     tournament_trimestry: "T2",
-    tournament_category: "AG",
+    tournament_category: "Special",
     tournament_status: "in_coming"
   },
   {
@@ -86,7 +86,7 @@ export const tournamentMocks = [
     tournament_start_date: "2025-01-09T18:30:00",
     tournament_end_date: "2025-01-10T23:30:00",
     tournament_trimestry: "T3",
-    tournament_category: "AG",
+    tournament_category: "Special",
     tournament_status: "in_coming"
   },
   {

@@ -34,7 +34,7 @@ export const GenericModal: React.FC<GenericModalProps> = ({
   disabled = false,   // par défaut false
 }) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onClose} size="md">
+    <Modal isOpen={isOpen} onOpenChange={onClose} size="lg" className="p-4">
       <ModalContent>
         {() => (
           <>

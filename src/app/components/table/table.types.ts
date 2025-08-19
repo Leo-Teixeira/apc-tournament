@@ -60,3 +60,12 @@ export type TournamentRow = {
   status: string;
   action: string;
 };
+
+export type SeasonRow = {
+  id: string;
+  name: string;
+  start_date: number;
+  end_date: number;
+  status: string;
+  action: string;
+};

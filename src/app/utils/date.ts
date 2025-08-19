@@ -35,6 +35,12 @@ export const toDateTimeLocalString = (date: Date): string => {
   return tzDate.toISOString().slice(0, 16);
 };
 
+export const toISODateOnly = (date: string | Date): string => {
+  const tzDate = new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * 60000);
+  return tzDate.toISOString().slice(0, 10); // garde seulement YYYY-MM-DD
+};
+
+
 export const formatDateFR = (value: string | Date) => {
   const date = new Date(value);
   if (isNaN(date.getTime())) return "-";

@@ -36,7 +36,8 @@ export const STRINGS = {
       { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
       { label: "Tournoi Spéciaux", icon: ChampionIcon, href: "/special" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
-      { label: "Stack", icon: Briefcase09Icon, href: "/malette" }
+      { label: "Stack", icon: Briefcase09Icon, href: "/malette" },
+      { label: "Saison", icon: Briefcase09Icon, href: "/season" },
     ]
   },
   sidebar_mobile: {
@@ -52,7 +53,7 @@ export const STRINGS = {
         href: "/sitandgo"
       },
       { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
-      { label: "Tournoi de l'AG", icon: ChampionIcon, href: "/ag" },
+      { label: "Tournoi de l'Special", icon: ChampionIcon, href: "/ag" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" }
     ]
   },
@@ -80,5 +81,11 @@ export const STRINGS = {
     in_coming: "En cours",
     start: "À venir",
     pause: "En pause"
-  }
+  },
+  statusLabel: {
+    draft: "Brouillon",
+    in_progress: "En cours",
+    past: "Terminée",
+  },
+  statutUndefined : "indéterminé"
 };

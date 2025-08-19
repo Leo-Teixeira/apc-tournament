@@ -114,14 +114,14 @@ export default function StackPage() {
 
   const handleConfirmChangeImage = async () => {
     if (imageSource === "wordpress" && selectedWpImageId !== null) {
-      const selectedImage = wpJetonImages.find(img => img.ID === selectedWpImageId);
+      const selectedImage = wpJetonImages.find(img => img.id === selectedWpImageId);
       if (!selectedImage) {
         alert("Image sélectionnée introuvable");
         return;
       }
       setPendingChipImage({
         type: "wordpress",
-        url: selectedImage.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com")
+        url: selectedImage.url.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com")
       });
       setIsChangeImageOpen(false);
     }
@@ -240,7 +240,6 @@ export default function StackPage() {
         cancelLabel="Annuler"
         confirmLabel={imageSource === "wordpress" && selectedWpImageId !== null ? "Utiliser" : undefined}
         onConfirm={handleConfirmChangeImage}
-        isConfirmDisabled={imageSource !== "wordpress" || selectedWpImageId === null}
       >
         {!imageSource && (
           <div className="flex flex-col gap-3">
@@ -257,16 +256,16 @@ export default function StackPage() {
               <p className="text-neutral-200">Aucune image disponible</p>
             )}
             {!isLoading && !error && wpJetonImages.map((img) => {
-              const imageUrl = img.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com");
+              const imageUrl = img.url.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com");
               return (
                 <img
-                  key={img.ID}
+                  key={img.id}
                   src={imageUrl}
-                  alt={`jeton ${img.post_title ?? img.ID}`}
+                  alt={`jeton ${img.title ?? img.id}`}
                   className={`cursor-pointer rounded border-4 ${
-                    selectedWpImageId === img.ID ? "border-primary_brand-500" : "border-transparent"
+                    selectedWpImageId === img.id ? "border-primary_brand-500" : "border-transparent"
                   }`}
-                  onClick={() => setSelectedWpImageId(img.ID)}
+                  onClick={() => setSelectedWpImageId(img.id)}
                   style={{ width: 80, height: 80, objectFit: "contain" }}
                 />
               );

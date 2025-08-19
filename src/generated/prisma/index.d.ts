@@ -213,47 +213,33 @@ export type wp_rank_math_internal_links = $Result.DefaultSelection<Prisma.$wp_ra
  * 
  */
 export type wp_rank_math_internal_meta = $Result.DefaultSelection<Prisma.$wp_rank_math_internal_metaPayload>
+/**
+ * Model repechage
+ * 
+ */
+export type repechage = $Result.DefaultSelection<Prisma.$repechagePayload>
+/**
+ * Model season
+ * 
+ */
+export type season = $Result.DefaultSelection<Prisma.$seasonPayload>
+/**
+ * Model trimester
+ * 
+ */
+export type trimester = $Result.DefaultSelection<Prisma.$trimesterPayload>
 
 /**
  * Enums
  */
 export namespace $Enums {
-  export const tournament_tournament_category: {
-  APT: 'APT',
-  AG: 'AG',
-  SitAndGo: 'SitAndGo',
-  Superfinale: 'Superfinale',
-  Solipoker: 'Solipoker'
-};
-
-export type tournament_tournament_category = (typeof tournament_tournament_category)[keyof typeof tournament_tournament_category]
-
-
-export const quarter_ranking_trimestry_ranking: {
-  T1: 'T1',
-  T2: 'T2',
-  T3: 'T3'
-};
-
-export type quarter_ranking_trimestry_ranking = (typeof quarter_ranking_trimestry_ranking)[keyof typeof quarter_ranking_trimestry_ranking]
-
-
-export const registration_statut: {
+  export const registration_statut: {
   Confirmed: 'Confirmed',
   Pending: 'Pending',
   Cancelled: 'Cancelled'
 };
 
 export type registration_statut = (typeof registration_statut)[keyof typeof registration_statut]
-
-
-export const tournament_tournament_trimestry: {
-  T1: 'T1',
-  T2: 'T2',
-  T3: 'T3'
-};
-
-export type tournament_tournament_trimestry = (typeof tournament_tournament_trimestry)[keyof typeof tournament_tournament_trimestry]
 
 
 export const tournament_tournament_status: {
@@ -264,27 +250,43 @@ export const tournament_tournament_status: {
 
 export type tournament_tournament_status = (typeof tournament_tournament_status)[keyof typeof tournament_tournament_status]
 
+
+export const season_status: {
+  draft: 'draft',
+  in_progress: 'in_progress',
+  past: 'past'
+};
+
+export type season_status = (typeof season_status)[keyof typeof season_status]
+
+
+export const tournament_tournament_category: {
+  APT: 'APT',
+  Special: 'Special',
+  SitAndGo: 'SitAndGo',
+  Superfinale: 'Superfinale',
+  Solipoker: 'Solipoker'
+};
+
+export type tournament_tournament_category = (typeof tournament_tournament_category)[keyof typeof tournament_tournament_category]
+
 }
-
-export type tournament_tournament_category = $Enums.tournament_tournament_category
-
-export const tournament_tournament_category: typeof $Enums.tournament_tournament_category
-
-export type quarter_ranking_trimestry_ranking = $Enums.quarter_ranking_trimestry_ranking
-
-export const quarter_ranking_trimestry_ranking: typeof $Enums.quarter_ranking_trimestry_ranking
 
 export type registration_statut = $Enums.registration_statut
 
 export const registration_statut: typeof $Enums.registration_statut
 
-export type tournament_tournament_trimestry = $Enums.tournament_tournament_trimestry
-
-export const tournament_tournament_trimestry: typeof $Enums.tournament_tournament_trimestry
-
 export type tournament_tournament_status = $Enums.tournament_tournament_status
 
 export const tournament_tournament_status: typeof $Enums.tournament_tournament_status
+
+export type season_status = $Enums.season_status
+
+export const season_status: typeof $Enums.season_status
+
+export type tournament_tournament_category = $Enums.tournament_tournament_category
+
+export const tournament_tournament_category: typeof $Enums.tournament_tournament_category
 
 /**
  * ##  Prisma Client ʲˢ
@@ -810,6 +812,36 @@ export class PrismaClient<
     * ```
     */
   get wp_rank_math_internal_meta(): Prisma.wp_rank_math_internal_metaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.repechage`: Exposes CRUD operations for the **repechage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Repechages
+    * const repechages = await prisma.repechage.findMany()
+    * ```
+    */
+  get repechage(): Prisma.repechageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.season`: Exposes CRUD operations for the **season** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seasons
+    * const seasons = await prisma.season.findMany()
+    * ```
+    */
+  get season(): Prisma.seasonDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trimester`: Exposes CRUD operations for the **trimester** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Trimesters
+    * const trimesters = await prisma.trimester.findMany()
+    * ```
+    */
+  get trimester(): Prisma.trimesterDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1289,7 +1321,10 @@ export namespace Prisma {
     wp_rank_math_analytics_inspections: 'wp_rank_math_analytics_inspections',
     wp_rank_math_analytics_objects: 'wp_rank_math_analytics_objects',
     wp_rank_math_internal_links: 'wp_rank_math_internal_links',
-    wp_rank_math_internal_meta: 'wp_rank_math_internal_meta'
+    wp_rank_math_internal_meta: 'wp_rank_math_internal_meta',
+    repechage: 'repechage',
+    season: 'season',
+    trimester: 'trimester'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1308,7 +1343,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "chip" | "quarter_ranking" | "registration" | "stack" | "table_assignment" | "tournament" | "tournament_level" | "tournament_ranking" | "tournament_table" | "wp_actionscheduler_actions" | "wp_actionscheduler_claims" | "wp_actionscheduler_groups" | "wp_actionscheduler_logs" | "wp_commentmeta" | "wp_comments" | "wp_links" | "wp_options" | "wp_postmeta" | "wp_posts" | "wp_tec_events" | "wp_tec_occurrences" | "wp_tec_slr_layouts" | "wp_tec_slr_maps" | "wp_tec_slr_seat_types" | "wp_tec_slr_sessions" | "wp_term_relationships" | "wp_term_taxonomy" | "wp_termmeta" | "wp_terms" | "wp_um_metadata" | "wp_usermeta" | "wp_users" | "stack_chip" | "wp_fbv" | "wp_fbv_attachment_folder" | "wp_rank_math_analytics_gsc" | "wp_rank_math_analytics_inspections" | "wp_rank_math_analytics_objects" | "wp_rank_math_internal_links" | "wp_rank_math_internal_meta"
+      modelProps: "chip" | "quarter_ranking" | "registration" | "stack" | "table_assignment" | "tournament" | "tournament_level" | "tournament_ranking" | "tournament_table" | "wp_actionscheduler_actions" | "wp_actionscheduler_claims" | "wp_actionscheduler_groups" | "wp_actionscheduler_logs" | "wp_commentmeta" | "wp_comments" | "wp_links" | "wp_options" | "wp_postmeta" | "wp_posts" | "wp_tec_events" | "wp_tec_occurrences" | "wp_tec_slr_layouts" | "wp_tec_slr_maps" | "wp_tec_slr_seat_types" | "wp_tec_slr_sessions" | "wp_term_relationships" | "wp_term_taxonomy" | "wp_termmeta" | "wp_terms" | "wp_um_metadata" | "wp_usermeta" | "wp_users" | "stack_chip" | "wp_fbv" | "wp_fbv_attachment_folder" | "wp_rank_math_analytics_gsc" | "wp_rank_math_analytics_inspections" | "wp_rank_math_analytics_objects" | "wp_rank_math_internal_links" | "wp_rank_math_internal_meta" | "repechage" | "season" | "trimester"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3952,6 +3987,204 @@ export namespace Prisma {
           }
         }
       }
+      repechage: {
+        payload: Prisma.$repechagePayload<ExtArgs>
+        fields: Prisma.repechageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.repechageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.repechageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          findFirst: {
+            args: Prisma.repechageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.repechageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          findMany: {
+            args: Prisma.repechageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>[]
+          }
+          create: {
+            args: Prisma.repechageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          createMany: {
+            args: Prisma.repechageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.repechageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          update: {
+            args: Prisma.repechageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          deleteMany: {
+            args: Prisma.repechageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.repechageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.repechageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$repechagePayload>
+          }
+          aggregate: {
+            args: Prisma.RepechageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRepechage>
+          }
+          groupBy: {
+            args: Prisma.repechageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RepechageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.repechageCountArgs<ExtArgs>
+            result: $Utils.Optional<RepechageCountAggregateOutputType> | number
+          }
+        }
+      }
+      season: {
+        payload: Prisma.$seasonPayload<ExtArgs>
+        fields: Prisma.seasonFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seasonFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seasonFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          findFirst: {
+            args: Prisma.seasonFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seasonFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          findMany: {
+            args: Prisma.seasonFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>[]
+          }
+          create: {
+            args: Prisma.seasonCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          createMany: {
+            args: Prisma.seasonCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.seasonDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          update: {
+            args: Prisma.seasonUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          deleteMany: {
+            args: Prisma.seasonDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seasonUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.seasonUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seasonPayload>
+          }
+          aggregate: {
+            args: Prisma.SeasonAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeason>
+          }
+          groupBy: {
+            args: Prisma.seasonGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeasonGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seasonCountArgs<ExtArgs>
+            result: $Utils.Optional<SeasonCountAggregateOutputType> | number
+          }
+        }
+      }
+      trimester: {
+        payload: Prisma.$trimesterPayload<ExtArgs>
+        fields: Prisma.trimesterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.trimesterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.trimesterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          findFirst: {
+            args: Prisma.trimesterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.trimesterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          findMany: {
+            args: Prisma.trimesterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>[]
+          }
+          create: {
+            args: Prisma.trimesterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          createMany: {
+            args: Prisma.trimesterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.trimesterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          update: {
+            args: Prisma.trimesterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          deleteMany: {
+            args: Prisma.trimesterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.trimesterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.trimesterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$trimesterPayload>
+          }
+          aggregate: {
+            args: Prisma.TrimesterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrimester>
+          }
+          groupBy: {
+            args: Prisma.trimesterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrimesterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.trimesterCountArgs<ExtArgs>
+            result: $Utils.Optional<TrimesterCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4076,6 +4309,9 @@ export namespace Prisma {
     wp_rank_math_analytics_objects?: wp_rank_math_analytics_objectsOmit
     wp_rank_math_internal_links?: wp_rank_math_internal_linksOmit
     wp_rank_math_internal_meta?: wp_rank_math_internal_metaOmit
+    repechage?: repechageOmit
+    season?: seasonOmit
+    trimester?: trimesterOmit
   }
 
   /* Types for Logging */
@@ -4390,11 +4626,13 @@ export namespace Prisma {
   export type Wp_usersCountOutputType = {
     quarter_ranking: number
     registration: number
+    repechage: number
   }
 
   export type Wp_usersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | Wp_usersCountOutputTypeCountQuarter_rankingArgs
     registration?: boolean | Wp_usersCountOutputTypeCountRegistrationArgs
+    repechage?: boolean | Wp_usersCountOutputTypeCountRepechageArgs
   }
 
   // Custom InputTypes
@@ -4420,6 +4658,93 @@ export namespace Prisma {
    */
   export type Wp_usersCountOutputTypeCountRegistrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: registrationWhereInput
+  }
+
+  /**
+   * Wp_usersCountOutputType without action
+   */
+  export type Wp_usersCountOutputTypeCountRepechageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: repechageWhereInput
+  }
+
+
+  /**
+   * Count Type SeasonCountOutputType
+   */
+
+  export type SeasonCountOutputType = {
+    quarter_ranking: number
+    trimester: number
+  }
+
+  export type SeasonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quarter_ranking?: boolean | SeasonCountOutputTypeCountQuarter_rankingArgs
+    trimester?: boolean | SeasonCountOutputTypeCountTrimesterArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SeasonCountOutputType without action
+   */
+  export type SeasonCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeasonCountOutputType
+     */
+    select?: SeasonCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SeasonCountOutputType without action
+   */
+  export type SeasonCountOutputTypeCountQuarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: quarter_rankingWhereInput
+  }
+
+  /**
+   * SeasonCountOutputType without action
+   */
+  export type SeasonCountOutputTypeCountTrimesterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: trimesterWhereInput
+  }
+
+
+  /**
+   * Count Type TrimesterCountOutputType
+   */
+
+  export type TrimesterCountOutputType = {
+    quarter_ranking: number
+    repechage: number
+  }
+
+  export type TrimesterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quarter_ranking?: boolean | TrimesterCountOutputTypeCountQuarter_rankingArgs
+    repechage?: boolean | TrimesterCountOutputTypeCountRepechageArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TrimesterCountOutputType without action
+   */
+  export type TrimesterCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrimesterCountOutputType
+     */
+    select?: TrimesterCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TrimesterCountOutputType without action
+   */
+  export type TrimesterCountOutputTypeCountQuarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: quarter_rankingWhereInput
+  }
+
+  /**
+   * TrimesterCountOutputType without action
+   */
+  export type TrimesterCountOutputTypeCountRepechageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: repechageWhereInput
   }
 
 
@@ -5413,6 +5738,7 @@ export namespace Prisma {
   export type Quarter_rankingAvgAggregateOutputType = {
     id: number | null
     user_id: number | null
+    trimestry_ranking: number | null
     aggregated_score: number | null
     position: number | null
     quarter_ranking_year: number | null
@@ -5422,29 +5748,30 @@ export namespace Prisma {
   export type Quarter_rankingSumAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
+    trimestry_ranking: bigint | null
     aggregated_score: number | null
     position: number | null
-    quarter_ranking_year: number | null
+    quarter_ranking_year: bigint | null
     tournament_id: bigint | null
   }
 
   export type Quarter_rankingMinAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking | null
+    trimestry_ranking: bigint | null
     aggregated_score: number | null
     position: number | null
-    quarter_ranking_year: number | null
+    quarter_ranking_year: bigint | null
     tournament_id: bigint | null
   }
 
   export type Quarter_rankingMaxAggregateOutputType = {
     id: bigint | null
     user_id: bigint | null
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking | null
+    trimestry_ranking: bigint | null
     aggregated_score: number | null
     position: number | null
-    quarter_ranking_year: number | null
+    quarter_ranking_year: bigint | null
     tournament_id: bigint | null
   }
 
@@ -5463,6 +5790,7 @@ export namespace Prisma {
   export type Quarter_rankingAvgAggregateInputType = {
     id?: true
     user_id?: true
+    trimestry_ranking?: true
     aggregated_score?: true
     position?: true
     quarter_ranking_year?: true
@@ -5472,6 +5800,7 @@ export namespace Prisma {
   export type Quarter_rankingSumAggregateInputType = {
     id?: true
     user_id?: true
+    trimestry_ranking?: true
     aggregated_score?: true
     position?: true
     quarter_ranking_year?: true
@@ -5598,10 +5927,10 @@ export namespace Prisma {
   export type Quarter_rankingGroupByOutputType = {
     id: bigint
     user_id: bigint
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint
     tournament_id: bigint
     _count: Quarter_rankingCountAggregateOutputType | null
     _avg: Quarter_rankingAvgAggregateOutputType | null
@@ -5634,6 +5963,8 @@ export namespace Prisma {
     tournament_id?: boolean
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
+    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    season?: boolean | seasonDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quarter_ranking"]>
 
 
@@ -5652,6 +5983,8 @@ export namespace Prisma {
   export type quarter_rankingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
+    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    season?: boolean | seasonDefaultArgs<ExtArgs>
   }
 
   export type $quarter_rankingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5659,14 +5992,16 @@ export namespace Prisma {
     objects: {
       wp_users: Prisma.$wp_usersPayload<ExtArgs>
       tournament: Prisma.$tournamentPayload<ExtArgs>
+      trimester: Prisma.$trimesterPayload<ExtArgs>
+      season: Prisma.$seasonPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       user_id: bigint
-      trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+      trimestry_ranking: bigint
       aggregated_score: number
       position: number
-      quarter_ranking_year: number
+      quarter_ranking_year: bigint
       tournament_id: bigint
     }, ExtArgs["result"]["quarter_ranking"]>
     composites: {}
@@ -6010,6 +6345,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     wp_users<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tournament<T extends tournamentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tournamentDefaultArgs<ExtArgs>>): Prisma__tournamentClient<$Result.GetResult<Prisma.$tournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    trimester<T extends trimesterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, trimesterDefaultArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    season<T extends seasonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, seasonDefaultArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6041,10 +6378,10 @@ export namespace Prisma {
   interface quarter_rankingFieldRefs {
     readonly id: FieldRef<"quarter_ranking", 'BigInt'>
     readonly user_id: FieldRef<"quarter_ranking", 'BigInt'>
-    readonly trimestry_ranking: FieldRef<"quarter_ranking", 'quarter_ranking_trimestry_ranking'>
+    readonly trimestry_ranking: FieldRef<"quarter_ranking", 'BigInt'>
     readonly aggregated_score: FieldRef<"quarter_ranking", 'Int'>
     readonly position: FieldRef<"quarter_ranking", 'Int'>
-    readonly quarter_ranking_year: FieldRef<"quarter_ranking", 'Int'>
+    readonly quarter_ranking_year: FieldRef<"quarter_ranking", 'BigInt'>
     readonly tournament_id: FieldRef<"quarter_ranking", 'BigInt'>
   }
     
@@ -9499,12 +9836,14 @@ export namespace Prisma {
   export type TournamentAvgAggregateOutputType = {
     id: number | null
     wordpress_post_id: number | null
+    tournament_trimestry: number | null
     tournament_stack: number | null
   }
 
   export type TournamentSumAggregateOutputType = {
     id: bigint | null
     wordpress_post_id: bigint | null
+    tournament_trimestry: bigint | null
     tournament_stack: number | null
   }
 
@@ -9515,7 +9854,7 @@ export namespace Prisma {
     tournament_description: string | null
     tournament_start_date: Date | null
     tournament_open_date: Date | null
-    tournament_trimestry: $Enums.tournament_tournament_trimestry | null
+    tournament_trimestry: bigint | null
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
     estimate_duration: Date | null
@@ -9533,7 +9872,7 @@ export namespace Prisma {
     tournament_description: string | null
     tournament_start_date: Date | null
     tournament_open_date: Date | null
-    tournament_trimestry: $Enums.tournament_tournament_trimestry | null
+    tournament_trimestry: bigint | null
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
     estimate_duration: Date | null
@@ -9567,12 +9906,14 @@ export namespace Prisma {
   export type TournamentAvgAggregateInputType = {
     id?: true
     wordpress_post_id?: true
+    tournament_trimestry?: true
     tournament_stack?: true
   }
 
   export type TournamentSumAggregateInputType = {
     id?: true
     wordpress_post_id?: true
+    tournament_trimestry?: true
     tournament_stack?: true
   }
 
@@ -9724,7 +10065,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date
     tournament_open_date: Date
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date
@@ -9827,7 +10168,7 @@ export namespace Prisma {
       tournament_description: string
       tournament_start_date: Date
       tournament_open_date: Date
-      tournament_trimestry: $Enums.tournament_tournament_trimestry
+      tournament_trimestry: bigint
       tournament_category: $Enums.tournament_tournament_category
       tournament_status: $Enums.tournament_tournament_status
       estimate_duration: Date
@@ -10217,7 +10558,7 @@ export namespace Prisma {
     readonly tournament_description: FieldRef<"tournament", 'String'>
     readonly tournament_start_date: FieldRef<"tournament", 'DateTime'>
     readonly tournament_open_date: FieldRef<"tournament", 'DateTime'>
-    readonly tournament_trimestry: FieldRef<"tournament", 'tournament_tournament_trimestry'>
+    readonly tournament_trimestry: FieldRef<"tournament", 'BigInt'>
     readonly tournament_category: FieldRef<"tournament", 'tournament_tournament_category'>
     readonly tournament_status: FieldRef<"tournament", 'tournament_tournament_status'>
     readonly estimate_duration: FieldRef<"tournament", 'DateTime'>
@@ -34713,6 +35054,7 @@ export namespace Prisma {
     photo_url?: boolean
     quarter_ranking?: boolean | wp_users$quarter_rankingArgs<ExtArgs>
     registration?: boolean | wp_users$registrationArgs<ExtArgs>
+    repechage?: boolean | wp_users$repechageArgs<ExtArgs>
     _count?: boolean | Wp_usersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wp_users"]>
 
@@ -34737,6 +35079,7 @@ export namespace Prisma {
   export type wp_usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | wp_users$quarter_rankingArgs<ExtArgs>
     registration?: boolean | wp_users$registrationArgs<ExtArgs>
+    repechage?: boolean | wp_users$repechageArgs<ExtArgs>
     _count?: boolean | Wp_usersCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -34745,6 +35088,7 @@ export namespace Prisma {
     objects: {
       quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
       registration: Prisma.$registrationPayload<ExtArgs>[]
+      repechage: Prisma.$repechagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       ID: bigint
@@ -35101,6 +35445,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     quarter_ranking<T extends wp_users$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registration<T extends wp_users$registrationArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$registrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    repechage<T extends wp_users$repechageArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$repechageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -35530,6 +35875,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RegistrationScalarFieldEnum | RegistrationScalarFieldEnum[]
+  }
+
+  /**
+   * wp_users.repechage
+   */
+  export type wp_users$repechageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    where?: repechageWhereInput
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    cursor?: repechageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
   }
 
   /**
@@ -43250,6 +43619,3005 @@ export namespace Prisma {
 
 
   /**
+   * Model repechage
+   */
+
+  export type AggregateRepechage = {
+    _count: RepechageCountAggregateOutputType | null
+    _avg: RepechageAvgAggregateOutputType | null
+    _sum: RepechageSumAggregateOutputType | null
+    _min: RepechageMinAggregateOutputType | null
+    _max: RepechageMaxAggregateOutputType | null
+  }
+
+  export type RepechageAvgAggregateOutputType = {
+    id: number | null
+    trimester_id: number | null
+    user_id: number | null
+  }
+
+  export type RepechageSumAggregateOutputType = {
+    id: bigint | null
+    trimester_id: bigint | null
+    user_id: bigint | null
+  }
+
+  export type RepechageMinAggregateOutputType = {
+    id: bigint | null
+    trimester_id: bigint | null
+    user_id: bigint | null
+  }
+
+  export type RepechageMaxAggregateOutputType = {
+    id: bigint | null
+    trimester_id: bigint | null
+    user_id: bigint | null
+  }
+
+  export type RepechageCountAggregateOutputType = {
+    id: number
+    trimester_id: number
+    user_id: number
+    _all: number
+  }
+
+
+  export type RepechageAvgAggregateInputType = {
+    id?: true
+    trimester_id?: true
+    user_id?: true
+  }
+
+  export type RepechageSumAggregateInputType = {
+    id?: true
+    trimester_id?: true
+    user_id?: true
+  }
+
+  export type RepechageMinAggregateInputType = {
+    id?: true
+    trimester_id?: true
+    user_id?: true
+  }
+
+  export type RepechageMaxAggregateInputType = {
+    id?: true
+    trimester_id?: true
+    user_id?: true
+  }
+
+  export type RepechageCountAggregateInputType = {
+    id?: true
+    trimester_id?: true
+    user_id?: true
+    _all?: true
+  }
+
+  export type RepechageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which repechage to aggregate.
+     */
+    where?: repechageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of repechages to fetch.
+     */
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: repechageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` repechages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` repechages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned repechages
+    **/
+    _count?: true | RepechageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RepechageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RepechageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RepechageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RepechageMaxAggregateInputType
+  }
+
+  export type GetRepechageAggregateType<T extends RepechageAggregateArgs> = {
+        [P in keyof T & keyof AggregateRepechage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRepechage[P]>
+      : GetScalarType<T[P], AggregateRepechage[P]>
+  }
+
+
+
+
+  export type repechageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: repechageWhereInput
+    orderBy?: repechageOrderByWithAggregationInput | repechageOrderByWithAggregationInput[]
+    by: RepechageScalarFieldEnum[] | RepechageScalarFieldEnum
+    having?: repechageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RepechageCountAggregateInputType | true
+    _avg?: RepechageAvgAggregateInputType
+    _sum?: RepechageSumAggregateInputType
+    _min?: RepechageMinAggregateInputType
+    _max?: RepechageMaxAggregateInputType
+  }
+
+  export type RepechageGroupByOutputType = {
+    id: bigint
+    trimester_id: bigint
+    user_id: bigint
+    _count: RepechageCountAggregateOutputType | null
+    _avg: RepechageAvgAggregateOutputType | null
+    _sum: RepechageSumAggregateOutputType | null
+    _min: RepechageMinAggregateOutputType | null
+    _max: RepechageMaxAggregateOutputType | null
+  }
+
+  type GetRepechageGroupByPayload<T extends repechageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RepechageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RepechageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RepechageGroupByOutputType[P]>
+            : GetScalarType<T[P], RepechageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type repechageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    trimester_id?: boolean
+    user_id?: boolean
+    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["repechage"]>
+
+
+
+  export type repechageSelectScalar = {
+    id?: boolean
+    trimester_id?: boolean
+    user_id?: boolean
+  }
+
+  export type repechageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "trimester_id" | "user_id", ExtArgs["result"]["repechage"]>
+  export type repechageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
+  }
+
+  export type $repechagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "repechage"
+    objects: {
+      trimester: Prisma.$trimesterPayload<ExtArgs>
+      wp_users: Prisma.$wp_usersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      trimester_id: bigint
+      user_id: bigint
+    }, ExtArgs["result"]["repechage"]>
+    composites: {}
+  }
+
+  type repechageGetPayload<S extends boolean | null | undefined | repechageDefaultArgs> = $Result.GetResult<Prisma.$repechagePayload, S>
+
+  type repechageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<repechageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RepechageCountAggregateInputType | true
+    }
+
+  export interface repechageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['repechage'], meta: { name: 'repechage' } }
+    /**
+     * Find zero or one Repechage that matches the filter.
+     * @param {repechageFindUniqueArgs} args - Arguments to find a Repechage
+     * @example
+     * // Get one Repechage
+     * const repechage = await prisma.repechage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends repechageFindUniqueArgs>(args: SelectSubset<T, repechageFindUniqueArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Repechage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {repechageFindUniqueOrThrowArgs} args - Arguments to find a Repechage
+     * @example
+     * // Get one Repechage
+     * const repechage = await prisma.repechage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends repechageFindUniqueOrThrowArgs>(args: SelectSubset<T, repechageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Repechage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageFindFirstArgs} args - Arguments to find a Repechage
+     * @example
+     * // Get one Repechage
+     * const repechage = await prisma.repechage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends repechageFindFirstArgs>(args?: SelectSubset<T, repechageFindFirstArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Repechage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageFindFirstOrThrowArgs} args - Arguments to find a Repechage
+     * @example
+     * // Get one Repechage
+     * const repechage = await prisma.repechage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends repechageFindFirstOrThrowArgs>(args?: SelectSubset<T, repechageFindFirstOrThrowArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Repechages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Repechages
+     * const repechages = await prisma.repechage.findMany()
+     * 
+     * // Get first 10 Repechages
+     * const repechages = await prisma.repechage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const repechageWithIdOnly = await prisma.repechage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends repechageFindManyArgs>(args?: SelectSubset<T, repechageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Repechage.
+     * @param {repechageCreateArgs} args - Arguments to create a Repechage.
+     * @example
+     * // Create one Repechage
+     * const Repechage = await prisma.repechage.create({
+     *   data: {
+     *     // ... data to create a Repechage
+     *   }
+     * })
+     * 
+     */
+    create<T extends repechageCreateArgs>(args: SelectSubset<T, repechageCreateArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Repechages.
+     * @param {repechageCreateManyArgs} args - Arguments to create many Repechages.
+     * @example
+     * // Create many Repechages
+     * const repechage = await prisma.repechage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends repechageCreateManyArgs>(args?: SelectSubset<T, repechageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Repechage.
+     * @param {repechageDeleteArgs} args - Arguments to delete one Repechage.
+     * @example
+     * // Delete one Repechage
+     * const Repechage = await prisma.repechage.delete({
+     *   where: {
+     *     // ... filter to delete one Repechage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends repechageDeleteArgs>(args: SelectSubset<T, repechageDeleteArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Repechage.
+     * @param {repechageUpdateArgs} args - Arguments to update one Repechage.
+     * @example
+     * // Update one Repechage
+     * const repechage = await prisma.repechage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends repechageUpdateArgs>(args: SelectSubset<T, repechageUpdateArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Repechages.
+     * @param {repechageDeleteManyArgs} args - Arguments to filter Repechages to delete.
+     * @example
+     * // Delete a few Repechages
+     * const { count } = await prisma.repechage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends repechageDeleteManyArgs>(args?: SelectSubset<T, repechageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Repechages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Repechages
+     * const repechage = await prisma.repechage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends repechageUpdateManyArgs>(args: SelectSubset<T, repechageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Repechage.
+     * @param {repechageUpsertArgs} args - Arguments to update or create a Repechage.
+     * @example
+     * // Update or create a Repechage
+     * const repechage = await prisma.repechage.upsert({
+     *   create: {
+     *     // ... data to create a Repechage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Repechage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends repechageUpsertArgs>(args: SelectSubset<T, repechageUpsertArgs<ExtArgs>>): Prisma__repechageClient<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Repechages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageCountArgs} args - Arguments to filter Repechages to count.
+     * @example
+     * // Count the number of Repechages
+     * const count = await prisma.repechage.count({
+     *   where: {
+     *     // ... the filter for the Repechages we want to count
+     *   }
+     * })
+    **/
+    count<T extends repechageCountArgs>(
+      args?: Subset<T, repechageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RepechageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Repechage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RepechageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RepechageAggregateArgs>(args: Subset<T, RepechageAggregateArgs>): Prisma.PrismaPromise<GetRepechageAggregateType<T>>
+
+    /**
+     * Group by Repechage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {repechageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends repechageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: repechageGroupByArgs['orderBy'] }
+        : { orderBy?: repechageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, repechageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRepechageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the repechage model
+   */
+  readonly fields: repechageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for repechage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__repechageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    trimester<T extends trimesterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, trimesterDefaultArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    wp_users<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the repechage model
+   */
+  interface repechageFieldRefs {
+    readonly id: FieldRef<"repechage", 'BigInt'>
+    readonly trimester_id: FieldRef<"repechage", 'BigInt'>
+    readonly user_id: FieldRef<"repechage", 'BigInt'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * repechage findUnique
+   */
+  export type repechageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter, which repechage to fetch.
+     */
+    where: repechageWhereUniqueInput
+  }
+
+  /**
+   * repechage findUniqueOrThrow
+   */
+  export type repechageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter, which repechage to fetch.
+     */
+    where: repechageWhereUniqueInput
+  }
+
+  /**
+   * repechage findFirst
+   */
+  export type repechageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter, which repechage to fetch.
+     */
+    where?: repechageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of repechages to fetch.
+     */
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for repechages.
+     */
+    cursor?: repechageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` repechages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` repechages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of repechages.
+     */
+    distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
+  }
+
+  /**
+   * repechage findFirstOrThrow
+   */
+  export type repechageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter, which repechage to fetch.
+     */
+    where?: repechageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of repechages to fetch.
+     */
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for repechages.
+     */
+    cursor?: repechageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` repechages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` repechages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of repechages.
+     */
+    distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
+  }
+
+  /**
+   * repechage findMany
+   */
+  export type repechageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter, which repechages to fetch.
+     */
+    where?: repechageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of repechages to fetch.
+     */
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing repechages.
+     */
+    cursor?: repechageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` repechages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` repechages.
+     */
+    skip?: number
+    distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
+  }
+
+  /**
+   * repechage create
+   */
+  export type repechageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a repechage.
+     */
+    data: XOR<repechageCreateInput, repechageUncheckedCreateInput>
+  }
+
+  /**
+   * repechage createMany
+   */
+  export type repechageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many repechages.
+     */
+    data: repechageCreateManyInput | repechageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * repechage update
+   */
+  export type repechageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a repechage.
+     */
+    data: XOR<repechageUpdateInput, repechageUncheckedUpdateInput>
+    /**
+     * Choose, which repechage to update.
+     */
+    where: repechageWhereUniqueInput
+  }
+
+  /**
+   * repechage updateMany
+   */
+  export type repechageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update repechages.
+     */
+    data: XOR<repechageUpdateManyMutationInput, repechageUncheckedUpdateManyInput>
+    /**
+     * Filter which repechages to update
+     */
+    where?: repechageWhereInput
+    /**
+     * Limit how many repechages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * repechage upsert
+   */
+  export type repechageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the repechage to update in case it exists.
+     */
+    where: repechageWhereUniqueInput
+    /**
+     * In case the repechage found by the `where` argument doesn't exist, create a new repechage with this data.
+     */
+    create: XOR<repechageCreateInput, repechageUncheckedCreateInput>
+    /**
+     * In case the repechage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<repechageUpdateInput, repechageUncheckedUpdateInput>
+  }
+
+  /**
+   * repechage delete
+   */
+  export type repechageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    /**
+     * Filter which repechage to delete.
+     */
+    where: repechageWhereUniqueInput
+  }
+
+  /**
+   * repechage deleteMany
+   */
+  export type repechageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which repechages to delete
+     */
+    where?: repechageWhereInput
+    /**
+     * Limit how many repechages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * repechage without action
+   */
+  export type repechageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model season
+   */
+
+  export type AggregateSeason = {
+    _count: SeasonCountAggregateOutputType | null
+    _avg: SeasonAvgAggregateOutputType | null
+    _sum: SeasonSumAggregateOutputType | null
+    _min: SeasonMinAggregateOutputType | null
+    _max: SeasonMaxAggregateOutputType | null
+  }
+
+  export type SeasonAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SeasonSumAggregateOutputType = {
+    id: bigint | null
+  }
+
+  export type SeasonMinAggregateOutputType = {
+    id: bigint | null
+    name: string | null
+    start_date: Date | null
+    end_date: Date | null
+    status: $Enums.season_status | null
+  }
+
+  export type SeasonMaxAggregateOutputType = {
+    id: bigint | null
+    name: string | null
+    start_date: Date | null
+    end_date: Date | null
+    status: $Enums.season_status | null
+  }
+
+  export type SeasonCountAggregateOutputType = {
+    id: number
+    name: number
+    start_date: number
+    end_date: number
+    status: number
+    _all: number
+  }
+
+
+  export type SeasonAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SeasonSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SeasonMinAggregateInputType = {
+    id?: true
+    name?: true
+    start_date?: true
+    end_date?: true
+    status?: true
+  }
+
+  export type SeasonMaxAggregateInputType = {
+    id?: true
+    name?: true
+    start_date?: true
+    end_date?: true
+    status?: true
+  }
+
+  export type SeasonCountAggregateInputType = {
+    id?: true
+    name?: true
+    start_date?: true
+    end_date?: true
+    status?: true
+    _all?: true
+  }
+
+  export type SeasonAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which season to aggregate.
+     */
+    where?: seasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seasons to fetch.
+     */
+    orderBy?: seasonOrderByWithRelationInput | seasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seasons
+    **/
+    _count?: true | SeasonCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SeasonAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SeasonSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeasonMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeasonMaxAggregateInputType
+  }
+
+  export type GetSeasonAggregateType<T extends SeasonAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeason]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeason[P]>
+      : GetScalarType<T[P], AggregateSeason[P]>
+  }
+
+
+
+
+  export type seasonGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seasonWhereInput
+    orderBy?: seasonOrderByWithAggregationInput | seasonOrderByWithAggregationInput[]
+    by: SeasonScalarFieldEnum[] | SeasonScalarFieldEnum
+    having?: seasonScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeasonCountAggregateInputType | true
+    _avg?: SeasonAvgAggregateInputType
+    _sum?: SeasonSumAggregateInputType
+    _min?: SeasonMinAggregateInputType
+    _max?: SeasonMaxAggregateInputType
+  }
+
+  export type SeasonGroupByOutputType = {
+    id: bigint
+    name: string
+    start_date: Date
+    end_date: Date
+    status: $Enums.season_status
+    _count: SeasonCountAggregateOutputType | null
+    _avg: SeasonAvgAggregateOutputType | null
+    _sum: SeasonSumAggregateOutputType | null
+    _min: SeasonMinAggregateOutputType | null
+    _max: SeasonMaxAggregateOutputType | null
+  }
+
+  type GetSeasonGroupByPayload<T extends seasonGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeasonGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeasonGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeasonGroupByOutputType[P]>
+            : GetScalarType<T[P], SeasonGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seasonSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    status?: boolean
+    quarter_ranking?: boolean | season$quarter_rankingArgs<ExtArgs>
+    trimester?: boolean | season$trimesterArgs<ExtArgs>
+    _count?: boolean | SeasonCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["season"]>
+
+
+
+  export type seasonSelectScalar = {
+    id?: boolean
+    name?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    status?: boolean
+  }
+
+  export type seasonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "start_date" | "end_date" | "status", ExtArgs["result"]["season"]>
+  export type seasonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quarter_ranking?: boolean | season$quarter_rankingArgs<ExtArgs>
+    trimester?: boolean | season$trimesterArgs<ExtArgs>
+    _count?: boolean | SeasonCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $seasonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "season"
+    objects: {
+      quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
+      trimester: Prisma.$trimesterPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      name: string
+      start_date: Date
+      end_date: Date
+      status: $Enums.season_status
+    }, ExtArgs["result"]["season"]>
+    composites: {}
+  }
+
+  type seasonGetPayload<S extends boolean | null | undefined | seasonDefaultArgs> = $Result.GetResult<Prisma.$seasonPayload, S>
+
+  type seasonCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seasonFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SeasonCountAggregateInputType | true
+    }
+
+  export interface seasonDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['season'], meta: { name: 'season' } }
+    /**
+     * Find zero or one Season that matches the filter.
+     * @param {seasonFindUniqueArgs} args - Arguments to find a Season
+     * @example
+     * // Get one Season
+     * const season = await prisma.season.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seasonFindUniqueArgs>(args: SelectSubset<T, seasonFindUniqueArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Season that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seasonFindUniqueOrThrowArgs} args - Arguments to find a Season
+     * @example
+     * // Get one Season
+     * const season = await prisma.season.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seasonFindUniqueOrThrowArgs>(args: SelectSubset<T, seasonFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Season that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonFindFirstArgs} args - Arguments to find a Season
+     * @example
+     * // Get one Season
+     * const season = await prisma.season.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seasonFindFirstArgs>(args?: SelectSubset<T, seasonFindFirstArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Season that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonFindFirstOrThrowArgs} args - Arguments to find a Season
+     * @example
+     * // Get one Season
+     * const season = await prisma.season.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seasonFindFirstOrThrowArgs>(args?: SelectSubset<T, seasonFindFirstOrThrowArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seasons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seasons
+     * const seasons = await prisma.season.findMany()
+     * 
+     * // Get first 10 Seasons
+     * const seasons = await prisma.season.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seasonWithIdOnly = await prisma.season.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends seasonFindManyArgs>(args?: SelectSubset<T, seasonFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Season.
+     * @param {seasonCreateArgs} args - Arguments to create a Season.
+     * @example
+     * // Create one Season
+     * const Season = await prisma.season.create({
+     *   data: {
+     *     // ... data to create a Season
+     *   }
+     * })
+     * 
+     */
+    create<T extends seasonCreateArgs>(args: SelectSubset<T, seasonCreateArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seasons.
+     * @param {seasonCreateManyArgs} args - Arguments to create many Seasons.
+     * @example
+     * // Create many Seasons
+     * const season = await prisma.season.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seasonCreateManyArgs>(args?: SelectSubset<T, seasonCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Season.
+     * @param {seasonDeleteArgs} args - Arguments to delete one Season.
+     * @example
+     * // Delete one Season
+     * const Season = await prisma.season.delete({
+     *   where: {
+     *     // ... filter to delete one Season
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seasonDeleteArgs>(args: SelectSubset<T, seasonDeleteArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Season.
+     * @param {seasonUpdateArgs} args - Arguments to update one Season.
+     * @example
+     * // Update one Season
+     * const season = await prisma.season.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seasonUpdateArgs>(args: SelectSubset<T, seasonUpdateArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seasons.
+     * @param {seasonDeleteManyArgs} args - Arguments to filter Seasons to delete.
+     * @example
+     * // Delete a few Seasons
+     * const { count } = await prisma.season.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seasonDeleteManyArgs>(args?: SelectSubset<T, seasonDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seasons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seasons
+     * const season = await prisma.season.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seasonUpdateManyArgs>(args: SelectSubset<T, seasonUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Season.
+     * @param {seasonUpsertArgs} args - Arguments to update or create a Season.
+     * @example
+     * // Update or create a Season
+     * const season = await prisma.season.upsert({
+     *   create: {
+     *     // ... data to create a Season
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Season we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seasonUpsertArgs>(args: SelectSubset<T, seasonUpsertArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seasons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonCountArgs} args - Arguments to filter Seasons to count.
+     * @example
+     * // Count the number of Seasons
+     * const count = await prisma.season.count({
+     *   where: {
+     *     // ... the filter for the Seasons we want to count
+     *   }
+     * })
+    **/
+    count<T extends seasonCountArgs>(
+      args?: Subset<T, seasonCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeasonCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Season.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeasonAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeasonAggregateArgs>(args: Subset<T, SeasonAggregateArgs>): Prisma.PrismaPromise<GetSeasonAggregateType<T>>
+
+    /**
+     * Group by Season.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seasonGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seasonGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seasonGroupByArgs['orderBy'] }
+        : { orderBy?: seasonGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seasonGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeasonGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the season model
+   */
+  readonly fields: seasonFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for season.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seasonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quarter_ranking<T extends season$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, season$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    trimester<T extends season$trimesterArgs<ExtArgs> = {}>(args?: Subset<T, season$trimesterArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the season model
+   */
+  interface seasonFieldRefs {
+    readonly id: FieldRef<"season", 'BigInt'>
+    readonly name: FieldRef<"season", 'String'>
+    readonly start_date: FieldRef<"season", 'DateTime'>
+    readonly end_date: FieldRef<"season", 'DateTime'>
+    readonly status: FieldRef<"season", 'season_status'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * season findUnique
+   */
+  export type seasonFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter, which season to fetch.
+     */
+    where: seasonWhereUniqueInput
+  }
+
+  /**
+   * season findUniqueOrThrow
+   */
+  export type seasonFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter, which season to fetch.
+     */
+    where: seasonWhereUniqueInput
+  }
+
+  /**
+   * season findFirst
+   */
+  export type seasonFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter, which season to fetch.
+     */
+    where?: seasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seasons to fetch.
+     */
+    orderBy?: seasonOrderByWithRelationInput | seasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seasons.
+     */
+    cursor?: seasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seasons.
+     */
+    distinct?: SeasonScalarFieldEnum | SeasonScalarFieldEnum[]
+  }
+
+  /**
+   * season findFirstOrThrow
+   */
+  export type seasonFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter, which season to fetch.
+     */
+    where?: seasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seasons to fetch.
+     */
+    orderBy?: seasonOrderByWithRelationInput | seasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seasons.
+     */
+    cursor?: seasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seasons.
+     */
+    distinct?: SeasonScalarFieldEnum | SeasonScalarFieldEnum[]
+  }
+
+  /**
+   * season findMany
+   */
+  export type seasonFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter, which seasons to fetch.
+     */
+    where?: seasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seasons to fetch.
+     */
+    orderBy?: seasonOrderByWithRelationInput | seasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seasons.
+     */
+    cursor?: seasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seasons.
+     */
+    skip?: number
+    distinct?: SeasonScalarFieldEnum | SeasonScalarFieldEnum[]
+  }
+
+  /**
+   * season create
+   */
+  export type seasonCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * The data needed to create a season.
+     */
+    data: XOR<seasonCreateInput, seasonUncheckedCreateInput>
+  }
+
+  /**
+   * season createMany
+   */
+  export type seasonCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seasons.
+     */
+    data: seasonCreateManyInput | seasonCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * season update
+   */
+  export type seasonUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * The data needed to update a season.
+     */
+    data: XOR<seasonUpdateInput, seasonUncheckedUpdateInput>
+    /**
+     * Choose, which season to update.
+     */
+    where: seasonWhereUniqueInput
+  }
+
+  /**
+   * season updateMany
+   */
+  export type seasonUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seasons.
+     */
+    data: XOR<seasonUpdateManyMutationInput, seasonUncheckedUpdateManyInput>
+    /**
+     * Filter which seasons to update
+     */
+    where?: seasonWhereInput
+    /**
+     * Limit how many seasons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * season upsert
+   */
+  export type seasonUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * The filter to search for the season to update in case it exists.
+     */
+    where: seasonWhereUniqueInput
+    /**
+     * In case the season found by the `where` argument doesn't exist, create a new season with this data.
+     */
+    create: XOR<seasonCreateInput, seasonUncheckedCreateInput>
+    /**
+     * In case the season was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seasonUpdateInput, seasonUncheckedUpdateInput>
+  }
+
+  /**
+   * season delete
+   */
+  export type seasonDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+    /**
+     * Filter which season to delete.
+     */
+    where: seasonWhereUniqueInput
+  }
+
+  /**
+   * season deleteMany
+   */
+  export type seasonDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seasons to delete
+     */
+    where?: seasonWhereInput
+    /**
+     * Limit how many seasons to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * season.quarter_ranking
+   */
+  export type season$quarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quarter_ranking
+     */
+    select?: quarter_rankingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quarter_ranking
+     */
+    omit?: quarter_rankingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quarter_rankingInclude<ExtArgs> | null
+    where?: quarter_rankingWhereInput
+    orderBy?: quarter_rankingOrderByWithRelationInput | quarter_rankingOrderByWithRelationInput[]
+    cursor?: quarter_rankingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Quarter_rankingScalarFieldEnum | Quarter_rankingScalarFieldEnum[]
+  }
+
+  /**
+   * season.trimester
+   */
+  export type season$trimesterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    where?: trimesterWhereInput
+    orderBy?: trimesterOrderByWithRelationInput | trimesterOrderByWithRelationInput[]
+    cursor?: trimesterWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrimesterScalarFieldEnum | TrimesterScalarFieldEnum[]
+  }
+
+  /**
+   * season without action
+   */
+  export type seasonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the season
+     */
+    select?: seasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the season
+     */
+    omit?: seasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seasonInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model trimester
+   */
+
+  export type AggregateTrimester = {
+    _count: TrimesterCountAggregateOutputType | null
+    _avg: TrimesterAvgAggregateOutputType | null
+    _sum: TrimesterSumAggregateOutputType | null
+    _min: TrimesterMinAggregateOutputType | null
+    _max: TrimesterMaxAggregateOutputType | null
+  }
+
+  export type TrimesterAvgAggregateOutputType = {
+    id: number | null
+    season_id: number | null
+    number: number | null
+  }
+
+  export type TrimesterSumAggregateOutputType = {
+    id: bigint | null
+    season_id: bigint | null
+    number: number | null
+  }
+
+  export type TrimesterMinAggregateOutputType = {
+    id: bigint | null
+    season_id: bigint | null
+    number: number | null
+    start_date: Date | null
+    end_date: Date | null
+  }
+
+  export type TrimesterMaxAggregateOutputType = {
+    id: bigint | null
+    season_id: bigint | null
+    number: number | null
+    start_date: Date | null
+    end_date: Date | null
+  }
+
+  export type TrimesterCountAggregateOutputType = {
+    id: number
+    season_id: number
+    number: number
+    start_date: number
+    end_date: number
+    _all: number
+  }
+
+
+  export type TrimesterAvgAggregateInputType = {
+    id?: true
+    season_id?: true
+    number?: true
+  }
+
+  export type TrimesterSumAggregateInputType = {
+    id?: true
+    season_id?: true
+    number?: true
+  }
+
+  export type TrimesterMinAggregateInputType = {
+    id?: true
+    season_id?: true
+    number?: true
+    start_date?: true
+    end_date?: true
+  }
+
+  export type TrimesterMaxAggregateInputType = {
+    id?: true
+    season_id?: true
+    number?: true
+    start_date?: true
+    end_date?: true
+  }
+
+  export type TrimesterCountAggregateInputType = {
+    id?: true
+    season_id?: true
+    number?: true
+    start_date?: true
+    end_date?: true
+    _all?: true
+  }
+
+  export type TrimesterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which trimester to aggregate.
+     */
+    where?: trimesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of trimesters to fetch.
+     */
+    orderBy?: trimesterOrderByWithRelationInput | trimesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: trimesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` trimesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` trimesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned trimesters
+    **/
+    _count?: true | TrimesterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TrimesterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TrimesterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrimesterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrimesterMaxAggregateInputType
+  }
+
+  export type GetTrimesterAggregateType<T extends TrimesterAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrimester]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrimester[P]>
+      : GetScalarType<T[P], AggregateTrimester[P]>
+  }
+
+
+
+
+  export type trimesterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: trimesterWhereInput
+    orderBy?: trimesterOrderByWithAggregationInput | trimesterOrderByWithAggregationInput[]
+    by: TrimesterScalarFieldEnum[] | TrimesterScalarFieldEnum
+    having?: trimesterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrimesterCountAggregateInputType | true
+    _avg?: TrimesterAvgAggregateInputType
+    _sum?: TrimesterSumAggregateInputType
+    _min?: TrimesterMinAggregateInputType
+    _max?: TrimesterMaxAggregateInputType
+  }
+
+  export type TrimesterGroupByOutputType = {
+    id: bigint
+    season_id: bigint
+    number: number
+    start_date: Date
+    end_date: Date
+    _count: TrimesterCountAggregateOutputType | null
+    _avg: TrimesterAvgAggregateOutputType | null
+    _sum: TrimesterSumAggregateOutputType | null
+    _min: TrimesterMinAggregateOutputType | null
+    _max: TrimesterMaxAggregateOutputType | null
+  }
+
+  type GetTrimesterGroupByPayload<T extends trimesterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrimesterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrimesterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrimesterGroupByOutputType[P]>
+            : GetScalarType<T[P], TrimesterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type trimesterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    season_id?: boolean
+    number?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    quarter_ranking?: boolean | trimester$quarter_rankingArgs<ExtArgs>
+    repechage?: boolean | trimester$repechageArgs<ExtArgs>
+    season?: boolean | seasonDefaultArgs<ExtArgs>
+    _count?: boolean | TrimesterCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trimester"]>
+
+
+
+  export type trimesterSelectScalar = {
+    id?: boolean
+    season_id?: boolean
+    number?: boolean
+    start_date?: boolean
+    end_date?: boolean
+  }
+
+  export type trimesterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "season_id" | "number" | "start_date" | "end_date", ExtArgs["result"]["trimester"]>
+  export type trimesterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quarter_ranking?: boolean | trimester$quarter_rankingArgs<ExtArgs>
+    repechage?: boolean | trimester$repechageArgs<ExtArgs>
+    season?: boolean | seasonDefaultArgs<ExtArgs>
+    _count?: boolean | TrimesterCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $trimesterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "trimester"
+    objects: {
+      quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
+      repechage: Prisma.$repechagePayload<ExtArgs>[]
+      season: Prisma.$seasonPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      season_id: bigint
+      number: number
+      start_date: Date
+      end_date: Date
+    }, ExtArgs["result"]["trimester"]>
+    composites: {}
+  }
+
+  type trimesterGetPayload<S extends boolean | null | undefined | trimesterDefaultArgs> = $Result.GetResult<Prisma.$trimesterPayload, S>
+
+  type trimesterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<trimesterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrimesterCountAggregateInputType | true
+    }
+
+  export interface trimesterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['trimester'], meta: { name: 'trimester' } }
+    /**
+     * Find zero or one Trimester that matches the filter.
+     * @param {trimesterFindUniqueArgs} args - Arguments to find a Trimester
+     * @example
+     * // Get one Trimester
+     * const trimester = await prisma.trimester.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends trimesterFindUniqueArgs>(args: SelectSubset<T, trimesterFindUniqueArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Trimester that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {trimesterFindUniqueOrThrowArgs} args - Arguments to find a Trimester
+     * @example
+     * // Get one Trimester
+     * const trimester = await prisma.trimester.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends trimesterFindUniqueOrThrowArgs>(args: SelectSubset<T, trimesterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Trimester that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterFindFirstArgs} args - Arguments to find a Trimester
+     * @example
+     * // Get one Trimester
+     * const trimester = await prisma.trimester.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends trimesterFindFirstArgs>(args?: SelectSubset<T, trimesterFindFirstArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Trimester that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterFindFirstOrThrowArgs} args - Arguments to find a Trimester
+     * @example
+     * // Get one Trimester
+     * const trimester = await prisma.trimester.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends trimesterFindFirstOrThrowArgs>(args?: SelectSubset<T, trimesterFindFirstOrThrowArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Trimesters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Trimesters
+     * const trimesters = await prisma.trimester.findMany()
+     * 
+     * // Get first 10 Trimesters
+     * const trimesters = await prisma.trimester.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trimesterWithIdOnly = await prisma.trimester.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends trimesterFindManyArgs>(args?: SelectSubset<T, trimesterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Trimester.
+     * @param {trimesterCreateArgs} args - Arguments to create a Trimester.
+     * @example
+     * // Create one Trimester
+     * const Trimester = await prisma.trimester.create({
+     *   data: {
+     *     // ... data to create a Trimester
+     *   }
+     * })
+     * 
+     */
+    create<T extends trimesterCreateArgs>(args: SelectSubset<T, trimesterCreateArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Trimesters.
+     * @param {trimesterCreateManyArgs} args - Arguments to create many Trimesters.
+     * @example
+     * // Create many Trimesters
+     * const trimester = await prisma.trimester.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends trimesterCreateManyArgs>(args?: SelectSubset<T, trimesterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Trimester.
+     * @param {trimesterDeleteArgs} args - Arguments to delete one Trimester.
+     * @example
+     * // Delete one Trimester
+     * const Trimester = await prisma.trimester.delete({
+     *   where: {
+     *     // ... filter to delete one Trimester
+     *   }
+     * })
+     * 
+     */
+    delete<T extends trimesterDeleteArgs>(args: SelectSubset<T, trimesterDeleteArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Trimester.
+     * @param {trimesterUpdateArgs} args - Arguments to update one Trimester.
+     * @example
+     * // Update one Trimester
+     * const trimester = await prisma.trimester.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends trimesterUpdateArgs>(args: SelectSubset<T, trimesterUpdateArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Trimesters.
+     * @param {trimesterDeleteManyArgs} args - Arguments to filter Trimesters to delete.
+     * @example
+     * // Delete a few Trimesters
+     * const { count } = await prisma.trimester.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends trimesterDeleteManyArgs>(args?: SelectSubset<T, trimesterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Trimesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Trimesters
+     * const trimester = await prisma.trimester.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends trimesterUpdateManyArgs>(args: SelectSubset<T, trimesterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Trimester.
+     * @param {trimesterUpsertArgs} args - Arguments to update or create a Trimester.
+     * @example
+     * // Update or create a Trimester
+     * const trimester = await prisma.trimester.upsert({
+     *   create: {
+     *     // ... data to create a Trimester
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Trimester we want to update
+     *   }
+     * })
+     */
+    upsert<T extends trimesterUpsertArgs>(args: SelectSubset<T, trimesterUpsertArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Trimesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterCountArgs} args - Arguments to filter Trimesters to count.
+     * @example
+     * // Count the number of Trimesters
+     * const count = await prisma.trimester.count({
+     *   where: {
+     *     // ... the filter for the Trimesters we want to count
+     *   }
+     * })
+    **/
+    count<T extends trimesterCountArgs>(
+      args?: Subset<T, trimesterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrimesterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Trimester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrimesterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrimesterAggregateArgs>(args: Subset<T, TrimesterAggregateArgs>): Prisma.PrismaPromise<GetTrimesterAggregateType<T>>
+
+    /**
+     * Group by Trimester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {trimesterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends trimesterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: trimesterGroupByArgs['orderBy'] }
+        : { orderBy?: trimesterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, trimesterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrimesterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the trimester model
+   */
+  readonly fields: trimesterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for trimester.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__trimesterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quarter_ranking<T extends trimester$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, trimester$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    repechage<T extends trimester$repechageArgs<ExtArgs> = {}>(args?: Subset<T, trimester$repechageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    season<T extends seasonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, seasonDefaultArgs<ExtArgs>>): Prisma__seasonClient<$Result.GetResult<Prisma.$seasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the trimester model
+   */
+  interface trimesterFieldRefs {
+    readonly id: FieldRef<"trimester", 'BigInt'>
+    readonly season_id: FieldRef<"trimester", 'BigInt'>
+    readonly number: FieldRef<"trimester", 'Int'>
+    readonly start_date: FieldRef<"trimester", 'DateTime'>
+    readonly end_date: FieldRef<"trimester", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * trimester findUnique
+   */
+  export type trimesterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter, which trimester to fetch.
+     */
+    where: trimesterWhereUniqueInput
+  }
+
+  /**
+   * trimester findUniqueOrThrow
+   */
+  export type trimesterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter, which trimester to fetch.
+     */
+    where: trimesterWhereUniqueInput
+  }
+
+  /**
+   * trimester findFirst
+   */
+  export type trimesterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter, which trimester to fetch.
+     */
+    where?: trimesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of trimesters to fetch.
+     */
+    orderBy?: trimesterOrderByWithRelationInput | trimesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for trimesters.
+     */
+    cursor?: trimesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` trimesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` trimesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of trimesters.
+     */
+    distinct?: TrimesterScalarFieldEnum | TrimesterScalarFieldEnum[]
+  }
+
+  /**
+   * trimester findFirstOrThrow
+   */
+  export type trimesterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter, which trimester to fetch.
+     */
+    where?: trimesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of trimesters to fetch.
+     */
+    orderBy?: trimesterOrderByWithRelationInput | trimesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for trimesters.
+     */
+    cursor?: trimesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` trimesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` trimesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of trimesters.
+     */
+    distinct?: TrimesterScalarFieldEnum | TrimesterScalarFieldEnum[]
+  }
+
+  /**
+   * trimester findMany
+   */
+  export type trimesterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter, which trimesters to fetch.
+     */
+    where?: trimesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of trimesters to fetch.
+     */
+    orderBy?: trimesterOrderByWithRelationInput | trimesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing trimesters.
+     */
+    cursor?: trimesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` trimesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` trimesters.
+     */
+    skip?: number
+    distinct?: TrimesterScalarFieldEnum | TrimesterScalarFieldEnum[]
+  }
+
+  /**
+   * trimester create
+   */
+  export type trimesterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * The data needed to create a trimester.
+     */
+    data: XOR<trimesterCreateInput, trimesterUncheckedCreateInput>
+  }
+
+  /**
+   * trimester createMany
+   */
+  export type trimesterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many trimesters.
+     */
+    data: trimesterCreateManyInput | trimesterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * trimester update
+   */
+  export type trimesterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * The data needed to update a trimester.
+     */
+    data: XOR<trimesterUpdateInput, trimesterUncheckedUpdateInput>
+    /**
+     * Choose, which trimester to update.
+     */
+    where: trimesterWhereUniqueInput
+  }
+
+  /**
+   * trimester updateMany
+   */
+  export type trimesterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update trimesters.
+     */
+    data: XOR<trimesterUpdateManyMutationInput, trimesterUncheckedUpdateManyInput>
+    /**
+     * Filter which trimesters to update
+     */
+    where?: trimesterWhereInput
+    /**
+     * Limit how many trimesters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * trimester upsert
+   */
+  export type trimesterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * The filter to search for the trimester to update in case it exists.
+     */
+    where: trimesterWhereUniqueInput
+    /**
+     * In case the trimester found by the `where` argument doesn't exist, create a new trimester with this data.
+     */
+    create: XOR<trimesterCreateInput, trimesterUncheckedCreateInput>
+    /**
+     * In case the trimester was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<trimesterUpdateInput, trimesterUncheckedUpdateInput>
+  }
+
+  /**
+   * trimester delete
+   */
+  export type trimesterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    /**
+     * Filter which trimester to delete.
+     */
+    where: trimesterWhereUniqueInput
+  }
+
+  /**
+   * trimester deleteMany
+   */
+  export type trimesterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which trimesters to delete
+     */
+    where?: trimesterWhereInput
+    /**
+     * Limit how many trimesters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * trimester.quarter_ranking
+   */
+  export type trimester$quarter_rankingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quarter_ranking
+     */
+    select?: quarter_rankingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quarter_ranking
+     */
+    omit?: quarter_rankingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quarter_rankingInclude<ExtArgs> | null
+    where?: quarter_rankingWhereInput
+    orderBy?: quarter_rankingOrderByWithRelationInput | quarter_rankingOrderByWithRelationInput[]
+    cursor?: quarter_rankingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Quarter_rankingScalarFieldEnum | Quarter_rankingScalarFieldEnum[]
+  }
+
+  /**
+   * trimester.repechage
+   */
+  export type trimester$repechageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the repechage
+     */
+    select?: repechageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the repechage
+     */
+    omit?: repechageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: repechageInclude<ExtArgs> | null
+    where?: repechageWhereInput
+    orderBy?: repechageOrderByWithRelationInput | repechageOrderByWithRelationInput[]
+    cursor?: repechageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
+  }
+
+  /**
+   * trimester without action
+   */
+  export type trimesterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -43785,6 +47153,37 @@ export namespace Prisma {
   export type Wp_rank_math_internal_metaScalarFieldEnum = (typeof Wp_rank_math_internal_metaScalarFieldEnum)[keyof typeof Wp_rank_math_internal_metaScalarFieldEnum]
 
 
+  export const RepechageScalarFieldEnum: {
+    id: 'id',
+    trimester_id: 'trimester_id',
+    user_id: 'user_id'
+  };
+
+  export type RepechageScalarFieldEnum = (typeof RepechageScalarFieldEnum)[keyof typeof RepechageScalarFieldEnum]
+
+
+  export const SeasonScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    start_date: 'start_date',
+    end_date: 'end_date',
+    status: 'status'
+  };
+
+  export type SeasonScalarFieldEnum = (typeof SeasonScalarFieldEnum)[keyof typeof SeasonScalarFieldEnum]
+
+
+  export const TrimesterScalarFieldEnum: {
+    id: 'id',
+    season_id: 'season_id',
+    number: 'number',
+    start_date: 'start_date',
+    end_date: 'end_date'
+  };
+
+  export type TrimesterScalarFieldEnum = (typeof TrimesterScalarFieldEnum)[keyof typeof TrimesterScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -44089,6 +47488,13 @@ export namespace Prisma {
   export type wp_rank_math_internal_linksOrderByRelevanceFieldEnum = (typeof wp_rank_math_internal_linksOrderByRelevanceFieldEnum)[keyof typeof wp_rank_math_internal_linksOrderByRelevanceFieldEnum]
 
 
+  export const seasonOrderByRelevanceFieldEnum: {
+    name: 'name'
+  };
+
+  export type seasonOrderByRelevanceFieldEnum = (typeof seasonOrderByRelevanceFieldEnum)[keyof typeof seasonOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -44116,13 +47522,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'quarter_ranking_trimestry_ranking'
-   */
-  export type Enumquarter_ranking_trimestry_rankingFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'quarter_ranking_trimestry_ranking'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -44140,13 +47539,6 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'tournament_tournament_trimestry'
-   */
-  export type Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tournament_tournament_trimestry'>
     
 
 
@@ -44175,6 +47567,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'season_status'
+   */
+  export type Enumseason_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'season_status'>
     
   /**
    * Deep Input Types
@@ -44235,13 +47634,15 @@ export namespace Prisma {
     NOT?: quarter_rankingWhereInput | quarter_rankingWhereInput[]
     id?: BigIntFilter<"quarter_ranking"> | bigint | number
     user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFilter<"quarter_ranking"> | bigint | number
     aggregated_score?: IntFilter<"quarter_ranking"> | number
     position?: IntFilter<"quarter_ranking"> | number
-    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: BigIntFilter<"quarter_ranking"> | bigint | number
     tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
+    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    season?: XOR<SeasonScalarRelationFilter, seasonWhereInput>
   }
 
   export type quarter_rankingOrderByWithRelationInput = {
@@ -44254,6 +47655,8 @@ export namespace Prisma {
     tournament_id?: SortOrder
     wp_users?: wp_usersOrderByWithRelationInput
     tournament?: tournamentOrderByWithRelationInput
+    trimester?: trimesterOrderByWithRelationInput
+    season?: seasonOrderByWithRelationInput
   }
 
   export type quarter_rankingWhereUniqueInput = Prisma.AtLeast<{
@@ -44262,13 +47665,15 @@ export namespace Prisma {
     OR?: quarter_rankingWhereInput[]
     NOT?: quarter_rankingWhereInput | quarter_rankingWhereInput[]
     user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFilter<"quarter_ranking"> | bigint | number
     aggregated_score?: IntFilter<"quarter_ranking"> | number
     position?: IntFilter<"quarter_ranking"> | number
-    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: BigIntFilter<"quarter_ranking"> | bigint | number
     tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
+    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    season?: XOR<SeasonScalarRelationFilter, seasonWhereInput>
   }, "id">
 
   export type quarter_rankingOrderByWithAggregationInput = {
@@ -44292,10 +47697,10 @@ export namespace Prisma {
     NOT?: quarter_rankingScalarWhereWithAggregatesInput | quarter_rankingScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
     user_id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingWithAggregatesFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
     aggregated_score?: IntWithAggregatesFilter<"quarter_ranking"> | number
     position?: IntWithAggregatesFilter<"quarter_ranking"> | number
-    quarter_ranking_year?: IntWithAggregatesFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
     tournament_id?: BigIntWithAggregatesFilter<"quarter_ranking"> | bigint | number
   }
 
@@ -44497,7 +47902,7 @@ export namespace Prisma {
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
     tournament_open_date?: DateTimeFilter<"tournament"> | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
@@ -44549,7 +47954,7 @@ export namespace Prisma {
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
     tournament_open_date?: DateTimeFilter<"tournament"> | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
@@ -44599,7 +48004,7 @@ export namespace Prisma {
     tournament_description?: StringWithAggregatesFilter<"tournament"> | string
     tournament_start_date?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
     tournament_open_date?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntWithAggregatesFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
@@ -46240,6 +49645,7 @@ export namespace Prisma {
     photo_url?: StringFilter<"wp_users"> | string
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
+    repechage?: RepechageListRelationFilter
   }
 
   export type wp_usersOrderByWithRelationInput = {
@@ -46257,6 +49663,7 @@ export namespace Prisma {
     photo_url?: SortOrder
     quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
+    repechage?: repechageOrderByRelationAggregateInput
     _relevance?: wp_usersOrderByRelevanceInput
   }
 
@@ -46278,6 +49685,7 @@ export namespace Prisma {
     photo_url?: StringFilter<"wp_users"> | string
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
+    repechage?: RepechageListRelationFilter
   }, "ID">
 
   export type wp_usersOrderByWithAggregationInput = {
@@ -46868,6 +50276,180 @@ export namespace Prisma {
     incoming_link_count?: IntNullableWithAggregatesFilter<"wp_rank_math_internal_meta"> | number | null
   }
 
+  export type repechageWhereInput = {
+    AND?: repechageWhereInput | repechageWhereInput[]
+    OR?: repechageWhereInput[]
+    NOT?: repechageWhereInput | repechageWhereInput[]
+    id?: BigIntFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    user_id?: BigIntFilter<"repechage"> | bigint | number
+    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
+  }
+
+  export type repechageOrderByWithRelationInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+    trimester?: trimesterOrderByWithRelationInput
+    wp_users?: wp_usersOrderByWithRelationInput
+  }
+
+  export type repechageWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: repechageWhereInput | repechageWhereInput[]
+    OR?: repechageWhereInput[]
+    NOT?: repechageWhereInput | repechageWhereInput[]
+    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    user_id?: BigIntFilter<"repechage"> | bigint | number
+    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
+  }, "id">
+
+  export type repechageOrderByWithAggregationInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+    _count?: repechageCountOrderByAggregateInput
+    _avg?: repechageAvgOrderByAggregateInput
+    _max?: repechageMaxOrderByAggregateInput
+    _min?: repechageMinOrderByAggregateInput
+    _sum?: repechageSumOrderByAggregateInput
+  }
+
+  export type repechageScalarWhereWithAggregatesInput = {
+    AND?: repechageScalarWhereWithAggregatesInput | repechageScalarWhereWithAggregatesInput[]
+    OR?: repechageScalarWhereWithAggregatesInput[]
+    NOT?: repechageScalarWhereWithAggregatesInput | repechageScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
+    user_id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
+  }
+
+  export type seasonWhereInput = {
+    AND?: seasonWhereInput | seasonWhereInput[]
+    OR?: seasonWhereInput[]
+    NOT?: seasonWhereInput | seasonWhereInput[]
+    id?: BigIntFilter<"season"> | bigint | number
+    name?: StringFilter<"season"> | string
+    start_date?: DateTimeFilter<"season"> | Date | string
+    end_date?: DateTimeFilter<"season"> | Date | string
+    status?: Enumseason_statusFilter<"season"> | $Enums.season_status
+    quarter_ranking?: Quarter_rankingListRelationFilter
+    trimester?: TrimesterListRelationFilter
+  }
+
+  export type seasonOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    status?: SortOrder
+    quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
+    trimester?: trimesterOrderByRelationAggregateInput
+    _relevance?: seasonOrderByRelevanceInput
+  }
+
+  export type seasonWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: seasonWhereInput | seasonWhereInput[]
+    OR?: seasonWhereInput[]
+    NOT?: seasonWhereInput | seasonWhereInput[]
+    name?: StringFilter<"season"> | string
+    start_date?: DateTimeFilter<"season"> | Date | string
+    end_date?: DateTimeFilter<"season"> | Date | string
+    status?: Enumseason_statusFilter<"season"> | $Enums.season_status
+    quarter_ranking?: Quarter_rankingListRelationFilter
+    trimester?: TrimesterListRelationFilter
+  }, "id">
+
+  export type seasonOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    status?: SortOrder
+    _count?: seasonCountOrderByAggregateInput
+    _avg?: seasonAvgOrderByAggregateInput
+    _max?: seasonMaxOrderByAggregateInput
+    _min?: seasonMinOrderByAggregateInput
+    _sum?: seasonSumOrderByAggregateInput
+  }
+
+  export type seasonScalarWhereWithAggregatesInput = {
+    AND?: seasonScalarWhereWithAggregatesInput | seasonScalarWhereWithAggregatesInput[]
+    OR?: seasonScalarWhereWithAggregatesInput[]
+    NOT?: seasonScalarWhereWithAggregatesInput | seasonScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"season"> | bigint | number
+    name?: StringWithAggregatesFilter<"season"> | string
+    start_date?: DateTimeWithAggregatesFilter<"season"> | Date | string
+    end_date?: DateTimeWithAggregatesFilter<"season"> | Date | string
+    status?: Enumseason_statusWithAggregatesFilter<"season"> | $Enums.season_status
+  }
+
+  export type trimesterWhereInput = {
+    AND?: trimesterWhereInput | trimesterWhereInput[]
+    OR?: trimesterWhereInput[]
+    NOT?: trimesterWhereInput | trimesterWhereInput[]
+    id?: BigIntFilter<"trimester"> | bigint | number
+    season_id?: BigIntFilter<"trimester"> | bigint | number
+    number?: IntFilter<"trimester"> | number
+    start_date?: DateTimeFilter<"trimester"> | Date | string
+    end_date?: DateTimeFilter<"trimester"> | Date | string
+    quarter_ranking?: Quarter_rankingListRelationFilter
+    repechage?: RepechageListRelationFilter
+    season?: XOR<SeasonScalarRelationFilter, seasonWhereInput>
+  }
+
+  export type trimesterOrderByWithRelationInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
+    repechage?: repechageOrderByRelationAggregateInput
+    season?: seasonOrderByWithRelationInput
+  }
+
+  export type trimesterWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: trimesterWhereInput | trimesterWhereInput[]
+    OR?: trimesterWhereInput[]
+    NOT?: trimesterWhereInput | trimesterWhereInput[]
+    season_id?: BigIntFilter<"trimester"> | bigint | number
+    number?: IntFilter<"trimester"> | number
+    start_date?: DateTimeFilter<"trimester"> | Date | string
+    end_date?: DateTimeFilter<"trimester"> | Date | string
+    quarter_ranking?: Quarter_rankingListRelationFilter
+    repechage?: RepechageListRelationFilter
+    season?: XOR<SeasonScalarRelationFilter, seasonWhereInput>
+  }, "id">
+
+  export type trimesterOrderByWithAggregationInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    _count?: trimesterCountOrderByAggregateInput
+    _avg?: trimesterAvgOrderByAggregateInput
+    _max?: trimesterMaxOrderByAggregateInput
+    _min?: trimesterMinOrderByAggregateInput
+    _sum?: trimesterSumOrderByAggregateInput
+  }
+
+  export type trimesterScalarWhereWithAggregatesInput = {
+    AND?: trimesterScalarWhereWithAggregatesInput | trimesterScalarWhereWithAggregatesInput[]
+    OR?: trimesterScalarWhereWithAggregatesInput[]
+    NOT?: trimesterScalarWhereWithAggregatesInput | trimesterScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"trimester"> | bigint | number
+    season_id?: BigIntWithAggregatesFilter<"trimester"> | bigint | number
+    number?: IntWithAggregatesFilter<"trimester"> | number
+    start_date?: DateTimeWithAggregatesFilter<"trimester"> | Date | string
+    end_date?: DateTimeWithAggregatesFilter<"trimester"> | Date | string
+  }
+
   export type chipCreateInput = {
     id?: bigint | number
     value: number
@@ -46916,69 +50498,67 @@ export namespace Prisma {
 
   export type quarter_rankingCreateInput = {
     id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
     wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
     tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
+    trimester: trimesterCreateNestedOneWithoutQuarter_rankingInput
+    season: seasonCreateNestedOneWithoutQuarter_rankingInput
   }
 
   export type quarter_rankingUncheckedCreateInput = {
     id?: bigint | number
     user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
     tournament_id: bigint | number
   }
 
   export type quarter_rankingUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
     wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
     tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    trimester?: trimesterUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    season?: seasonUpdateOneRequiredWithoutQuarter_rankingNestedInput
   }
 
   export type quarter_rankingUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type quarter_rankingCreateManyInput = {
     id?: bigint | number
     user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
     tournament_id: bigint | number
   }
 
   export type quarter_rankingUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
   }
 
   export type quarter_rankingUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -47162,7 +50742,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -47185,7 +50765,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -47208,7 +50788,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47231,7 +50811,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47254,7 +50834,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -47272,7 +50852,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47289,7 +50869,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49030,6 +52610,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
     registration?: registrationCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersUncheckedCreateInput = {
@@ -49047,6 +52628,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
     registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersUpdateInput = {
@@ -49064,6 +52646,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUpdateManyWithoutWp_usersNestedInput
   }
 
   export type wp_usersUncheckedUpdateInput = {
@@ -49081,6 +52664,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
   }
 
   export type wp_usersCreateManyInput = {
@@ -49719,6 +53303,173 @@ export namespace Prisma {
     incoming_link_count?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type repechageCreateInput = {
+    id?: bigint | number
+    trimester: trimesterCreateNestedOneWithoutRepechageInput
+    wp_users: wp_usersCreateNestedOneWithoutRepechageInput
+  }
+
+  export type repechageUncheckedCreateInput = {
+    id?: bigint | number
+    trimester_id: bigint | number
+    user_id: bigint | number
+  }
+
+  export type repechageUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester?: trimesterUpdateOneRequiredWithoutRepechageNestedInput
+    wp_users?: wp_usersUpdateOneRequiredWithoutRepechageNestedInput
+  }
+
+  export type repechageUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type repechageCreateManyInput = {
+    id?: bigint | number
+    trimester_id: bigint | number
+    user_id: bigint | number
+  }
+
+  export type repechageUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type repechageUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type seasonCreateInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutSeasonInput
+    trimester?: trimesterCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonUncheckedCreateInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutSeasonInput
+    trimester?: trimesterUncheckedCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    quarter_ranking?: quarter_rankingUpdateManyWithoutSeasonNestedInput
+    trimester?: trimesterUpdateManyWithoutSeasonNestedInput
+  }
+
+  export type seasonUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutSeasonNestedInput
+    trimester?: trimesterUncheckedUpdateManyWithoutSeasonNestedInput
+  }
+
+  export type seasonCreateManyInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+  }
+
+  export type seasonUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+  }
+
+  export type seasonUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+  }
+
+  export type trimesterCreateInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTrimesterInput
+    repechage?: repechageCreateNestedManyWithoutTrimesterInput
+    season: seasonCreateNestedOneWithoutTrimesterInput
+  }
+
+  export type trimesterUncheckedCreateInput = {
+    id?: bigint | number
+    season_id: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTrimesterInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutTrimesterInput
+  }
+
+  export type trimesterUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutTrimesterNestedInput
+    repechage?: repechageUpdateManyWithoutTrimesterNestedInput
+    season?: seasonUpdateOneRequiredWithoutTrimesterNestedInput
+  }
+
+  export type trimesterUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    season_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTrimesterNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutTrimesterNestedInput
+  }
+
+  export type trimesterCreateManyInput = {
+    id?: bigint | number
+    season_id: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+  }
+
+  export type trimesterUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type trimesterUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    season_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -49850,13 +53601,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type Enumquarter_ranking_trimestry_rankingFilter<$PrismaModel = never> = {
-    equals?: $Enums.quarter_ranking_trimestry_ranking | Enumquarter_ranking_trimestry_rankingFieldRefInput<$PrismaModel>
-    in?: $Enums.quarter_ranking_trimestry_ranking[]
-    notIn?: $Enums.quarter_ranking_trimestry_ranking[]
-    not?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel> | $Enums.quarter_ranking_trimestry_ranking
-  }
-
   export type Wp_usersScalarRelationFilter = {
     is?: wp_usersWhereInput
     isNot?: wp_usersWhereInput
@@ -49865,6 +53609,16 @@ export namespace Prisma {
   export type TournamentScalarRelationFilter = {
     is?: tournamentWhereInput
     isNot?: tournamentWhereInput
+  }
+
+  export type TrimesterScalarRelationFilter = {
+    is?: trimesterWhereInput
+    isNot?: trimesterWhereInput
+  }
+
+  export type SeasonScalarRelationFilter = {
+    is?: seasonWhereInput
+    isNot?: seasonWhereInput
   }
 
   export type quarter_rankingCountOrderByAggregateInput = {
@@ -49880,6 +53634,7 @@ export namespace Prisma {
   export type quarter_rankingAvgOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
+    trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
     quarter_ranking_year?: SortOrder
@@ -49909,20 +53664,11 @@ export namespace Prisma {
   export type quarter_rankingSumOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
+    trimestry_ranking?: SortOrder
     aggregated_score?: SortOrder
     position?: SortOrder
     quarter_ranking_year?: SortOrder
     tournament_id?: SortOrder
-  }
-
-  export type Enumquarter_ranking_trimestry_rankingWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.quarter_ranking_trimestry_ranking | Enumquarter_ranking_trimestry_rankingFieldRefInput<$PrismaModel>
-    in?: $Enums.quarter_ranking_trimestry_ranking[]
-    notIn?: $Enums.quarter_ranking_trimestry_ranking[]
-    not?: NestedEnumquarter_ranking_trimestry_rankingWithAggregatesFilter<$PrismaModel> | $Enums.quarter_ranking_trimestry_ranking
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel>
-    _max?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel>
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -50170,13 +53916,6 @@ export namespace Prisma {
     _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
-  export type Enumtournament_tournament_trimestryFilter<$PrismaModel = never> = {
-    equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
-    in?: $Enums.tournament_tournament_trimestry[]
-    notIn?: $Enums.tournament_tournament_trimestry[]
-    not?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel> | $Enums.tournament_tournament_trimestry
-  }
-
   export type Enumtournament_tournament_categoryFilter<$PrismaModel = never> = {
     equals?: $Enums.tournament_tournament_category | Enumtournament_tournament_categoryFieldRefInput<$PrismaModel>
     in?: $Enums.tournament_tournament_category[]
@@ -50289,6 +54028,7 @@ export namespace Prisma {
   export type tournamentAvgOrderByAggregateInput = {
     id?: SortOrder
     wordpress_post_id?: SortOrder
+    tournament_trimestry?: SortOrder
     tournament_stack?: SortOrder
   }
 
@@ -50331,17 +54071,8 @@ export namespace Prisma {
   export type tournamentSumOrderByAggregateInput = {
     id?: SortOrder
     wordpress_post_id?: SortOrder
+    tournament_trimestry?: SortOrder
     tournament_stack?: SortOrder
-  }
-
-  export type Enumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
-    in?: $Enums.tournament_tournament_trimestry[]
-    notIn?: $Enums.tournament_tournament_trimestry[]
-    not?: NestedEnumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel> | $Enums.tournament_tournament_trimestry
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel>
-    _max?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel>
   }
 
   export type Enumtournament_tournament_categoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -51606,6 +55337,16 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
+  export type RepechageListRelationFilter = {
+    every?: repechageWhereInput
+    some?: repechageWhereInput
+    none?: repechageWhereInput
+  }
+
+  export type repechageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type wp_usersOrderByRelevanceInput = {
     fields: wp_usersOrderByRelevanceFieldEnum | wp_usersOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -52129,6 +55870,137 @@ export namespace Prisma {
     incoming_link_count?: SortOrder
   }
 
+  export type repechageCountOrderByAggregateInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type repechageAvgOrderByAggregateInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type repechageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type repechageMinOrderByAggregateInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type repechageSumOrderByAggregateInput = {
+    id?: SortOrder
+    trimester_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type Enumseason_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.season_status | Enumseason_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.season_status[]
+    notIn?: $Enums.season_status[]
+    not?: NestedEnumseason_statusFilter<$PrismaModel> | $Enums.season_status
+  }
+
+  export type TrimesterListRelationFilter = {
+    every?: trimesterWhereInput
+    some?: trimesterWhereInput
+    none?: trimesterWhereInput
+  }
+
+  export type trimesterOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type seasonOrderByRelevanceInput = {
+    fields: seasonOrderByRelevanceFieldEnum | seasonOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type seasonCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    status?: SortOrder
+  }
+
+  export type seasonAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type seasonMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    status?: SortOrder
+  }
+
+  export type seasonMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    status?: SortOrder
+  }
+
+  export type seasonSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type Enumseason_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.season_status | Enumseason_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.season_status[]
+    notIn?: $Enums.season_status[]
+    not?: NestedEnumseason_statusWithAggregatesFilter<$PrismaModel> | $Enums.season_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumseason_statusFilter<$PrismaModel>
+    _max?: NestedEnumseason_statusFilter<$PrismaModel>
+  }
+
+  export type trimesterCountOrderByAggregateInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+  }
+
+  export type trimesterAvgOrderByAggregateInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+  }
+
+  export type trimesterMaxOrderByAggregateInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+  }
+
+  export type trimesterMinOrderByAggregateInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+  }
+
+  export type trimesterSumOrderByAggregateInput = {
+    id?: SortOrder
+    season_id?: SortOrder
+    number?: SortOrder
+  }
+
   export type stack_chipCreateNestedManyWithoutChipInput = {
     create?: XOR<stack_chipCreateWithoutChipInput, stack_chipUncheckedCreateWithoutChipInput> | stack_chipCreateWithoutChipInput[] | stack_chipUncheckedCreateWithoutChipInput[]
     connectOrCreate?: stack_chipCreateOrConnectWithoutChipInput | stack_chipCreateOrConnectWithoutChipInput[]
@@ -52203,8 +56075,16 @@ export namespace Prisma {
     connect?: tournamentWhereUniqueInput
   }
 
-  export type Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput = {
-    set?: $Enums.quarter_ranking_trimestry_ranking
+  export type trimesterCreateNestedOneWithoutQuarter_rankingInput = {
+    create?: XOR<trimesterCreateWithoutQuarter_rankingInput, trimesterUncheckedCreateWithoutQuarter_rankingInput>
+    connectOrCreate?: trimesterCreateOrConnectWithoutQuarter_rankingInput
+    connect?: trimesterWhereUniqueInput
+  }
+
+  export type seasonCreateNestedOneWithoutQuarter_rankingInput = {
+    create?: XOR<seasonCreateWithoutQuarter_rankingInput, seasonUncheckedCreateWithoutQuarter_rankingInput>
+    connectOrCreate?: seasonCreateOrConnectWithoutQuarter_rankingInput
+    connect?: seasonWhereUniqueInput
   }
 
   export type wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput = {
@@ -52221,6 +56101,22 @@ export namespace Prisma {
     upsert?: tournamentUpsertWithoutQuarter_rankingInput
     connect?: tournamentWhereUniqueInput
     update?: XOR<XOR<tournamentUpdateToOneWithWhereWithoutQuarter_rankingInput, tournamentUpdateWithoutQuarter_rankingInput>, tournamentUncheckedUpdateWithoutQuarter_rankingInput>
+  }
+
+  export type trimesterUpdateOneRequiredWithoutQuarter_rankingNestedInput = {
+    create?: XOR<trimesterCreateWithoutQuarter_rankingInput, trimesterUncheckedCreateWithoutQuarter_rankingInput>
+    connectOrCreate?: trimesterCreateOrConnectWithoutQuarter_rankingInput
+    upsert?: trimesterUpsertWithoutQuarter_rankingInput
+    connect?: trimesterWhereUniqueInput
+    update?: XOR<XOR<trimesterUpdateToOneWithWhereWithoutQuarter_rankingInput, trimesterUpdateWithoutQuarter_rankingInput>, trimesterUncheckedUpdateWithoutQuarter_rankingInput>
+  }
+
+  export type seasonUpdateOneRequiredWithoutQuarter_rankingNestedInput = {
+    create?: XOR<seasonCreateWithoutQuarter_rankingInput, seasonUncheckedCreateWithoutQuarter_rankingInput>
+    connectOrCreate?: seasonCreateOrConnectWithoutQuarter_rankingInput
+    upsert?: seasonUpsertWithoutQuarter_rankingInput
+    connect?: seasonWhereUniqueInput
+    update?: XOR<XOR<seasonUpdateToOneWithWhereWithoutQuarter_rankingInput, seasonUpdateWithoutQuarter_rankingInput>, seasonUncheckedUpdateWithoutQuarter_rankingInput>
   }
 
   export type tournamentCreateNestedOneWithoutRegistrationInput = {
@@ -52601,10 +56497,6 @@ export namespace Prisma {
     connect?: tournament_tableWhereUniqueInput | tournament_tableWhereUniqueInput[]
   }
 
-  export type Enumtournament_tournament_trimestryFieldUpdateOperationsInput = {
-    set?: $Enums.tournament_tournament_trimestry
-  }
-
   export type Enumtournament_tournament_categoryFieldUpdateOperationsInput = {
     set?: $Enums.tournament_tournament_category
   }
@@ -52897,6 +56789,13 @@ export namespace Prisma {
     connect?: registrationWhereUniqueInput | registrationWhereUniqueInput[]
   }
 
+  export type repechageCreateNestedManyWithoutWp_usersInput = {
+    create?: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput> | repechageCreateWithoutWp_usersInput[] | repechageUncheckedCreateWithoutWp_usersInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutWp_usersInput | repechageCreateOrConnectWithoutWp_usersInput[]
+    createMany?: repechageCreateManyWp_usersInputEnvelope
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+  }
+
   export type quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput = {
     create?: XOR<quarter_rankingCreateWithoutWp_usersInput, quarter_rankingUncheckedCreateWithoutWp_usersInput> | quarter_rankingCreateWithoutWp_usersInput[] | quarter_rankingUncheckedCreateWithoutWp_usersInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutWp_usersInput | quarter_rankingCreateOrConnectWithoutWp_usersInput[]
@@ -52909,6 +56808,13 @@ export namespace Prisma {
     connectOrCreate?: registrationCreateOrConnectWithoutWp_usersInput | registrationCreateOrConnectWithoutWp_usersInput[]
     createMany?: registrationCreateManyWp_usersInputEnvelope
     connect?: registrationWhereUniqueInput | registrationWhereUniqueInput[]
+  }
+
+  export type repechageUncheckedCreateNestedManyWithoutWp_usersInput = {
+    create?: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput> | repechageCreateWithoutWp_usersInput[] | repechageUncheckedCreateWithoutWp_usersInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutWp_usersInput | repechageCreateOrConnectWithoutWp_usersInput[]
+    createMany?: repechageCreateManyWp_usersInputEnvelope
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
   }
 
   export type quarter_rankingUpdateManyWithoutWp_usersNestedInput = {
@@ -52939,6 +56845,20 @@ export namespace Prisma {
     deleteMany?: registrationScalarWhereInput | registrationScalarWhereInput[]
   }
 
+  export type repechageUpdateManyWithoutWp_usersNestedInput = {
+    create?: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput> | repechageCreateWithoutWp_usersInput[] | repechageUncheckedCreateWithoutWp_usersInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutWp_usersInput | repechageCreateOrConnectWithoutWp_usersInput[]
+    upsert?: repechageUpsertWithWhereUniqueWithoutWp_usersInput | repechageUpsertWithWhereUniqueWithoutWp_usersInput[]
+    createMany?: repechageCreateManyWp_usersInputEnvelope
+    set?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    disconnect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    delete?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    update?: repechageUpdateWithWhereUniqueWithoutWp_usersInput | repechageUpdateWithWhereUniqueWithoutWp_usersInput[]
+    updateMany?: repechageUpdateManyWithWhereWithoutWp_usersInput | repechageUpdateManyWithWhereWithoutWp_usersInput[]
+    deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
+  }
+
   export type quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput = {
     create?: XOR<quarter_rankingCreateWithoutWp_usersInput, quarter_rankingUncheckedCreateWithoutWp_usersInput> | quarter_rankingCreateWithoutWp_usersInput[] | quarter_rankingUncheckedCreateWithoutWp_usersInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutWp_usersInput | quarter_rankingCreateOrConnectWithoutWp_usersInput[]
@@ -52965,6 +56885,20 @@ export namespace Prisma {
     update?: registrationUpdateWithWhereUniqueWithoutWp_usersInput | registrationUpdateWithWhereUniqueWithoutWp_usersInput[]
     updateMany?: registrationUpdateManyWithWhereWithoutWp_usersInput | registrationUpdateManyWithWhereWithoutWp_usersInput[]
     deleteMany?: registrationScalarWhereInput | registrationScalarWhereInput[]
+  }
+
+  export type repechageUncheckedUpdateManyWithoutWp_usersNestedInput = {
+    create?: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput> | repechageCreateWithoutWp_usersInput[] | repechageUncheckedCreateWithoutWp_usersInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutWp_usersInput | repechageCreateOrConnectWithoutWp_usersInput[]
+    upsert?: repechageUpsertWithWhereUniqueWithoutWp_usersInput | repechageUpsertWithWhereUniqueWithoutWp_usersInput[]
+    createMany?: repechageCreateManyWp_usersInputEnvelope
+    set?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    disconnect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    delete?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    update?: repechageUpdateWithWhereUniqueWithoutWp_usersInput | repechageUpdateWithWhereUniqueWithoutWp_usersInput[]
+    updateMany?: repechageUpdateManyWithWhereWithoutWp_usersInput | repechageUpdateManyWithWhereWithoutWp_usersInput[]
+    deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
   }
 
   export type chipCreateNestedOneWithoutStack_chipInput = {
@@ -53009,6 +56943,220 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type trimesterCreateNestedOneWithoutRepechageInput = {
+    create?: XOR<trimesterCreateWithoutRepechageInput, trimesterUncheckedCreateWithoutRepechageInput>
+    connectOrCreate?: trimesterCreateOrConnectWithoutRepechageInput
+    connect?: trimesterWhereUniqueInput
+  }
+
+  export type wp_usersCreateNestedOneWithoutRepechageInput = {
+    create?: XOR<wp_usersCreateWithoutRepechageInput, wp_usersUncheckedCreateWithoutRepechageInput>
+    connectOrCreate?: wp_usersCreateOrConnectWithoutRepechageInput
+    connect?: wp_usersWhereUniqueInput
+  }
+
+  export type trimesterUpdateOneRequiredWithoutRepechageNestedInput = {
+    create?: XOR<trimesterCreateWithoutRepechageInput, trimesterUncheckedCreateWithoutRepechageInput>
+    connectOrCreate?: trimesterCreateOrConnectWithoutRepechageInput
+    upsert?: trimesterUpsertWithoutRepechageInput
+    connect?: trimesterWhereUniqueInput
+    update?: XOR<XOR<trimesterUpdateToOneWithWhereWithoutRepechageInput, trimesterUpdateWithoutRepechageInput>, trimesterUncheckedUpdateWithoutRepechageInput>
+  }
+
+  export type wp_usersUpdateOneRequiredWithoutRepechageNestedInput = {
+    create?: XOR<wp_usersCreateWithoutRepechageInput, wp_usersUncheckedCreateWithoutRepechageInput>
+    connectOrCreate?: wp_usersCreateOrConnectWithoutRepechageInput
+    upsert?: wp_usersUpsertWithoutRepechageInput
+    connect?: wp_usersWhereUniqueInput
+    update?: XOR<XOR<wp_usersUpdateToOneWithWhereWithoutRepechageInput, wp_usersUpdateWithoutRepechageInput>, wp_usersUncheckedUpdateWithoutRepechageInput>
+  }
+
+  export type quarter_rankingCreateNestedManyWithoutSeasonInput = {
+    create?: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput> | quarter_rankingCreateWithoutSeasonInput[] | quarter_rankingUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutSeasonInput | quarter_rankingCreateOrConnectWithoutSeasonInput[]
+    createMany?: quarter_rankingCreateManySeasonInputEnvelope
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+  }
+
+  export type trimesterCreateNestedManyWithoutSeasonInput = {
+    create?: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput> | trimesterCreateWithoutSeasonInput[] | trimesterUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: trimesterCreateOrConnectWithoutSeasonInput | trimesterCreateOrConnectWithoutSeasonInput[]
+    createMany?: trimesterCreateManySeasonInputEnvelope
+    connect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+  }
+
+  export type quarter_rankingUncheckedCreateNestedManyWithoutSeasonInput = {
+    create?: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput> | quarter_rankingCreateWithoutSeasonInput[] | quarter_rankingUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutSeasonInput | quarter_rankingCreateOrConnectWithoutSeasonInput[]
+    createMany?: quarter_rankingCreateManySeasonInputEnvelope
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+  }
+
+  export type trimesterUncheckedCreateNestedManyWithoutSeasonInput = {
+    create?: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput> | trimesterCreateWithoutSeasonInput[] | trimesterUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: trimesterCreateOrConnectWithoutSeasonInput | trimesterCreateOrConnectWithoutSeasonInput[]
+    createMany?: trimesterCreateManySeasonInputEnvelope
+    connect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+  }
+
+  export type Enumseason_statusFieldUpdateOperationsInput = {
+    set?: $Enums.season_status
+  }
+
+  export type quarter_rankingUpdateManyWithoutSeasonNestedInput = {
+    create?: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput> | quarter_rankingCreateWithoutSeasonInput[] | quarter_rankingUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutSeasonInput | quarter_rankingCreateOrConnectWithoutSeasonInput[]
+    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutSeasonInput | quarter_rankingUpsertWithWhereUniqueWithoutSeasonInput[]
+    createMany?: quarter_rankingCreateManySeasonInputEnvelope
+    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    update?: quarter_rankingUpdateWithWhereUniqueWithoutSeasonInput | quarter_rankingUpdateWithWhereUniqueWithoutSeasonInput[]
+    updateMany?: quarter_rankingUpdateManyWithWhereWithoutSeasonInput | quarter_rankingUpdateManyWithWhereWithoutSeasonInput[]
+    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+  }
+
+  export type trimesterUpdateManyWithoutSeasonNestedInput = {
+    create?: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput> | trimesterCreateWithoutSeasonInput[] | trimesterUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: trimesterCreateOrConnectWithoutSeasonInput | trimesterCreateOrConnectWithoutSeasonInput[]
+    upsert?: trimesterUpsertWithWhereUniqueWithoutSeasonInput | trimesterUpsertWithWhereUniqueWithoutSeasonInput[]
+    createMany?: trimesterCreateManySeasonInputEnvelope
+    set?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    disconnect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    delete?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    connect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    update?: trimesterUpdateWithWhereUniqueWithoutSeasonInput | trimesterUpdateWithWhereUniqueWithoutSeasonInput[]
+    updateMany?: trimesterUpdateManyWithWhereWithoutSeasonInput | trimesterUpdateManyWithWhereWithoutSeasonInput[]
+    deleteMany?: trimesterScalarWhereInput | trimesterScalarWhereInput[]
+  }
+
+  export type quarter_rankingUncheckedUpdateManyWithoutSeasonNestedInput = {
+    create?: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput> | quarter_rankingCreateWithoutSeasonInput[] | quarter_rankingUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutSeasonInput | quarter_rankingCreateOrConnectWithoutSeasonInput[]
+    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutSeasonInput | quarter_rankingUpsertWithWhereUniqueWithoutSeasonInput[]
+    createMany?: quarter_rankingCreateManySeasonInputEnvelope
+    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    update?: quarter_rankingUpdateWithWhereUniqueWithoutSeasonInput | quarter_rankingUpdateWithWhereUniqueWithoutSeasonInput[]
+    updateMany?: quarter_rankingUpdateManyWithWhereWithoutSeasonInput | quarter_rankingUpdateManyWithWhereWithoutSeasonInput[]
+    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+  }
+
+  export type trimesterUncheckedUpdateManyWithoutSeasonNestedInput = {
+    create?: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput> | trimesterCreateWithoutSeasonInput[] | trimesterUncheckedCreateWithoutSeasonInput[]
+    connectOrCreate?: trimesterCreateOrConnectWithoutSeasonInput | trimesterCreateOrConnectWithoutSeasonInput[]
+    upsert?: trimesterUpsertWithWhereUniqueWithoutSeasonInput | trimesterUpsertWithWhereUniqueWithoutSeasonInput[]
+    createMany?: trimesterCreateManySeasonInputEnvelope
+    set?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    disconnect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    delete?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    connect?: trimesterWhereUniqueInput | trimesterWhereUniqueInput[]
+    update?: trimesterUpdateWithWhereUniqueWithoutSeasonInput | trimesterUpdateWithWhereUniqueWithoutSeasonInput[]
+    updateMany?: trimesterUpdateManyWithWhereWithoutSeasonInput | trimesterUpdateManyWithWhereWithoutSeasonInput[]
+    deleteMany?: trimesterScalarWhereInput | trimesterScalarWhereInput[]
+  }
+
+  export type quarter_rankingCreateNestedManyWithoutTrimesterInput = {
+    create?: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput> | quarter_rankingCreateWithoutTrimesterInput[] | quarter_rankingUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTrimesterInput | quarter_rankingCreateOrConnectWithoutTrimesterInput[]
+    createMany?: quarter_rankingCreateManyTrimesterInputEnvelope
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+  }
+
+  export type repechageCreateNestedManyWithoutTrimesterInput = {
+    create?: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput> | repechageCreateWithoutTrimesterInput[] | repechageUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutTrimesterInput | repechageCreateOrConnectWithoutTrimesterInput[]
+    createMany?: repechageCreateManyTrimesterInputEnvelope
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+  }
+
+  export type seasonCreateNestedOneWithoutTrimesterInput = {
+    create?: XOR<seasonCreateWithoutTrimesterInput, seasonUncheckedCreateWithoutTrimesterInput>
+    connectOrCreate?: seasonCreateOrConnectWithoutTrimesterInput
+    connect?: seasonWhereUniqueInput
+  }
+
+  export type quarter_rankingUncheckedCreateNestedManyWithoutTrimesterInput = {
+    create?: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput> | quarter_rankingCreateWithoutTrimesterInput[] | quarter_rankingUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTrimesterInput | quarter_rankingCreateOrConnectWithoutTrimesterInput[]
+    createMany?: quarter_rankingCreateManyTrimesterInputEnvelope
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+  }
+
+  export type repechageUncheckedCreateNestedManyWithoutTrimesterInput = {
+    create?: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput> | repechageCreateWithoutTrimesterInput[] | repechageUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutTrimesterInput | repechageCreateOrConnectWithoutTrimesterInput[]
+    createMany?: repechageCreateManyTrimesterInputEnvelope
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+  }
+
+  export type quarter_rankingUpdateManyWithoutTrimesterNestedInput = {
+    create?: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput> | quarter_rankingCreateWithoutTrimesterInput[] | quarter_rankingUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTrimesterInput | quarter_rankingCreateOrConnectWithoutTrimesterInput[]
+    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutTrimesterInput | quarter_rankingUpsertWithWhereUniqueWithoutTrimesterInput[]
+    createMany?: quarter_rankingCreateManyTrimesterInputEnvelope
+    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    update?: quarter_rankingUpdateWithWhereUniqueWithoutTrimesterInput | quarter_rankingUpdateWithWhereUniqueWithoutTrimesterInput[]
+    updateMany?: quarter_rankingUpdateManyWithWhereWithoutTrimesterInput | quarter_rankingUpdateManyWithWhereWithoutTrimesterInput[]
+    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+  }
+
+  export type repechageUpdateManyWithoutTrimesterNestedInput = {
+    create?: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput> | repechageCreateWithoutTrimesterInput[] | repechageUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutTrimesterInput | repechageCreateOrConnectWithoutTrimesterInput[]
+    upsert?: repechageUpsertWithWhereUniqueWithoutTrimesterInput | repechageUpsertWithWhereUniqueWithoutTrimesterInput[]
+    createMany?: repechageCreateManyTrimesterInputEnvelope
+    set?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    disconnect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    delete?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    update?: repechageUpdateWithWhereUniqueWithoutTrimesterInput | repechageUpdateWithWhereUniqueWithoutTrimesterInput[]
+    updateMany?: repechageUpdateManyWithWhereWithoutTrimesterInput | repechageUpdateManyWithWhereWithoutTrimesterInput[]
+    deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
+  }
+
+  export type seasonUpdateOneRequiredWithoutTrimesterNestedInput = {
+    create?: XOR<seasonCreateWithoutTrimesterInput, seasonUncheckedCreateWithoutTrimesterInput>
+    connectOrCreate?: seasonCreateOrConnectWithoutTrimesterInput
+    upsert?: seasonUpsertWithoutTrimesterInput
+    connect?: seasonWhereUniqueInput
+    update?: XOR<XOR<seasonUpdateToOneWithWhereWithoutTrimesterInput, seasonUpdateWithoutTrimesterInput>, seasonUncheckedUpdateWithoutTrimesterInput>
+  }
+
+  export type quarter_rankingUncheckedUpdateManyWithoutTrimesterNestedInput = {
+    create?: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput> | quarter_rankingCreateWithoutTrimesterInput[] | quarter_rankingUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: quarter_rankingCreateOrConnectWithoutTrimesterInput | quarter_rankingCreateOrConnectWithoutTrimesterInput[]
+    upsert?: quarter_rankingUpsertWithWhereUniqueWithoutTrimesterInput | quarter_rankingUpsertWithWhereUniqueWithoutTrimesterInput[]
+    createMany?: quarter_rankingCreateManyTrimesterInputEnvelope
+    set?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    disconnect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    delete?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    connect?: quarter_rankingWhereUniqueInput | quarter_rankingWhereUniqueInput[]
+    update?: quarter_rankingUpdateWithWhereUniqueWithoutTrimesterInput | quarter_rankingUpdateWithWhereUniqueWithoutTrimesterInput[]
+    updateMany?: quarter_rankingUpdateManyWithWhereWithoutTrimesterInput | quarter_rankingUpdateManyWithWhereWithoutTrimesterInput[]
+    deleteMany?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
+  }
+
+  export type repechageUncheckedUpdateManyWithoutTrimesterNestedInput = {
+    create?: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput> | repechageCreateWithoutTrimesterInput[] | repechageUncheckedCreateWithoutTrimesterInput[]
+    connectOrCreate?: repechageCreateOrConnectWithoutTrimesterInput | repechageCreateOrConnectWithoutTrimesterInput[]
+    upsert?: repechageUpsertWithWhereUniqueWithoutTrimesterInput | repechageUpsertWithWhereUniqueWithoutTrimesterInput[]
+    createMany?: repechageCreateManyTrimesterInputEnvelope
+    set?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    disconnect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    delete?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+    update?: repechageUpdateWithWhereUniqueWithoutTrimesterInput | repechageUpdateWithWhereUniqueWithoutTrimesterInput[]
+    updateMany?: repechageUpdateManyWithWhereWithoutTrimesterInput | repechageUpdateManyWithWhereWithoutTrimesterInput[]
+    deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -53107,23 +57255,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel = never> = {
-    equals?: $Enums.quarter_ranking_trimestry_ranking | Enumquarter_ranking_trimestry_rankingFieldRefInput<$PrismaModel>
-    in?: $Enums.quarter_ranking_trimestry_ranking[]
-    notIn?: $Enums.quarter_ranking_trimestry_ranking[]
-    not?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel> | $Enums.quarter_ranking_trimestry_ranking
-  }
-
-  export type NestedEnumquarter_ranking_trimestry_rankingWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.quarter_ranking_trimestry_ranking | Enumquarter_ranking_trimestry_rankingFieldRefInput<$PrismaModel>
-    in?: $Enums.quarter_ranking_trimestry_ranking[]
-    notIn?: $Enums.quarter_ranking_trimestry_ranking[]
-    not?: NestedEnumquarter_ranking_trimestry_rankingWithAggregatesFilter<$PrismaModel> | $Enums.quarter_ranking_trimestry_ranking
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel>
-    _max?: NestedEnumquarter_ranking_trimestry_rankingFilter<$PrismaModel>
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -53230,13 +57361,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumtournament_tournament_trimestryFilter<$PrismaModel = never> = {
-    equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
-    in?: $Enums.tournament_tournament_trimestry[]
-    notIn?: $Enums.tournament_tournament_trimestry[]
-    not?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel> | $Enums.tournament_tournament_trimestry
-  }
-
   export type NestedEnumtournament_tournament_categoryFilter<$PrismaModel = never> = {
     equals?: $Enums.tournament_tournament_category | Enumtournament_tournament_categoryFieldRefInput<$PrismaModel>
     in?: $Enums.tournament_tournament_category[]
@@ -53275,16 +57399,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedEnumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.tournament_tournament_trimestry | Enumtournament_tournament_trimestryFieldRefInput<$PrismaModel>
-    in?: $Enums.tournament_tournament_trimestry[]
-    notIn?: $Enums.tournament_tournament_trimestry[]
-    not?: NestedEnumtournament_tournament_trimestryWithAggregatesFilter<$PrismaModel> | $Enums.tournament_tournament_trimestry
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel>
-    _max?: NestedEnumtournament_tournament_trimestryFilter<$PrismaModel>
   }
 
   export type NestedEnumtournament_tournament_categoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -53417,6 +57531,23 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumseason_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.season_status | Enumseason_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.season_status[]
+    notIn?: $Enums.season_status[]
+    not?: NestedEnumseason_statusFilter<$PrismaModel> | $Enums.season_status
+  }
+
+  export type NestedEnumseason_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.season_status | Enumseason_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.season_status[]
+    notIn?: $Enums.season_status[]
+    not?: NestedEnumseason_statusWithAggregatesFilter<$PrismaModel> | $Enums.season_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumseason_statusFilter<$PrismaModel>
+    _max?: NestedEnumseason_statusFilter<$PrismaModel>
+  }
+
   export type stack_chipCreateWithoutChipInput = {
     stack: stackCreateNestedOneWithoutStack_chipInput
   }
@@ -53473,6 +57604,7 @@ export namespace Prisma {
     pseudo_winamax: string
     photo_url: string
     registration?: registrationCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersUncheckedCreateWithoutQuarter_rankingInput = {
@@ -53489,6 +57621,7 @@ export namespace Prisma {
     pseudo_winamax: string
     photo_url: string
     registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersCreateOrConnectWithoutQuarter_rankingInput = {
@@ -53503,7 +57636,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -53525,7 +57658,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -53543,6 +57676,52 @@ export namespace Prisma {
   export type tournamentCreateOrConnectWithoutQuarter_rankingInput = {
     where: tournamentWhereUniqueInput
     create: XOR<tournamentCreateWithoutQuarter_rankingInput, tournamentUncheckedCreateWithoutQuarter_rankingInput>
+  }
+
+  export type trimesterCreateWithoutQuarter_rankingInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    repechage?: repechageCreateNestedManyWithoutTrimesterInput
+    season: seasonCreateNestedOneWithoutTrimesterInput
+  }
+
+  export type trimesterUncheckedCreateWithoutQuarter_rankingInput = {
+    id?: bigint | number
+    season_id: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    repechage?: repechageUncheckedCreateNestedManyWithoutTrimesterInput
+  }
+
+  export type trimesterCreateOrConnectWithoutQuarter_rankingInput = {
+    where: trimesterWhereUniqueInput
+    create: XOR<trimesterCreateWithoutQuarter_rankingInput, trimesterUncheckedCreateWithoutQuarter_rankingInput>
+  }
+
+  export type seasonCreateWithoutQuarter_rankingInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    trimester?: trimesterCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonUncheckedCreateWithoutQuarter_rankingInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    trimester?: trimesterUncheckedCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonCreateOrConnectWithoutQuarter_rankingInput = {
+    where: seasonWhereUniqueInput
+    create: XOR<seasonCreateWithoutQuarter_rankingInput, seasonUncheckedCreateWithoutQuarter_rankingInput>
   }
 
   export type wp_usersUpsertWithoutQuarter_rankingInput = {
@@ -53570,6 +57749,7 @@ export namespace Prisma {
     pseudo_winamax?: StringFieldUpdateOperationsInput | string
     photo_url?: StringFieldUpdateOperationsInput | string
     registration?: registrationUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUpdateManyWithoutWp_usersNestedInput
   }
 
   export type wp_usersUncheckedUpdateWithoutQuarter_rankingInput = {
@@ -53586,6 +57766,7 @@ export namespace Prisma {
     pseudo_winamax?: StringFieldUpdateOperationsInput | string
     photo_url?: StringFieldUpdateOperationsInput | string
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
   }
 
   export type tournamentUpsertWithoutQuarter_rankingInput = {
@@ -53606,7 +57787,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53628,7 +57809,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53643,6 +57824,64 @@ export namespace Prisma {
     tournament_table?: tournament_tableUncheckedUpdateManyWithoutTournamentNestedInput
   }
 
+  export type trimesterUpsertWithoutQuarter_rankingInput = {
+    update: XOR<trimesterUpdateWithoutQuarter_rankingInput, trimesterUncheckedUpdateWithoutQuarter_rankingInput>
+    create: XOR<trimesterCreateWithoutQuarter_rankingInput, trimesterUncheckedCreateWithoutQuarter_rankingInput>
+    where?: trimesterWhereInput
+  }
+
+  export type trimesterUpdateToOneWithWhereWithoutQuarter_rankingInput = {
+    where?: trimesterWhereInput
+    data: XOR<trimesterUpdateWithoutQuarter_rankingInput, trimesterUncheckedUpdateWithoutQuarter_rankingInput>
+  }
+
+  export type trimesterUpdateWithoutQuarter_rankingInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    repechage?: repechageUpdateManyWithoutTrimesterNestedInput
+    season?: seasonUpdateOneRequiredWithoutTrimesterNestedInput
+  }
+
+  export type trimesterUncheckedUpdateWithoutQuarter_rankingInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    season_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    repechage?: repechageUncheckedUpdateManyWithoutTrimesterNestedInput
+  }
+
+  export type seasonUpsertWithoutQuarter_rankingInput = {
+    update: XOR<seasonUpdateWithoutQuarter_rankingInput, seasonUncheckedUpdateWithoutQuarter_rankingInput>
+    create: XOR<seasonCreateWithoutQuarter_rankingInput, seasonUncheckedCreateWithoutQuarter_rankingInput>
+    where?: seasonWhereInput
+  }
+
+  export type seasonUpdateToOneWithWhereWithoutQuarter_rankingInput = {
+    where?: seasonWhereInput
+    data: XOR<seasonUpdateWithoutQuarter_rankingInput, seasonUncheckedUpdateWithoutQuarter_rankingInput>
+  }
+
+  export type seasonUpdateWithoutQuarter_rankingInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    trimester?: trimesterUpdateManyWithoutSeasonNestedInput
+  }
+
+  export type seasonUncheckedUpdateWithoutQuarter_rankingInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    trimester?: trimesterUncheckedUpdateManyWithoutSeasonNestedInput
+  }
+
   export type tournamentCreateWithoutRegistrationInput = {
     id?: bigint | number
     wordpress_post_id: bigint | number
@@ -53650,7 +57889,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -53672,7 +57911,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -53706,6 +57945,7 @@ export namespace Prisma {
     pseudo_winamax: string
     photo_url: string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersUncheckedCreateWithoutRegistrationInput = {
@@ -53722,6 +57962,7 @@ export namespace Prisma {
     pseudo_winamax: string
     photo_url: string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
   }
 
   export type wp_usersCreateOrConnectWithoutRegistrationInput = {
@@ -53823,7 +58064,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53845,7 +58086,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53885,6 +58126,7 @@ export namespace Prisma {
     pseudo_winamax?: StringFieldUpdateOperationsInput | string
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUpdateManyWithoutWp_usersNestedInput
   }
 
   export type wp_usersUncheckedUpdateWithoutRegistrationInput = {
@@ -53901,6 +58143,7 @@ export namespace Prisma {
     pseudo_winamax?: StringFieldUpdateOperationsInput | string
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
   }
 
   export type table_assignmentUpsertWithWhereUniqueWithoutRegistrationInput = {
@@ -53999,7 +58242,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54021,7 +58264,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54088,7 +58331,7 @@ export namespace Prisma {
     tournament_description?: StringFilter<"tournament"> | string
     tournament_start_date?: DateTimeFilter<"tournament"> | Date | string
     tournament_open_date?: DateTimeFilter<"tournament"> | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFilter<"tournament"> | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFilter<"tournament"> | Date | string
@@ -54257,20 +58500,20 @@ export namespace Prisma {
 
   export type quarter_rankingCreateWithoutTournamentInput = {
     id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
     wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
+    trimester: trimesterCreateNestedOneWithoutQuarter_rankingInput
+    season: seasonCreateNestedOneWithoutQuarter_rankingInput
   }
 
   export type quarter_rankingUncheckedCreateWithoutTournamentInput = {
     id?: bigint | number
     user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
   }
 
   export type quarter_rankingCreateOrConnectWithoutTournamentInput = {
@@ -54435,10 +58678,10 @@ export namespace Prisma {
     NOT?: quarter_rankingScalarWhereInput | quarter_rankingScalarWhereInput[]
     id?: BigIntFilter<"quarter_ranking"> | bigint | number
     user_id?: BigIntFilter<"quarter_ranking"> | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFilter<"quarter_ranking"> | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFilter<"quarter_ranking"> | bigint | number
     aggregated_score?: IntFilter<"quarter_ranking"> | number
     position?: IntFilter<"quarter_ranking"> | number
-    quarter_ranking_year?: IntFilter<"quarter_ranking"> | number
+    quarter_ranking_year?: BigIntFilter<"quarter_ranking"> | bigint | number
     tournament_id?: BigIntFilter<"quarter_ranking"> | bigint | number
   }
 
@@ -54574,7 +58817,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54596,7 +58839,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54634,7 +58877,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54656,7 +58899,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54703,7 +58946,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54725,7 +58968,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54794,7 +59037,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54816,7 +59059,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54864,7 +59107,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54886,7 +59129,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -54940,7 +59183,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54962,7 +59205,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54979,19 +59222,19 @@ export namespace Prisma {
 
   export type quarter_rankingCreateWithoutWp_usersInput = {
     id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
     tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
+    trimester: trimesterCreateNestedOneWithoutQuarter_rankingInput
+    season: seasonCreateNestedOneWithoutQuarter_rankingInput
   }
 
   export type quarter_rankingUncheckedCreateWithoutWp_usersInput = {
     id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
     tournament_id: bigint | number
   }
 
@@ -55035,6 +59278,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type repechageCreateWithoutWp_usersInput = {
+    id?: bigint | number
+    trimester: trimesterCreateNestedOneWithoutRepechageInput
+  }
+
+  export type repechageUncheckedCreateWithoutWp_usersInput = {
+    id?: bigint | number
+    trimester_id: bigint | number
+  }
+
+  export type repechageCreateOrConnectWithoutWp_usersInput = {
+    where: repechageWhereUniqueInput
+    create: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput>
+  }
+
+  export type repechageCreateManyWp_usersInputEnvelope = {
+    data: repechageCreateManyWp_usersInput | repechageCreateManyWp_usersInput[]
+    skipDuplicates?: boolean
+  }
+
   export type quarter_rankingUpsertWithWhereUniqueWithoutWp_usersInput = {
     where: quarter_rankingWhereUniqueInput
     update: XOR<quarter_rankingUpdateWithoutWp_usersInput, quarter_rankingUncheckedUpdateWithoutWp_usersInput>
@@ -55065,6 +59328,31 @@ export namespace Prisma {
   export type registrationUpdateManyWithWhereWithoutWp_usersInput = {
     where: registrationScalarWhereInput
     data: XOR<registrationUpdateManyMutationInput, registrationUncheckedUpdateManyWithoutWp_usersInput>
+  }
+
+  export type repechageUpsertWithWhereUniqueWithoutWp_usersInput = {
+    where: repechageWhereUniqueInput
+    update: XOR<repechageUpdateWithoutWp_usersInput, repechageUncheckedUpdateWithoutWp_usersInput>
+    create: XOR<repechageCreateWithoutWp_usersInput, repechageUncheckedCreateWithoutWp_usersInput>
+  }
+
+  export type repechageUpdateWithWhereUniqueWithoutWp_usersInput = {
+    where: repechageWhereUniqueInput
+    data: XOR<repechageUpdateWithoutWp_usersInput, repechageUncheckedUpdateWithoutWp_usersInput>
+  }
+
+  export type repechageUpdateManyWithWhereWithoutWp_usersInput = {
+    where: repechageScalarWhereInput
+    data: XOR<repechageUpdateManyMutationInput, repechageUncheckedUpdateManyWithoutWp_usersInput>
+  }
+
+  export type repechageScalarWhereInput = {
+    AND?: repechageScalarWhereInput | repechageScalarWhereInput[]
+    OR?: repechageScalarWhereInput[]
+    NOT?: repechageScalarWhereInput | repechageScalarWhereInput[]
+    id?: BigIntFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    user_id?: BigIntFilter<"repechage"> | bigint | number
   }
 
   export type chipCreateWithoutStack_chipInput = {
@@ -55147,6 +59435,373 @@ export namespace Prisma {
     stack_name?: StringFieldUpdateOperationsInput | string
     stack_total_player?: IntFieldUpdateOperationsInput | number
     tournament?: tournamentUncheckedUpdateManyWithoutStackNestedInput
+  }
+
+  export type trimesterCreateWithoutRepechageInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTrimesterInput
+    season: seasonCreateNestedOneWithoutTrimesterInput
+  }
+
+  export type trimesterUncheckedCreateWithoutRepechageInput = {
+    id?: bigint | number
+    season_id: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTrimesterInput
+  }
+
+  export type trimesterCreateOrConnectWithoutRepechageInput = {
+    where: trimesterWhereUniqueInput
+    create: XOR<trimesterCreateWithoutRepechageInput, trimesterUncheckedCreateWithoutRepechageInput>
+  }
+
+  export type wp_usersCreateWithoutRepechageInput = {
+    ID?: bigint | number
+    user_login?: string
+    user_pass?: string
+    user_nicename?: string
+    user_email?: string
+    user_url?: string
+    user_registered?: Date | string
+    user_activation_key?: string
+    user_status?: number
+    display_name?: string
+    pseudo_winamax: string
+    photo_url: string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
+    registration?: registrationCreateNestedManyWithoutWp_usersInput
+  }
+
+  export type wp_usersUncheckedCreateWithoutRepechageInput = {
+    ID?: bigint | number
+    user_login?: string
+    user_pass?: string
+    user_nicename?: string
+    user_email?: string
+    user_url?: string
+    user_registered?: Date | string
+    user_activation_key?: string
+    user_status?: number
+    display_name?: string
+    pseudo_winamax: string
+    photo_url: string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
+    registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
+  }
+
+  export type wp_usersCreateOrConnectWithoutRepechageInput = {
+    where: wp_usersWhereUniqueInput
+    create: XOR<wp_usersCreateWithoutRepechageInput, wp_usersUncheckedCreateWithoutRepechageInput>
+  }
+
+  export type trimesterUpsertWithoutRepechageInput = {
+    update: XOR<trimesterUpdateWithoutRepechageInput, trimesterUncheckedUpdateWithoutRepechageInput>
+    create: XOR<trimesterCreateWithoutRepechageInput, trimesterUncheckedCreateWithoutRepechageInput>
+    where?: trimesterWhereInput
+  }
+
+  export type trimesterUpdateToOneWithWhereWithoutRepechageInput = {
+    where?: trimesterWhereInput
+    data: XOR<trimesterUpdateWithoutRepechageInput, trimesterUncheckedUpdateWithoutRepechageInput>
+  }
+
+  export type trimesterUpdateWithoutRepechageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutTrimesterNestedInput
+    season?: seasonUpdateOneRequiredWithoutTrimesterNestedInput
+  }
+
+  export type trimesterUncheckedUpdateWithoutRepechageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    season_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTrimesterNestedInput
+  }
+
+  export type wp_usersUpsertWithoutRepechageInput = {
+    update: XOR<wp_usersUpdateWithoutRepechageInput, wp_usersUncheckedUpdateWithoutRepechageInput>
+    create: XOR<wp_usersCreateWithoutRepechageInput, wp_usersUncheckedCreateWithoutRepechageInput>
+    where?: wp_usersWhereInput
+  }
+
+  export type wp_usersUpdateToOneWithWhereWithoutRepechageInput = {
+    where?: wp_usersWhereInput
+    data: XOR<wp_usersUpdateWithoutRepechageInput, wp_usersUncheckedUpdateWithoutRepechageInput>
+  }
+
+  export type wp_usersUpdateWithoutRepechageInput = {
+    ID?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_login?: StringFieldUpdateOperationsInput | string
+    user_pass?: StringFieldUpdateOperationsInput | string
+    user_nicename?: StringFieldUpdateOperationsInput | string
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_url?: StringFieldUpdateOperationsInput | string
+    user_registered?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_activation_key?: StringFieldUpdateOperationsInput | string
+    user_status?: IntFieldUpdateOperationsInput | number
+    display_name?: StringFieldUpdateOperationsInput | string
+    pseudo_winamax?: StringFieldUpdateOperationsInput | string
+    photo_url?: StringFieldUpdateOperationsInput | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
+    registration?: registrationUpdateManyWithoutWp_usersNestedInput
+  }
+
+  export type wp_usersUncheckedUpdateWithoutRepechageInput = {
+    ID?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_login?: StringFieldUpdateOperationsInput | string
+    user_pass?: StringFieldUpdateOperationsInput | string
+    user_nicename?: StringFieldUpdateOperationsInput | string
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_url?: StringFieldUpdateOperationsInput | string
+    user_registered?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_activation_key?: StringFieldUpdateOperationsInput | string
+    user_status?: IntFieldUpdateOperationsInput | number
+    display_name?: StringFieldUpdateOperationsInput | string
+    pseudo_winamax?: StringFieldUpdateOperationsInput | string
+    photo_url?: StringFieldUpdateOperationsInput | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
+    registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
+  }
+
+  export type quarter_rankingCreateWithoutSeasonInput = {
+    id?: bigint | number
+    aggregated_score: number
+    position: number
+    wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
+    tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
+    trimester: trimesterCreateNestedOneWithoutQuarter_rankingInput
+  }
+
+  export type quarter_rankingUncheckedCreateWithoutSeasonInput = {
+    id?: bigint | number
+    user_id: bigint | number
+    trimestry_ranking: bigint | number
+    aggregated_score: number
+    position: number
+    tournament_id: bigint | number
+  }
+
+  export type quarter_rankingCreateOrConnectWithoutSeasonInput = {
+    where: quarter_rankingWhereUniqueInput
+    create: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput>
+  }
+
+  export type quarter_rankingCreateManySeasonInputEnvelope = {
+    data: quarter_rankingCreateManySeasonInput | quarter_rankingCreateManySeasonInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type trimesterCreateWithoutSeasonInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutTrimesterInput
+    repechage?: repechageCreateNestedManyWithoutTrimesterInput
+  }
+
+  export type trimesterUncheckedCreateWithoutSeasonInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutTrimesterInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutTrimesterInput
+  }
+
+  export type trimesterCreateOrConnectWithoutSeasonInput = {
+    where: trimesterWhereUniqueInput
+    create: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput>
+  }
+
+  export type trimesterCreateManySeasonInputEnvelope = {
+    data: trimesterCreateManySeasonInput | trimesterCreateManySeasonInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type quarter_rankingUpsertWithWhereUniqueWithoutSeasonInput = {
+    where: quarter_rankingWhereUniqueInput
+    update: XOR<quarter_rankingUpdateWithoutSeasonInput, quarter_rankingUncheckedUpdateWithoutSeasonInput>
+    create: XOR<quarter_rankingCreateWithoutSeasonInput, quarter_rankingUncheckedCreateWithoutSeasonInput>
+  }
+
+  export type quarter_rankingUpdateWithWhereUniqueWithoutSeasonInput = {
+    where: quarter_rankingWhereUniqueInput
+    data: XOR<quarter_rankingUpdateWithoutSeasonInput, quarter_rankingUncheckedUpdateWithoutSeasonInput>
+  }
+
+  export type quarter_rankingUpdateManyWithWhereWithoutSeasonInput = {
+    where: quarter_rankingScalarWhereInput
+    data: XOR<quarter_rankingUpdateManyMutationInput, quarter_rankingUncheckedUpdateManyWithoutSeasonInput>
+  }
+
+  export type trimesterUpsertWithWhereUniqueWithoutSeasonInput = {
+    where: trimesterWhereUniqueInput
+    update: XOR<trimesterUpdateWithoutSeasonInput, trimesterUncheckedUpdateWithoutSeasonInput>
+    create: XOR<trimesterCreateWithoutSeasonInput, trimesterUncheckedCreateWithoutSeasonInput>
+  }
+
+  export type trimesterUpdateWithWhereUniqueWithoutSeasonInput = {
+    where: trimesterWhereUniqueInput
+    data: XOR<trimesterUpdateWithoutSeasonInput, trimesterUncheckedUpdateWithoutSeasonInput>
+  }
+
+  export type trimesterUpdateManyWithWhereWithoutSeasonInput = {
+    where: trimesterScalarWhereInput
+    data: XOR<trimesterUpdateManyMutationInput, trimesterUncheckedUpdateManyWithoutSeasonInput>
+  }
+
+  export type trimesterScalarWhereInput = {
+    AND?: trimesterScalarWhereInput | trimesterScalarWhereInput[]
+    OR?: trimesterScalarWhereInput[]
+    NOT?: trimesterScalarWhereInput | trimesterScalarWhereInput[]
+    id?: BigIntFilter<"trimester"> | bigint | number
+    season_id?: BigIntFilter<"trimester"> | bigint | number
+    number?: IntFilter<"trimester"> | number
+    start_date?: DateTimeFilter<"trimester"> | Date | string
+    end_date?: DateTimeFilter<"trimester"> | Date | string
+  }
+
+  export type quarter_rankingCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    aggregated_score: number
+    position: number
+    wp_users: wp_usersCreateNestedOneWithoutQuarter_rankingInput
+    tournament: tournamentCreateNestedOneWithoutQuarter_rankingInput
+    season: seasonCreateNestedOneWithoutQuarter_rankingInput
+  }
+
+  export type quarter_rankingUncheckedCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    user_id: bigint | number
+    aggregated_score: number
+    position: number
+    quarter_ranking_year: bigint | number
+    tournament_id: bigint | number
+  }
+
+  export type quarter_rankingCreateOrConnectWithoutTrimesterInput = {
+    where: quarter_rankingWhereUniqueInput
+    create: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput>
+  }
+
+  export type quarter_rankingCreateManyTrimesterInputEnvelope = {
+    data: quarter_rankingCreateManyTrimesterInput | quarter_rankingCreateManyTrimesterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type repechageCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    wp_users: wp_usersCreateNestedOneWithoutRepechageInput
+  }
+
+  export type repechageUncheckedCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    user_id: bigint | number
+  }
+
+  export type repechageCreateOrConnectWithoutTrimesterInput = {
+    where: repechageWhereUniqueInput
+    create: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput>
+  }
+
+  export type repechageCreateManyTrimesterInputEnvelope = {
+    data: repechageCreateManyTrimesterInput | repechageCreateManyTrimesterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type seasonCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonUncheckedCreateWithoutTrimesterInput = {
+    id?: bigint | number
+    name: string
+    start_date: Date | string
+    end_date: Date | string
+    status: $Enums.season_status
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutSeasonInput
+  }
+
+  export type seasonCreateOrConnectWithoutTrimesterInput = {
+    where: seasonWhereUniqueInput
+    create: XOR<seasonCreateWithoutTrimesterInput, seasonUncheckedCreateWithoutTrimesterInput>
+  }
+
+  export type quarter_rankingUpsertWithWhereUniqueWithoutTrimesterInput = {
+    where: quarter_rankingWhereUniqueInput
+    update: XOR<quarter_rankingUpdateWithoutTrimesterInput, quarter_rankingUncheckedUpdateWithoutTrimesterInput>
+    create: XOR<quarter_rankingCreateWithoutTrimesterInput, quarter_rankingUncheckedCreateWithoutTrimesterInput>
+  }
+
+  export type quarter_rankingUpdateWithWhereUniqueWithoutTrimesterInput = {
+    where: quarter_rankingWhereUniqueInput
+    data: XOR<quarter_rankingUpdateWithoutTrimesterInput, quarter_rankingUncheckedUpdateWithoutTrimesterInput>
+  }
+
+  export type quarter_rankingUpdateManyWithWhereWithoutTrimesterInput = {
+    where: quarter_rankingScalarWhereInput
+    data: XOR<quarter_rankingUpdateManyMutationInput, quarter_rankingUncheckedUpdateManyWithoutTrimesterInput>
+  }
+
+  export type repechageUpsertWithWhereUniqueWithoutTrimesterInput = {
+    where: repechageWhereUniqueInput
+    update: XOR<repechageUpdateWithoutTrimesterInput, repechageUncheckedUpdateWithoutTrimesterInput>
+    create: XOR<repechageCreateWithoutTrimesterInput, repechageUncheckedCreateWithoutTrimesterInput>
+  }
+
+  export type repechageUpdateWithWhereUniqueWithoutTrimesterInput = {
+    where: repechageWhereUniqueInput
+    data: XOR<repechageUpdateWithoutTrimesterInput, repechageUncheckedUpdateWithoutTrimesterInput>
+  }
+
+  export type repechageUpdateManyWithWhereWithoutTrimesterInput = {
+    where: repechageScalarWhereInput
+    data: XOR<repechageUpdateManyMutationInput, repechageUncheckedUpdateManyWithoutTrimesterInput>
+  }
+
+  export type seasonUpsertWithoutTrimesterInput = {
+    update: XOR<seasonUpdateWithoutTrimesterInput, seasonUncheckedUpdateWithoutTrimesterInput>
+    create: XOR<seasonCreateWithoutTrimesterInput, seasonUncheckedCreateWithoutTrimesterInput>
+    where?: seasonWhereInput
+  }
+
+  export type seasonUpdateToOneWithWhereWithoutTrimesterInput = {
+    where?: seasonWhereInput
+    data: XOR<seasonUpdateWithoutTrimesterInput, seasonUncheckedUpdateWithoutTrimesterInput>
+  }
+
+  export type seasonUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    quarter_ranking?: quarter_rankingUpdateManyWithoutSeasonNestedInput
+  }
+
+  export type seasonUncheckedUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    name?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseason_statusFieldUpdateOperationsInput | $Enums.season_status
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutSeasonNestedInput
   }
 
   export type stack_chipCreateManyChipInput = {
@@ -55268,7 +59923,7 @@ export namespace Prisma {
     tournament_description: string
     tournament_start_date: Date | string
     tournament_open_date: Date | string
-    tournament_trimestry: $Enums.tournament_tournament_trimestry
+    tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
     estimate_duration: Date | string
@@ -55297,7 +59952,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55319,7 +59974,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55341,7 +59996,7 @@ export namespace Prisma {
     tournament_description?: StringFieldUpdateOperationsInput | string
     tournament_start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament_open_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    tournament_trimestry?: Enumtournament_tournament_trimestryFieldUpdateOperationsInput | $Enums.tournament_tournament_trimestry
+    tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
     estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55354,10 +60009,10 @@ export namespace Prisma {
   export type quarter_rankingCreateManyTournamentInput = {
     id?: bigint | number
     user_id: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
   }
 
   export type registrationCreateManyTournamentInput = {
@@ -55394,29 +60049,29 @@ export namespace Prisma {
 
   export type quarter_rankingUpdateWithoutTournamentInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
     wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    trimester?: trimesterUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    season?: seasonUpdateOneRequiredWithoutQuarter_rankingNestedInput
   }
 
   export type quarter_rankingUncheckedUpdateWithoutTournamentInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type quarter_rankingUncheckedUpdateManyWithoutTournamentInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type registrationUpdateWithoutTournamentInput = {
@@ -55557,10 +60212,10 @@ export namespace Prisma {
 
   export type quarter_rankingCreateManyWp_usersInput = {
     id?: bigint | number
-    trimestry_ranking: $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking: bigint | number
     aggregated_score: number
     position: number
-    quarter_ranking_year: number
+    quarter_ranking_year: bigint | number
     tournament_id: bigint | number
   }
 
@@ -55571,30 +60226,35 @@ export namespace Prisma {
     statut: $Enums.registration_statut
   }
 
+  export type repechageCreateManyWp_usersInput = {
+    id?: bigint | number
+    trimester_id: bigint | number
+  }
+
   export type quarter_rankingUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
     tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    trimester?: trimesterUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    season?: seasonUpdateOneRequiredWithoutQuarter_rankingNestedInput
   }
 
   export type quarter_rankingUncheckedUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type quarter_rankingUncheckedUpdateManyWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimestry_ranking?: Enumquarter_ranking_trimestry_rankingFieldUpdateOperationsInput | $Enums.quarter_ranking_trimestry_ranking
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
-    quarter_ranking_year?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -55623,6 +60283,145 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     inscription_date?: DateTimeFieldUpdateOperationsInput | Date | string
     statut?: Enumregistration_statutFieldUpdateOperationsInput | $Enums.registration_statut
+  }
+
+  export type repechageUpdateWithoutWp_usersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester?: trimesterUpdateOneRequiredWithoutRepechageNestedInput
+  }
+
+  export type repechageUncheckedUpdateWithoutWp_usersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type repechageUncheckedUpdateManyWithoutWp_usersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type quarter_rankingCreateManySeasonInput = {
+    id?: bigint | number
+    user_id: bigint | number
+    trimestry_ranking: bigint | number
+    aggregated_score: number
+    position: number
+    tournament_id: bigint | number
+  }
+
+  export type trimesterCreateManySeasonInput = {
+    id?: bigint | number
+    number: number
+    start_date: Date | string
+    end_date: Date | string
+  }
+
+  export type quarter_rankingUpdateWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    trimester?: trimesterUpdateOneRequiredWithoutQuarter_rankingNestedInput
+  }
+
+  export type quarter_rankingUncheckedUpdateWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type quarter_rankingUncheckedUpdateManyWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimestry_ranking?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type trimesterUpdateWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutTrimesterNestedInput
+    repechage?: repechageUpdateManyWithoutTrimesterNestedInput
+  }
+
+  export type trimesterUncheckedUpdateWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutTrimesterNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutTrimesterNestedInput
+  }
+
+  export type trimesterUncheckedUpdateManyWithoutSeasonInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    number?: IntFieldUpdateOperationsInput | number
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type quarter_rankingCreateManyTrimesterInput = {
+    id?: bigint | number
+    user_id: bigint | number
+    aggregated_score: number
+    position: number
+    quarter_ranking_year: bigint | number
+    tournament_id: bigint | number
+  }
+
+  export type repechageCreateManyTrimesterInput = {
+    id?: bigint | number
+    user_id: bigint | number
+  }
+
+  export type quarter_rankingUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    wp_users?: wp_usersUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    tournament?: tournamentUpdateOneRequiredWithoutQuarter_rankingNestedInput
+    season?: seasonUpdateOneRequiredWithoutQuarter_rankingNestedInput
+  }
+
+  export type quarter_rankingUncheckedUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type quarter_rankingUncheckedUpdateManyWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregated_score?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    quarter_ranking_year?: BigIntFieldUpdateOperationsInput | bigint | number
+    tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type repechageUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wp_users?: wp_usersUpdateOneRequiredWithoutRepechageNestedInput
+  }
+
+  export type repechageUncheckedUpdateWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type repechageUncheckedUpdateManyWithoutTrimesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
 

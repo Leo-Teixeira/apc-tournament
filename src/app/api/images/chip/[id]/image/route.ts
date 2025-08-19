@@ -1,20 +1,23 @@
 import { prisma } from "@/lib/prisma";
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id);
-  if (isNaN(id)) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const numericId = Number(id);
+
+  if (isNaN(numericId)) {
     return new Response(JSON.stringify({ error: "ID invalide" }), { status: 400 });
   }
 
   try {
     const data = await req.json();
     const { chip_image } = data;
+
     if (!chip_image) {
       return new Response(JSON.stringify({ error: "chip_image est requis" }), { status: 400 });
     }
 
     const updatedChip = await prisma.chip.update({
-      where: { id: id },
+      where: { id: numericId },
       data: { chip_image: chip_image },
     });
 

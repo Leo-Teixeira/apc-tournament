@@ -522,6 +522,28 @@ exports.Prisma.Wp_rank_math_internal_metaScalarFieldEnum = {
   incoming_link_count: 'incoming_link_count'
 };
 
+exports.Prisma.RepechageScalarFieldEnum = {
+  id: 'id',
+  trimester_id: 'trimester_id',
+  user_id: 'user_id'
+};
+
+exports.Prisma.SeasonScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  status: 'status'
+};
+
+exports.Prisma.TrimesterScalarFieldEnum = {
+  id: 'id',
+  season_id: 'season_id',
+  number: 'number',
+  start_date: 'start_date',
+  end_date: 'end_date'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -732,27 +754,19 @@ exports.Prisma.wp_rank_math_internal_linksOrderByRelevanceFieldEnum = {
   url: 'url',
   type: 'type'
 };
-exports.quarter_ranking_trimestry_ranking = exports.$Enums.quarter_ranking_trimestry_ranking = {
-  T1: 'T1',
-  T2: 'T2',
-  T3: 'T3'
-};
 
+exports.Prisma.seasonOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
 exports.registration_statut = exports.$Enums.registration_statut = {
   Confirmed: 'Confirmed',
   Pending: 'Pending',
   Cancelled: 'Cancelled'
 };
 
-exports.tournament_tournament_trimestry = exports.$Enums.tournament_tournament_trimestry = {
-  T1: 'T1',
-  T2: 'T2',
-  T3: 'T3'
-};
-
 exports.tournament_tournament_category = exports.$Enums.tournament_tournament_category = {
   APT: 'APT',
-  AG: 'AG',
+  Special: 'Special',
   SitAndGo: 'SitAndGo',
   Superfinale: 'Superfinale',
   Solipoker: 'Solipoker'
@@ -762,6 +776,12 @@ exports.tournament_tournament_status = exports.$Enums.tournament_tournament_stat
   in_coming: 'in_coming',
   finish: 'finish',
   start: 'start'
+};
+
+exports.season_status = exports.$Enums.season_status = {
+  draft: 'draft',
+  in_progress: 'in_progress',
+  past: 'past'
 };
 
 exports.Prisma.ModelName = {
@@ -804,7 +824,10 @@ exports.Prisma.ModelName = {
   wp_rank_math_analytics_inspections: 'wp_rank_math_analytics_inspections',
   wp_rank_math_analytics_objects: 'wp_rank_math_analytics_objects',
   wp_rank_math_internal_links: 'wp_rank_math_internal_links',
-  wp_rank_math_internal_meta: 'wp_rank_math_internal_meta'
+  wp_rank_math_internal_meta: 'wp_rank_math_internal_meta',
+  repechage: 'repechage',
+  season: 'season',
+  trimester: 'trimester'
 };
 
 /**

@@ -595,7 +595,6 @@ model trimester {
   end_date        DateTime          @db.Date
   quarter_ranking quarter_ranking[]
   repechage       repechage[]
-  tournament      tournament[]
   season          season            @relation(fields: [season_id], references: [id], onUpdate: Restrict, map: "trimester_ibfk_1")
 
   @@index([season_id], map: "season_id")
@@ -615,7 +614,7 @@ enum tournament_tournament_status {
 
 enum season_status {
   draft
-  start
+  in_progress
   past
 }
 
