@@ -1,5 +1,5 @@
 export type WpMediaImage = {
-    id: number;
-    url: string;
-    title?: string;
+    ID: number;
+    guid: string;
+    post_title?: string;
   }

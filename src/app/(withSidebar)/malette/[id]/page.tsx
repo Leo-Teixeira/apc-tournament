@@ -114,14 +114,14 @@ export default function StackPage() {
 
   const handleConfirmChangeImage = async () => {
     if (imageSource === "wordpress" && selectedWpImageId !== null) {
-      const selectedImage = wpJetonImages.find(img => img.id === selectedWpImageId);
+      const selectedImage = wpJetonImages.find(img => img.ID === selectedWpImageId);
       if (!selectedImage) {
         alert("Image sélectionnée introuvable");
         return;
       }
       setPendingChipImage({
         type: "wordpress",
-        url: selectedImage.url.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com")
+        url: selectedImage.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com")
       });
       setIsChangeImageOpen(false);
     }
@@ -256,16 +256,16 @@ export default function StackPage() {
               <p className="text-neutral-200">Aucune image disponible</p>
             )}
             {!isLoading && !error && wpJetonImages.map((img) => {
-              const imageUrl = img.url.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com");
+              const imageUrl = img.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com");
               return (
                 <img
-                  key={img.id}
+                  key={img.ID}
                   src={imageUrl}
-                  alt={`jeton ${img.title ?? img.id}`}
+                  alt={`jeton ${img.post_title ?? img.ID}`}
                   className={`cursor-pointer rounded border-4 ${
-                    selectedWpImageId === img.id ? "border-primary_brand-500" : "border-transparent"
+                    selectedWpImageId === img.ID ? "border-primary_brand-500" : "border-transparent"
                   }`}
-                  onClick={() => setSelectedWpImageId(img.id)}
+                  onClick={() => setSelectedWpImageId(img.ID)}
                   style={{ width: 80, height: 80, objectFit: "contain" }}
                 />
               );

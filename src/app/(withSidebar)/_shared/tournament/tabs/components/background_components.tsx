@@ -19,23 +19,24 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
   const updateBackgrounds = useUpdateTournamentBackgrounds();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Indique quel fond est sélectionné pour modification dans la popup
   const [editingBackgroundIndex, setEditingBackgroundIndex] = useState<number | null>(null);
 
+  // Si pas de fonds, initialisation avec 2 slots vides pour les fonds modifiables
   const [pendingBackgrounds, setPendingBackgrounds] = useState<string[]>(() => {
     const arr: string[] = [];
     if (tournament.tournament_background_1) arr.push(tournament.tournament_background_1);
+    else arr.push(""); // vide = pas de fond
+
     if (tournament.tournament_background_2) arr.push(tournament.tournament_background_2);
+    else arr.push("");
     return arr;
   });
 
-  // Ouvre la popup et sélectionne le fond à modifier
   const openModalForIndex = (index: number) => {
     setEditingBackgroundIndex(index);
     setIsModalOpen(true);
   };
 
-  // Sélectionne une image dans la popup pour le fond en cours d'édition
   const selectImageForEditingBackground = (url: string) => {
     if (editingBackgroundIndex === null) return;
     setPendingBackgrounds((prev) => {
@@ -47,9 +48,11 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
 
   const handleSave = async () => {
     try {
+      // filtre les fonds vides avant envoi
+      const backgroundsToSave = pendingBackgrounds.filter((bg) => bg !== "");
       await updateBackgrounds.mutateAsync({
         id: tournament.id,
-        background: pendingBackgrounds,
+        background: backgroundsToSave,
       });
       setIsModalOpen(false);
       alert("Fonds mis à jour !");
@@ -63,34 +66,28 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
       {tournament.tournament_status !== "finish" ? (
         <Card className="bg-background_card rounded-xl p-5">
           <div className="flex flex-col gap-5">
-            {/* Affichage des deux fonds côte à côte */}
+            {/* Affichage des deux fonds ou skeletons côte à côte */}
             <div className="flex gap-4 justify-center">
-              {pendingBackgrounds.length > 0 ? (
-                pendingBackgrounds.map((bg, index) => (
-                  <div key={index} className="flex flex-col items-center gap-4">
+              {pendingBackgrounds.map((bg, index) => (
+                <div key={index} className="flex flex-col items-center gap-4">
+                  {bg ? (
                     <img
                       className="rounded-lg w-[920px] h-[360px] object-cover"
                       src={bg}
                       alt={`background ${index + 1}`}
                     />
+                  ) : (
+                    <div className="w-[650px] h-[360px] rounded-lg bg-gray-700 animate-pulse" />
+                  )}
 
-                    <ButtonComponents
-                      text="Changer de fond"
-                      onClick={() => {
-                        openModalForIndex(index)
-                      }}
-                      buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
-                      textClassName="text-primary_brand-50"
-                    />
-                  </div>
-                ))
-              ) : (
-                <img
-                  className="w-full max-w-full rounded-lg object-cover"
-                  src="/images/wallpaper.svg"
-                  alt="background"
-                />
-              )}
+                  <ButtonComponents
+                    text="Changer de fond"
+                    onClick={() => openModalForIndex(index)}
+                    buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
+                    textClassName="text-primary_brand-50"
+                  />
+                </div>
+              ))}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -141,43 +138,44 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
 
         {!isLoading && !error && (
           <div className="flex flex-wrap gap-2 max-h-80 overflow-auto mt-3">
-            {wpImages.map((img) => {
-              const imageUrl = img.url.replace(
-                "angers-poker-club.local",
-                "aqua-bat-544144.hostingersite.com"
-              );              
-              // Pour la sélection visuelle dans la popup
-              const isSelected = editingBackgroundIndex !== null
-                ? pendingBackgrounds[editingBackgroundIndex] === imageUrl
-                : pendingBackgrounds.includes(imageUrl);
+           {wpImages.map((img) => {
+            if (!img.guid) return null; // Ignore les images sans url définie
 
-              return (
-                <img
-                  key={img.id}
-                  src={imageUrl}
-                  alt={`fond ${img.title ?? img.id}`}
-                  className={`cursor-pointer rounded border-4 ${
-                    isSelected
-                      ? "border-primary_brand-500"
-                      : "border-transparent"
-                  }`}
-                  style={{ width: 120, height: 80, objectFit: "cover" }}
-                  onClick={() => {
-                    if (editingBackgroundIndex !== null) {
-                      selectImageForEditingBackground(imageUrl);
-                    } else {
-                      // Si aucun fond sélectionné précisément, toggle comme avant
-                      const idx = pendingBackgrounds.indexOf(imageUrl);
-                      if (idx !== -1) {
-                        setPendingBackgrounds(pendingBackgrounds.filter(bg => bg !== imageUrl));
-                      } else if (pendingBackgrounds.length < 2) {
-                        setPendingBackgrounds([...pendingBackgrounds, imageUrl]);
-                      }
+            const imageUrl = img.guid.replace(
+              "angers-poker-club.local",
+              "aqua-bat-544144.hostingersite.com"
+            );
+
+            const isSelected = editingBackgroundIndex !== null
+              ? pendingBackgrounds[editingBackgroundIndex] === imageUrl
+              : pendingBackgrounds.includes(imageUrl);
+
+            return (
+              <img
+                key={img.ID}
+                src={imageUrl}
+                alt={`fond ${img.post_title ?? img.ID}`}
+                className={`cursor-pointer rounded border-4 ${
+                  isSelected
+                    ? "border-primary_brand-500"
+                    : "border-transparent"
+                }`}
+                style={{ width: 120, height: 80, objectFit: "cover" }}
+                onClick={() => {
+                  if (editingBackgroundIndex !== null) {
+                    selectImageForEditingBackground(imageUrl);
+                  } else {
+                    const idx = pendingBackgrounds.indexOf(imageUrl);
+                    if (idx !== -1) {
+                      setPendingBackgrounds(pendingBackgrounds.filter(bg => bg !== imageUrl));
+                    } else if (pendingBackgrounds.length < 2) {
+                      setPendingBackgrounds([...pendingBackgrounds, imageUrl]);
                     }
-                  }}
-                />
-              );
-            })}
+                  }
+                }}
+              />
+            );
+          })}
           </div>
         )}
 
