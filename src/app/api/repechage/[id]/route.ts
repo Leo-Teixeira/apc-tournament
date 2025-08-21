@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const body = await req.json();
-    const { id } = body;
+    const idStr = params.id;
+    if (!idStr) {
+      return NextResponse.json({ error: "Missing repechage id" }, { status: 400 });
+    }
 
-    if (!id || typeof id !== "number") {
-      return NextResponse.json({ error: "Invalid or missing repechage id" }, { status: 400 });
+    const idNum = Number(idStr);
+    if (isNaN(idNum)) {
+      return NextResponse.json({ error: "Invalid repechage id" }, { status: 400 });
     }
 
     // Vérifier si l'entrée repechage existe
     const repechageEntry = await prisma.repechage.findUnique({
-      where: { id: BigInt(id) },
+      where: { id: BigInt(idNum) },
     });
 
     if (!repechageEntry) {
@@ -21,7 +24,7 @@ export async function DELETE(req: NextRequest) {
 
     // Supprimer l'entrée repechage
     await prisma.repechage.delete({
-      where: { id: BigInt(id) },
+      where: { id: BigInt(idNum) },
     });
 
     return NextResponse.json({ success: true, message: "Repechage entry deleted" });
