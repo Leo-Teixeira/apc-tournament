@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { extractParamsFromPath } from "@/app/utils/api-params";
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const idStr = params.id;
+    const { idStr } = extractParamsFromPath(req, ["id"]);
     if (!idStr) {
       return NextResponse.json({ error: "Missing repechage id" }, { status: 400 });
     }
