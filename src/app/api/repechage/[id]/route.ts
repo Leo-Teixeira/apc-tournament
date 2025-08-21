@@ -1,23 +1,22 @@
-// À mettre dans src/app/api/repechage/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
-  req: Request, 
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  const idNum = Number(id);
+  if (isNaN(idNum)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
+
   try {
-    const { id } = params;  // params est passé automatiquement
-
-    if (!id) {
-      return NextResponse.json({ error: "Missing id" }, { status: 400 });
-    }
-
-    const idNum = Number(id);
-    if (isNaN(idNum)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-    }
-
     const repechageEntry = await prisma.repechage.findUnique({
       where: { id: BigInt(idNum) },
     });
