@@ -525,7 +525,8 @@ exports.Prisma.Wp_rank_math_internal_metaScalarFieldEnum = {
 exports.Prisma.RepechageScalarFieldEnum = {
   id: 'id',
   trimester_id: 'trimester_id',
-  user_id: 'user_id'
+  user_id: 'user_id',
+  category: 'category'
 };
 
 exports.Prisma.SeasonScalarFieldEnum = {
@@ -753,6 +754,10 @@ exports.Prisma.wp_rank_math_analytics_objectsOrderByRelevanceFieldEnum = {
 exports.Prisma.wp_rank_math_internal_linksOrderByRelevanceFieldEnum = {
   url: 'url',
   type: 'type'
+};
+
+exports.Prisma.repechageOrderByRelevanceFieldEnum = {
+  category: 'category'
 };
 
 exports.Prisma.seasonOrderByRelevanceFieldEnum = {

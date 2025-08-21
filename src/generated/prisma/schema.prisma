@@ -570,6 +570,7 @@ model repechage {
   id           BigInt    @id @default(autoincrement())
   trimester_id BigInt
   user_id      BigInt    @db.UnsignedBigInt
+  category     String    @db.VarChar(255)
   trimester    trimester @relation(fields: [trimester_id], references: [id], onUpdate: Restrict, map: "repechage_ibfk_1")
   wp_users     wp_users  @relation(fields: [user_id], references: [ID], onUpdate: Restrict, map: "repechage_ibfk_2")
 
