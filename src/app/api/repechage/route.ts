@@ -22,22 +22,6 @@ export async function POST(req: any) {
     const { userId, trimesterNumber, category } = body;
     console.log("Parsed inputs:", { userId, trimesterNumber, category });
 
-    if (
-      typeof userId !== "number" ||
-      typeof trimesterNumber !== "number" ||
-      typeof category !== "string" ||
-      category.trim() === ""
-    ) {
-      console.log("Invalid input data");
-      return new Response(JSON.stringify({ error: "Invalid userId, trimesterNumber or category" }), {
-        status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
-      });
-    }
-
     const currentSeason = await prisma.season.findFirst({
       where: { status: "in_progress" },
     });
