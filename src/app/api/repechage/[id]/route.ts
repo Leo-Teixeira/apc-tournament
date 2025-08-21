@@ -16,7 +16,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params; // Ne pas await ici
     console.log("Received DELETE request for repechage id:", id);
 
     if (!id) {
