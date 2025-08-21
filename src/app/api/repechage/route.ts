@@ -38,25 +38,6 @@ export async function POST(req: any) {
       });
     }
 
-    const trimester = await prisma.trimester.findFirst({
-      where: {
-        number: trimesterNumber,
-        season_id: currentSeason.id,
-      },
-    });
-    console.log("Found trimester:", trimester);
-
-    if (!trimester) {
-      console.log("No trimester found for current season");
-      return new Response(JSON.stringify({ error: "Trimester not found for current season" }), {
-        status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
-      });
-    }
-
     const user = await prisma.wp_users.findUnique({
       where: { ID: BigInt(userId) },
     });
@@ -75,7 +56,7 @@ export async function POST(req: any) {
 
     const repechageEntry = await prisma.repechage.create({
       data: {
-        trimester_id: trimester.id,
+        trimester_id: trimesterNumber,
         user_id: BigInt(userId),
         category: category.trim(),
       },
