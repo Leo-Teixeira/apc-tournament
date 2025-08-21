@@ -1,47 +1,97 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
   });
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params; // Ne pas await ici
-
-  if (!id) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
-  }
-
-  const idNum = Number(id);
-  if (isNaN(idNum)) {
-    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-  }
-
   try {
+    const id = params.id;
+    console.log("Received DELETE request for repechage id:", id);
+
+    if (!id) {
+      console.log("No id provided");
+      return new Response(
+        JSON.stringify({ error: "Missing id" }),
+        {
+          status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    const idNum = Number(id);
+    if (isNaN(idNum)) {
+      console.log("Invalid id, not a number:", id);
+      return new Response(
+        JSON.stringify({ error: "Invalid id" }),
+        {
+          status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
     const repechageEntry = await prisma.repechage.findUnique({
       where: { id: BigInt(idNum) },
     });
 
     if (!repechageEntry) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      console.log("Repechage entry not found:", idNum);
+      return new Response(
+        JSON.stringify({ error: "Repechage not found" }),
+        {
+          status: 404,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
 
     await prisma.repechage.delete({
       where: { id: BigInt(idNum) },
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    console.log("Deleted repechage id:", idNum);
+    return new Response(
+      JSON.stringify({ success: true, message: "Repechage deleted" }),
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (err) {
+    console.error("Failed deleting repechage:", err);
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 }

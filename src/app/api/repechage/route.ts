@@ -24,7 +24,7 @@ export async function POST(req: any) {
 
     if (
       typeof userId !== "number" ||
-      ![1, 2, 3].includes(trimesterNumber) ||
+      typeof trimesterNumber !== "number" ||
       typeof category !== "string" ||
       category.trim() === ""
     ) {
