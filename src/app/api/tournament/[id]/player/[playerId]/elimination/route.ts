@@ -123,7 +123,13 @@ async function updateQuarterRanking(tournamentId: number) {
   await prisma.quarter_ranking.createMany({ data: sorted });
 }
 
-// ----------- API PUT ELIMINATION -----------
+// Extraction du rôle depuis la chaîne PHP sérialisée wp_capabilities
+function extractRoleFromSerialized(serialized: string | undefined | null): string | null {
+  if (!serialized) return null;
+  const match = serialized.match(/s:\d+:"(.+?)";b:1;/);
+  return match ? match[9] : null;
+}
+
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
   if (!tournament || !player) {
@@ -161,14 +167,24 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Assignment or registration not found" }, { status: 404 });
     }
 
-    // --- Transaction : élimination + MAJ classement ---
+    // Récupérer le rôle de l'utilisateur lié à la registration
+    const userMeta = await prisma.wp_usermeta.findFirst({
+      where: {
+        user_id: assignment.registration.user_id,
+        meta_key: "wp_capabilities",
+      },
+      select: { meta_value: true },
+    });
+
+    const role = extractRoleFromSerialized(userMeta?.meta_value);
+
+    // --- Transaction : élimination + MAJ classement avec check rôle ---
     const result = await prisma.$transaction(async (tx) => {
       await tx.table_assignment.update({
         where: { id: assignment.id },
         data: { eliminated: true, user_kill_id: BigInt(user_kill_id) },
       });
 
-      // Calcul du ranking uniquement pour APT et SitAndGo
       let ranking_position: number = 0;
       let score: number = 0;
       let tableId: bigint | null = null;
@@ -206,7 +222,7 @@ export async function PUT(req: NextRequest) {
           score = res.score;
         }
 
-        // --- Insertion ranking uniquement pour APT et SitAndGo ---
+        // Mise à jour classement tournoi toujours
         await tx.tournament_ranking.deleteMany({
           where: {
             registration_id: assignment.registration.id,
@@ -222,9 +238,13 @@ export async function PUT(req: NextRequest) {
             ...(isSitAndGo && tableId ? { table_id: tableId } : {}),
           },
         });
+
+        // MAIS mise à jour du classement trimestriel uniquement si rôle n'est pas "um_invite"
+        if (role !== "um_invite") {
+          await updateQuarterRanking(tournamentId);
+        }
       }
 
-      // Compte total des vivants à renvoyer pour la gestion de la fin
       const aliveCount = await tx.table_assignment.count({
         where: {
           tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -267,7 +287,6 @@ export async function PUT(req: NextRequest) {
     // --- Fin du tournoi ---
     let tournamentFinished = false;
     if (isSitAndGo) {
-      // Sit&Go : le tournoi se termine s'il reste <=1 joueur sur chaque table
       const tables = await prisma.tournament_table.findMany({
         where: { tournament_id: BigInt(tournamentId) },
         include: {
@@ -278,14 +297,11 @@ export async function PUT(req: NextRequest) {
       });
       tournamentFinished = tables.every((t) => t.table_assignment.length <= 1);
     } else {
-      // Tous les autres (APT y compris) : le tournoi se termine quand il reste un joueur vivant
       tournamentFinished = result.aliveCount === 1;
     }
 
     if (tournamentFinished && hasRanking) {
-      // Classement final uniquement pour APT et Sit&Go
       if (isSitAndGo) {
-        // Tous les derniers survivants sur chaque table
         const lastAssignments = await prisma.table_assignment.findMany({
           where: {
             tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -321,7 +337,6 @@ export async function PUT(req: NextRequest) {
           });
         }
       } else {
-        // APT : champion unique
         const lastAssignment = await prisma.table_assignment.findFirst({
           where: {
             tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -352,7 +367,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Fin du tournoi quel que soit le type
     if (tournamentFinished) {
       await prisma.tournament.update({
         where: { id: BigInt(tournamentId) },
@@ -375,3 +389,4 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+

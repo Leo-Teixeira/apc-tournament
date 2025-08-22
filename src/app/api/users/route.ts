@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         user_email: true,
         pseudo_winamax: true,
         display_name: true,
-        photo_url: true
+        photo_url: true,
       }
     });
 

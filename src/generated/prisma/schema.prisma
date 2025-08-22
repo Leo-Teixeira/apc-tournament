@@ -431,6 +431,8 @@ model wp_usermeta {
   meta_key   String? @db.VarChar(255)
   meta_value String? @db.LongText
 
+  user wp_users @relation("UserMetaToUser", fields: [user_id], references: [ID])
+
   @@index([meta_key(length: 191)], map: "meta_key")
   @@index([user_id], map: "user_id")
 }
@@ -451,6 +453,8 @@ model wp_users {
   quarter_ranking     quarter_ranking[]
   registration        registration[]
   repechage           repechage[]
+
+  wp_usermeta wp_usermeta[] @relation("UserMetaToUser")
 
   @@index([user_email], map: "user_email")
   @@index([user_login], map: "user_login_key")

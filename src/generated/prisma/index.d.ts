@@ -4627,12 +4627,14 @@ export namespace Prisma {
     quarter_ranking: number
     registration: number
     repechage: number
+    wp_usermeta: number
   }
 
   export type Wp_usersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quarter_ranking?: boolean | Wp_usersCountOutputTypeCountQuarter_rankingArgs
     registration?: boolean | Wp_usersCountOutputTypeCountRegistrationArgs
     repechage?: boolean | Wp_usersCountOutputTypeCountRepechageArgs
+    wp_usermeta?: boolean | Wp_usersCountOutputTypeCountWp_usermetaArgs
   }
 
   // Custom InputTypes
@@ -4665,6 +4667,13 @@ export namespace Prisma {
    */
   export type Wp_usersCountOutputTypeCountRepechageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: repechageWhereInput
+  }
+
+  /**
+   * Wp_usersCountOutputType without action
+   */
+  export type Wp_usersCountOutputTypeCountWp_usermetaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: wp_usermetaWhereInput
   }
 
 
@@ -34079,6 +34088,7 @@ export namespace Prisma {
     user_id?: boolean
     meta_key?: boolean
     meta_value?: boolean
+    user?: boolean | wp_usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wp_usermeta"]>
 
 
@@ -34091,10 +34101,15 @@ export namespace Prisma {
   }
 
   export type wp_usermetaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"umeta_id" | "user_id" | "meta_key" | "meta_value", ExtArgs["result"]["wp_usermeta"]>
+  export type wp_usermetaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | wp_usersDefaultArgs<ExtArgs>
+  }
 
   export type $wp_usermetaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "wp_usermeta"
-    objects: {}
+    objects: {
+      user: Prisma.$wp_usersPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       umeta_id: bigint
       user_id: bigint
@@ -34440,6 +34455,7 @@ export namespace Prisma {
    */
   export interface Prisma__wp_usermetaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -34490,6 +34506,10 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * Filter, which wp_usermeta to fetch.
      */
     where: wp_usermetaWhereUniqueInput
@@ -34508,6 +34528,10 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * Filter, which wp_usermeta to fetch.
      */
     where: wp_usermetaWhereUniqueInput
@@ -34525,6 +34549,10 @@ export namespace Prisma {
      * Omit specific fields from the wp_usermeta
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
     /**
      * Filter, which wp_usermeta to fetch.
      */
@@ -34574,6 +34602,10 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * Filter, which wp_usermeta to fetch.
      */
     where?: wp_usermetaWhereInput
@@ -34622,6 +34654,10 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * Filter, which wp_usermetas to fetch.
      */
     where?: wp_usermetaWhereInput
@@ -34665,9 +34701,13 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * The data needed to create a wp_usermeta.
      */
-    data?: XOR<wp_usermetaCreateInput, wp_usermetaUncheckedCreateInput>
+    data: XOR<wp_usermetaCreateInput, wp_usermetaUncheckedCreateInput>
   }
 
   /**
@@ -34693,6 +34733,10 @@ export namespace Prisma {
      * Omit specific fields from the wp_usermeta
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
     /**
      * The data needed to update a wp_usermeta.
      */
@@ -34734,6 +34778,10 @@ export namespace Prisma {
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    /**
      * The filter to search for the wp_usermeta to update in case it exists.
      */
     where: wp_usermetaWhereUniqueInput
@@ -34759,6 +34807,10 @@ export namespace Prisma {
      * Omit specific fields from the wp_usermeta
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
     /**
      * Filter which wp_usermeta to delete.
      */
@@ -34791,6 +34843,10 @@ export namespace Prisma {
      * Omit specific fields from the wp_usermeta
      */
     omit?: wp_usermetaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
   }
 
 
@@ -35055,6 +35111,7 @@ export namespace Prisma {
     quarter_ranking?: boolean | wp_users$quarter_rankingArgs<ExtArgs>
     registration?: boolean | wp_users$registrationArgs<ExtArgs>
     repechage?: boolean | wp_users$repechageArgs<ExtArgs>
+    wp_usermeta?: boolean | wp_users$wp_usermetaArgs<ExtArgs>
     _count?: boolean | Wp_usersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wp_users"]>
 
@@ -35080,6 +35137,7 @@ export namespace Prisma {
     quarter_ranking?: boolean | wp_users$quarter_rankingArgs<ExtArgs>
     registration?: boolean | wp_users$registrationArgs<ExtArgs>
     repechage?: boolean | wp_users$repechageArgs<ExtArgs>
+    wp_usermeta?: boolean | wp_users$wp_usermetaArgs<ExtArgs>
     _count?: boolean | Wp_usersCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -35089,6 +35147,7 @@ export namespace Prisma {
       quarter_ranking: Prisma.$quarter_rankingPayload<ExtArgs>[]
       registration: Prisma.$registrationPayload<ExtArgs>[]
       repechage: Prisma.$repechagePayload<ExtArgs>[]
+      wp_usermeta: Prisma.$wp_usermetaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       ID: bigint
@@ -35446,6 +35505,7 @@ export namespace Prisma {
     quarter_ranking<T extends wp_users$quarter_rankingArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$quarter_rankingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quarter_rankingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registration<T extends wp_users$registrationArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$registrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$registrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     repechage<T extends wp_users$repechageArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$repechageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$repechagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wp_usermeta<T extends wp_users$wp_usermetaArgs<ExtArgs> = {}>(args?: Subset<T, wp_users$wp_usermetaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$wp_usermetaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -35899,6 +35959,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RepechageScalarFieldEnum | RepechageScalarFieldEnum[]
+  }
+
+  /**
+   * wp_users.wp_usermeta
+   */
+  export type wp_users$wp_usermetaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the wp_usermeta
+     */
+    select?: wp_usermetaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the wp_usermeta
+     */
+    omit?: wp_usermetaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: wp_usermetaInclude<ExtArgs> | null
+    where?: wp_usermetaWhereInput
+    orderBy?: wp_usermetaOrderByWithRelationInput | wp_usermetaOrderByWithRelationInput[]
+    cursor?: wp_usermetaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Wp_usermetaScalarFieldEnum | Wp_usermetaScalarFieldEnum[]
   }
 
   /**
@@ -49604,6 +49688,7 @@ export namespace Prisma {
     user_id?: BigIntFilter<"wp_usermeta"> | bigint | number
     meta_key?: StringNullableFilter<"wp_usermeta"> | string | null
     meta_value?: StringNullableFilter<"wp_usermeta"> | string | null
+    user?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
   }
 
   export type wp_usermetaOrderByWithRelationInput = {
@@ -49611,6 +49696,7 @@ export namespace Prisma {
     user_id?: SortOrder
     meta_key?: SortOrderInput | SortOrder
     meta_value?: SortOrderInput | SortOrder
+    user?: wp_usersOrderByWithRelationInput
     _relevance?: wp_usermetaOrderByRelevanceInput
   }
 
@@ -49622,6 +49708,7 @@ export namespace Prisma {
     user_id?: BigIntFilter<"wp_usermeta"> | bigint | number
     meta_key?: StringNullableFilter<"wp_usermeta"> | string | null
     meta_value?: StringNullableFilter<"wp_usermeta"> | string | null
+    user?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
   }, "umeta_id">
 
   export type wp_usermetaOrderByWithAggregationInput = {
@@ -49665,6 +49752,7 @@ export namespace Prisma {
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     repechage?: RepechageListRelationFilter
+    wp_usermeta?: Wp_usermetaListRelationFilter
   }
 
   export type wp_usersOrderByWithRelationInput = {
@@ -49683,6 +49771,7 @@ export namespace Prisma {
     quarter_ranking?: quarter_rankingOrderByRelationAggregateInput
     registration?: registrationOrderByRelationAggregateInput
     repechage?: repechageOrderByRelationAggregateInput
+    wp_usermeta?: wp_usermetaOrderByRelationAggregateInput
     _relevance?: wp_usersOrderByRelevanceInput
   }
 
@@ -49705,6 +49794,7 @@ export namespace Prisma {
     quarter_ranking?: Quarter_rankingListRelationFilter
     registration?: RegistrationListRelationFilter
     repechage?: RepechageListRelationFilter
+    wp_usermeta?: Wp_usermetaListRelationFilter
   }, "ID">
 
   export type wp_usersOrderByWithAggregationInput = {
@@ -52573,9 +52663,9 @@ export namespace Prisma {
 
   export type wp_usermetaCreateInput = {
     umeta_id?: bigint | number
-    user_id?: bigint | number
     meta_key?: string | null
     meta_value?: string | null
+    user?: wp_usersCreateNestedOneWithoutWp_usermetaInput
   }
 
   export type wp_usermetaUncheckedCreateInput = {
@@ -52587,9 +52677,9 @@ export namespace Prisma {
 
   export type wp_usermetaUpdateInput = {
     umeta_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     meta_key?: NullableStringFieldUpdateOperationsInput | string | null
     meta_value?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: wp_usersUpdateOneRequiredWithoutWp_usermetaNestedInput
   }
 
   export type wp_usermetaUncheckedUpdateInput = {
@@ -52608,7 +52698,6 @@ export namespace Prisma {
 
   export type wp_usermetaUpdateManyMutationInput = {
     umeta_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     meta_key?: NullableStringFieldUpdateOperationsInput | string | null
     meta_value?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -52636,6 +52725,7 @@ export namespace Prisma {
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
     registration?: registrationCreateNestedManyWithoutWp_usersInput
     repechage?: repechageCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersUncheckedCreateInput = {
@@ -52654,6 +52744,7 @@ export namespace Prisma {
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
     registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
     repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersUpdateInput = {
@@ -52672,6 +52763,7 @@ export namespace Prisma {
     quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUpdateManyWithoutUserNestedInput
   }
 
   export type wp_usersUncheckedUpdateInput = {
@@ -52690,6 +52782,7 @@ export namespace Prisma {
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type wp_usersCreateManyInput = {
@@ -55375,7 +55468,17 @@ export namespace Prisma {
     none?: repechageWhereInput
   }
 
+  export type Wp_usermetaListRelationFilter = {
+    every?: wp_usermetaWhereInput
+    some?: wp_usermetaWhereInput
+    none?: wp_usermetaWhereInput
+  }
+
   export type repechageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type wp_usermetaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56816,6 +56919,20 @@ export namespace Prisma {
     set?: boolean | null
   }
 
+  export type wp_usersCreateNestedOneWithoutWp_usermetaInput = {
+    create?: XOR<wp_usersCreateWithoutWp_usermetaInput, wp_usersUncheckedCreateWithoutWp_usermetaInput>
+    connectOrCreate?: wp_usersCreateOrConnectWithoutWp_usermetaInput
+    connect?: wp_usersWhereUniqueInput
+  }
+
+  export type wp_usersUpdateOneRequiredWithoutWp_usermetaNestedInput = {
+    create?: XOR<wp_usersCreateWithoutWp_usermetaInput, wp_usersUncheckedCreateWithoutWp_usermetaInput>
+    connectOrCreate?: wp_usersCreateOrConnectWithoutWp_usermetaInput
+    upsert?: wp_usersUpsertWithoutWp_usermetaInput
+    connect?: wp_usersWhereUniqueInput
+    update?: XOR<XOR<wp_usersUpdateToOneWithWhereWithoutWp_usermetaInput, wp_usersUpdateWithoutWp_usermetaInput>, wp_usersUncheckedUpdateWithoutWp_usermetaInput>
+  }
+
   export type quarter_rankingCreateNestedManyWithoutWp_usersInput = {
     create?: XOR<quarter_rankingCreateWithoutWp_usersInput, quarter_rankingUncheckedCreateWithoutWp_usersInput> | quarter_rankingCreateWithoutWp_usersInput[] | quarter_rankingUncheckedCreateWithoutWp_usersInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutWp_usersInput | quarter_rankingCreateOrConnectWithoutWp_usersInput[]
@@ -56837,6 +56954,13 @@ export namespace Prisma {
     connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
   }
 
+  export type wp_usermetaCreateNestedManyWithoutUserInput = {
+    create?: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput> | wp_usermetaCreateWithoutUserInput[] | wp_usermetaUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: wp_usermetaCreateOrConnectWithoutUserInput | wp_usermetaCreateOrConnectWithoutUserInput[]
+    createMany?: wp_usermetaCreateManyUserInputEnvelope
+    connect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+  }
+
   export type quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput = {
     create?: XOR<quarter_rankingCreateWithoutWp_usersInput, quarter_rankingUncheckedCreateWithoutWp_usersInput> | quarter_rankingCreateWithoutWp_usersInput[] | quarter_rankingUncheckedCreateWithoutWp_usersInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutWp_usersInput | quarter_rankingCreateOrConnectWithoutWp_usersInput[]
@@ -56856,6 +56980,13 @@ export namespace Prisma {
     connectOrCreate?: repechageCreateOrConnectWithoutWp_usersInput | repechageCreateOrConnectWithoutWp_usersInput[]
     createMany?: repechageCreateManyWp_usersInputEnvelope
     connect?: repechageWhereUniqueInput | repechageWhereUniqueInput[]
+  }
+
+  export type wp_usermetaUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput> | wp_usermetaCreateWithoutUserInput[] | wp_usermetaUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: wp_usermetaCreateOrConnectWithoutUserInput | wp_usermetaCreateOrConnectWithoutUserInput[]
+    createMany?: wp_usermetaCreateManyUserInputEnvelope
+    connect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
   }
 
   export type quarter_rankingUpdateManyWithoutWp_usersNestedInput = {
@@ -56900,6 +57031,20 @@ export namespace Prisma {
     deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
   }
 
+  export type wp_usermetaUpdateManyWithoutUserNestedInput = {
+    create?: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput> | wp_usermetaCreateWithoutUserInput[] | wp_usermetaUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: wp_usermetaCreateOrConnectWithoutUserInput | wp_usermetaCreateOrConnectWithoutUserInput[]
+    upsert?: wp_usermetaUpsertWithWhereUniqueWithoutUserInput | wp_usermetaUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: wp_usermetaCreateManyUserInputEnvelope
+    set?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    disconnect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    delete?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    connect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    update?: wp_usermetaUpdateWithWhereUniqueWithoutUserInput | wp_usermetaUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: wp_usermetaUpdateManyWithWhereWithoutUserInput | wp_usermetaUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: wp_usermetaScalarWhereInput | wp_usermetaScalarWhereInput[]
+  }
+
   export type quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput = {
     create?: XOR<quarter_rankingCreateWithoutWp_usersInput, quarter_rankingUncheckedCreateWithoutWp_usersInput> | quarter_rankingCreateWithoutWp_usersInput[] | quarter_rankingUncheckedCreateWithoutWp_usersInput[]
     connectOrCreate?: quarter_rankingCreateOrConnectWithoutWp_usersInput | quarter_rankingCreateOrConnectWithoutWp_usersInput[]
@@ -56940,6 +57085,20 @@ export namespace Prisma {
     update?: repechageUpdateWithWhereUniqueWithoutWp_usersInput | repechageUpdateWithWhereUniqueWithoutWp_usersInput[]
     updateMany?: repechageUpdateManyWithWhereWithoutWp_usersInput | repechageUpdateManyWithWhereWithoutWp_usersInput[]
     deleteMany?: repechageScalarWhereInput | repechageScalarWhereInput[]
+  }
+
+  export type wp_usermetaUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput> | wp_usermetaCreateWithoutUserInput[] | wp_usermetaUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: wp_usermetaCreateOrConnectWithoutUserInput | wp_usermetaCreateOrConnectWithoutUserInput[]
+    upsert?: wp_usermetaUpsertWithWhereUniqueWithoutUserInput | wp_usermetaUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: wp_usermetaCreateManyUserInputEnvelope
+    set?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    disconnect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    delete?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    connect?: wp_usermetaWhereUniqueInput | wp_usermetaWhereUniqueInput[]
+    update?: wp_usermetaUpdateWithWhereUniqueWithoutUserInput | wp_usermetaUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: wp_usermetaUpdateManyWithWhereWithoutUserInput | wp_usermetaUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: wp_usermetaScalarWhereInput | wp_usermetaScalarWhereInput[]
   }
 
   export type chipCreateNestedOneWithoutStack_chipInput = {
@@ -57646,6 +57805,7 @@ export namespace Prisma {
     photo_url: string
     registration?: registrationCreateNestedManyWithoutWp_usersInput
     repechage?: repechageCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersUncheckedCreateWithoutQuarter_rankingInput = {
@@ -57663,6 +57823,7 @@ export namespace Prisma {
     photo_url: string
     registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
     repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersCreateOrConnectWithoutQuarter_rankingInput = {
@@ -57791,6 +57952,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     registration?: registrationUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUpdateManyWithoutUserNestedInput
   }
 
   export type wp_usersUncheckedUpdateWithoutQuarter_rankingInput = {
@@ -57808,6 +57970,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type tournamentUpsertWithoutQuarter_rankingInput = {
@@ -57987,6 +58150,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
     repechage?: repechageCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersUncheckedCreateWithoutRegistrationInput = {
@@ -58004,6 +58168,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
     repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersCreateOrConnectWithoutRegistrationInput = {
@@ -58168,6 +58333,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUpdateManyWithoutUserNestedInput
   }
 
   export type wp_usersUncheckedUpdateWithoutRegistrationInput = {
@@ -58185,6 +58351,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
     repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type table_assignmentUpsertWithWhereUniqueWithoutRegistrationInput = {
@@ -59261,6 +59428,94 @@ export namespace Prisma {
     tournament_ranking?: tournament_rankingUncheckedUpdateManyWithoutTournamentNestedInput
   }
 
+  export type wp_usersCreateWithoutWp_usermetaInput = {
+    ID?: bigint | number
+    user_login?: string
+    user_pass?: string
+    user_nicename?: string
+    user_email?: string
+    user_url?: string
+    user_registered?: Date | string
+    user_activation_key?: string
+    user_status?: number
+    display_name?: string
+    pseudo_winamax: string
+    photo_url: string
+    quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
+    registration?: registrationCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageCreateNestedManyWithoutWp_usersInput
+  }
+
+  export type wp_usersUncheckedCreateWithoutWp_usermetaInput = {
+    ID?: bigint | number
+    user_login?: string
+    user_pass?: string
+    user_nicename?: string
+    user_email?: string
+    user_url?: string
+    user_registered?: Date | string
+    user_activation_key?: string
+    user_status?: number
+    display_name?: string
+    pseudo_winamax: string
+    photo_url: string
+    quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
+    registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
+    repechage?: repechageUncheckedCreateNestedManyWithoutWp_usersInput
+  }
+
+  export type wp_usersCreateOrConnectWithoutWp_usermetaInput = {
+    where: wp_usersWhereUniqueInput
+    create: XOR<wp_usersCreateWithoutWp_usermetaInput, wp_usersUncheckedCreateWithoutWp_usermetaInput>
+  }
+
+  export type wp_usersUpsertWithoutWp_usermetaInput = {
+    update: XOR<wp_usersUpdateWithoutWp_usermetaInput, wp_usersUncheckedUpdateWithoutWp_usermetaInput>
+    create: XOR<wp_usersCreateWithoutWp_usermetaInput, wp_usersUncheckedCreateWithoutWp_usermetaInput>
+    where?: wp_usersWhereInput
+  }
+
+  export type wp_usersUpdateToOneWithWhereWithoutWp_usermetaInput = {
+    where?: wp_usersWhereInput
+    data: XOR<wp_usersUpdateWithoutWp_usermetaInput, wp_usersUncheckedUpdateWithoutWp_usermetaInput>
+  }
+
+  export type wp_usersUpdateWithoutWp_usermetaInput = {
+    ID?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_login?: StringFieldUpdateOperationsInput | string
+    user_pass?: StringFieldUpdateOperationsInput | string
+    user_nicename?: StringFieldUpdateOperationsInput | string
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_url?: StringFieldUpdateOperationsInput | string
+    user_registered?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_activation_key?: StringFieldUpdateOperationsInput | string
+    user_status?: IntFieldUpdateOperationsInput | number
+    display_name?: StringFieldUpdateOperationsInput | string
+    pseudo_winamax?: StringFieldUpdateOperationsInput | string
+    photo_url?: StringFieldUpdateOperationsInput | string
+    quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
+    registration?: registrationUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUpdateManyWithoutWp_usersNestedInput
+  }
+
+  export type wp_usersUncheckedUpdateWithoutWp_usermetaInput = {
+    ID?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_login?: StringFieldUpdateOperationsInput | string
+    user_pass?: StringFieldUpdateOperationsInput | string
+    user_nicename?: StringFieldUpdateOperationsInput | string
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_url?: StringFieldUpdateOperationsInput | string
+    user_registered?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_activation_key?: StringFieldUpdateOperationsInput | string
+    user_status?: IntFieldUpdateOperationsInput | number
+    display_name?: StringFieldUpdateOperationsInput | string
+    pseudo_winamax?: StringFieldUpdateOperationsInput | string
+    photo_url?: StringFieldUpdateOperationsInput | string
+    quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
+    registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
+    repechage?: repechageUncheckedUpdateManyWithoutWp_usersNestedInput
+  }
+
   export type quarter_rankingCreateWithoutWp_usersInput = {
     id?: bigint | number
     aggregated_score: number
@@ -59341,6 +59596,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type wp_usermetaCreateWithoutUserInput = {
+    umeta_id?: bigint | number
+    meta_key?: string | null
+    meta_value?: string | null
+  }
+
+  export type wp_usermetaUncheckedCreateWithoutUserInput = {
+    umeta_id?: bigint | number
+    meta_key?: string | null
+    meta_value?: string | null
+  }
+
+  export type wp_usermetaCreateOrConnectWithoutUserInput = {
+    where: wp_usermetaWhereUniqueInput
+    create: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput>
+  }
+
+  export type wp_usermetaCreateManyUserInputEnvelope = {
+    data: wp_usermetaCreateManyUserInput | wp_usermetaCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type quarter_rankingUpsertWithWhereUniqueWithoutWp_usersInput = {
     where: quarter_rankingWhereUniqueInput
     update: XOR<quarter_rankingUpdateWithoutWp_usersInput, quarter_rankingUncheckedUpdateWithoutWp_usersInput>
@@ -59397,6 +59674,32 @@ export namespace Prisma {
     trimester_id?: BigIntFilter<"repechage"> | bigint | number
     user_id?: BigIntFilter<"repechage"> | bigint | number
     category?: StringFilter<"repechage"> | string
+  }
+
+  export type wp_usermetaUpsertWithWhereUniqueWithoutUserInput = {
+    where: wp_usermetaWhereUniqueInput
+    update: XOR<wp_usermetaUpdateWithoutUserInput, wp_usermetaUncheckedUpdateWithoutUserInput>
+    create: XOR<wp_usermetaCreateWithoutUserInput, wp_usermetaUncheckedCreateWithoutUserInput>
+  }
+
+  export type wp_usermetaUpdateWithWhereUniqueWithoutUserInput = {
+    where: wp_usermetaWhereUniqueInput
+    data: XOR<wp_usermetaUpdateWithoutUserInput, wp_usermetaUncheckedUpdateWithoutUserInput>
+  }
+
+  export type wp_usermetaUpdateManyWithWhereWithoutUserInput = {
+    where: wp_usermetaScalarWhereInput
+    data: XOR<wp_usermetaUpdateManyMutationInput, wp_usermetaUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type wp_usermetaScalarWhereInput = {
+    AND?: wp_usermetaScalarWhereInput | wp_usermetaScalarWhereInput[]
+    OR?: wp_usermetaScalarWhereInput[]
+    NOT?: wp_usermetaScalarWhereInput | wp_usermetaScalarWhereInput[]
+    umeta_id?: BigIntFilter<"wp_usermeta"> | bigint | number
+    user_id?: BigIntFilter<"wp_usermeta"> | bigint | number
+    meta_key?: StringNullableFilter<"wp_usermeta"> | string | null
+    meta_value?: StringNullableFilter<"wp_usermeta"> | string | null
   }
 
   export type chipCreateWithoutStack_chipInput = {
@@ -59519,6 +59822,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingCreateNestedManyWithoutWp_usersInput
     registration?: registrationCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersUncheckedCreateWithoutRepechageInput = {
@@ -59536,6 +59840,7 @@ export namespace Prisma {
     photo_url: string
     quarter_ranking?: quarter_rankingUncheckedCreateNestedManyWithoutWp_usersInput
     registration?: registrationUncheckedCreateNestedManyWithoutWp_usersInput
+    wp_usermeta?: wp_usermetaUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type wp_usersCreateOrConnectWithoutRepechageInput = {
@@ -59598,6 +59903,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUpdateManyWithoutUserNestedInput
   }
 
   export type wp_usersUncheckedUpdateWithoutRepechageInput = {
@@ -59615,6 +59921,7 @@ export namespace Prisma {
     photo_url?: StringFieldUpdateOperationsInput | string
     quarter_ranking?: quarter_rankingUncheckedUpdateManyWithoutWp_usersNestedInput
     registration?: registrationUncheckedUpdateManyWithoutWp_usersNestedInput
+    wp_usermeta?: wp_usermetaUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type quarter_rankingCreateWithoutSeasonInput = {
@@ -60278,6 +60585,12 @@ export namespace Prisma {
     category: string
   }
 
+  export type wp_usermetaCreateManyUserInput = {
+    umeta_id?: bigint | number
+    meta_key?: string | null
+    meta_value?: string | null
+  }
+
   export type quarter_rankingUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregated_score?: IntFieldUpdateOperationsInput | number
@@ -60348,6 +60661,24 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type wp_usermetaUpdateWithoutUserInput = {
+    umeta_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    meta_key?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_value?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type wp_usermetaUncheckedUpdateWithoutUserInput = {
+    umeta_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    meta_key?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_value?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type wp_usermetaUncheckedUpdateManyWithoutUserInput = {
+    umeta_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    meta_key?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_value?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quarter_rankingCreateManySeasonInput = {
