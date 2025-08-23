@@ -29,6 +29,7 @@ export const TableTabs = () => {
   const [seatNumber, setSeatNumber] = useState<number>(1);
 
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
+  const [selectedKillerId, setSelectedKillerId] = useState<number | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { tournament, assignements } = useTournamentContext();
 
@@ -60,9 +61,8 @@ export const TableTabs = () => {
     if (!selectedPlayer || !tournament) return;
 
     try {
-      const killer =
-        assignements.find((a) => a.registration_id === killerId)?.registration?.wp_users
-          ?.pseudo_winamax ?? "??";
+      const killerRegistration = killerOptions.find(k => k.id == killerId);
+      
 
       // Appel API => retour { rebalanced, moves }
       const res = await eliminatePlayerMutation.mutateAsync({
@@ -73,26 +73,19 @@ export const TableTabs = () => {
 
       notify(
         "error",
-        `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killer}`
+        `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`
       );
 
       if (res?.moves?.length) {
         res.moves.forEach((move) => {
-          if (move.to && move.from) {
-            notify(
-              "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.to}, siège ${move.from}`
-            );
-          } else if (move.to) {
-            notify(
-              "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.to}`
-            );
+          if (move.fromTableNumber && move.playerName && move.toTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
+          } else if (move.fromTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
+          } else if (move.toTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
           } else {
-            notify(
-              "info",
-              `♻️ ${move.playerName} a été déplacé`
-            );
+            notify("info", `♻️ ${move.playerName} a été déplacé`);
           }
         });
       } else if (res?.rebalanced) {
@@ -208,16 +201,17 @@ export const TableTabs = () => {
         onClose={onClose}
         title="Éliminer un joueur"
         confirmLabel="Confirmer l'élimination"
-        onConfirm={() => {
-          const killerId = killerOptions[0]?.id;
-          if (killerId) handleConfirmElimination(killerId);
-        }}>
+        onConfirm={async () => {
+          if (selectedKillerId) handleConfirmElimination(selectedKillerId);
+        }}
+        >
         <EliminatePlayerFormBody
-          eliminatePlayer={
-            selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""
-          }
+          eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
           allPlayerTable={killerOptions}
+          selectedKillerId={selectedKillerId}
+          onSelectKiller={setSelectedKillerId}
         />
+
       </GenericModal>
 
       <GenericModal

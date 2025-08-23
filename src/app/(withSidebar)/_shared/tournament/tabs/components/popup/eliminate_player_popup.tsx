@@ -4,18 +4,32 @@ import { Registration } from "@/app/types";
 type EliminatePlayerProps = {
   eliminatePlayer: string;
   allPlayerTable: Registration[];
+  selectedKillerId: number | null;
+  onSelectKiller: (id: number) => void;
 };
+
 
 export const EliminatePlayerFormBody: React.FC<EliminatePlayerProps> = ({
   eliminatePlayer,
-  allPlayerTable
+  allPlayerTable,
+  selectedKillerId,
+  onSelectKiller
 }) => {
   return (
     <div className="flex flex-col gap-6 text-primary_brand-50 w-full">
       <span className="text-l font-satoshiRegular">
         Qui a éliminé {eliminatePlayer} ?
       </span>
-      <RadioGroup name="killer" className="flex flex-col gap-3">
+      <RadioGroup
+        name="killer"
+        className="flex flex-col gap-3"
+        value={selectedKillerId !== null ? String(selectedKillerId) : ""}
+        onChange={(event) => {
+          const value = (event.target as HTMLInputElement).value;
+          console.log(value);
+          onSelectKiller(Number(value));
+        }}
+      >
         {allPlayerTable.map((player) => (
           <Radio key={player.id} value={String(player.id)}>
             <div className="flex items-center gap-4 p-2 rounded w-full">
@@ -34,3 +48,5 @@ export const EliminatePlayerFormBody: React.FC<EliminatePlayerProps> = ({
     </div>
   );
 };
+
+

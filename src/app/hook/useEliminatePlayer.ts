@@ -15,8 +15,11 @@ export type EliminatePlayerResponse = {
   rebalanced?: boolean; // 🔹 flag rééquilibrage transmis par l’API
   moves?: {
     playerName: string;
-    from: number;
-    to: number;
+    registrationId: number;
+    fromTableId: number;
+    fromTableNumber?: number;
+    toTableId: number;
+    toTableNumber?: number;
   }[]; // 🔹 optionnel si on veut la liste des déplacements
 };
 

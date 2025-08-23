@@ -33,6 +33,7 @@ export const PlayerTabs = React.memo(() => {
   const [search, setSearch] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState<TableAssignment | null>(null);
   const [killerOptions, setKillerOptions] = useState<Registration[]>([]);
+  const [selectedKillerId, setSelectedKillerId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelKillModal, setIsCancelKillModal] = useState(false);
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
@@ -96,6 +97,7 @@ export const PlayerTabs = React.memo(() => {
                   .filter((r): r is Registration => !!r);
 
                 setKillerOptions(killers);
+                setSelectedKillerId(null);
                 onOpen();
               }
             }
@@ -156,64 +158,50 @@ export const PlayerTabs = React.memo(() => {
   }, [tournament?.tournament_status, assignements, onOpen, registration, tournament?.id]);
 
   // 🆕 Elimination avec retour API + notifs killer et rééquilibrage détaillé
-  const handleConfirmElimination = useCallback(async (killerId: number) => {
+  const handleConfirmElimination = useCallback(async (killerRegistrationId: number) => {
     if (!selectedPlayer || !tournament) return;
-
     try {
-      const killer =
-        assignements.find((a) => a.registration_id === killerId)?.registration?.wp_users
-          ?.pseudo_winamax ?? "??";
-
+      const killerRegistration = killerOptions.find(k => k.id == killerRegistrationId);
+      
+  
       const res = await eliminatePlayerMutation.mutateAsync({
         tournamentId: tournament.id,
         registrationId: selectedPlayer.registration_id,
-        killerId
+        killerId: killerRegistrationId,
       });
-
-      notify(
-        "error",
-        `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killer}`
-      );
-
-      // 🔹 Notifications pour chaque joueur déplacé
+  
+      notify("error", `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`);
+  
+      // Notifications moves améliorées et clarifiées
       if (res?.moves?.length) {
-        res.moves.forEach((move) => {
-          if (move.to && move.from) {
-            notify(
-              "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.to}, siège ${move.from}`
-            );
-          } else if (move.to) {
-            notify(
-              "info",
-              `♻️ ${move.playerName} déplacé à la Table ${move.to}`
-            );
+        res.moves.forEach(move => {
+          if (move.fromTableNumber && move.playerName && move.toTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
+          } else if (move.fromTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
+          } else if (move.toTableNumber) {
+            notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
           } else {
-            notify(
-              "info",
-              `♻️ ${move.playerName} a été déplacé`
-            );
+            notify("info", `♻️ ${move.playerName} a été déplacé`);
           }
         });
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
-
-      const remainingAlive = assignements.filter((a) => !a.eliminated);
-      if (
-        remainingAlive.length === 1 &&
-        tournament.tournament_status !== "finish"
-      ) {
+  
+      const remainingAlive = assignements.filter(a => !a.eliminated);
+      if (remainingAlive.length === 1 && tournament.tournament_status !== "finish") {
         await finishTournamentMutation.mutateAsync(tournament.id);
         notify("success", "🏆 Le tournoi est terminé !");
       }
-
+  
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
       notify("error", "❌ Une erreur est survenue lors de l'élimination.");
     }
   }, [selectedPlayer, tournament, eliminatePlayerMutation, assignements, finishTournamentMutation, onClose, notify]);
+  
 
   if (isLoading) return <LoadingComponent />;
 
@@ -250,14 +238,16 @@ export const PlayerTabs = React.memo(() => {
         title="Éliminer un joueur"
         confirmLabel="Confirmer l'élimination"
         onConfirm={async () => {
-          const killerId = killerOptions[0]?.id;
-          if (killerId) handleConfirmElimination(killerId);
-        }}>
+          console.log(selectedKillerId);
+          console.log(killerOptions);
+          if (selectedKillerId) await handleConfirmElimination(selectedKillerId);
+        }}
+      >
         <EliminatePlayerFormBody
-          eliminatePlayer={
-            selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""
-          }
+          eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
           allPlayerTable={killerOptions}
+          selectedKillerId={selectedKillerId}
+          onSelectKiller={setSelectedKillerId}
         />
       </GenericModal>
 
