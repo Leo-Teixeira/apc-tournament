@@ -143,7 +143,7 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
 
             const imageUrl = img.guid.replace(
               "angers-poker-club.local",
-              "aqua-bat-544144.hostingersite.com"
+              "angers-poker-club.fr"
             );
 
             const isSelected = editingBackgroundIndex !== null

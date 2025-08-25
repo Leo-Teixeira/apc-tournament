@@ -121,7 +121,7 @@ export default function StackPage() {
       }
       setPendingChipImage({
         type: "wordpress",
-        url: selectedImage.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com")
+        url: selectedImage.guid.replace("angers-poker-club.local", "angers-poker-club.fr")
       });
       setIsChangeImageOpen(false);
     }
@@ -256,7 +256,7 @@ export default function StackPage() {
               <p className="text-neutral-200">Aucune image disponible</p>
             )}
             {!isLoading && !error && wpJetonImages.map((img) => {
-              const imageUrl = img.guid.replace("angers-poker-club.local", "aqua-bat-544144.hostingersite.com");
+              const imageUrl = img.guid.replace("angers-poker-club.local", "angers-poker-club.fr");
               return (
                 <img
                   key={img.ID}

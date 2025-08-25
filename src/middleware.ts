@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
   // if (!alreadyValidated) {
   //   try {
   //     const res = await fetch(
-  //       "https://aqua-bat-544144.hostingersite.com/wp-json/custom/validate-token",
+  //       "https://angers-poker-club.fr/wp-json/custom/validate-token",
   //       {
   //         headers: { Authorization: `Bearer ${token}` }
   //       }
