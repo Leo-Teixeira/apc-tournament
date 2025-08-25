@@ -26,8 +26,8 @@ export const mapTournamentsToRow = (
       trimestry: parseInt(
         tournament.tournament_trimestry.replace("T", "") || "0"
       ),
-      tournament_date: new Date(tournament.tournament_start_date).toISOString(),
-      open_tournament_date: new Date(tournament.tournament_open_date).toISOString(),
+      tournament_date: toISODateOnly(tournament.tournament_start_date),
+      open_tournament_date: toISODateOnly(tournament.tournament_open_date),
       status: tournament.tournament_status,
       action: ""
     };

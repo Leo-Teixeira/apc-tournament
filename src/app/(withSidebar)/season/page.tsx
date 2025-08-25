@@ -255,7 +255,6 @@ export default function SeasonsHome() {
               ariaLabel="Liste des saisons"
               showActions
               actions={getConditionalActions}
-              enableRowClick
               getDetailUrl={(id) => `/seasons/${id}`}
             />
           </div>

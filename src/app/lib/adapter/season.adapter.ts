@@ -7,15 +7,15 @@ export function mapSeasonsToRows(seasons: Season[]): SeasonRow[] {
   return seasons.map((season) => ({
     id: String(season.id),
     name: season.name,
-    start_date: new Date(season.start_date).getTime(),
-    end_date: new Date(season.end_date).getTime(),
+    start_date: toISODateOnly(season.start_date),
+    end_date: toISODateOnly(season.end_date),
     status: season.status,
     action: "",
     trimester: season.trimester
       ? season.trimester.map((t) => ({
           name: `T${t.number}`,
-          start_date: new Date(t.start_date).getTime(),
-          end_date: new Date(t.end_date).getTime(),
+          start_date: toISODateOnly(t.start_date),
+          end_date: toISODateOnly(t.end_date),
         }))
       : [],
   }));
