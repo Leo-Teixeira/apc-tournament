@@ -64,8 +64,8 @@ export type TournamentRow = {
 export type SeasonRow = {
   id: string;
   name: string;
-  start_date: number;
-  end_date: number;
+  start_date: string;
+  end_date: string;
   status: string;
   action: string;
 };
