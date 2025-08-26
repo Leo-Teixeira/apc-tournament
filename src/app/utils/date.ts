@@ -74,3 +74,10 @@ export function formatDateFr(dateString: string): string {
   const formatted = date.toLocaleDateString("fr-FR", options);
   return formatted.replace(":", "h");
 }
+
+export function toLocalISOString(date: Date) {
+  const tzoffset = date.getTimezoneOffset() * 60000; // offset en ms
+  const localISOTime = new Date(date.getTime() - tzoffset).toISOString().slice(0, -1);
+  return localISOTime;
+}
+

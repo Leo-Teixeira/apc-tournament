@@ -1,21 +1,22 @@
 import { BlindRow } from "@/app/components/table/table.types";
 import { TournamentLevel } from "@/app/types";
+import { formatHourFR, getDurationInMinutes, toLocalISOString } from "@/app/utils/date";
 
 export const mapTournamentLevelsToRow = (
   levels: TournamentLevel[]
 ): BlindRow[] => {
   return levels
-    .filter((level) => level.level_start && level.level_end)
+    .filter(level => level.level_start && level.level_end)
     .sort((a, b) => a.level_number - b.level_number)
-    .map((level) => {
-      const start = new Date(level.level_start);
-      const end = new Date(level.level_end);
+    .map(level => {
+      // On créé les dates en UTC avec toLocalISOString qui ajuste la timezone locale
+      const start = new Date(toLocalISOString(new Date(level.level_start)));
+      const end = new Date(toLocalISOString(new Date(level.level_end)));
 
       if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
 
-      const durationMinutes = Math.round(
-        (end.getTime() - start.getTime()) / 60000
-      );
+      // Durée en minutes grâce à ta fonction utilitaire
+      const durationMinutes = getDurationInMinutes(start, end);
 
       return {
         id: level.id,
@@ -25,11 +26,8 @@ export const mapTournamentLevelsToRow = (
         ante: "-",
         pause: level.level_pause,
         duration: `${durationMinutes}"`,
-        time: start.toLocaleTimeString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "UTC"
-        }),
+        // Affichage de l'heure locale format FR
+        time: formatHourFR(start),
         action: ""
       };
     })
