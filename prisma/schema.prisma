@@ -625,8 +625,8 @@ enum season_status {
 
 enum tournament_tournament_category {
   APT
-  Special
-  SitAndGo
-  Superfinale
-  Solipoker
+  SPECIAL
+  SITANDGO
+  SUPERFINALE
+  SOLIPOKER
 }
