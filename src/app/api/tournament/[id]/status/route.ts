@@ -31,10 +31,8 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status === "in_coming") {
-      const now = new Date();
-      const offsetMs = now.getTimezoneOffset() * 60000;
-      const localDate = new Date(now.getTime() - offsetMs);
-
+      const localDate = new Date(); // Date actuelle avec fuseau local
+    
       await prisma.tournament.update({
         where: { id: tournamentId },
         data: {
@@ -42,6 +40,7 @@ export async function PATCH(req: NextRequest) {
           tournament_status: status
         }
       });
+    
 
       const levels = await prisma.tournament_level.findMany({
         where: { tournament_id: tournamentId },
