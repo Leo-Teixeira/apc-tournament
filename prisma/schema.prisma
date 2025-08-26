@@ -625,7 +625,11 @@ enum season_status {
 
 enum tournament_tournament_category {
   APT
+<<<<<<< HEAD
   SPECIAUX
+=======
+  SPECIAL
+>>>>>>> 715bf1118cb830ecf4697a68f8be828e176cfcca
   SITANDGO
   SUPERFINALE
   SOLIPOKER
