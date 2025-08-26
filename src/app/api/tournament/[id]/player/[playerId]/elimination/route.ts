@@ -55,7 +55,7 @@ async function getScoreAndRankingPosition(
   let score = 0;
   if (tournament.tournament_category === "APT") {
     score = getAptScore(totalRegistrations, ranking_position);
-  } else if (tournament.tournament_category === "SitAndGo") {
+  } else if (tournament.tournament_category === "SITANDGO") {
     score = getSitAndGoScore(totalRegistrations, ranking_position);
   }
 
@@ -72,7 +72,7 @@ async function updateQuarterRanking(tournamentId: number) {
 
   if (
     tournament.tournament_category !== "APT" &&
-    tournament.tournament_category !== "SitAndGo"
+    tournament.tournament_category !== "SITANDGO"
   ) {
     // Aucun classement stocké pour les autres
     return;
@@ -197,9 +197,9 @@ export async function PUT(req: NextRequest) {
     }
 
     const { tournament_category } = tournamentData;
-    const needReequilibrage = tournament_category !== "SitAndGo";
-    const hasRanking = tournament_category === "APT" || tournament_category === "SitAndGo";
-    const isSitAndGo = tournament_category === "SitAndGo";
+    const needReequilibrage = tournament_category !== "SITANDGO";
+    const hasRanking = tournament_category === "APT" || tournament_category === "SITANDGO";
+    const isSitAndGo = tournament_category === "SITANDGO";
 
     const assignment = await prisma.table_assignment.findFirst({
       where: { registration_id: BigInt(registrationId) },

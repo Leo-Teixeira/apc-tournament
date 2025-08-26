@@ -20,7 +20,7 @@ function getTableCapacities(totalPlayers: number, category: string): number[] {
       return [totalPlayers];
     }
     return getBalancedCapacities(totalPlayers, 8);
-  } else if (category === "SitAndGo") {
+  } else if (category === "SITANDGO") {
     return getBalancedCapacities(totalPlayers, 9);
   } else {
     return getBalancedCapacities(totalPlayers, 9);

@@ -28,7 +28,7 @@ import { TournamentMobileCards } from "../../components/tournament-mobile-cards"
 export default function SitAndGoHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
 
-  const { data, isLoading } = useTournamentDataByCategory("SitAndGo");
+  const { data, isLoading } = useTournamentDataByCategory("SITANDGO");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);

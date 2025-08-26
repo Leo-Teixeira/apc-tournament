@@ -262,10 +262,10 @@ export type season_status = (typeof season_status)[keyof typeof season_status]
 
 export const tournament_tournament_category: {
   APT: 'APT',
-  Special: 'Special',
-  SitAndGo: 'SitAndGo',
-  Superfinale: 'Superfinale',
-  Solipoker: 'Solipoker'
+  SPECIAUX: 'SPECIAUX',
+  SITANDGO: 'SITANDGO',
+  SUPERFINALE: 'SUPERFINALE',
+  SOLIPOKER: 'SOLIPOKER'
 };
 
 export type tournament_tournament_category = (typeof tournament_tournament_category)[keyof typeof tournament_tournament_category]

@@ -771,10 +771,10 @@ exports.registration_statut = exports.$Enums.registration_statut = {
 
 exports.tournament_tournament_category = exports.$Enums.tournament_tournament_category = {
   APT: 'APT',
-  Special: 'Special',
-  SitAndGo: 'SitAndGo',
-  Superfinale: 'Superfinale',
-  Solipoker: 'Solipoker'
+  SPECIAUX: 'SPECIAUX',
+  SITANDGO: 'SITANDGO',
+  SUPERFINALE: 'SUPERFINALE',
+  SOLIPOKER: 'SOLIPOKER'
 };
 
 exports.tournament_tournament_status = exports.$Enums.tournament_tournament_status = {
