@@ -31,7 +31,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status === "in_coming") {
-      const localDate = new Date(); // Date actuelle avec fuseau local
+      const localDate = new Date();
     
       await prisma.tournament.update({
         where: { id: tournamentId },
@@ -41,42 +41,37 @@ export async function PATCH(req: NextRequest) {
         }
       });
     
-
       const levels = await prisma.tournament_level.findMany({
         where: { tournament_id: tournamentId },
         orderBy: { level_number: "asc" }
       });
-
-      let previousEnd = new Date(localDate);
-
+    
+      let previousEnd = localDate;
+    
       const updatedLevels = await Promise.all(
-        levels.map((level) => {
-          const originalDuration =
-            new Date(level.level_end).getTime() -
-            new Date(level.level_start).getTime();
-
+        levels.map(level => {
+          const originalDuration = 
+            new Date(level.level_end).getTime() - new Date(level.level_start).getTime();
+    
           const start = new Date(previousEnd);
           const end = new Date(start.getTime() + originalDuration);
           previousEnd = end;
-
+    
           return prisma.tournament_level.update({
             where: { id: level.id },
             data: {
               level_start: start,
-              level_end: end
+              level_end: end,
             }
           });
         })
       );
-
-      return NextResponse.json(
-        serializeBigInt({
-          message: "Tournament started and levels updated (local time)",
-          startDate: localDate,
-          levels: updatedLevels
-        }),
-        { status: 200 }
-      );
+    
+      return NextResponse.json(serializeBigInt({
+        message: "Tournament started and levels updated (local time)",
+        startDate: localDate,
+        levels: updatedLevels
+      }), { status: 200 });
     } else {
       const updated = await prisma.tournament.update({
         where: { id: tournamentId },
