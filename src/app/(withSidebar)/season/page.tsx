@@ -112,7 +112,7 @@ export default function SeasonsHome() {
   
     // Vérifier s'il y a déjà une saison en cours dans les données
     const seasonInProgressExists = data?.some(
-      (season) => season.status === "in_progress" && season.id !== editSeasonId
+      (season) => season.status === "in_progress" && editSeasonId !== null && season.id !== String(editSeasonId)
     );
   
     if (seasonInProgressExists && seasonStatus === "in_progress") {
