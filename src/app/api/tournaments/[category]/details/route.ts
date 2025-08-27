@@ -54,16 +54,18 @@ export async function GET(req: NextRequest) {
               }
             }
           }
-        }
+        },
       }
     });
+
+    const trimestry = await prisma.trimester.findMany();
 
     // Séparer les données
     const tournamentss = result;
     const registrations = result.flatMap(t => t.registration);
     const quarterRanking = result.flatMap(t => t.quarter_ranking);
 
-    const responseData = serializeBigInt({ tournamentss, registrations, quarterRanking });
+    const responseData = serializeBigInt({ tournamentss, registrations, quarterRanking, trimestry });
 
 
     console.log(`✅ Données récupérées avec succès pour la catégorie : ${mappedCategory}`);

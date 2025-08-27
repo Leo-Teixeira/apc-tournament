@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
         end_date: true,
         status: true,
         trimester: {
+          orderBy: { number: "asc" },
           select: {
             id: true,
             number: true,

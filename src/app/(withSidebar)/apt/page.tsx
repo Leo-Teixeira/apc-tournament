@@ -223,6 +223,7 @@ export default function APTHome() {
       >
         <TournamentFormBody
           tournament={tournaments.find((t) => t.id == Number(itemSelected?.id))}
+          trimestry={data ? data!.trimestry : []}
           onUpdate={(updatedFields) => {
             setTournamentFormData((prev) => ({ ...prev, ...updatedFields }));
           }}

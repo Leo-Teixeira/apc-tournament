@@ -109,6 +109,17 @@ export default function SeasonsHome() {
       alert("Veuillez remplir tous les champs de la saison.");
       return;
     }
+  
+    // Vérifier s'il y a déjà une saison en cours dans les données
+    const seasonInProgressExists = data?.some(
+      (season) => season.status === "in_progress" && season.id !== editSeasonId
+    );
+  
+    if (seasonInProgressExists && seasonStatus === "in_progress") {
+      alert("Il ne peut y avoir qu'une seule saison en cours à la fois.");
+      return;
+    }
+  
     try {
       if (!isEditMode) {
         await createSeasonMutation.mutateAsync({
@@ -139,6 +150,7 @@ export default function SeasonsHome() {
       alert("Une erreur est survenue lors de l'enregistrement de la saison.");
     }
   };
+  
 
   // Edition
   const handleEditSeason = (item: SeasonRow & { trimester?: TrimesterInput[] }) => {

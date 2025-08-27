@@ -34,7 +34,7 @@ export default function StackPage() {
   const { data: wpJetonImages = [], isLoading, error } = useWpJetonImages();
   const [selectedWpImageId, setSelectedWpImageId] = useState<number | null>(null);
 
-  const { data: stack } = useStackById(String(id));
+  const { data: stack, isLoading: isChipLoading } = useStackById(String(id));
   const { data: allChips = [] } = useAllChips(isOpen);
   const addChipToStack = useAddChipToStack();
   const createChipInStack = useCreateChipInStack();
@@ -127,6 +127,11 @@ export default function StackPage() {
     }
   };
 
+  if (isChipLoading) {
+    return <div className="text-center text-white">Chargement des jetons...</div>;
+  }
+  
+
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -173,7 +178,7 @@ export default function StackPage() {
           <select
             value={selectedChipId}
             onChange={(e) => setSelectedChipId(e.target.value)}
-            className="rounded border p-2 bg-background_card text-neutral-50"
+            className="rounded border p-2 bg-neutral-50 text-black"
           >
             <option value="">Créer un nouveau jeton</option>
             {availableChips.map((chip: Chip) => (

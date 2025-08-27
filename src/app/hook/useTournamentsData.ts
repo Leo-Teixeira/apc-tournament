@@ -4,6 +4,7 @@ import { mapTournamentsToRow } from "@/app/lib/adapter/tournament.adapter";
 import { mapQuarterRankingByTrimestry } from "@/app/lib/adapter/quarter_ranking.adapter";
 import { Tournament } from "@/app/types";
 import { StandingRow, TournamentRow } from "../components/table/table.types";
+import { Trimester } from "../types/trimester.types";
 
 type TrimestryKey = "T1" | "T2" | "T3";
 
@@ -11,6 +12,7 @@ type TournamentDataByCategory = {
   tournaments: Tournament[];
   tournamentRows: TournamentRow[];
   quarterRankingRows: Record<TrimestryKey, StandingRow[]>;
+  trimestry: Trimester[];
 };
 
 export const useTournamentDataByCategory = (category: string) => {
@@ -28,12 +30,15 @@ export const useTournamentDataByCategory = (category: string) => {
         tournaments: data.tournamentss, // ou data.tournaments selon ton backend
         tournamentRows: mapTournamentsToRow(
           data.tournamentss,
-          data.registrations
+          data.registrations,
+          data.trimestry
         ),
         quarterRankingRows: mapQuarterRankingByTrimestry(
           data.quarterRanking,
-          category
+          category,
+          data.trimestry
         ),
+        trimestry: data.trimestry
       };
     },
   });
