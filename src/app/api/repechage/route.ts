@@ -2,55 +2,51 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 
+function defaultHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+    "X-PNonce": crypto.randomUUID(),  // on rajoute un token unique
+    "Cache-Control": "no-cache, no-store, must-revalidate"
+  };
+}
 
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      ...defaultHeaders()
     }
   });
 }
 
-
-export async function POST(req: any) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("Received body:", body);  // Log de l'entrée
+    console.log("Received body:", body);
 
     const { userId, trimesterNumber, category } = body;
-    console.log("Parsed inputs:", { userId, trimesterNumber, category });
 
     const currentSeason = await prisma.season.findFirst({
       where: { status: "in_progress" },
     });
-    console.log("Current season:", currentSeason);
 
     if (!currentSeason) {
-      console.log("No current season found");
       return new Response(JSON.stringify({ error: "Current season not found" }), {
         status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
+        headers: { ...defaultHeaders() }
       });
     }
 
     const user = await prisma.wp_users.findUnique({
       where: { ID: BigInt(userId) },
     });
-    console.log("Found user:", user);
 
     if (!user) {
-      console.log(`User with ID ${userId} not found`);
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
+        headers: { ...defaultHeaders() }
       });
     }
 
@@ -61,24 +57,17 @@ export async function POST(req: any) {
         category: category.trim(),
       },
     });
-    console.log("Created repechage entry:", repechageEntry);
 
     return new Response(JSON.stringify(serializeBigInt(repechageEntry)), {
       status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      }
+      headers: { ...defaultHeaders() }
     });
 
   } catch (err) {
     console.error("Error during repechage creation:", err);
     return new Response(JSON.stringify({ error: "Failed to create repechage entry" }), {
       status: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      }
+      headers: { ...defaultHeaders() }
     });
   }
 }
