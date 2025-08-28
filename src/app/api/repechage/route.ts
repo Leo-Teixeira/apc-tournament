@@ -9,7 +9,8 @@ function defaultHeaders() {
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json",
     "X-PNonce": crypto.randomUUID(),
-    "Cache-Control": "no-cache, no-store, must-revalidate"
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Access-Control-Allow-Credentials": "true",
   };
 }
 
