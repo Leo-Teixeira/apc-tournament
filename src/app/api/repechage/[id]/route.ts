@@ -4,22 +4,21 @@ import { prisma } from "@/lib/prisma";
 // === Headers réutilisables ===
 function defaultHeaders() {
   return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Origin": "https://angers-poker-club.fr", // remplacer par le vrai domaine client
+    "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type,X-WP-Nonce",
     "Content-Type": "application/json",
     "X-PNonce": crypto.randomUUID(),
-    "Cache-Control": "no-cache, no-store, must-revalidate", 
+    "Cache-Control": "no-cache, no-store, must-revalidate",
     "Access-Control-Allow-Credentials": "true",
   };
 }
+
 
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
       ...defaultHeaders(),
-      "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type,X-WP-Nonce" // ajoutez autres headers si besoin
     },
   });
 }
