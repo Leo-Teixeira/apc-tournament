@@ -21,9 +21,6 @@ type ButtonTabsProps = {
   onAddTable?: () => void;
   isAddTableLoading?: boolean;
 
-  onModify?: () => void;
-  isModifyLoading?: boolean;
-
   onGenerateTables?: () => void;
   isGenerateTablesLoading?: boolean;
 
@@ -46,8 +43,6 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
   isResetLevelLoading,
   onAddTable,
   isAddTableLoading,
-  onModify,
-  isModifyLoading,
   onGenerateTables,
   isGenerateTablesLoading,
   onAddPlayer,
@@ -56,21 +51,6 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
   isEditStackLoading,
 }) => {
   switch (tabsId) {
-    case "0":
-      return (
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-          {tournamentStatus === "start" && (
-            <ButtonComponents
-              text="Modifier le tournoi"
-              onClick={onModify}
-              buttonClassName="w-full sm:w-auto bg-white/20 hover:bg-primary_brand-300"
-              textClassName="text-primary_brand-50"
-              loading={isModifyLoading}
-              disabled={isModifyLoading}
-            />
-          )}
-        </div>
-      );
 
     case "1":
       return (

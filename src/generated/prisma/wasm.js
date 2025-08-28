@@ -132,7 +132,6 @@ exports.Prisma.Quarter_rankingScalarFieldEnum = {
   trimestry_ranking: 'trimestry_ranking',
   aggregated_score: 'aggregated_score',
   position: 'position',
-  quarter_ranking_year: 'quarter_ranking_year',
   tournament_id: 'tournament_id'
 };
 

@@ -20,7 +20,7 @@ export const mapFlatAssignementsToSeatRows = (
         return {
           id: r.id,
           avatarName: user?.pseudo_winamax || user?.display_name || "Inconnu",
-          avatar: user?.photo_url || "/images/ellipseAvatar.png",
+          avatar: user?.photo_url ?? "/images/ellipseAvatar.png",
           seat: "Non assigné",
           action: "",
           eliminated: false

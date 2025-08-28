@@ -1,5 +1,15 @@
 import { prisma } from "@/lib/prisma";
 
+// 🔎 Fonction utilitaire pour trouver le prochain siège disponible dans une table
+function findNextAvailableSeat(players: { table_seat_number: number | null }[], startSeat: number = 1): number {
+  const occupied = new Set(players.map(p => p.table_seat_number).filter((n): n is number => n !== null));
+  let seat = startSeat;
+  while (occupied.has(seat)) {
+    seat++;
+  }
+  return seat;
+}
+
 export async function reequilibrateTables(tournamentId: number) {
   const tournament = await prisma.tournament.findUnique({
     where: { id: BigInt(tournamentId) },
@@ -47,13 +57,14 @@ export async function reequilibrateTables(tournamentId: number) {
   if (allRemainingPlayers.length === aptMaxLastTable) {
     const mainTable = tables.find(t => t.table_number === 1) || tables[0];
 
+    // Déplacer tous les joueurs dans la même table
     for (const player of allRemainingPlayers) {
       const fromTableId = player.table_id;
       const fromTableNumber = player.tournament_table?.table_number;
 
       await prisma.table_assignment.update({
         where: { id: player.id },
-        data: { table_id: mainTable.id, table_seat_number: undefined }
+        data: { table_id: mainTable.id, table_seat_number: undefined } // reset pour réassigner ensuite correctement
       });
 
       moves.push({
@@ -66,14 +77,22 @@ export async function reequilibrateTables(tournamentId: number) {
       });
     }
 
-    // Réattribuer les sièges
-    const newAssignments = allRemainingPlayers.map((p, i) =>
-      prisma.table_assignment.update({
-        where: { id: p.id },
-        data: { table_seat_number: i + 1 }
-      })
-    );
-    await Promise.all(newAssignments);
+    // Réattribuer les sièges sans doublon
+    const updatedAssignments: Promise<any>[] = [];
+    const tempPlayers: any[] = [];
+
+    for (const player of allRemainingPlayers) {
+      const nextSeat = findNextAvailableSeat(tempPlayers);
+      tempPlayers.push({ ...player, table_seat_number: nextSeat });
+
+      updatedAssignments.push(
+        prisma.table_assignment.update({
+          where: { id: player.id },
+          data: { table_seat_number: nextSeat }
+        })
+      );
+    }
+    await Promise.all(updatedAssignments);
 
     // Supprimer les tables vides
     const allTables = await prisma.tournament_table.findMany({
@@ -96,12 +115,14 @@ export async function reequilibrateTables(tournamentId: number) {
     players: table.table_assignment
   }));
 
+  // Récupérer les joueurs des tables trop petites (< 4)
   const underfilledPlayers = tablesWithPlayers
     .filter(t => t.players.length < 4)
     .flatMap(t => t.players);
 
   tablesWithPlayers = tablesWithPlayers.filter(t => t.players.length >= 4);
 
+  // Déplacer les joueurs des petites tables
   for (const player of underfilledPlayers) {
     const fromTableId = player.table_id;
     const fromTableNumber = player.tournament_table?.table_number;
@@ -111,15 +132,17 @@ export async function reequilibrateTables(tournamentId: number) {
     });
 
     if (targetTable) {
+      const nextSeat = findNextAvailableSeat(targetTable.players);
+
       await prisma.table_assignment.update({
         where: { id: player.id },
         data: {
           table_id: targetTable.id,
-          table_seat_number: targetTable.players.length + 1
+          table_seat_number: nextSeat
         }
       });
 
-      targetTable.players.push({ ...player, table_id: targetTable.id });
+      targetTable.players.push({ ...player, table_id: targetTable.id, table_seat_number: nextSeat });
       changed = true;
 
       moves.push({
@@ -133,9 +156,9 @@ export async function reequilibrateTables(tournamentId: number) {
     }
   }
 
+  // Rééquilibrage max -> min
   tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
 
-  // Déplacements max -> min
   while (tablesWithPlayers.length > 1) {
     const min = tablesWithPlayers[0];
     const max = tablesWithPlayers[tablesWithPlayers.length - 1];
@@ -146,28 +169,29 @@ export async function reequilibrateTables(tournamentId: number) {
 
       const fromTableId = max.id;
       const fromTableNumber = max.tableNumber;
+      const nextSeat = findNextAvailableSeat(min.players);
 
       await prisma.table_assignment.update({
         where: { id: movedPlayer.id },
         data: {
           table_id: min.id,
-          table_seat_number: min.players.length + 1
+          table_seat_number: nextSeat
         }
       });
 
-      min.players.push({ ...movedPlayer, table_id: min.id });
+      min.players.push({ ...movedPlayer, table_id: min.id, table_seat_number: nextSeat });
       changed = true;
 
       moves.push({
         playerName: movedPlayer.registration?.wp_users?.pseudo_winamax ?? "??",
         registrationId: Number(movedPlayer.registration_id),
-        fromTableId: Number(fromTableId), // ✅ conversion
+        fromTableId: Number(fromTableId),
         fromTableNumber,
-        toTableId: Number(min.id), // ✅ conversion
+        toTableId: Number(min.id),
         toTableNumber: min.tableNumber
       });
-      
 
+      // Resort pour continuer
       tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
       continue;
     }

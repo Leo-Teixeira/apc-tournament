@@ -110,6 +110,8 @@ export async function GET(req: NextRequest) {
       }
     });
 
+    const trimestry = await prisma.trimester.findMany();
+
     const result = {
       tournament: {
         ...tournamentData,
@@ -120,7 +122,8 @@ export async function GET(req: NextRequest) {
       },
       registrations: tournamentData.registration,
       classement: tournamentData.tournament_ranking,
-      stacks
+      stacks,
+      trimestry
     };
 
     return NextResponse.json(

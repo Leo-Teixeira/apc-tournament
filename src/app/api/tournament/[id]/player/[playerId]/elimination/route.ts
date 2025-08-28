@@ -74,13 +74,14 @@ async function updateQuarterRanking(tournamentId: number) {
     tournament.tournament_category !== "APT" &&
     tournament.tournament_category !== "SITANDGO"
   ) {
-    // Aucun classement stocké pour les autres
+    // Aucun classement stocké pour les autres catégories
     return;
   }
 
   const year = tournament.tournament_start_date.getFullYear();
   const { tournament_category, tournament_trimestry } = tournament;
 
+  // Trouver les tournois liés
   const relatedTournaments = await prisma.tournament.findMany({
     where: {
       tournament_category,
@@ -94,6 +95,8 @@ async function updateQuarterRanking(tournamentId: number) {
   });
 
   const relatedIds = relatedTournaments.map((t) => t.id);
+
+  // Récupérer les classements liés
   const rankings = await prisma.tournament_ranking.findMany({
     where: { tournament_id: { in: relatedIds } },
     select: {
@@ -102,10 +105,10 @@ async function updateQuarterRanking(tournamentId: number) {
     }
   });
 
-  // Extraire les user_ids des classements récupérés
+  // Extraire user_ids
   const userIds = rankings.map(r => r.registration.user_id);
 
-  // Récupérer les rôles des users concernés
+  // Récupérer les rôles des utilisateurs concernés
   const userRolesMeta = await prisma.wp_usermeta.findMany({
     where: {
       user_id: { in: userIds },
@@ -117,21 +120,21 @@ async function updateQuarterRanking(tournamentId: number) {
     }
   });
 
-  // Fonction pour extraire rôle depuis chaîne sérialisée PHP
+  // Extraction rôle depuis sérialisation PHP
   function extractRoleFromSerialized(serialized: string | null | undefined): string | null {
     if (!serialized) return null;
     const match = serialized.match(/s:\d+:"(.+?)";b:1;/);
     return match ? match[1] : null;
   }
 
-  // Construire un mapping userId -> rôle
+  // Map userId -> rôle
   const roleMap = new Map<bigint, string | null>();
   for (const meta of userRolesMeta) {
     const role = extractRoleFromSerialized(meta.meta_value);
     roleMap.set(meta.user_id, role);
   }
 
-  // Intégrer dans scoreByUser uniquement les users dont le rôle n'est pas "um_invite"
+  // Filtrer les scores pour exclure role "um_invite"
   const scoreByUser: Record<string, number> = {};
   for (const r of rankings) {
     const userId = r.registration.user_id;
@@ -142,7 +145,7 @@ async function updateQuarterRanking(tournamentId: number) {
     }
   }
 
-// Trouver la saison correspondant à l'année du tournoi
+  // Trouver la saison d'après la date début tournoi
   const season = await prisma.season.findFirst({
     where: {
       start_date: { lte: tournament.tournament_start_date },
@@ -154,6 +157,7 @@ async function updateQuarterRanking(tournamentId: number) {
     throw new Error(`No season found for year ${year}`);
   }
 
+  // Construire le classement agrégé trié
   const sorted = Object.entries(scoreByUser)
     .map(([userId, score]) => ({ userId: BigInt(userId), score }))
     .sort((a, b) => b.score - a.score)
@@ -161,17 +165,19 @@ async function updateQuarterRanking(tournamentId: number) {
       user_id: entry.userId,
       aggregated_score: entry.score,
       position: i + 1,
-      trimestry_ranking: tournament_trimestry, 
-      quarter_ranking_year: season.id,   // ⚡ utiliser l’id de la saison
+      trimestry_ranking: tournament_trimestry,
       tournament_id: relatedIds[0],
-  }));
+    }));
 
-
+  // Suppression des anciens classements sur ce trimestre
   await prisma.quarter_ranking.deleteMany({
-    where: { trimestry_ranking: tournament_trimestry, quarter_ranking_year: year },
+    where: { trimestry_ranking: tournament_trimestry }
   });
+
+  // Création des nouveaux classements
   await prisma.quarter_ranking.createMany({ data: sorted });
 }
+
 
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);

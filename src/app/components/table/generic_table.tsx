@@ -165,13 +165,13 @@ export function GenericTable<T extends { id: string | number; eliminated?: boole
       );
     }
 
-    if (columnKey === "avatarName") {
+    if (columnKey === "avatar") {
       return (
         <TableCell>
           <div className="flex items-center gap-3">
             <img
               src={
-                (item as any).avatarUrl ||
+                (item as any).avatar ??
                 "/images/ellipseAvatar.png"
               }
               alt={(item as any).avatarName}

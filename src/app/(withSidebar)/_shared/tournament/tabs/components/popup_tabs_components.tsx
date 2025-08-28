@@ -7,7 +7,6 @@ import {
   TournamentRanking
 } from "@/app/types";
 import { NiveauFormBody } from "./popup/add_level_popup";
-import { TournamentFormBody } from "./popup/modif_tournament_popup";
 import { PlayerFormBody } from "./popup/add_player_popup";
 import { useMemo, useRef, useState } from "react";
 import { formatDate } from "@/app/utils/date";
@@ -17,7 +16,6 @@ import { useGenerateTables } from "@/app/hook/useGenerateTables";
 import { useUpdateStack } from "@/app/hook/useUpdateStack";
 import { useCreateLevel } from "@/app/hook/useCreateLevel";
 import { useCreatePlayer } from "@/app/hook/useCreatePlayer";
-import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
 
 interface ModalManagerProps {
   selectedTab: string;
@@ -36,7 +34,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   const updateStackMutation = useUpdateStack();
   const createLevelMutation = useCreateLevel();
   const createPlayerMutation = useCreatePlayer();
-  const updateTournamentMutation = useUpdateTournament();
 
   const levelFormRef = useRef<Partial<TournamentLevel>>({});
   const [playerFormData, setPlayerFormData] = useState({
@@ -60,22 +57,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   );
 
   if (!tournament) return null;
-
-  const handleCreateTournament = async () => {
-    if (!tournament?.id) return;
-
-    try {
-      await updateTournamentMutation.mutateAsync({
-        id: tournament.id,
-        data: tournamentFormData
-      });
-      
-      onClose();
-    } catch (error) {
-      console.error("Erreur modification tournoi :", error);
-      alert("Une erreur est survenue.");
-    }
-  };
 
   const handleCreatePlayer = async () => {
     if (!tournament?.id) return;
@@ -186,24 +167,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
           level={lastLevel}
           onUpdate={(data) => {
             levelFormRef.current = { ...levelFormRef.current, ...data };
-          }}
-        />
-      </GenericModal>
-    );
-  }
-
-  if (selectedTab === "0") {
-    return (
-      <GenericModal
-        isOpen={isOpen}
-        onClose={onClose}
-        title="Modifier tournoi"
-        confirmLabel="Modifier le tournoi"
-        onConfirm={handleCreateTournament}>
-        <TournamentFormBody
-          tournament={tournament}
-          onUpdate={(updatedFields) => {
-            setTournamentFormData((prev) => ({ ...prev, ...updatedFields }));
           }}
         />
       </GenericModal>

@@ -1,14 +1,14 @@
 import { Card, Divider } from "@heroui/react";
 import { BackgroundComponent } from "./components/background_components";
 import { ClassementComponent } from "./components/classement_components";
-import { formatDateFR, formatHourFR } from "@/app/utils/date";
+import { formatDate, formatDateFR, formatHour, formatHourFR, formatHourUTC, parseLocalDateTime, toLocalISOString } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
 export const GeneralTabs = () => {
   const { tournament, levels, registration, classement } =
     useTournamentContext();
-
-  const startDate = tournament?.tournament_start_date
+    
+    const startDate = tournament?.tournament_start_date
     ? new Date(tournament.tournament_start_date)
     : null;
 
@@ -16,14 +16,17 @@ export const GeneralTabs = () => {
     ? new Date(tournament.tournament_open_date)
     : null;
 
-  const startDateString = startDate ? formatDateFR(startDate) : "";
-  const startTimeString = startDate ? formatHourFR(startDate) : "";
+  // Formattage des dates en UTC pour afficher l'heure brute telle qu'en DB
+  const startDateString = startDate ? formatDate(startDate) : "";
+  const startTimeString = startDate ? formatHour(startDate) : "";
 
-  const openDateString = openDate ? formatDateFR(openDate) : "";
-  const openTimeString = openDate ? formatHourFR(openDate) : "";
+  const openDateString = openDate ? formatDate(openDate) : "";
+  const openTimeString = openDate ? formatHour(openDate) : "";
+
+
 
   const durationFormatted = tournament?.estimate_duration
-    ? formatHourFR(tournament.estimate_duration)
+    ? formatHour(tournament.estimate_duration)
     : "";
 
   return (

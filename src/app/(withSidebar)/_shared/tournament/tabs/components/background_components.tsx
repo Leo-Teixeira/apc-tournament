@@ -55,7 +55,6 @@ export const BackgroundComponent: React.FC<BackgroundProps> = ({ tournament }) =
         background: backgroundsToSave,
       });
       setIsModalOpen(false);
-      alert("Fonds mis à jour !");
     } catch (err) {
       alert("Erreur lors de la mise à jour des fonds");
     }

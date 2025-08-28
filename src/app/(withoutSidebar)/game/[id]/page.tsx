@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { Chip, TournamentLevel } from "@/app/types";
-import { toLocalDate, toLocalISOString, formatHourFR, getDurationInMinutes } from "@/app/utils/date";
+import { toLocalDate } from "@/app/utils/date";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
 import LoadingComponent from "@/app/error/loading/page";
@@ -48,19 +48,21 @@ export default function Game() {
   }
 
   const getDurationSince = (startISO: string) => {
-    const start = new Date(toLocalISOString(new Date(startISO)));
-    const diffSeconds = Math.max(0, Math.floor((getNow().getTime() - start.getTime()) / 1000));
-    const h = Math.floor(diffSeconds / 3600);
-    const m = Math.floor((diffSeconds % 3600) / 60);
-    const s = diffSeconds % 60;
+    const start = toLocalDate(startISO);
+    const diff = getNow().getTime() - start.getTime();
+    const total = Math.max(0, Math.floor(diff / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
     return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
-  
+
   const getTimeLeft = (end: string | Date) => {
-    const endDate = typeof end === "string" ? new Date(toLocalISOString(new Date(end))) : end;
-    const diffSeconds = Math.max(0, Math.floor((endDate.getTime() - getNow().getTime()) / 1000));
-    const m = Math.floor(diffSeconds / 60);
-    const s = diffSeconds % 60;
+    const endDate = typeof end === "string" ? toLocalDate(end) : end;
+    const diff = endDate.getTime() - getNow().getTime();
+    const total = Math.max(0, Math.floor(diff / 1000));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
     return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
@@ -80,6 +82,7 @@ export default function Game() {
   
     return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
+  
 
   const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
   const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
@@ -122,10 +125,9 @@ export default function Game() {
   useEffect(() => {
     const refDate = getNow();
 
-    // Trouver currentLevel en convertissant les dates en locales via toLocalISOString
     const cl = levels.find((level) => {
-      const start = new Date(toLocalISOString(new Date(level.level_start)));
-      const end = new Date(toLocalISOString(new Date(level.level_end)));
+      const start = toLocalDate(level.level_start);
+      const end = toLocalDate(level.level_end);
       return refDate >= start && refDate < end;
     });
 
@@ -135,7 +137,6 @@ export default function Game() {
       next = levels.slice(currentIndex + 1).find((lvl) => !lvl.level_pause);
     }
 
-    // Trouver la prochaine pause avec les dates locales
     const np = levels
       .filter((level) => level.level_pause)
       .find((pauseLevel) => toLocalDate(pauseLevel.level_start) > refDate);
@@ -172,7 +173,15 @@ export default function Game() {
             {tournament.tournament_name}
           </h1>
           <p className="font-satoshi text-5xl text-primary_brand-50">
-            {`${nowTime.getDate().toString().padStart(2, "0")}/${(nowTime.getMonth() + 1).toString().padStart(2, "0")}/${nowTime.getFullYear()} ${formatHourFR(nowTime)}`}
+            {`${nowTime.getDate().toString().padStart(2, "0")}/${(
+              nowTime.getMonth() + 1
+            ).toString().padStart(2, "0")}/${nowTime.getFullYear()} ${nowTime
+              .getHours()
+              .toString()
+              .padStart(2, "0")}:${nowTime
+              .getMinutes()
+              .toString()
+              .padStart(2, "0")}`}
           </p>
         </div>
 

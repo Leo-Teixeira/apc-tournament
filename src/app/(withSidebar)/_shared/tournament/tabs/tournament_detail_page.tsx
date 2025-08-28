@@ -36,15 +36,12 @@ export default function TournamentDetailPage() {
     levels,
     registration,
     classement,
-    stacks,
-    refetchAll,
-    refetchOnly
+    trimestry
   } = useTournamentContext();
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
-  const [isShowTableModalOpen, setIsShowTableModalOpen] = useState(false);
   const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] = useState(false);
   const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] = useState(false);
   const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
@@ -86,6 +83,10 @@ export default function TournamentDetailPage() {
     levels.length > 0 &&
     (tournament?.stack?.stack_chip?.length ?? 0) > 0;
 
+  const trimesterObj = trimestry.find(
+    (trimester) => trimester.id === tournament?.tournament_trimestry
+  );
+
   const tabs = useMemo(() => {
     if (!tournament || !registration || !classement) return [];
     return [
@@ -107,7 +108,7 @@ export default function TournamentDetailPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-3">
             <h1 className="font-satoshiBlack text-xl4 max-sm:hidden">
-              {tournament.tournament_name} - {tournament.tournament_trimestry}
+              {tournament.tournament_name} - Trimestre {trimesterObj?.number}
             </h1>
             <button
               onClick={() => router.back()}
@@ -231,13 +232,10 @@ export default function TournamentDetailPage() {
             )}
           </Tabs>
           {tournament.tournament_status !== "finish" && (
-            //! revoir ça demain
             <ButtonTabsComponents
               tournamentStatus={tournament.tournament_status}
               tabsId={selectedTab}
               levels={levels}
-              onModify={onOpen}
-              isModifyLoading={false}
 
               onAddLevel={onOpen}
               isAddLevelLoading={false}

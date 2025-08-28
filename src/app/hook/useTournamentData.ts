@@ -8,6 +8,7 @@ import {
   TableAssignment,
   Stack,
 } from "@/app/types";
+import { Trimester } from "../types/trimester.types";
 
 type TournamentData = {
   tournament: Tournament;
@@ -16,6 +17,7 @@ type TournamentData = {
   levels: TournamentLevel[];
   assignements: TableAssignment[];
   stacks: Stack[];
+  trimestry: Trimester[];
 };
 
 export const useTournamentData = (tournamentId: string) => {
@@ -38,6 +40,7 @@ export const useTournamentData = (tournamentId: string) => {
             (r: Registration) => r.table_assignment
           ) || [],
         stacks: data.stacks,
+        trimestry: data.trimestry
       };
     },
   });

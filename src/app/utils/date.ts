@@ -89,4 +89,12 @@ export function parseLocalDateTime(dateTimeString: string) {
   return new Date(year, month - 1, day, hours, minutes);
 }
 
+export const formatHourUTC = (value: string | Date) => {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "-";
+  const hours = date.getUTCHours().toString().padStart(2, "0");
+  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
 

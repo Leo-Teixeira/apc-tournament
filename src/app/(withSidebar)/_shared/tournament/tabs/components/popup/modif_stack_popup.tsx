@@ -129,26 +129,6 @@ export const StackEditorForm: React.FC<Props> = ({
           }}
         />
 
-        <label className="text-primary_brand-50 font-satoshiBold">
-          Ajouter un jeton
-        </label>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Input
-            type="number"
-            min={1}
-            placeholder="Valeur"
-            value={String(newChipValue)}
-            onChange={(e) => setNewChipValue(parseInt(e.target.value))}
-          />
-          <Input
-            type="text"
-            placeholder="URL de l'image"
-            value={newChipImage}
-            onChange={(e) => setNewChipImage(e.target.value)}
-          />
-          <Button onClick={handleAddChip}>Ajouter</Button>
-        </div>
-
         <Divider />
 
         <p className="text-primary_brand-50 font-satoshiBold">Jetons actuels</p>

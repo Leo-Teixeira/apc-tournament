@@ -3,6 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
+// utilitaire : trouve le prochain siège libre dans une table
+function findNextAvailableSeat(assignments: { table_seat_number: number | null }[]) {
+  const usedSeats = new Set(assignments.map((a) => a.table_seat_number).filter((n): n is number => n !== null));
+  let seat = 1;
+  while (usedSeats.has(seat)) seat++;
+  return seat;
+}
+
 export async function POST(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
@@ -22,12 +30,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
+    // Vérifier si déjà inscrit
     const alreadyRegistered = await prisma.registration.findMany({
       where: {
         tournament_id: BigInt(tournamentId),
-        wp_users: {
-          pseudo_winamax: pseudo
-        }
+        wp_users: { pseudo_winamax: pseudo }
       }
     });
 
@@ -38,6 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Récupérer ou créer le joueur
     let user = await prisma.wp_users.findFirst({
       where: { pseudo_winamax: pseudo }
     });
@@ -52,7 +60,7 @@ export async function POST(req: NextRequest) {
           display_name: `${firstName} ${lastName}`,
           pseudo_winamax: pseudo,
           user_registered: new Date(),
-          photo_url: "",
+          photo_url: ""
         }
       });
 
@@ -60,11 +68,12 @@ export async function POST(req: NextRequest) {
         data: {
           user_id: user.ID,
           meta_key: "wp_capabilities",
-          meta_value: 'a:1:{s:14:"membre_externe";b:1;}'
+          meta_value: 'a:1:{s:16:"um_custom_role_1";b:1;}'
         }
       });
     }
 
+    // Inscrire au tournoi
     await prisma.registration.create({
       data: {
         user_id: user.ID,
@@ -87,65 +96,48 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const hasFreeSpot = tables.some(
-      (table) => table.table_assignment.length < table.table_capacity
-    );
+    // Récupérer la registration nouvellement créée
+    const newRegistration = await prisma.registration.findFirst({
+      where: { user_id: user.ID, tournament_id: BigInt(tournamentId) }
+    });
 
-    if (!hasFreeSpot) {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tournament/${tournamentId}/table/regenerate`,
-        {
-          method: "POST"
-        }
-      );
-
-      if (!res.ok) {
-        return NextResponse.json(
-          { error: "No available table and failed to regenerate" },
-          { status: 500 }
-        );
-      }
-
+    if (!newRegistration) {
       return NextResponse.json(
-        serializeBigInt({
-          message: "Tables regenerated and player added"
-        })
+        { error: "Registration not created properly" },
+        { status: 500 }
       );
     }
 
-    const newRegistration = await prisma.registration.findFirst({
-      where: {
-        user_id: user.ID,
-        tournament_id: BigInt(tournamentId)
+    // --- Choix de la table ---
+    // On trie par nombre de joueurs
+    const minCount = Math.min(...tables.map(t => t.table_assignment.length));
+    const candidateTables = tables.filter(t => t.table_assignment.length === minCount);
+
+    // Si plusieurs tables ont le même nombre de joueurs, on tire au hasard
+    const targetTable = candidateTables[Math.floor(Math.random() * candidateTables.length)];
+
+    // Trouver le prochain siège libre
+    const seatNumber = findNextAvailableSeat(targetTable.table_assignment);
+
+    // Assigner le joueur
+    await prisma.table_assignment.create({
+      data: {
+        registration_id: newRegistration.id,
+        table_id: targetTable.id,
+        table_seat_number: seatNumber,
+        eliminated: false,
+        user_kill_id: null
       }
     });
 
-    const targetTable = tables
-      .filter((t) => t.table_assignment.length < t.table_capacity)
-      .sort((a, b) => a.table_assignment.length - b.table_assignment.length)[0];
-
-    if (targetTable && newRegistration) {
-      await prisma.table_assignment.create({
-        data: {
-          registration_id: newRegistration.id,
-          table_id: targetTable.id,
-          table_seat_number: targetTable.table_assignment.length + 1,
-          eliminated: false,
-          user_kill_id: null
-        }
-      });
-    }
-
     return NextResponse.json(
       serializeBigInt({
-        message: "Player registered and assigned to a table"
+        message: "Player registered and assigned to the least filled table"
       })
     );
+
   } catch (error) {
     console.error("Error registering player:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

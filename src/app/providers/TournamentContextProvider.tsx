@@ -9,6 +9,7 @@ import {
   Stack
 } from "@/app/types";
 import { useTournamentData } from "../hook/useTournamentData";
+import { Trimester } from "../types/trimester.types";
 
 type TournamentContextType = {
   tournament?: Tournament;
@@ -17,6 +18,7 @@ type TournamentContextType = {
   classement: TournamentRanking[];
   assignements: TableAssignment[];
   stacks: Stack[];
+  trimestry: Trimester[];
   refetchAll: () => void;
   refetchOnly: () => void;
 };
@@ -43,6 +45,7 @@ export const TournamentProvider = ({
         classement: data?.classement ?? [],
         assignements: data?.assignements ?? [],
         stacks: data?.stacks ?? [],
+        trimestry: data?.trimestry ?? [],
         refetchAll: () => refetch(),
         refetchOnly: () => refetchStatusOnly?.()
       }}>

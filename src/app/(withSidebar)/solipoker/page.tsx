@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { GenericTable } from "../../components/table/generic_table";
 import { STRINGS } from "../../constants/string";
 import { standingsColumns } from "../../components/table/presets/standings.config";
@@ -12,15 +11,8 @@ import {
 import { tournamentColumns } from "../../components/table/presets/tournament.config";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Delete02Icon,
-  PencilEdit02Icon,
   ViewIcon,
 } from "@hugeicons/core-free-icons";
-import { GenericModal } from "@/app/components/popup";
-import { TournamentFormBody } from "../_shared/tournament/tabs/components/popup/modif_tournament_popup";
-import { Tournament } from "@/app/types";
-import { useUpdateTournament } from "@/app/hook/useUpdateTournament";
-import { useDeleteTournament } from "@/app/hook/useDeleteTournament";
 import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
 import TabBar from "../../components/tabBar";
 import { TournamentMobileCards } from "../../components/tournament-mobile-cards";
@@ -30,20 +22,7 @@ export default function SoliPokerHome() {
 
   const { data, isLoading } = useTournamentDataByCategory("solipoker");
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
-  const [tournamentFormData, setTournamentFormData] = useState<
-    Partial<Tournament>
-  >({});
-  const [tournamentToDelete, setTournamentToDelete] =
-    useState<TournamentRow | null>(null);
-  const [itemSelected, setItemSelected] = useState<TournamentRow | null>(null);
-
-  const updateTournamentMutation = useUpdateTournament();
-  const deleteTournamentMutation = useDeleteTournament();
-
   const tournamentRows = data?.tournamentRows ?? [];
-  const tournaments = data?.tournaments ?? [];
   const quarterRankingRows = data?.quarterRankingRows ?? {
     T1: [],
     T2: [],
@@ -58,29 +37,6 @@ export default function SoliPokerHome() {
         onClick: () => window.open(`/solipoker/${item.id}`, "_self"),
       },
     ];
-
-    if (item.status !== "finish") {
-      actions.push({
-        tooltip: "Éditer",
-        icon: <HugeiconsIcon icon={PencilEdit02Icon} size={20} strokeWidth={1.5} />,
-        onClick: () => {
-          setItemSelected(item);
-          setIsDeleteModalOpen(false);
-          setIsModifyModalOpen(true);
-        },
-      });
-
-      actions.push({
-        tooltip: "Supprimer",
-        icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
-        onClick: () => {
-          setItemSelected(item);
-          setTournamentToDelete(item);
-          setIsDeleteModalOpen(true);
-        },
-        color: "danger",
-      });
-    }
 
     return actions;
   };
@@ -164,68 +120,6 @@ export default function SoliPokerHome() {
           ))}
         </div>
       </div>
-
-      {/* Modals */}
-      <GenericModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setTournamentToDelete(null);
-          setItemSelected(null);
-        }}
-        title="Supprimer le tournoi"
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
-        onConfirm={async () => {
-          if (!tournamentToDelete) return;
-
-          try {
-            await deleteTournamentMutation.mutateAsync(tournamentToDelete.id);
-            setIsDeleteModalOpen(false);
-            setTournamentToDelete(null);
-            setItemSelected(null);
-          } catch (error) {
-            console.error("Erreur suppression tournoi :", error);
-            alert("Une erreur est survenue.");
-          }
-        }}
-      >
-        <p>
-          Es-tu sûr de vouloir supprimer le tournoi{" "}
-          <b>{tournamentToDelete?.name}</b> ?
-        </p>
-      </GenericModal>
-
-      <GenericModal
-        isOpen={isModifyModalOpen}
-        onClose={() => setIsModifyModalOpen(false)}
-        title="Modifier tournoi"
-        confirmLabel="Modifier le tournoi"
-        onConfirm={async () => {
-          if (!itemSelected) return;
-
-          try {
-            await updateTournamentMutation.mutateAsync({
-              id: Number(itemSelected.id),
-              data: tournamentFormData,
-            });
-
-            setIsModifyModalOpen(false);
-          } catch (error) {
-            console.error("Erreur modification tournoi :", error);
-            alert("Une erreur est survenue.");
-          }
-        }}
-      >
-        <TournamentFormBody
-          tournament={tournaments.find(
-            (t) => t.id == Number(itemSelected?.id)
-          )}
-          onUpdate={(updatedFields) => {
-            setTournamentFormData((prev) => ({ ...prev, ...updatedFields }));
-          }}
-        />
-      </GenericModal>
     </div>
   );
 }
