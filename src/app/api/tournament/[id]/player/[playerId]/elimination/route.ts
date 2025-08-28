@@ -62,123 +62,6 @@ async function getScoreAndRankingPosition(
   return { ranking_position, score, tournament_category: tournament.tournament_category, totalRegistrations };
 }
 
-async function updateQuarterRanking(tournamentId: number) {
-  // Seul APT et SitAndGo ont un classement agrégé
-  const tournament = await prisma.tournament.findUnique({
-    where: { id: BigInt(tournamentId) },
-    select: { tournament_category: true, tournament_trimestry: true, tournament_start_date: true }
-  });
-  if (!tournament) return;
-
-  if (
-    tournament.tournament_category !== "APT" &&
-    tournament.tournament_category !== "SITANDGO"
-  ) {
-    // Aucun classement stocké pour les autres catégories
-    return;
-  }
-
-  const year = tournament.tournament_start_date.getFullYear();
-  const { tournament_category, tournament_trimestry } = tournament;
-
-  // Trouver les tournois liés
-  const relatedTournaments = await prisma.tournament.findMany({
-    where: {
-      tournament_category,
-      tournament_trimestry,
-      tournament_start_date: {
-        gte: new Date(`${year}-01-01T00:00:00Z`),
-        lt: new Date(`${year + 1}-01-01T00:00:00Z`)
-      }
-    },
-    select: { id: true }
-  });
-
-  const relatedIds = relatedTournaments.map((t) => t.id);
-
-  // Récupérer les classements liés
-  const rankings = await prisma.tournament_ranking.findMany({
-    where: { tournament_id: { in: relatedIds } },
-    select: {
-      registration: { select: { user_id: true } },
-      ranking_score: true
-    }
-  });
-
-  // Extraire user_ids
-  const userIds = rankings.map(r => r.registration.user_id);
-
-  // Récupérer les rôles des utilisateurs concernés
-  const userRolesMeta = await prisma.wp_usermeta.findMany({
-    where: {
-      user_id: { in: userIds },
-      meta_key: "wp_capabilities",
-    },
-    select: {
-      user_id: true,
-      meta_value: true,
-    }
-  });
-
-  // Extraction rôle depuis sérialisation PHP
-  function extractRoleFromSerialized(serialized: string | null | undefined): string | null {
-    if (!serialized) return null;
-    const match = serialized.match(/s:\d+:"(.+?)";b:1;/);
-    return match ? match[1] : null;
-  }
-
-  // Map userId -> rôle
-  const roleMap = new Map<bigint, string | null>();
-  for (const meta of userRolesMeta) {
-    const role = extractRoleFromSerialized(meta.meta_value);
-    roleMap.set(meta.user_id, role);
-  }
-
-  // Filtrer les scores pour exclure role "um_invite"
-  const scoreByUser: Record<string, number> = {};
-  for (const r of rankings) {
-    const userId = r.registration.user_id;
-    const role = roleMap.get(userId);
-    if (role !== "um_invite") {
-      const userIdStr = userId.toString();
-      scoreByUser[userIdStr] = (scoreByUser[userIdStr] ?? 0) + r.ranking_score;
-    }
-  }
-
-  // Trouver la saison d'après la date début tournoi
-  const season = await prisma.season.findFirst({
-    where: {
-      start_date: { lte: tournament.tournament_start_date },
-      end_date: { gte: tournament.tournament_start_date }
-    }
-  });
-
-  if (!season) {
-    throw new Error(`No season found for year ${year}`);
-  }
-
-  // Construire le classement agrégé trié
-  const sorted = Object.entries(scoreByUser)
-    .map(([userId, score]) => ({ userId: BigInt(userId), score }))
-    .sort((a, b) => b.score - a.score)
-    .map((entry, i) => ({
-      user_id: entry.userId,
-      aggregated_score: entry.score,
-      position: i + 1,
-      trimestry_ranking: tournament_trimestry,
-      tournament_id: relatedIds[0],
-    }));
-
-  // Suppression des anciens classements sur ce trimestre
-  await prisma.quarter_ranking.deleteMany({
-    where: { trimestry_ranking: tournament_trimestry }
-  });
-
-  // Création des nouveaux classements
-  await prisma.quarter_ranking.createMany({ data: sorted });
-}
-
-
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
   if (!tournament || !player) {
@@ -414,8 +297,6 @@ export async function PUT(req: NextRequest) {
         where: { id: BigInt(tournamentId) },
         data: { tournament_status: tournament_tournament_status.finish },
       });
-
-      await updateQuarterRanking(tournamentId);
     }
 
     return NextResponse.json(

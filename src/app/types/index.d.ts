@@ -5,7 +5,6 @@ export * from "./tournament_level.types";
 export * from "./registration.types";
 export * from "./tournament_ranking.types";
 export * from "./tournament_table.types";
-export * from "./quarter_ranking.types";
 export * from "./table_assignement.types";
 export * from "./stack.types";
 export * from "./helpers";

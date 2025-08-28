@@ -126,15 +126,6 @@ exports.Prisma.ChipScalarFieldEnum = {
   chip_image: 'chip_image'
 };
 
-exports.Prisma.Quarter_rankingScalarFieldEnum = {
-  id: 'id',
-  user_id: 'user_id',
-  trimestry_ranking: 'trimestry_ranking',
-  aggregated_score: 'aggregated_score',
-  position: 'position',
-  tournament_id: 'tournament_id'
-};
-
 exports.Prisma.RegistrationScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
@@ -790,7 +781,6 @@ exports.season_status = exports.$Enums.season_status = {
 
 exports.Prisma.ModelName = {
   chip: 'chip',
-  quarter_ranking: 'quarter_ranking',
   registration: 'registration',
   stack: 'stack',
   table_assignment: 'table_assignment',

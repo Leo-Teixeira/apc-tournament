@@ -16,23 +16,6 @@ model chip {
   stack_chip stack_chip[]
 }
 
-model quarter_ranking {
-  id                BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
-  user_id           BigInt     @db.UnsignedBigInt
-  trimestry_ranking BigInt
-  aggregated_score  Int
-  position          Int
-  tournament_id     BigInt     @db.UnsignedBigInt
-  wp_users          wp_users   @relation(fields: [user_id], references: [ID], onDelete: Cascade, map: "quarter_ranking_ibfk_1")
-  tournament        tournament @relation(fields: [tournament_id], references: [id], onUpdate: Restrict, map: "quarter_ranking_ibfk_2")
-  trimester         trimester  @relation(fields: [trimestry_ranking], references: [id], onUpdate: Restrict, map: "quarter_ranking_ibfk_3")
-
-  @@index([user_id], map: "user_id")
-  @@index([tournament_id], map: "tournament_id")
-  @@index([position], map: "position_idx")
-  @@index([trimestry_ranking], map: "trimestry_ranking")
-}
-
 model registration {
   id                                                           BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
   user_id                                                      BigInt               @db.UnsignedBigInt
@@ -93,7 +76,6 @@ model tournament {
   tournament_pause_date   DateTime?                      @db.Date
   tournament_background_1 String?                        @db.VarChar(255)
   tournament_background_2 String?                        @db.VarChar(255)
-  quarter_ranking         quarter_ranking[]
   registration            registration[]
   stack                   stack                          @relation(fields: [tournament_stack], references: [id], onUpdate: Restrict, map: "tournament_ibfk_1")
   tournament_level        tournament_level[]
@@ -435,19 +417,18 @@ model wp_usermeta {
 }
 
 model wp_users {
-  ID                  BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
-  user_login          String            @default("") @db.VarChar(60)
-  user_pass           String            @default("") @db.VarChar(255)
-  user_nicename       String            @default("") @db.VarChar(50)
-  user_email          String            @default("") @db.VarChar(100)
-  user_url            String            @default("") @db.VarChar(100)
-  user_registered     DateTime          @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
-  user_activation_key String            @default("") @db.VarChar(255)
-  user_status         Int               @default(0)
-  display_name        String            @default("") @db.VarChar(250)
-  pseudo_winamax      String            @db.VarChar(255)
-  photo_url           String            @db.VarChar(255)
-  quarter_ranking     quarter_ranking[]
+  ID                  BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  user_login          String         @default("") @db.VarChar(60)
+  user_pass           String         @default("") @db.VarChar(255)
+  user_nicename       String         @default("") @db.VarChar(50)
+  user_email          String         @default("") @db.VarChar(100)
+  user_url            String         @default("") @db.VarChar(100)
+  user_registered     DateTime       @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
+  user_activation_key String         @default("") @db.VarChar(255)
+  user_status         Int            @default(0)
+  display_name        String         @default("") @db.VarChar(250)
+  pseudo_winamax      String         @db.VarChar(255)
+  photo_url           String         @db.VarChar(255)
   registration        registration[]
   repechage           repechage[]
 
@@ -589,14 +570,13 @@ model season {
 }
 
 model trimester {
-  id              BigInt            @id @default(autoincrement())
-  season_id       BigInt
-  number          Int
-  start_date      DateTime          @db.Date
-  end_date        DateTime          @db.Date
-  quarter_ranking quarter_ranking[]
-  repechage       repechage[]
-  season          season            @relation(fields: [season_id], references: [id], onUpdate: Restrict, map: "trimester_ibfk_1")
+  id         BigInt      @id @default(autoincrement())
+  season_id  BigInt
+  number     Int
+  start_date DateTime    @db.Date
+  end_date   DateTime    @db.Date
+  repechage  repechage[]
+  season     season      @relation(fields: [season_id], references: [id], onUpdate: Restrict, map: "trimester_ibfk_1")
 
   @@index([season_id], map: "season_id")
 }

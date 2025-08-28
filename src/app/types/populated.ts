@@ -1,5 +1,4 @@
 import { Populated } from "./helper";
-import { QuarterRanking } from "./quarter_ranking.types";
 import { Registration } from "./registration.types";
 import { Stack } from "./stack.types";
 import { TableAssignment } from "./table_assignement.types";
@@ -24,11 +23,6 @@ export type TournamentRankingPopulated = Populated<
 
 export type TournamentTablePopulated = Populated<
   TournamentTable,
-  "tournament_id"
->;
-
-export type QuarterRankingPopulated = Populated<
-  QuarterRanking,
   "tournament_id"
 >;
 

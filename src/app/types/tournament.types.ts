@@ -1,4 +1,3 @@
-import { QuarterRanking } from "./quarter_ranking.types";
 import { Registration } from "./registration.types";
 import { Stack } from "./stack.types";
 import { TournamentLevel } from "./tournament_level.types";
@@ -19,7 +18,6 @@ export type Tournament = {
   tournament_trimestry: number;
   tournament_category: "APT" | "Special" | "Sit&Go" | "Superfinale" | "Solipoker";
   tournament_status: "in_coming" | "finish" | "start";
-  quarter_ranking?: QuarterRanking[];
   registration?: Registration[];
   tournament_level?: TournamentLevel[];
   tournament_ranking?: TournamentRanking[];

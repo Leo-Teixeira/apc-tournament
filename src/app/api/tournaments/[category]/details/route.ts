@@ -43,29 +43,38 @@ export async function GET(req: NextRequest) {
             }
           }
         },
-        quarter_ranking: {
+      }
+    });
+
+    const trimestry = await prisma.trimester.findMany();
+
+    const seasons = await prisma.season.findMany();
+
+    // Replace the existing tournament_ranking query with this:
+    const tournament_ranking = await prisma.tournament_ranking.findMany({
+      include: {
+        tournament: true, // Include the related tournament details
+        registration: {   // Optionally include registration if needed
           include: {
             wp_users: {
               select: {
                 ID: true,
                 pseudo_winamax: true,
                 display_name: true,
-                user_email: true
-              }
-            }
-          }
+                user_email: true,
+              },
+            },
+          },
         },
-      }
+      },
     });
 
-    const trimestry = await prisma.trimester.findMany();
 
     // Séparer les données
     const tournamentss = result;
     const registrations = result.flatMap(t => t.registration);
-    const quarterRanking = result.flatMap(t => t.quarter_ranking);
 
-    const responseData = serializeBigInt({ tournamentss, registrations, quarterRanking, trimestry });
+    const responseData = serializeBigInt({ tournamentss, registrations, trimestry, seasons, tournament_ranking });
 
 
     console.log(`✅ Données récupérées avec succès pour la catégorie : ${mappedCategory}`);

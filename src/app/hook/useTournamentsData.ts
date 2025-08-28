@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { mapTournamentsToRow } from "@/app/lib/adapter/tournament.adapter";
 import { mapQuarterRankingByTrimestry } from "@/app/lib/adapter/quarter_ranking.adapter";
-import { Tournament } from "@/app/types";
+import { Season, Tournament } from "@/app/types";
 import { StandingRow, TournamentRow } from "../components/table/table.types";
 import { Trimester } from "../types/trimester.types";
 
@@ -34,10 +34,14 @@ export const useTournamentDataByCategory = (category: string) => {
           data.trimestry
         ),
         quarterRankingRows: mapQuarterRankingByTrimestry(
-          data.quarterRanking,
           category,
-          data.trimestry
+          data.trimestry,
+          data.tournamentss,          // ou data.tournaments selon nom API
+          data.registrations,
+          data.seasons,
+          data.tournament_ranking     // ce tableau doit venir de votre backend avec les données détaillées
         ),
+        
         trimestry: data.trimestry
       };
     },

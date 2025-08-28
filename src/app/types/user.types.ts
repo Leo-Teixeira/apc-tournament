@@ -1,4 +1,3 @@
-import { QuarterRanking } from "./quarter_ranking.types";
 import { Registration } from "./registration.types";
 
 export type WPUser = {
@@ -14,7 +13,6 @@ export type WPUser = {
   display_name: string;
   pseudo_winamax: string;
   photo_url?: string;
-  quarter_ranking?: QuarterRanking[];
   registration?: Registration[];
 };
 

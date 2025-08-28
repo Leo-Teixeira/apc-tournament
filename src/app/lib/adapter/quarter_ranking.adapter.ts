@@ -1,7 +1,7 @@
 import { StandingRow } from "@/app/components/table/table.types";
 import {
-  QuarterRanking,
   Registration,
+  Season,
   Tournament,
   TournamentRanking,
 } from "@/app/types";
@@ -11,57 +11,73 @@ import { WPUser } from "@/app/types/user.types";
 type TrimestryKey = "T1" | "T2" | "T3";
 
 export const mapQuarterRankingByTrimestry = (
-  rankings: QuarterRanking[],
   category: string,
-  trimesters: Trimester[]
+  trimesters: Trimester[],
+  tournaments: Tournament[],
+  registrations: Registration[],
+  seasons: Season[],
+  rankings: TournamentRanking[]
 ): Record<TrimestryKey, StandingRow[]> => {
+  // Initialiser un objet résultat avec 3 clés pour chaque trimestre
   const result: Record<TrimestryKey, StandingRow[]> = {
     T1: [],
     T2: [],
     T3: [],
   };
 
-  rankings.forEach((ranking) => {
-    if (
-      ranking.tournament &&
-      ranking.wp_users &&
-      ranking.tournament.tournament_category === category
-    ) {
-      // Trouver le trimestre lié au tournoi
-      const trimesterObj = trimesters.find(
-        (trimester) => trimester.id === ranking.tournament?.tournament_trimestry
-      );
+  rankings.forEach((ranking, index) => {
 
-      // On prend le numéro du trimestre pour créer la clé TrimestryKey (ex: "T1", "T2", "T3")
-      // Si trimesterObj absent, on abandonne ce ranking
-      if (!trimesterObj) return;
+    // Vérifier la présence du tournoi lié au ranking
+    if (!ranking.tournament) {
+      return;
+    }
 
-      const trimestryKey = `T${trimesterObj.number}` as TrimestryKey;
+    // Vérifier la présence de l'utilisateur lié à la registration
+    if (!ranking.registration?.wp_users) {
+      return;
+    }
 
-      // Vérifier que la clé existe dans le résultat
-      if (!(trimestryKey in result)) return;
+    // Filtrer par catégorie, insensible à la casse
+    if (ranking.tournament.tournament_category.toUpperCase() !== category.toUpperCase()) {
+      return;
+    }
 
-      // Chercher si l'utilisateur existe déjà dans ce trimestre
-      const existingUser = result[trimestryKey].find(
-        (rank) => Number(rank.id) === ranking.wp_users?.ID
-      );
+    // Récupérer le trimestre correspondant au tournoi
+    const trimesterObj = trimesters.find(
+      (trimester) => trimester.id === ranking.tournament?.tournament_trimestry
+    );
 
-      if (existingUser) {
-        // Ajouter les points si déjà présent
-        existingUser.points += ranking.aggregated_score;
-      } else {
-        // Sinon ajout du nouveau joueur
-        result[trimestryKey].push({
-          id: String(ranking.wp_users.ID),
-          place: 0, // sera recalculé
-          name: `Joueur ${ranking.wp_users.pseudo_winamax}`,
-          points: ranking.aggregated_score,
-        });
-      }
+    if (!trimesterObj) {
+      return;
+    }
+
+    // Construire la clé trimestre (ex: T1, T2, T3)
+    const trimestryKey = `T${trimesterObj.number}` as TrimestryKey;
+    if (!(trimestryKey in result)) {
+      return;
+    }
+
+    // Récupérer l'ID et le pseudo du joueur
+    const userId = ranking.registration.id;
+    const userName = ranking.registration.wp_users.pseudo_winamax || `Joueur ${userId}`;
+
+    // Chercher si le joueur est déjà dans le tableau du trimestre
+    const existingUser = result[trimestryKey].find((user) => user.name === userName);
+    if (existingUser) {
+      // Additionner les points si déjà existant
+      existingUser.points += ranking.ranking_score ?? 0;
+    } else {
+      // Ajouter un nouvel utilisateur si pas trouvé
+      result[trimestryKey].push({
+        id: String(userId),
+        place: 0, // place sera calculée plus tard
+        name: userName,
+        points: ranking.ranking_score ?? 0,
+      });
     }
   });
 
-  // Recalcul des places après agrégation et tri décroissant par points
+  // Trier les joueurs par points décroissants et attribuer les places
   (Object.keys(result) as TrimestryKey[]).forEach((key) => {
     result[key]
       .sort((a, b) => b.points - a.points)
@@ -72,6 +88,8 @@ export const mapQuarterRankingByTrimestry = (
 
   return result;
 };
+
+
 
 export const mapClassementTournament = (
   classement: TournamentRanking[]
