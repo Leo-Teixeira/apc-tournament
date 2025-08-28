@@ -8,8 +8,8 @@ function defaultHeaders() {
     "Access-Control-Allow-Methods": "DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json",
-    "X-PNonce": crypto.randomUUID(), // token unique par requête
-    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "X-PNonce": crypto.randomUUID(),
+    "Cache-Control": "no-cache, no-store, must-revalidate", 
   };
 }
 
