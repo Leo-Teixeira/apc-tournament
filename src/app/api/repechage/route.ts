@@ -8,7 +8,7 @@ function defaultHeaders() {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json",
-    "X-PNonce": crypto.randomUUID(),  // on rajoute un token unique
+    "X-PNonce": crypto.randomUUID(),
     "Cache-Control": "no-cache, no-store, must-revalidate"
   };
 }
@@ -16,10 +16,13 @@ function defaultHeaders() {
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      ...defaultHeaders()
+      ...defaultHeaders(),
+      "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type,X-WP-Nonce" // ajoutez autres headers si besoin
     }
   });
 }
+
 
 export async function POST(req: NextRequest) {
   try {
