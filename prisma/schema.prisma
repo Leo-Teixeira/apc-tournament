@@ -549,12 +549,14 @@ model wp_rank_math_internal_meta {
 }
 
 model repechage {
-  id           BigInt    @id @default(autoincrement())
-  trimester_id BigInt
-  user_id      BigInt    @db.UnsignedBigInt
-  category     String    @db.VarChar(255)
-  trimester    trimester @relation(fields: [trimester_id], references: [id], onUpdate: Restrict, map: "repechage_ibfk_1")
-  wp_users     wp_users  @relation(fields: [user_id], references: [ID], onUpdate: Restrict, map: "repechage_ibfk_2")
+  id               BigInt                     @id @default(autoincrement())
+  trimester_id     BigInt?
+  user_id          BigInt                     @db.UnsignedBigInt
+  category         String                     @db.VarChar(255)
+  repechage_etat   repechage_repechage_etat
+  repechage_period repechage_repechage_period
+  trimester        trimester?                 @relation(fields: [trimester_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "repechage_ibfk_1")
+  wp_users         wp_users                   @relation(fields: [user_id], references: [ID], onUpdate: Restrict, map: "repechage_ibfk_2")
 
   @@index([trimester_id], map: "trimester_id")
   @@index([user_id], map: "user_id")
@@ -605,4 +607,14 @@ enum tournament_tournament_category {
   SITANDGO
   SUPERFINALE
   SOLIPOKER
+}
+
+enum repechage_repechage_etat {
+  qualif
+  repecher
+}
+
+enum repechage_repechage_period {
+  trimestry
+  annuel
 }

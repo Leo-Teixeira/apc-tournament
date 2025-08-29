@@ -516,7 +516,9 @@ exports.Prisma.RepechageScalarFieldEnum = {
   id: 'id',
   trimester_id: 'trimester_id',
   user_id: 'user_id',
-  category: 'category'
+  category: 'category',
+  repechage_etat: 'repechage_etat',
+  repechage_period: 'repechage_period'
 };
 
 exports.Prisma.SeasonScalarFieldEnum = {
@@ -771,6 +773,16 @@ exports.tournament_tournament_status = exports.$Enums.tournament_tournament_stat
   in_coming: 'in_coming',
   finish: 'finish',
   start: 'start'
+};
+
+exports.repechage_repechage_etat = exports.$Enums.repechage_repechage_etat = {
+  qualif: 'qualif',
+  repecher: 'repecher'
+};
+
+exports.repechage_repechage_period = exports.$Enums.repechage_repechage_period = {
+  trimestry: 'trimestry',
+  annuel: 'annuel'
 };
 
 exports.season_status = exports.$Enums.season_status = {

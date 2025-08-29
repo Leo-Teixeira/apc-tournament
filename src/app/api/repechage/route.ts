@@ -14,7 +14,6 @@ function defaultHeaders() {
   };
 }
 
-
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
@@ -23,13 +22,12 @@ export async function OPTIONS() {
   });
 }
 
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     console.log("Received body:", body);
 
-    const { userId, trimesterNumber, category } = body;
+    const { userId, trimesterNumber, category, repechage_etat, repechage_period } = body;
 
     const currentSeason = await prisma.season.findFirst({
       where: { status: "in_progress" },
@@ -53,11 +51,31 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Recherche du trimestre si trimesterNumber est donné
+    let trimester_id = null;
+    if (trimesterNumber !== undefined && trimesterNumber !== null) {
+      const trimester = await prisma.trimester.findFirst({
+        where: {
+          number: trimesterNumber,
+          season_id: currentSeason.id,
+        },
+      });
+      if (!trimester) {
+        return new Response(JSON.stringify({ error: "Trimester not found" }), {
+          status: 400,
+          headers: { ...defaultHeaders() }
+        });
+      }
+      trimester_id = trimester.id;
+    }
+
     const repechageEntry = await prisma.repechage.create({
       data: {
-        trimester_id: trimesterNumber,
+        trimester_id: trimester_id,
         user_id: BigInt(userId),
         category: category.trim(),
+        repechage_etat: repechage_etat,
+        repechage_period: repechage_period,
       },
     });
 

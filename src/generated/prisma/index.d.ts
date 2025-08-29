@@ -265,6 +265,22 @@ export const tournament_tournament_category: {
 
 export type tournament_tournament_category = (typeof tournament_tournament_category)[keyof typeof tournament_tournament_category]
 
+
+export const repechage_repechage_etat: {
+  qualif: 'qualif',
+  repecher: 'repecher'
+};
+
+export type repechage_repechage_etat = (typeof repechage_repechage_etat)[keyof typeof repechage_repechage_etat]
+
+
+export const repechage_repechage_period: {
+  trimestry: 'trimestry',
+  annuel: 'annuel'
+};
+
+export type repechage_repechage_period = (typeof repechage_repechage_period)[keyof typeof repechage_repechage_period]
+
 }
 
 export type registration_statut = $Enums.registration_statut
@@ -282,6 +298,14 @@ export const season_status: typeof $Enums.season_status
 export type tournament_tournament_category = $Enums.tournament_tournament_category
 
 export const tournament_tournament_category: typeof $Enums.tournament_tournament_category
+
+export type repechage_repechage_etat = $Enums.repechage_repechage_etat
+
+export const repechage_repechage_etat: typeof $Enums.repechage_repechage_etat
+
+export type repechage_repechage_period = $Enums.repechage_repechage_period
+
+export const repechage_repechage_period: typeof $Enums.repechage_repechage_period
 
 /**
  * ##  Prisma Client ʲˢ
@@ -42535,6 +42559,8 @@ export namespace Prisma {
     trimester_id: bigint | null
     user_id: bigint | null
     category: string | null
+    repechage_etat: $Enums.repechage_repechage_etat | null
+    repechage_period: $Enums.repechage_repechage_period | null
   }
 
   export type RepechageMaxAggregateOutputType = {
@@ -42542,6 +42568,8 @@ export namespace Prisma {
     trimester_id: bigint | null
     user_id: bigint | null
     category: string | null
+    repechage_etat: $Enums.repechage_repechage_etat | null
+    repechage_period: $Enums.repechage_repechage_period | null
   }
 
   export type RepechageCountAggregateOutputType = {
@@ -42549,6 +42577,8 @@ export namespace Prisma {
     trimester_id: number
     user_id: number
     category: number
+    repechage_etat: number
+    repechage_period: number
     _all: number
   }
 
@@ -42570,6 +42600,8 @@ export namespace Prisma {
     trimester_id?: true
     user_id?: true
     category?: true
+    repechage_etat?: true
+    repechage_period?: true
   }
 
   export type RepechageMaxAggregateInputType = {
@@ -42577,6 +42609,8 @@ export namespace Prisma {
     trimester_id?: true
     user_id?: true
     category?: true
+    repechage_etat?: true
+    repechage_period?: true
   }
 
   export type RepechageCountAggregateInputType = {
@@ -42584,6 +42618,8 @@ export namespace Prisma {
     trimester_id?: true
     user_id?: true
     category?: true
+    repechage_etat?: true
+    repechage_period?: true
     _all?: true
   }
 
@@ -42675,9 +42711,11 @@ export namespace Prisma {
 
   export type RepechageGroupByOutputType = {
     id: bigint
-    trimester_id: bigint
+    trimester_id: bigint | null
     user_id: bigint
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
     _count: RepechageCountAggregateOutputType | null
     _avg: RepechageAvgAggregateOutputType | null
     _sum: RepechageSumAggregateOutputType | null
@@ -42704,7 +42742,9 @@ export namespace Prisma {
     trimester_id?: boolean
     user_id?: boolean
     category?: boolean
-    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    repechage_etat?: boolean
+    repechage_period?: boolean
+    trimester?: boolean | repechage$trimesterArgs<ExtArgs>
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["repechage"]>
 
@@ -42715,25 +42755,29 @@ export namespace Prisma {
     trimester_id?: boolean
     user_id?: boolean
     category?: boolean
+    repechage_etat?: boolean
+    repechage_period?: boolean
   }
 
-  export type repechageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "trimester_id" | "user_id" | "category", ExtArgs["result"]["repechage"]>
+  export type repechageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "trimester_id" | "user_id" | "category" | "repechage_etat" | "repechage_period", ExtArgs["result"]["repechage"]>
   export type repechageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    trimester?: boolean | trimesterDefaultArgs<ExtArgs>
+    trimester?: boolean | repechage$trimesterArgs<ExtArgs>
     wp_users?: boolean | wp_usersDefaultArgs<ExtArgs>
   }
 
   export type $repechagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "repechage"
     objects: {
-      trimester: Prisma.$trimesterPayload<ExtArgs>
+      trimester: Prisma.$trimesterPayload<ExtArgs> | null
       wp_users: Prisma.$wp_usersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      trimester_id: bigint
+      trimester_id: bigint | null
       user_id: bigint
       category: string
+      repechage_etat: $Enums.repechage_repechage_etat
+      repechage_period: $Enums.repechage_repechage_period
     }, ExtArgs["result"]["repechage"]>
     composites: {}
   }
@@ -43074,7 +43118,7 @@ export namespace Prisma {
    */
   export interface Prisma__repechageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    trimester<T extends trimesterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, trimesterDefaultArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    trimester<T extends repechage$trimesterArgs<ExtArgs> = {}>(args?: Subset<T, repechage$trimesterArgs<ExtArgs>>): Prisma__trimesterClient<$Result.GetResult<Prisma.$trimesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     wp_users<T extends wp_usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, wp_usersDefaultArgs<ExtArgs>>): Prisma__wp_usersClient<$Result.GetResult<Prisma.$wp_usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -43109,6 +43153,8 @@ export namespace Prisma {
     readonly trimester_id: FieldRef<"repechage", 'BigInt'>
     readonly user_id: FieldRef<"repechage", 'BigInt'>
     readonly category: FieldRef<"repechage", 'String'>
+    readonly repechage_etat: FieldRef<"repechage", 'repechage_repechage_etat'>
+    readonly repechage_period: FieldRef<"repechage", 'repechage_repechage_period'>
   }
     
 
@@ -43449,6 +43495,25 @@ export namespace Prisma {
      * Limit how many repechages to delete.
      */
     limit?: number
+  }
+
+  /**
+   * repechage.trimester
+   */
+  export type repechage$trimesterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the trimester
+     */
+    select?: trimesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the trimester
+     */
+    omit?: trimesterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: trimesterInclude<ExtArgs> | null
+    where?: trimesterWhereInput
   }
 
   /**
@@ -45987,7 +46052,9 @@ export namespace Prisma {
     id: 'id',
     trimester_id: 'trimester_id',
     user_id: 'user_id',
-    category: 'category'
+    category: 'category',
+    repechage_etat: 'repechage_etat',
+    repechage_period: 'repechage_period'
   };
 
   export type RepechageScalarFieldEnum = (typeof RepechageScalarFieldEnum)[keyof typeof RepechageScalarFieldEnum]
@@ -46405,6 +46472,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'repechage_repechage_etat'
+   */
+  export type Enumrepechage_repechage_etatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'repechage_repechage_etat'>
+    
+
+
+  /**
+   * Reference to a field of type 'repechage_repechage_period'
+   */
+  export type Enumrepechage_repechage_periodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'repechage_repechage_period'>
     
 
 
@@ -49043,18 +49124,22 @@ export namespace Prisma {
     OR?: repechageWhereInput[]
     NOT?: repechageWhereInput | repechageWhereInput[]
     id?: BigIntFilter<"repechage"> | bigint | number
-    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntNullableFilter<"repechage"> | bigint | number | null
     user_id?: BigIntFilter<"repechage"> | bigint | number
     category?: StringFilter<"repechage"> | string
-    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    repechage_etat?: Enumrepechage_repechage_etatFilter<"repechage"> | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFilter<"repechage"> | $Enums.repechage_repechage_period
+    trimester?: XOR<TrimesterNullableScalarRelationFilter, trimesterWhereInput> | null
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
   }
 
   export type repechageOrderByWithRelationInput = {
     id?: SortOrder
-    trimester_id?: SortOrder
+    trimester_id?: SortOrderInput | SortOrder
     user_id?: SortOrder
     category?: SortOrder
+    repechage_etat?: SortOrder
+    repechage_period?: SortOrder
     trimester?: trimesterOrderByWithRelationInput
     wp_users?: wp_usersOrderByWithRelationInput
     _relevance?: repechageOrderByRelevanceInput
@@ -49065,18 +49150,22 @@ export namespace Prisma {
     AND?: repechageWhereInput | repechageWhereInput[]
     OR?: repechageWhereInput[]
     NOT?: repechageWhereInput | repechageWhereInput[]
-    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntNullableFilter<"repechage"> | bigint | number | null
     user_id?: BigIntFilter<"repechage"> | bigint | number
     category?: StringFilter<"repechage"> | string
-    trimester?: XOR<TrimesterScalarRelationFilter, trimesterWhereInput>
+    repechage_etat?: Enumrepechage_repechage_etatFilter<"repechage"> | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFilter<"repechage"> | $Enums.repechage_repechage_period
+    trimester?: XOR<TrimesterNullableScalarRelationFilter, trimesterWhereInput> | null
     wp_users?: XOR<Wp_usersScalarRelationFilter, wp_usersWhereInput>
   }, "id">
 
   export type repechageOrderByWithAggregationInput = {
     id?: SortOrder
-    trimester_id?: SortOrder
+    trimester_id?: SortOrderInput | SortOrder
     user_id?: SortOrder
     category?: SortOrder
+    repechage_etat?: SortOrder
+    repechage_period?: SortOrder
     _count?: repechageCountOrderByAggregateInput
     _avg?: repechageAvgOrderByAggregateInput
     _max?: repechageMaxOrderByAggregateInput
@@ -49089,9 +49178,11 @@ export namespace Prisma {
     OR?: repechageScalarWhereWithAggregatesInput[]
     NOT?: repechageScalarWhereWithAggregatesInput | repechageScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
-    trimester_id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntNullableWithAggregatesFilter<"repechage"> | bigint | number | null
     user_id?: BigIntWithAggregatesFilter<"repechage"> | bigint | number
     category?: StringWithAggregatesFilter<"repechage"> | string
+    repechage_etat?: Enumrepechage_repechage_etatWithAggregatesFilter<"repechage"> | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodWithAggregatesFilter<"repechage"> | $Enums.repechage_repechage_period
   }
 
   export type seasonWhereInput = {
@@ -51997,48 +52088,62 @@ export namespace Prisma {
   export type repechageCreateInput = {
     id?: bigint | number
     category: string
-    trimester: trimesterCreateNestedOneWithoutRepechageInput
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
+    trimester?: trimesterCreateNestedOneWithoutRepechageInput
     wp_users: wp_usersCreateNestedOneWithoutRepechageInput
   }
 
   export type repechageUncheckedCreateInput = {
     id?: bigint | number
-    trimester_id: bigint | number
+    trimester_id?: bigint | number | null
     user_id: bigint | number
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type repechageUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
-    trimester?: trimesterUpdateOneRequiredWithoutRepechageNestedInput
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
+    trimester?: trimesterUpdateOneWithoutRepechageNestedInput
     wp_users?: wp_usersUpdateOneRequiredWithoutRepechageNestedInput
   }
 
   export type repechageUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type repechageCreateManyInput = {
     id?: bigint | number
-    trimester_id: bigint | number
+    trimester_id?: bigint | number | null
     user_id: bigint | number
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type repechageUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type repechageUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type seasonCreateInput = {
@@ -54500,9 +54605,23 @@ export namespace Prisma {
     incoming_link_count?: SortOrder
   }
 
-  export type TrimesterScalarRelationFilter = {
-    is?: trimesterWhereInput
-    isNot?: trimesterWhereInput
+  export type Enumrepechage_repechage_etatFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_etat | Enumrepechage_repechage_etatFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_etat[]
+    notIn?: $Enums.repechage_repechage_etat[]
+    not?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel> | $Enums.repechage_repechage_etat
+  }
+
+  export type Enumrepechage_repechage_periodFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_period | Enumrepechage_repechage_periodFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_period[]
+    notIn?: $Enums.repechage_repechage_period[]
+    not?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel> | $Enums.repechage_repechage_period
+  }
+
+  export type TrimesterNullableScalarRelationFilter = {
+    is?: trimesterWhereInput | null
+    isNot?: trimesterWhereInput | null
   }
 
   export type repechageOrderByRelevanceInput = {
@@ -54516,6 +54635,8 @@ export namespace Prisma {
     trimester_id?: SortOrder
     user_id?: SortOrder
     category?: SortOrder
+    repechage_etat?: SortOrder
+    repechage_period?: SortOrder
   }
 
   export type repechageAvgOrderByAggregateInput = {
@@ -54529,6 +54650,8 @@ export namespace Prisma {
     trimester_id?: SortOrder
     user_id?: SortOrder
     category?: SortOrder
+    repechage_etat?: SortOrder
+    repechage_period?: SortOrder
   }
 
   export type repechageMinOrderByAggregateInput = {
@@ -54536,12 +54659,34 @@ export namespace Prisma {
     trimester_id?: SortOrder
     user_id?: SortOrder
     category?: SortOrder
+    repechage_etat?: SortOrder
+    repechage_period?: SortOrder
   }
 
   export type repechageSumOrderByAggregateInput = {
     id?: SortOrder
     trimester_id?: SortOrder
     user_id?: SortOrder
+  }
+
+  export type Enumrepechage_repechage_etatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_etat | Enumrepechage_repechage_etatFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_etat[]
+    notIn?: $Enums.repechage_repechage_etat[]
+    not?: NestedEnumrepechage_repechage_etatWithAggregatesFilter<$PrismaModel> | $Enums.repechage_repechage_etat
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel>
+    _max?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel>
+  }
+
+  export type Enumrepechage_repechage_periodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_period | Enumrepechage_repechage_periodFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_period[]
+    notIn?: $Enums.repechage_repechage_period[]
+    not?: NestedEnumrepechage_repechage_periodWithAggregatesFilter<$PrismaModel> | $Enums.repechage_repechage_period
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel>
+    _max?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel>
   }
 
   export type Enumseason_statusFilter<$PrismaModel = never> = {
@@ -55522,10 +55667,20 @@ export namespace Prisma {
     connect?: wp_usersWhereUniqueInput
   }
 
-  export type trimesterUpdateOneRequiredWithoutRepechageNestedInput = {
+  export type Enumrepechage_repechage_etatFieldUpdateOperationsInput = {
+    set?: $Enums.repechage_repechage_etat
+  }
+
+  export type Enumrepechage_repechage_periodFieldUpdateOperationsInput = {
+    set?: $Enums.repechage_repechage_period
+  }
+
+  export type trimesterUpdateOneWithoutRepechageNestedInput = {
     create?: XOR<trimesterCreateWithoutRepechageInput, trimesterUncheckedCreateWithoutRepechageInput>
     connectOrCreate?: trimesterCreateOrConnectWithoutRepechageInput
     upsert?: trimesterUpsertWithoutRepechageInput
+    disconnect?: trimesterWhereInput | boolean
+    delete?: trimesterWhereInput | boolean
     connect?: trimesterWhereUniqueInput
     update?: XOR<XOR<trimesterUpdateToOneWithWhereWithoutRepechageInput, trimesterUpdateWithoutRepechageInput>, trimesterUncheckedUpdateWithoutRepechageInput>
   }
@@ -56010,6 +56165,40 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumrepechage_repechage_etatFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_etat | Enumrepechage_repechage_etatFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_etat[]
+    notIn?: $Enums.repechage_repechage_etat[]
+    not?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel> | $Enums.repechage_repechage_etat
+  }
+
+  export type NestedEnumrepechage_repechage_periodFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_period | Enumrepechage_repechage_periodFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_period[]
+    notIn?: $Enums.repechage_repechage_period[]
+    not?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel> | $Enums.repechage_repechage_period
+  }
+
+  export type NestedEnumrepechage_repechage_etatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_etat | Enumrepechage_repechage_etatFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_etat[]
+    notIn?: $Enums.repechage_repechage_etat[]
+    not?: NestedEnumrepechage_repechage_etatWithAggregatesFilter<$PrismaModel> | $Enums.repechage_repechage_etat
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel>
+    _max?: NestedEnumrepechage_repechage_etatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumrepechage_repechage_periodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.repechage_repechage_period | Enumrepechage_repechage_periodFieldRefInput<$PrismaModel>
+    in?: $Enums.repechage_repechage_period[]
+    notIn?: $Enums.repechage_repechage_period[]
+    not?: NestedEnumrepechage_repechage_periodWithAggregatesFilter<$PrismaModel> | $Enums.repechage_repechage_period
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel>
+    _max?: NestedEnumrepechage_repechage_periodFilter<$PrismaModel>
   }
 
   export type NestedEnumseason_statusFilter<$PrismaModel = never> = {
@@ -57451,13 +57640,17 @@ export namespace Prisma {
   export type repechageCreateWithoutWp_usersInput = {
     id?: bigint | number
     category: string
-    trimester: trimesterCreateNestedOneWithoutRepechageInput
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
+    trimester?: trimesterCreateNestedOneWithoutRepechageInput
   }
 
   export type repechageUncheckedCreateWithoutWp_usersInput = {
     id?: bigint | number
-    trimester_id: bigint | number
+    trimester_id?: bigint | number | null
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type repechageCreateOrConnectWithoutWp_usersInput = {
@@ -57529,9 +57722,11 @@ export namespace Prisma {
     OR?: repechageScalarWhereInput[]
     NOT?: repechageScalarWhereInput | repechageScalarWhereInput[]
     id?: BigIntFilter<"repechage"> | bigint | number
-    trimester_id?: BigIntFilter<"repechage"> | bigint | number
+    trimester_id?: BigIntNullableFilter<"repechage"> | bigint | number | null
     user_id?: BigIntFilter<"repechage"> | bigint | number
     category?: StringFilter<"repechage"> | string
+    repechage_etat?: Enumrepechage_repechage_etatFilter<"repechage"> | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFilter<"repechage"> | $Enums.repechage_repechage_period
   }
 
   export type wp_usermetaUpsertWithWhereUniqueWithoutUserInput = {
@@ -57830,6 +58025,8 @@ export namespace Prisma {
   export type repechageCreateWithoutTrimesterInput = {
     id?: bigint | number
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
     wp_users: wp_usersCreateNestedOneWithoutRepechageInput
   }
 
@@ -57837,6 +58034,8 @@ export namespace Prisma {
     id?: bigint | number
     user_id: bigint | number
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type repechageCreateOrConnectWithoutTrimesterInput = {
@@ -58290,8 +58489,10 @@ export namespace Prisma {
 
   export type repechageCreateManyWp_usersInput = {
     id?: bigint | number
-    trimester_id: bigint | number
+    trimester_id?: bigint | number | null
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type wp_usermetaCreateManyUserInput = {
@@ -58330,19 +58531,25 @@ export namespace Prisma {
   export type repechageUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
-    trimester?: trimesterUpdateOneRequiredWithoutRepechageNestedInput
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
+    trimester?: trimesterUpdateOneWithoutRepechageNestedInput
   }
 
   export type repechageUncheckedUpdateWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type repechageUncheckedUpdateManyWithoutWp_usersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    trimester_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    trimester_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type wp_usermetaUpdateWithoutUserInput = {
@@ -58397,11 +58604,15 @@ export namespace Prisma {
     id?: bigint | number
     user_id: bigint | number
     category: string
+    repechage_etat: $Enums.repechage_repechage_etat
+    repechage_period: $Enums.repechage_repechage_period
   }
 
   export type repechageUpdateWithoutTrimesterInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
     wp_users?: wp_usersUpdateOneRequiredWithoutRepechageNestedInput
   }
 
@@ -58409,12 +58620,16 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
   export type repechageUncheckedUpdateManyWithoutTrimesterInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     category?: StringFieldUpdateOperationsInput | string
+    repechage_etat?: Enumrepechage_repechage_etatFieldUpdateOperationsInput | $Enums.repechage_repechage_etat
+    repechage_period?: Enumrepechage_repechage_periodFieldUpdateOperationsInput | $Enums.repechage_repechage_period
   }
 
 
