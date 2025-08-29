@@ -14,6 +14,7 @@ export type WPUser = {
   pseudo_winamax: string;
   photo_url?: string;
   registration?: Registration[];
+  role?: string;
 };
 
 export type User = {

@@ -30,14 +30,14 @@ export const useTournamentDataByCategory = (category: string) => {
         tournaments: data.tournamentss, // ou data.tournaments selon ton backend
         tournamentRows: mapTournamentsToRow(
           data.tournamentss,
-          data.registrations,
+          data.registrationsWithRoles,
           data.trimestry
         ),
         quarterRankingRows: mapQuarterRankingByTrimestry(
           category,
           data.trimestry,
           data.tournamentss,          // ou data.tournaments selon nom API
-          data.registrations,
+          data.registrationsWithRoles,
           data.seasons,
           data.tournament_ranking     // ce tableau doit venir de votre backend avec les données détaillées
         ),
