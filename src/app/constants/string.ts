@@ -1,5 +1,6 @@
 import {
   Briefcase09Icon,
+  Calendar03Icon,
   Cards01Icon,
   Cards02Icon,
   ChampionIcon,
@@ -37,7 +38,7 @@ export const STRINGS = {
       { label: "Tournoi Spéciaux", icon: ChampionIcon, href: "/special" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" },
       { label: "Stack", icon: Briefcase09Icon, href: "/malette" },
-      { label: "Saison", icon: Briefcase09Icon, href: "/season" },
+      { label: "Saison", icon: Calendar03Icon, href: "/season" },
     ]
   },
   sidebar_mobile: {
