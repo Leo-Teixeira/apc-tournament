@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     if (trimesterNumber !== undefined && trimesterNumber !== null) {
       const trimester = await prisma.trimester.findFirst({
         where: {
-          number: trimesterNumber,
+          id: trimesterNumber,
           season_id: currentSeason.id,
         },
       });
