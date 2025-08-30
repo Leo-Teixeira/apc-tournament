@@ -59,22 +59,6 @@ export const formatHourFR = (value: string | Date) => {
   return hours;
 };
 
-export function formatDateFr(dateString: string): string {
-  const date = new Date(dateString);
-
-  const options: Intl.DateTimeFormatOptions = {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "Europe/Paris"
-  };
-  const formatted = date.toLocaleDateString("fr-FR", options);
-  return formatted.replace(":", "h");
-}
-
 export function toLocalISOString(date: Date) {
   const tzoffset = date.getTimezoneOffset() * 60000; // offset en ms
   const localISOTime = new Date(date.getTime() - tzoffset).toISOString().slice(0, -1);
@@ -127,6 +111,28 @@ export function formatDateTimeFr(date: string | Date): string {
     minute: '2-digit',
     hour12: false,
     timeZone: 'Europe/Paris'
+  }).replace(':', 'h');
+}
+
+export function formatDateFr(date: string | Date): string {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '-';
+  return d.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Europe/Paris',
+  });
+}
+
+export function formatHourFr(date: string | Date): string {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '-';
+  return d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Paris',
   }).replace(':', 'h');
 }
 

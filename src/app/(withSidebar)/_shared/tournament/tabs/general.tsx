@@ -1,7 +1,7 @@
 import { Card, Divider } from "@heroui/react";
 import { BackgroundComponent } from "./components/background_components";
 import { ClassementComponent } from "./components/classement_components";
-import { formatDate, formatDateFR, formatHour, formatHourFR, formatHourUTC, parseLocalDateTime, toLocalISOString } from "@/app/utils/date";
+import { formatDate, formatDateFr, formatDateFR, formatHour, formatHourFr, formatHourFR, formatHourUTC, parseLocalDateTime, toLocalISOString } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
 export const GeneralTabs = () => {
@@ -17,11 +17,11 @@ export const GeneralTabs = () => {
     : null;
 
   // Formattage des dates en UTC pour afficher l'heure brute telle qu'en DB
-  const startDateString = startDate ? formatDate(startDate) : "";
-  const startTimeString = startDate ? formatHour(startDate) : "";
+  const startDateString = startDate ? formatDateFr(startDate) : "";
+  const startTimeString = startDate ? formatHourFr(startDate) : "";
 
-  const openDateString = openDate ? formatDate(openDate) : "";
-  const openTimeString = openDate ? formatHour(openDate) : "";
+  const openDateString = openDate ? formatDateFr(openDate) : "";
+  const openTimeString = openDate ? formatHourFr(openDate) : "";
 
 
 
