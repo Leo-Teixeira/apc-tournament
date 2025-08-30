@@ -4,7 +4,7 @@ import { tournament_tournament_status } from "@/generated/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
-process.env.TZ = process.env.VERCEL_TZ || 'UTC';
+process.env.TZ = process.env.VERCEL_TZ || 'Europe/Paris';
 
 export async function PATCH(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
