@@ -1,6 +1,6 @@
 import { BlindRow } from "@/app/components/table/table.types";
 import { TournamentLevel } from "@/app/types";
-import { formatHour, formatHourFR, getDurationInMinutes, toLocalISOString } from "@/app/utils/date";
+import { formatHour, formatHourFr, formatHourFR, getDurationInMinutes, toLocalISOString } from "@/app/utils/date";
 
 export const mapTournamentLevelsToRow = (
   levels: TournamentLevel[]
@@ -24,7 +24,7 @@ export const mapTournamentLevelsToRow = (
         ante: "-",
         pause: level.level_pause,
         duration: `${durationMinutes}"`,
-        time: formatHour(start),  // Utilise formatHour pour UTC brute
+        time: formatHourFr(start),  // Utilise formatHour pour UTC brute
         action: ""
       };
     })
