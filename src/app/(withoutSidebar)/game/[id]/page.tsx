@@ -4,10 +4,11 @@ import { useEffect, useState, useRef } from "react";
 import { ChipLegend } from "@/app/components/chipLegend";
 import InfoItem from "@/app/components/infoItem";
 import { Chip, TournamentLevel } from "@/app/types";
-import { toLocalDate } from "@/app/utils/date";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
 import LoadingComponent from "@/app/error/loading/page";
+
+import { DateTime } from "luxon";
 
 export default function Game() {
   const { id } = useParams();
@@ -36,7 +37,9 @@ export default function Game() {
     .filter((chip): chip is Chip => chip !== undefined);
 
   const chipRaceCount = levels.filter((level) => {
-    const levelEnd = toLocalDate(level.level_end);
+    const levelEnd = DateTime.fromISO(level.level_end, { zone: "utc" })
+      .setZone("Europe/Paris")
+      .toJSDate();
     return levelEnd <= getNow() && Number(level.level_chip_race) === 1;
   }).length;
 
@@ -48,7 +51,7 @@ export default function Game() {
   }
 
   const getDurationSince = (startISO: string) => {
-    const start = toLocalDate(startISO);
+    const start = DateTime.fromISO(startISO, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
     const diff = getNow().getTime() - start.getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const h = Math.floor(total / 3600);
@@ -58,7 +61,9 @@ export default function Game() {
   };
 
   const getTimeLeft = (end: string | Date) => {
-    const endDate = typeof end === "string" ? toLocalDate(end) : end;
+    const endDate = typeof end === "string" ?
+      DateTime.fromISO(end, { zone: "utc" }).setZone("Europe/Paris").toJSDate() :
+      end;
     const diff = endDate.getTime() - getNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
@@ -71,18 +76,20 @@ export default function Game() {
       console.log("⏸ [DEBUG] On est actuellement en pause, pas de timer affiché.");
       return "-";
     }
-  
+
     if (!nextPause) return "Aucune autre pause";
-  
-    const pauseStart = toLocalDate(nextPause.level_start).getTime();
+
+    const pauseStart = DateTime.fromISO(nextPause.level_start, { zone: "utc" })
+      .setZone("Europe/Paris")
+      .toJSDate()
+      .getTime();
     const diff = pauseStart - getNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
     const s = total % 60;
-  
+
     return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
-  
 
   const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
   const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
@@ -90,13 +97,13 @@ export default function Game() {
   const getAverageStackAlive = () => {
     const alivePlayersCount = getAlivePlayers().length;
     const confirmedPlayersCount = getConfirmedPlayers().length;
-  
+
     if (alivePlayersCount === 0) return "0";
-  
+
     const stackTotalPerPlayer = tournament?.stack?.stack_total_player ?? 0;
     const totalChipsInitial = stackTotalPerPlayer * confirmedPlayersCount;
     const averageStack = totalChipsInitial / alivePlayersCount;
-  
+
     return Math.round(averageStack).toString();
   };
 
@@ -126,8 +133,8 @@ export default function Game() {
     const refDate = getNow();
 
     const cl = levels.find((level) => {
-      const start = toLocalDate(level.level_start);
-      const end = toLocalDate(level.level_end);
+      const start = DateTime.fromISO(level.level_start, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
+      const end = DateTime.fromISO(level.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
       return refDate >= start && refDate < end;
     });
 
@@ -139,7 +146,7 @@ export default function Game() {
 
     const np = levels
       .filter((level) => level.level_pause)
-      .find((pauseLevel) => toLocalDate(pauseLevel.level_start) > refDate);
+      .find((pauseLevel) => DateTime.fromISO(pauseLevel.level_start, { zone: "utc" }).setZone("Europe/Paris").toJSDate() > refDate);
 
     setNextPause(np ?? null);
 
@@ -156,6 +163,7 @@ export default function Game() {
   if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
 
   const nowTime = getNow();
+  const localNowStr = DateTime.fromJSDate(nowTime).setZone("Europe/Paris").toFormat("dd/MM/yyyy HH:mm");
 
   const backgroundUrl =
     bgIndex === 0
@@ -173,15 +181,7 @@ export default function Game() {
             {tournament.tournament_name}
           </h1>
           <p className="font-satoshi text-5xl text-primary_brand-50">
-            {`${nowTime.getDate().toString().padStart(2, "0")}/${(
-              nowTime.getMonth() + 1
-            ).toString().padStart(2, "0")}/${nowTime.getFullYear()} ${nowTime
-              .getHours()
-              .toString()
-              .padStart(2, "0")}:${nowTime
-              .getMinutes()
-              .toString()
-              .padStart(2, "0")}`}
+            {localNowStr}
           </p>
         </div>
 
@@ -201,7 +201,7 @@ export default function Game() {
 
           <div className="text-center text-primary_brand-50">
             <div className="text-xl12 font-satoshiBold">
-              {currentLevel ? getTimeLeft(toLocalDate(currentLevel.level_end)) : "--:--"}
+              {currentLevel ? getTimeLeft(DateTime.fromISO(currentLevel.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate()) : "--:--"}
             </div>
             <div className="text-xl7 font-satoshiBold">
               {currentLevel && !currentLevel.level_pause
