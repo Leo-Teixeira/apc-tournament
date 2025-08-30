@@ -5,6 +5,7 @@ import { Prisma, tournament_tournament_status } from "@/generated/prisma";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
+
 function getAptScore(total: number, rank: number): number {
   const aptScoreRanges = [
     { min: 0,  max: 15, scores: [26, 18, 12, 8, 6, 5] },
@@ -22,6 +23,7 @@ function getAptScore(total: number, rank: number): number {
   return range?.scores[rank - 1] ?? 0;
 }
 
+
 function getSitAndGoScore(total: number, rank: number): number {
   const sitAndGoScores: Record<number, number[]> = {
     5: [5, 2, 0, 0, 0],
@@ -34,8 +36,9 @@ function getSitAndGoScore(total: number, rank: number): number {
   return scores ? scores[rank - 1] ?? 0 : 0;
 }
 
+
 async function getScoreAndRankingPosition(
-  tx: Prisma.TransactionClient, // Type spécial de client transactionnel
+  tx: Prisma.TransactionClient,
   tournamentId: number | bigint,
   ranking_position: number
 ) {
@@ -62,6 +65,7 @@ async function getScoreAndRankingPosition(
   return { ranking_position, score, tournament_category: tournament.tournament_category, totalRegistrations };
 }
 
+
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
   if (!tournament || !player) {
@@ -87,7 +91,7 @@ export async function PUT(req: NextRequest) {
 
     const { tournament_category } = tournamentData;
     const needReequilibrage = tournament_category !== "SITANDGO";
-    const hasRanking = tournament_category === "APT" || tournament_category === "SITANDGO";
+    const hasRanking = tournament_category === "APT" || tournament_category === "SITANDGO" || tournament_category === "SPECIAUX";
     const isSitAndGo = tournament_category === "SITANDGO";
 
     const assignment = await prisma.table_assignment.findFirst({
@@ -109,7 +113,6 @@ export async function PUT(req: NextRequest) {
     });
 
     // --- Transaction : élimination + MAJ classement avec check rôle ---
-    // --- Transaction : élimination + MAJ classement avec check rôle ---
     const result = await prisma.$transaction(async (tx) => {
       await tx.table_assignment.update({
         where: { id: assignment.id },
@@ -117,29 +120,29 @@ export async function PUT(req: NextRequest) {
       });
 
       let ranking_position: number = 0;
-      let score: number = 0; // par défaut score 0
+      let score: number = 0; // score par défaut à 0
       let tableId: bigint | null = null;
 
       if (hasRanking) {
         if (isSitAndGo) {
-          tableId = assignment.table_id ?? null;
-          const aliveOnThisTable = await tx.table_assignment.count({
-            where: {
-              table_id: tableId!,
-              eliminated: false,
-              registration: { statut: "Confirmed" },
-            },
-          });
-          ranking_position = aliveOnThisTable + 1;
-          const totalOnThisTable = await tx.table_assignment.count({
-            where: {
-              table_id: tableId!,
-              registration: { statut: "Confirmed" },
-            },
-          });
-          score = getSitAndGoScore(totalOnThisTable, ranking_position);
-        } else {
-          // Pour toutes catégories hors SitAndGo, calcul de la position similaire
+          tableId = assignment.table_id ?? null;
+          const aliveOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              eliminated: false,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          ranking_position = aliveOnThisTable + 1;
+          const totalOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          score = getSitAndGoScore(totalOnThisTable, ranking_position);
+        } else {
+          // Pour toutes catégories hors SitAndGo
           const aliveCount = await tx.table_assignment.count({
             where: {
               tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -148,20 +151,17 @@ export async function PUT(req: NextRequest) {
             },
           });
           ranking_position = aliveCount + 1;
-      
+
           if (tournament_category === "APT") {
             const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
             score = res.score;
           } else if (tournament_category === "SPECIAUX") {
-            // Score toujours à 0, position correcte
-            score = 0;
+            score = 0; // score toujours 0 pour spéciaux
           } else {
-            // Autres catégories si existantes
             score = 0;
           }
         }
       }
-      
 
       // Mise à jour classement tournoi toujours
       await tx.tournament_ranking.deleteMany({
@@ -192,7 +192,6 @@ export async function PUT(req: NextRequest) {
 
       return { ranking_position, score, aliveCount };
     });
-
 
     // --- Rééquilibrage ---
     let rebalanced = false;
@@ -325,4 +324,3 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
-
