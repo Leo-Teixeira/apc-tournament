@@ -37,6 +37,8 @@ export const PlayerTabs = React.memo(() => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelKillModal, setIsCancelKillModal] = useState(false);
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
+  // Nouveau state pour loader modal élimination
+  const [isEliminateLoading, setIsEliminateLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { tournament, assignements, registration } = useTournamentContext();
@@ -161,18 +163,18 @@ export const PlayerTabs = React.memo(() => {
   const handleConfirmElimination = useCallback(async (killerRegistrationId: number) => {
     if (!selectedPlayer || !tournament) return;
     try {
-      const killerRegistration = killerOptions.find(k => k.id == killerRegistrationId);
+      setIsEliminateLoading(true);
       
-  
+      const killerRegistration = killerOptions.find(k => k.id == killerRegistrationId);
+
       const res = await eliminatePlayerMutation.mutateAsync({
         tournamentId: tournament.id,
         registrationId: selectedPlayer.registration_id,
         killerId: killerRegistrationId,
       });
-  
+
       notify("error", `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`);
-  
-      // Notifications moves améliorées et clarifiées
+
       if (res?.moves?.length) {
         res.moves.forEach(move => {
           if (move.fromTableNumber && move.playerName && move.toTableNumber) {
@@ -188,20 +190,21 @@ export const PlayerTabs = React.memo(() => {
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
-  
+
       const remainingAlive = assignements.filter(a => !a.eliminated);
       if (remainingAlive.length === 1 && tournament.tournament_status !== "finish") {
         await finishTournamentMutation.mutateAsync(tournament.id);
         notify("success", "🏆 Le tournoi est terminé !");
       }
-  
+
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
       notify("error", "❌ Une erreur est survenue lors de l'élimination.");
+    } finally {
+      setIsEliminateLoading(false);
     }
   }, [selectedPlayer, tournament, eliminatePlayerMutation, assignements, finishTournamentMutation, onClose, notify]);
-  
 
   if (isLoading) return <LoadingComponent />;
 
@@ -238,10 +241,9 @@ export const PlayerTabs = React.memo(() => {
         title="Éliminer un joueur"
         confirmLabel="Confirmer l'élimination"
         onConfirm={async () => {
-          console.log(selectedKillerId);
-          console.log(killerOptions);
           if (selectedKillerId) await handleConfirmElimination(selectedKillerId);
         }}
+        loading={isEliminateLoading} // <-- Loader activé ici
       >
         <EliminatePlayerFormBody
           eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
@@ -272,7 +274,8 @@ export const PlayerTabs = React.memo(() => {
             console.error("Erreur annulation élimination:", error);
             notify("error", "❌ Une erreur est survenue lors de l'annulation.");
           }
-        }}>
+        }}
+      >
         <p>
           Es-tu sûr de vouloir annuler l&apos;élimination de{" "}
           <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
@@ -300,7 +303,8 @@ export const PlayerTabs = React.memo(() => {
             console.error("Erreur suppression joueur:", error);
             notify("error", "❌ Une erreur est survenue lors de la suppression.");
           }
-        }}>
+        }}
+      >
         <p>
           Es-tu sûr de vouloir supprimer l&apos;invitation du joueur{" "}
           <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?

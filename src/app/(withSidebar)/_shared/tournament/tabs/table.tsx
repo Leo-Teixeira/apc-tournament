@@ -43,6 +43,8 @@ export const TableTabs = () => {
   const [moveMode, setMoveMode] = useState<"swap" | "move">("swap");
   const [selectedSwapTargetId, setSelectedSwapTargetId] = useState<number | null>(null);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
+  const [isEliminateLoading, setIsEliminateLoading] = useState(false);
+
 
   const { data: availableTables } = useAvailableTables(
     tournament?.id,
@@ -59,23 +61,23 @@ export const TableTabs = () => {
   // ✅ Elimination avec notifs killer + mouvements rééquilibrage détaillés
   const handleConfirmElimination = async (killerId: number) => {
     if (!selectedPlayer || !tournament) return;
-
+  
     try {
+      setIsEliminateLoading(true);
+  
       const killerRegistration = killerOptions.find(k => k.id == killerId);
-      
-
-      // Appel API => retour { rebalanced, moves }
+  
       const res = await eliminatePlayerMutation.mutateAsync({
         tournamentId: tournament.id,
         registrationId: selectedPlayer.registration_id,
-        killerId
+        killerId,
       });
-
+  
       notify(
         "error",
         `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`
       );
-
+  
       if (res?.moves?.length) {
         res.moves.forEach((move) => {
           if (move.fromTableNumber && move.playerName && move.toTableNumber) {
@@ -89,11 +91,9 @@ export const TableTabs = () => {
           }
         });
       } else if (res?.rebalanced) {
-        // Rééquilibrage sans détails
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
-
-      // Fin auto si dernier vivant
+  
       const remainingAlive = assignements.filter((a) => !a.eliminated);
       if (
         remainingAlive.length === 1 &&
@@ -102,13 +102,16 @@ export const TableTabs = () => {
         await finishTournamentMutation.mutateAsync(tournament.id);
         notify("success", "🏆 Le tournoi est terminé !");
       }
-
+  
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
       notify("error", "❌ Une erreur est survenue lors de l'élimination.");
+    } finally {
+      setIsEliminateLoading(false);
     }
   };
+  
 
   const getConditionalActions = (item: SeatRow): ActionDefinition<SeatRow>[] => {
     const actions: ActionDefinition<SeatRow>[] = [];
@@ -204,15 +207,16 @@ export const TableTabs = () => {
         onConfirm={async () => {
           if (selectedKillerId) handleConfirmElimination(selectedKillerId);
         }}
-        >
+        loading={isEliminateLoading}  // <--- ici la prop loading
+      >
         <EliminatePlayerFormBody
           eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
           allPlayerTable={killerOptions}
           selectedKillerId={selectedKillerId}
           onSelectKiller={setSelectedKillerId}
         />
-
       </GenericModal>
+
 
       <GenericModal
         isOpen={isMoveModalOpen}
