@@ -31,3 +31,8 @@
   font-family: Satoshi-medium;
   src: url("/fonts/Satoshi-Medium.woff2") format("woff2");
 }
+
+.pb-safe-area {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+

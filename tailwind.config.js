@@ -12,6 +12,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      padding: {
+        'safe-area': 'env(safe-area-inset-bottom)',
+      },
       screens: {
         xs: "480px",
         sm: "640px",

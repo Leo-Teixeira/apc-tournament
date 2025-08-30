@@ -103,7 +103,7 @@ export default function TournamentDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-2 md:px-0">
+    <div className="flex flex-col gap-6 px-2 md:px-0 pb-safe-area">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-3">
@@ -267,28 +267,41 @@ export default function TournamentDetailPage() {
             { id: "1", label: "Niveaux", icon: Layers01Icon },
             { id: "2", label: "Joueurs", icon: UserGroup03Icon },
             { id: "3", label: "Tables", icon: TableRoundIcon }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setSelectedTab(tab.id)}
-              className={`flex flex-col items-center justify-center px-4 py-2 rounded-xl gap-1 transition-all duration-200 ${
-                selectedTab === tab.id
-                  ? "bg-ligth/10 scale-105"
-                  : "bg-transparent hover:bg-neutral-800/50"
-              }`}
-              style={{ minWidth: 64 }}
-            >
-              <HugeiconsIcon icon={tab.icon} size={24} className="mb-1 text-white" />
-              <span
-                className={`text-xs ${
-                  selectedTab === tab.id ? "text-white" : "text-neutral-400"
-                }`}
+          ].map((tab) => {
+            const disabled = tournament.tournament_status === "finish";
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  if (disabled) return;
+                  setSelectedTab(tab.id);
+                }}
+                disabled={disabled}
+                className={`flex flex-col items-center justify-center px-4 py-2 rounded-xl gap-1 transition-all duration-200 ${
+                  selectedTab === tab.id
+                    ? "bg-ligth/10 scale-105"
+                    : "bg-transparent hover:bg-neutral-800/50"
+                } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                style={{ minWidth: 64 }}
+                aria-disabled={disabled}
               >
-                {tab.label}
-              </span>
-            </button>
-          ))}
+                <HugeiconsIcon
+                  icon={tab.icon}
+                  size={24}
+                  className={`mb-1 text-white ${disabled ? "opacity-50" : ""}`}
+                />
+                <span
+                  className={`text-xs ${
+                    selectedTab === tab.id ? "text-white" : "text-neutral-400"
+                  } ${disabled ? "opacity-50" : ""}`}
+                >
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
+
         {/* Contenu de l'onglet sélectionné */}
         <div className="pb-32 md:pb-0">
           {tabs.find((tab) => tab.id === selectedTab)?.content}

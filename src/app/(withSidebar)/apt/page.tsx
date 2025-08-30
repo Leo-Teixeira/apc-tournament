@@ -66,7 +66,7 @@ export default function APTHome() {
   }
 
   return (
-    <div className="flex flex-col gap-2 md:gap-6 w-full">
+    <div className="flex flex-col gap-2 md:gap-6 w-full pb-safe-area">
       <div className="block md:hidden mb-2">
         <TabBar />
       </div>

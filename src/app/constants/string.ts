@@ -54,7 +54,7 @@ export const STRINGS = {
         href: "/sitandgo"
       },
       { label: "Super finale", icon: RankingIcon, href: "/superfinale" },
-      { label: "Tournoi de l'Special", icon: ChampionIcon, href: "/ag" },
+      { label: "Tournoi de l'Special", icon: ChampionIcon, href: "/special" },
       { label: "SoliPoker", icon: HealtcareIcon, href: "/solipoker" }
     ]
   },
