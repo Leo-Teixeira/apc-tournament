@@ -10969,6 +10969,7 @@ export namespace Prisma {
     tournament_id: number | null
     ranking_position: number | null
     ranking_score: number | null
+    table_id: number | null
   }
 
   export type Tournament_rankingSumAggregateOutputType = {
@@ -10977,6 +10978,7 @@ export namespace Prisma {
     tournament_id: bigint | null
     ranking_position: number | null
     ranking_score: number | null
+    table_id: bigint | null
   }
 
   export type Tournament_rankingMinAggregateOutputType = {
@@ -10985,6 +10987,7 @@ export namespace Prisma {
     tournament_id: bigint | null
     ranking_position: number | null
     ranking_score: number | null
+    table_id: bigint | null
   }
 
   export type Tournament_rankingMaxAggregateOutputType = {
@@ -10993,6 +10996,7 @@ export namespace Prisma {
     tournament_id: bigint | null
     ranking_position: number | null
     ranking_score: number | null
+    table_id: bigint | null
   }
 
   export type Tournament_rankingCountAggregateOutputType = {
@@ -11001,6 +11005,7 @@ export namespace Prisma {
     tournament_id: number
     ranking_position: number
     ranking_score: number
+    table_id: number
     _all: number
   }
 
@@ -11011,6 +11016,7 @@ export namespace Prisma {
     tournament_id?: true
     ranking_position?: true
     ranking_score?: true
+    table_id?: true
   }
 
   export type Tournament_rankingSumAggregateInputType = {
@@ -11019,6 +11025,7 @@ export namespace Prisma {
     tournament_id?: true
     ranking_position?: true
     ranking_score?: true
+    table_id?: true
   }
 
   export type Tournament_rankingMinAggregateInputType = {
@@ -11027,6 +11034,7 @@ export namespace Prisma {
     tournament_id?: true
     ranking_position?: true
     ranking_score?: true
+    table_id?: true
   }
 
   export type Tournament_rankingMaxAggregateInputType = {
@@ -11035,6 +11043,7 @@ export namespace Prisma {
     tournament_id?: true
     ranking_position?: true
     ranking_score?: true
+    table_id?: true
   }
 
   export type Tournament_rankingCountAggregateInputType = {
@@ -11043,6 +11052,7 @@ export namespace Prisma {
     tournament_id?: true
     ranking_position?: true
     ranking_score?: true
+    table_id?: true
     _all?: true
   }
 
@@ -11138,6 +11148,7 @@ export namespace Prisma {
     tournament_id: bigint
     ranking_position: number
     ranking_score: number
+    table_id: bigint | null
     _count: Tournament_rankingCountAggregateOutputType | null
     _avg: Tournament_rankingAvgAggregateOutputType | null
     _sum: Tournament_rankingSumAggregateOutputType | null
@@ -11165,6 +11176,7 @@ export namespace Prisma {
     tournament_id?: boolean
     ranking_position?: boolean
     ranking_score?: boolean
+    table_id?: boolean
     registration?: boolean | registrationDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tournament_ranking"]>
@@ -11177,9 +11189,10 @@ export namespace Prisma {
     tournament_id?: boolean
     ranking_position?: boolean
     ranking_score?: boolean
+    table_id?: boolean
   }
 
-  export type tournament_rankingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registration_id" | "tournament_id" | "ranking_position" | "ranking_score", ExtArgs["result"]["tournament_ranking"]>
+  export type tournament_rankingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registration_id" | "tournament_id" | "ranking_position" | "ranking_score" | "table_id", ExtArgs["result"]["tournament_ranking"]>
   export type tournament_rankingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     registration?: boolean | registrationDefaultArgs<ExtArgs>
     tournament?: boolean | tournamentDefaultArgs<ExtArgs>
@@ -11197,6 +11210,7 @@ export namespace Prisma {
       tournament_id: bigint
       ranking_position: number
       ranking_score: number
+      table_id: bigint | null
     }, ExtArgs["result"]["tournament_ranking"]>
     composites: {}
   }
@@ -11573,6 +11587,7 @@ export namespace Prisma {
     readonly tournament_id: FieldRef<"tournament_ranking", 'BigInt'>
     readonly ranking_position: FieldRef<"tournament_ranking", 'Int'>
     readonly ranking_score: FieldRef<"tournament_ranking", 'Int'>
+    readonly table_id: FieldRef<"tournament_ranking", 'BigInt'>
   }
     
 
@@ -45622,7 +45637,8 @@ export namespace Prisma {
     registration_id: 'registration_id',
     tournament_id: 'tournament_id',
     ranking_position: 'ranking_position',
-    ranking_score: 'ranking_score'
+    ranking_score: 'ranking_score',
+    table_id: 'table_id'
   };
 
   export type Tournament_rankingScalarFieldEnum = (typeof Tournament_rankingScalarFieldEnum)[keyof typeof Tournament_rankingScalarFieldEnum]
@@ -46946,6 +46962,7 @@ export namespace Prisma {
     tournament_id?: BigIntFilter<"tournament_ranking"> | bigint | number
     ranking_position?: IntFilter<"tournament_ranking"> | number
     ranking_score?: IntFilter<"tournament_ranking"> | number
+    table_id?: BigIntNullableFilter<"tournament_ranking"> | bigint | number | null
     registration?: XOR<RegistrationScalarRelationFilter, registrationWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }
@@ -46956,6 +46973,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrderInput | SortOrder
     registration?: registrationOrderByWithRelationInput
     tournament?: tournamentOrderByWithRelationInput
   }
@@ -46969,6 +46987,7 @@ export namespace Prisma {
     tournament_id?: BigIntFilter<"tournament_ranking"> | bigint | number
     ranking_position?: IntFilter<"tournament_ranking"> | number
     ranking_score?: IntFilter<"tournament_ranking"> | number
+    table_id?: BigIntNullableFilter<"tournament_ranking"> | bigint | number | null
     registration?: XOR<RegistrationScalarRelationFilter, registrationWhereInput>
     tournament?: XOR<TournamentScalarRelationFilter, tournamentWhereInput>
   }, "id">
@@ -46979,6 +46998,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrderInput | SortOrder
     _count?: tournament_rankingCountOrderByAggregateInput
     _avg?: tournament_rankingAvgOrderByAggregateInput
     _max?: tournament_rankingMaxOrderByAggregateInput
@@ -46995,6 +47015,7 @@ export namespace Prisma {
     tournament_id?: BigIntWithAggregatesFilter<"tournament_ranking"> | bigint | number
     ranking_position?: IntWithAggregatesFilter<"tournament_ranking"> | number
     ranking_score?: IntWithAggregatesFilter<"tournament_ranking"> | number
+    table_id?: BigIntNullableWithAggregatesFilter<"tournament_ranking"> | bigint | number | null
   }
 
   export type tournament_tableWhereInput = {
@@ -49757,6 +49778,7 @@ export namespace Prisma {
     id?: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
     registration: registrationCreateNestedOneWithoutTournament_rankingInput
     tournament: tournamentCreateNestedOneWithoutTournament_rankingInput
   }
@@ -49767,12 +49789,14 @@ export namespace Prisma {
     tournament_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type tournament_rankingUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     registration?: registrationUpdateOneRequiredWithoutTournament_rankingNestedInput
     tournament?: tournamentUpdateOneRequiredWithoutTournament_rankingNestedInput
   }
@@ -49783,6 +49807,7 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_rankingCreateManyInput = {
@@ -49791,12 +49816,14 @@ export namespace Prisma {
     tournament_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type tournament_rankingUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_rankingUncheckedUpdateManyInput = {
@@ -49805,6 +49832,7 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_tableCreateInput = {
@@ -52942,6 +52970,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrder
   }
 
   export type tournament_rankingAvgOrderByAggregateInput = {
@@ -52950,6 +52979,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrder
   }
 
   export type tournament_rankingMaxOrderByAggregateInput = {
@@ -52958,6 +52988,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrder
   }
 
   export type tournament_rankingMinOrderByAggregateInput = {
@@ -52966,6 +52997,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrder
   }
 
   export type tournament_rankingSumOrderByAggregateInput = {
@@ -52974,6 +53006,7 @@ export namespace Prisma {
     tournament_id?: SortOrder
     ranking_position?: SortOrder
     ranking_score?: SortOrder
+    table_id?: SortOrder
   }
 
   export type tournament_tableCountOrderByAggregateInput = {
@@ -56402,6 +56435,7 @@ export namespace Prisma {
     id?: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
     tournament: tournamentCreateNestedOneWithoutTournament_rankingInput
   }
 
@@ -56410,6 +56444,7 @@ export namespace Prisma {
     tournament_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type tournament_rankingCreateOrConnectWithoutRegistrationInput = {
@@ -56589,6 +56624,7 @@ export namespace Prisma {
     tournament_id?: BigIntFilter<"tournament_ranking"> | bigint | number
     ranking_position?: IntFilter<"tournament_ranking"> | number
     ranking_score?: IntFilter<"tournament_ranking"> | number
+    table_id?: BigIntNullableFilter<"tournament_ranking"> | bigint | number | null
   }
 
   export type stack_chipCreateWithoutStackInput = {
@@ -56956,6 +56992,7 @@ export namespace Prisma {
     id?: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
     registration: registrationCreateNestedOneWithoutTournament_rankingInput
   }
 
@@ -56964,6 +57001,7 @@ export namespace Prisma {
     registration_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type tournament_rankingCreateOrConnectWithoutTournamentInput = {
@@ -58149,6 +58187,7 @@ export namespace Prisma {
     tournament_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type table_assignmentUpdateWithoutRegistrationInput = {
@@ -58203,6 +58242,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     tournament?: tournamentUpdateOneRequiredWithoutTournament_rankingNestedInput
   }
 
@@ -58211,6 +58251,7 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_rankingUncheckedUpdateManyWithoutRegistrationInput = {
@@ -58218,6 +58259,7 @@ export namespace Prisma {
     tournament_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type stack_chipCreateManyStackInput = {
@@ -58336,6 +58378,7 @@ export namespace Prisma {
     registration_id: bigint | number
     ranking_position: number
     ranking_score: number
+    table_id?: bigint | number | null
   }
 
   export type tournament_tableCreateManyTournamentInput = {
@@ -58411,6 +58454,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     registration?: registrationUpdateOneRequiredWithoutTournament_rankingNestedInput
   }
 
@@ -58419,6 +58463,7 @@ export namespace Prisma {
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_rankingUncheckedUpdateManyWithoutTournamentInput = {
@@ -58426,6 +58471,7 @@ export namespace Prisma {
     registration_id?: BigIntFieldUpdateOperationsInput | bigint | number
     ranking_position?: IntFieldUpdateOperationsInput | number
     ranking_score?: IntFieldUpdateOperationsInput | number
+    table_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type tournament_tableUpdateWithoutTournamentInput = {

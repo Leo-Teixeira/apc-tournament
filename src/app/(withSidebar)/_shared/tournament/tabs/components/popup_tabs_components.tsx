@@ -66,7 +66,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         tournamentId: tournament.id,
         data: playerFormData
       });
-      
       onClose();
     } catch (error) {
       console.error("Erreur ajout joueur :", error);
@@ -82,14 +81,11 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
       tournament_id: tournament.id
     };
 
-    console.log("📦 Payload envoyé :", payload);
-
     try {
       await createLevelMutation.mutateAsync({
         tournamentId: tournament.id,
         data: payload
       });
-      
       onClose();
     } catch (error) {
       console.error("❌ Erreur création niveau :", error);
@@ -98,13 +94,10 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   };
 
   const handleConfirmStackUpdate = async () => {
-    console.log(updatedStack);
-    console.log(tournament);
     if (!updatedStack || !tournament) {
       alert("Aucune modification détectée.");
       return;
     }
-
     const payload = {
       tournament_id: tournament.id,
       selected_stack_id: updatedStack.id,
@@ -125,14 +118,12 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
               }
         ) ?? []
     };
-    console.log(payload);
 
     try {
       await updateStackMutation.mutateAsync({
         stackId: updatedStack.id,
         data: payload
       });
-      
       onClose();
     } catch (error) {
       console.error("Erreur lors de la modification du stack :", error);
@@ -145,7 +136,6 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
 
     try {
       await generateTablesMutation.mutateAsync(tournament.id);
-      
       onClose();
     } catch (error) {
       console.error("Erreur lors de la génération des tables :", error);
@@ -153,6 +143,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
     }
   };
 
+  // Liaison des états de chargement à loader de chaque modal :
   if (selectedTab === "1") {
     return (
       <GenericModal
@@ -160,7 +151,9 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onClose={onClose}
         title="Ajouter un niveau"
         confirmLabel="Ajouter le niveau"
-        onConfirm={handleCreateNiveau}>
+        onConfirm={handleCreateNiveau}
+        loading={createLevelMutation.isLoading}
+      >
         <NiveauFormBody
           isModify={false}
           tournamentStart={new Date(tournament.tournament_start_date)}
@@ -179,7 +172,9 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onClose={onClose}
         title="Ajouter un joueur"
         confirmLabel="Ajouter le joueur"
-        onConfirm={handleCreatePlayer}>
+        onConfirm={handleCreatePlayer}
+        loading={createPlayerMutation.isLoading}
+      >
         <PlayerFormBody
           onUpdate={(data) =>
             setPlayerFormData((prev) => ({ ...prev, ...data }))
@@ -196,7 +191,9 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         title="Générer les tables"
         confirmLabel="Confirmer"
         cancelLabel="Annuler"
-        onConfirm={generateTable}>
+        onConfirm={generateTable}
+        loading={generateTablesMutation.isLoading}
+      >
         <p>Es-tu sûr de vouloir générer les tables pour ce tournoi ?</p>
       </GenericModal>
     );
@@ -209,7 +206,9 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         title="Modifier le stack"
         confirmLabel="Confirmer"
         cancelLabel="Annuler"
-        onConfirm={handleConfirmStackUpdate}>
+        onConfirm={handleConfirmStackUpdate}
+        loading={updateStackMutation.isLoading}
+      >
         <StackEditorForm
           stacks={stacks}
           currentStackId={tournament.tournament_stack}

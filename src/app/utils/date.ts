@@ -97,4 +97,43 @@ export const formatHourUTC = (value: string | Date) => {
   return `${hours}:${minutes}`;
 };
 
+export const safeParseDate = (dateString: string | Date): Date | null => {
+  if (!dateString) return null;
+
+  if (dateString instanceof Date && !isNaN(dateString.getTime())) return dateString;
+
+  let isoString = String(dateString);
+
+  // Ajoute un "Z" si la chaîne ne contient pas d’indication de fuseau
+  if (!isoString.endsWith("Z") && !isoString.includes("+")) {
+    isoString += "Z";
+  }  
+
+  const d = new Date(isoString);
+  return isNaN(d.getTime()) ? null : d;
+};
+
+
+export const formatDateTimeFr = (date: string | Date): string => {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '-';
+
+  // Partie date locale France, sans heure
+  const datePart = d.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Europe/Paris',
+  });
+
+  // Partie heure en UTC brute, sans décalage
+  const hours = d.getUTCHours().toString().padStart(2, '0');
+  const minutes = d.getUTCMinutes().toString().padStart(2, '0');
+  const hourPart = `${hours}h${minutes}`;
+
+  return `${datePart} ${hourPart}`;
+};
+
+
+
 

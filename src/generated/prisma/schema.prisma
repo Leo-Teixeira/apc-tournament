@@ -113,11 +113,13 @@ model tournament_ranking {
   tournament_id    BigInt       @db.UnsignedBigInt
   ranking_position Int
   ranking_score    Int
-  registration     registration @relation(fields: [registration_id], references: [id], onDelete: Cascade, map: "tournament_ranking_ibfk_1")
+  table_id         BigInt?      @db.UnsignedBigInt
+  registration     registration @relation(fields: [registration_id], references: [id], onUpdate: Restrict, map: "tournament_ranking_ibfk_1")
   tournament       tournament   @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "tournament_ranking_ibfk_2")
 
   @@index([registration_id], map: "registration_id")
   @@index([tournament_id], map: "tournament_id")
+  @@index([table_id], map: "table_id")
   @@index([ranking_position], map: "ranking_position_idx")
   @@index([ranking_score], map: "ranking_score_idx")
 }
@@ -128,7 +130,7 @@ model tournament_table {
   table_number     Int
   table_capacity   Int                @db.TinyInt
   table_assignment table_assignment[]
-  tournament       tournament         @relation(fields: [tournament_id], references: [id], onDelete: Cascade, map: "tournament_table_ibfk_1")
+  tournament       tournament         @relation(fields: [tournament_id], references: [id], onUpdate: Restrict, map: "tournament_table_ibfk_1")
 
   @@index([tournament_id], map: "tournament_id")
   @@index([table_capacity], map: "table_capacity_idx")

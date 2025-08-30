@@ -171,7 +171,7 @@ export const TableTabs = () => {
   return (
     <div className="flex flex-col gap-6">
       {Object.keys(groupedRows).length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-6 sm:flex-col xl:grid xl:grid-cols-3 xl:gap-6">
           {Object.entries(groupedRows).map(([tableNumber, rows]) => (
             <div key={tableNumber} className="flex flex-col gap-2">
               <h2 className="text-center sm:text-left text-base sm:text-xl font-bold">

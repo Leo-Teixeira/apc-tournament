@@ -7,6 +7,7 @@ export type TournamentRanking = {
   tournament_id: number;
   ranking_position: number;
   ranking_score: number;
+  table_id?: number;
   registration?: Registration;
   tournament?: Tournament;
 };

@@ -81,7 +81,7 @@ export const PlayerFormBody = ({
                     setPseudo(player.pseudo_winamax);
                     setSearch(player.pseudo_winamax);
                   }}>
-                  {player.pseudo_winamax} – {player.display_name}
+                  {player.display_name}
                 </li>
               ))}
             </ul>

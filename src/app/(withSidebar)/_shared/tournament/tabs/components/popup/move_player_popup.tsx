@@ -85,11 +85,12 @@ export const MovePlayerModalBody = ({
                 </option>
               ))}
           </select>
-
+          
+          <span>Numéro de siege</span>
           <input
             type="number"
             min={1}
-            className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2"
+            className="w-full border bg-neutral-800 text-white rounded-lg px-4 py-2 no-arrows"
             placeholder="Numéro de siège"
             value={seatNumber}
             onChange={(e) => {
@@ -98,6 +99,7 @@ export const MovePlayerModalBody = ({
               onSeatNumberChange(value);
             }}
           />
+
         </>
       )}
     </div>

@@ -95,5 +95,7 @@ export const mapClassementTournament = (
         points: classe.ranking_score,
       };
     })
-    .filter((row): row is StandingRow => row !== undefined);
+    .filter((row): row is StandingRow => row !== undefined)
+    .sort((a, b) => b.points - a.points); // Tri décroissant par points
 };
+

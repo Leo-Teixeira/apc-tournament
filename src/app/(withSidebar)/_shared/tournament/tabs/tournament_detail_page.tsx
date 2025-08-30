@@ -339,7 +339,6 @@ export default function TournamentDetailPage() {
             if (!tournament) throw new Error("Tournoi non disponible");
             await generateLevelsMutation.mutateAsync(tournament.id);
             setIsGenerateLevelModalOpen(false);
-            window.location.reload();
           } catch (err) {
             console.error("❌ Erreur génération niveaux :", err);
             alert("Erreur lors de la génération des niveaux");

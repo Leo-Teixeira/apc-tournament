@@ -1,7 +1,7 @@
 import { TournamentRow } from "@/app/components/table/table.types";
 import { Registration, Tournament } from "@/app/types";
 import { Trimester } from "@/app/types/trimester.types";
-import { toISODateOnly } from "@/app/utils/date";
+import { formatDateTimeFr, toISODateOnly } from "@/app/utils/date";
 
 const formatDate = (value: string | Date): string => {
   const date = new Date(value);
@@ -31,8 +31,8 @@ export const mapTournamentsToRow = (
       name: tournament.tournament_name,
       players,
       trimestry: trimesterObj ? trimesterObj.number : 0,
-      tournament_date: toISODateOnly(tournament.tournament_start_date),
-      open_tournament_date: toISODateOnly(tournament.tournament_open_date),
+      tournament_date: formatDateTimeFr(tournament.tournament_start_date),
+      open_tournament_date: formatDateTimeFr(tournament.tournament_open_date),
       status: tournament.tournament_status,
       action: ""
     };

@@ -185,7 +185,8 @@ exports.Prisma.Tournament_rankingScalarFieldEnum = {
   registration_id: 'registration_id',
   tournament_id: 'tournament_id',
   ranking_position: 'ranking_position',
-  ranking_score: 'ranking_score'
+  ranking_score: 'ranking_score',
+  table_id: 'table_id'
 };
 
 exports.Prisma.Tournament_tableScalarFieldEnum = {
