@@ -114,25 +114,22 @@ export const safeParseDate = (dateString: string | Date): Date | null => {
 };
 
 
-export const formatDateTimeFr = (date: string | Date): string => {
+export function formatDateTimeFr(date: string | Date): string {
   const d = new Date(date);
   if (isNaN(d.getTime())) return '-';
 
-  // Partie date locale France, sans heure
-  const datePart = d.toLocaleDateString('fr-FR', {
+  // Format complet (date + heure) avec fuseau Europe/Paris
+  return d.toLocaleString('fr-FR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
-    timeZone: 'Europe/Paris',
-  });
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Paris'
+  }).replace(':', 'h');
+}
 
-  // Partie heure en UTC brute, sans décalage
-  const hours = d.getUTCHours().toString().padStart(2, '0');
-  const minutes = d.getUTCMinutes().toString().padStart(2, '0');
-  const hourPart = `${hours}h${minutes}`;
-
-  return `${datePart} ${hourPart}`;
-};
 
 
 

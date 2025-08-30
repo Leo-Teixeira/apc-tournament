@@ -32,13 +32,13 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status === "in_coming") {
-      // Création de la date "maintenant" en timezone Europe/Paris
-      const localDate = DateTime.now().setZone("Europe/Paris").toJSDate();
+      // Création date UTC
+      const utcDate = DateTime.now().toUTC().toJSDate();
 
       await prisma.tournament.update({
         where: { id: tournamentId },
         data: {
-          tournament_start_date: localDate,
+          tournament_start_date: utcDate,
           tournament_status: status
         }
       });
@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest) {
         orderBy: { level_number: "asc" }
       });
 
-      let previousEnd = new Date(localDate);
+      let previousEnd = new Date(utcDate);
 
       const updatedLevels = await Promise.all(
         levels.map((level) => {
@@ -72,8 +72,8 @@ export async function PATCH(req: NextRequest) {
 
       return NextResponse.json(
         serializeBigInt({
-          message: "Tournament started and levels updated (local time)",
-          startDate: localDate,
+          message: "Tournament started and levels updated (UTC time)",
+          startDate: utcDate,
           levels: updatedLevels
         }),
         { status: 200 }

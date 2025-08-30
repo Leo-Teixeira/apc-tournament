@@ -32,7 +32,7 @@ export const mapTournamentsToRow = (
       players,
       trimestry: trimesterObj ? trimesterObj.number : 0,
       tournament_date: formatDateTimeFr(tournament.tournament_start_date),
-      open_tournament_date: formatDateTimeFr(tournament.tournament_open_date),
+      open_tournament_date: formatDateTimeFr(tournament.tournament_open_date),      
       status: tournament.tournament_status,
       action: ""
     };
