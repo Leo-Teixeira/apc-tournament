@@ -4,6 +4,8 @@ import { tournament_tournament_status } from "@/generated/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
+process.env.TZ = process.env.VERCEL_TZ || 'UTC';
+
 export async function PATCH(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
@@ -31,9 +33,8 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status === "in_coming") {
-      const now = new Date();
-      const offsetMs = now.getTimezoneOffset() * 60000;
-      const localDate = new Date(now.getTime() - offsetMs);
+      // new Date() prendra en compte la timezone définie par process.env.TZ
+      const localDate = new Date();
 
       await prisma.tournament.update({
         where: { id: tournamentId },
