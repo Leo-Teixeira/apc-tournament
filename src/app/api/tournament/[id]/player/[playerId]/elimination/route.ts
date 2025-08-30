@@ -118,13 +118,28 @@ export async function PUT(req: NextRequest) {
 
       let ranking_position: number = 0;
       let score: number = 0; // par défaut score 0
-      const tableId: bigint | null = null;
+      let tableId: bigint | null = null;
 
       if (hasRanking) {
         if (isSitAndGo) {
-          // ... votre code SitAndGo inchangé ...
-        } else if (tournament_category === "APT") {
-          // APT inchangé
+          tableId = assignment.table_id ?? null;
+          const aliveOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              eliminated: false,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          ranking_position = aliveOnThisTable + 1;
+          const totalOnThisTable = await tx.table_assignment.count({
+            where: {
+              table_id: tableId!,
+              registration: { statut: "Confirmed" },
+            },
+          });
+          score = getSitAndGoScore(totalOnThisTable, ranking_position);
+        } else {
+          // Pour toutes catégories hors SitAndGo, calcul de la position similaire
           const aliveCount = await tx.table_assignment.count({
             where: {
               tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -133,21 +148,20 @@ export async function PUT(req: NextRequest) {
             },
           });
           ranking_position = aliveCount + 1;
-          const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
-          score = res.score;
-        } else if (tournament_category === "SPECIAUX") {
-          // Nouveau cas Tournois spéciaux
-          const aliveCount = await tx.table_assignment.count({
-            where: {
-              tournament_table: { tournament_id: BigInt(tournamentId) },
-              eliminated: false,
-              registration: { statut: "Confirmed" },
-            },
-          });
-          ranking_position = aliveCount + 1;
-          score = 0; // score toujours 0 pour spéciaux
+      
+          if (tournament_category === "APT") {
+            const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
+            score = res.score;
+          } else if (tournament_category === "SPECIAUX") {
+            // Score toujours à 0, position correcte
+            score = 0;
+          } else {
+            // Autres catégories si existantes
+            score = 0;
+          }
         }
       }
+      
 
       // Mise à jour classement tournoi toujours
       await tx.tournament_ranking.deleteMany({
