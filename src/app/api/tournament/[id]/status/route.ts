@@ -3,8 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { tournament_tournament_status } from "@/generated/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
-
-process.env.TZ = process.env.VERCEL_TZ || 'Europe/Paris';
+import { DateTime } from "luxon";
 
 export async function PATCH(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
@@ -33,8 +32,8 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status === "in_coming") {
-      // new Date() prendra en compte la timezone définie par process.env.TZ
-      const localDate = new Date();
+      // Création de la date "maintenant" en timezone Europe/Paris
+      const localDate = DateTime.now().setZone("Europe/Paris").toJSDate();
 
       await prisma.tournament.update({
         where: { id: tournamentId },
