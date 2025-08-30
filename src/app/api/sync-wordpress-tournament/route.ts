@@ -136,36 +136,34 @@ export async function PUT(req: NextRequest) {
     const existingTournament = await prisma.tournament.findFirst({
       where: { wordpress_post_id: wordpress_post_id }
     });
-    
     if (!existingTournament) {
       return NextResponse.json({ error: "Tournament not found" }, { status: 404 });
     }
 
-    // Validation et conversion similaires à POST (trimester, stack, etc.)
-    // Ici on récupère la trimester de la même façon que dans POST
+    // Validation et parsing du trimestre
     const trimmedNumberMatch = tournament_trimestry.match(/^T(\d)$/);
     if (!trimmedNumberMatch) {
       return NextResponse.json({ error: "Invalid trimester format" }, { status: 400 });
     }
     const trimesterNumber = parseInt(trimmedNumberMatch[1], 10);
 
+    // Récupérer la saison en cours
     const currentSeason = await prisma.season.findFirst({
       where: {
         status: 'in_progress',
       },
     });
-
     if (!currentSeason) {
       return NextResponse.json({ error: "Current season not found" }, { status: 400 });
     }
 
+    // Récupérer le trimestre selon numéro et saison
     const trimester = await prisma.trimester.findFirst({
       where: {
         number: trimesterNumber,
         season_id: currentSeason.id,
       },
     });
-
     if (!trimester) {
       return NextResponse.json({ error: "Trimester not found for current season" }, { status: 400 });
     }
