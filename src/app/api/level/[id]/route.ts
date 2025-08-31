@@ -125,49 +125,60 @@ export async function DELETE(request: NextRequest) {
     const tournamentId = deletedLevel.tournament_id;
     const levelNumber = deletedLevel.level_number;
 
-    await prisma.$transaction(async (tx) => {
-      await tx.tournament_level.delete({ where: { id: levelId } });
-
-      const previousLevel = await tx.tournament_level.findFirst({
-        where: {
-          tournament_id: tournamentId,
-          level_number: levelNumber - 1
-        }
-      });
-
-      const followingLevels = await tx.tournament_level.findMany({
-        where: {
-          tournament_id: tournamentId,
-          level_number: { gt: levelNumber }
-        },
-        orderBy: { level_number: "asc" }
-      });
-
-      let previousEnd = previousLevel
-        ? new Date(previousLevel.level_end)
-        : new Date(deletedLevel.level_start);
-
-      for (const level of followingLevels) {
-        const durationMin = getDurationInMinutes(
-          new Date(level.level_start),
-          new Date(level.level_end)
-        );
-
-        const newStart = new Date(previousEnd);
-        const newEnd = new Date(newStart.getTime() + durationMin * 60 * 1000);
-
-        await tx.tournament_level.update({
-          where: { id: level.id },
-          data: {
-            level_number: level.level_number - 1,
-            level_start: newStart,
-            level_end: newEnd
-          }
-        });
-
-        previousEnd = newEnd;
+    // Récupérer tous les niveaux avant la transaction
+    const previousLevel = await prisma.tournament_level.findFirst({
+      where: {
+        tournament_id: tournamentId,
+        level_number: levelNumber - 1
       }
     });
+
+    const followingLevels = await prisma.tournament_level.findMany({
+      where: {
+        tournament_id: tournamentId,
+        level_number: { gt: levelNumber }
+      },
+      orderBy: { level_number: "asc" }
+    });
+
+    let previousEnd = previousLevel
+      ? new Date(previousLevel.level_end)
+      : new Date(deletedLevel.level_start);
+
+    // Préparer la nouvelle liste avec les nouveaux horaires et numéros
+    const updates = followingLevels.map((level) => {
+      const durationMin = getDurationInMinutes(
+        new Date(level.level_start),
+        new Date(level.level_end)
+      );
+
+      const newStart = new Date(previousEnd);
+      const newEnd = new Date(newStart.getTime() + durationMin * 60 * 1000);
+
+      previousEnd = newEnd;
+
+      return {
+        id: level.id,
+        data: {
+          level_number: level.level_number - 1,
+          level_start: newStart,
+          level_end: newEnd
+        }
+      };
+    });
+
+    // Dans la transaction, n’exécute que les requêtes nécessaires
+    await prisma.$transaction(async (tx) => {
+      await tx.tournament_level.delete({ where: { id: levelId } });
+      await Promise.all(
+        updates.map((u) =>
+          tx.tournament_level.update({
+            where: { id: u.id },
+            data: u.data
+          })
+        )
+      );
+    }, { timeout: 15000 }); // Timeout monté à 15 secondes par prudence
 
     return NextResponse.json({
       message: "Level deleted and reordered successfully"
@@ -180,3 +191,4 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
