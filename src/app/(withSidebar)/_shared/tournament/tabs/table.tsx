@@ -75,7 +75,7 @@ export const TableTabs = () => {
   
       notify(
         "error",
-        `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`
+        `💀 ${selectedPlayer.registration?.wp_users?.display_name} a été éliminé par ${killerRegistration?.wp_users?.display_name}`
       );
   
       if (res?.moves?.length) {
@@ -210,7 +210,7 @@ export const TableTabs = () => {
         loading={isEliminateLoading}  // <--- ici la prop loading
       >
         <EliminatePlayerFormBody
-          eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
+          eliminatePlayer={selectedPlayer?.registration?.wp_users?.display_name ?? ""}
           allPlayerTable={killerOptions}
           selectedKillerId={selectedKillerId}
           onSelectKiller={setSelectedKillerId}
@@ -268,7 +268,7 @@ export const TableTabs = () => {
 
             notify(
               "info",
-              `🔄 ${selectedPlayerToMove?.registration?.wp_users?.pseudo_winamax} est maintenant à ${tableDest}`
+              `🔄 ${selectedPlayerToMove?.registration?.wp_users?.display_name} est maintenant à ${tableDest}`
             );
 
             setIsMoveModalOpen(false);

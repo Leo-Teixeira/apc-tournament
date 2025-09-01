@@ -134,7 +134,7 @@ export const PlayerTabs = React.memo(() => {
 
           if (!assignment) {
             const fallbackReg = registration.find(
-              (r) => r.wp_users?.pseudo_winamax === item.avatarName
+              (r) => r.wp_users?.display_name === item.avatarName
             );
             if (fallbackReg) {
               assignment = {
@@ -173,7 +173,7 @@ export const PlayerTabs = React.memo(() => {
         killerId: killerRegistrationId,
       });
 
-      notify("error", `💀 ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été éliminé par ${killerRegistration?.wp_users?.pseudo_winamax}`);
+      notify("error", `💀 ${selectedPlayer.registration?.wp_users?.display_name} a été éliminé par ${killerRegistration?.wp_users?.display_name}`);
 
       if (res?.moves?.length) {
         res.moves.forEach(move => {
@@ -246,7 +246,7 @@ export const PlayerTabs = React.memo(() => {
         loading={isEliminateLoading} // <-- Loader activé ici
       >
         <EliminatePlayerFormBody
-          eliminatePlayer={selectedPlayer?.registration?.wp_users?.pseudo_winamax ?? ""}
+          eliminatePlayer={selectedPlayer?.registration?.wp_users?.display_name ?? ""}
           allPlayerTable={killerOptions}
           selectedKillerId={selectedKillerId}
           onSelectKiller={setSelectedKillerId}
@@ -267,7 +267,7 @@ export const PlayerTabs = React.memo(() => {
               tournamentId: tournament.id,
               registrationId: selectedPlayer.registration_id
             });
-            notify("success", `✅ Élimination annulée pour ${selectedPlayer.registration?.wp_users?.pseudo_winamax}`);
+            notify("success", `✅ Élimination annulée pour ${selectedPlayer.registration?.wp_users?.display_name}`);
             setSelectedPlayer(null);
             setIsCancelKillModal(false);
           } catch (error) {
@@ -278,7 +278,7 @@ export const PlayerTabs = React.memo(() => {
       >
         <p>
           Es-tu sûr de vouloir annuler l&apos;élimination de{" "}
-          <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
+          <b>{selectedPlayer?.registration?.wp_users?.display_name}</b> ?
         </p>
       </GenericModal>
 
@@ -296,7 +296,7 @@ export const PlayerTabs = React.memo(() => {
               tournamentId: tournament.id,
               registrationId: selectedPlayer.registration_id
             });
-            notify("error", `❌ ${selectedPlayer.registration?.wp_users?.pseudo_winamax} a été retiré du tournoi`);
+            notify("error", `❌ ${selectedPlayer.registration?.wp_users?.display_name} a été retiré du tournoi`);
             setSelectedPlayer(null);
             setIsCancelStatusModal(false);
           } catch (error) {
@@ -307,7 +307,7 @@ export const PlayerTabs = React.memo(() => {
       >
         <p>
           Es-tu sûr de vouloir supprimer l&apos;invitation du joueur{" "}
-          <b>{selectedPlayer?.registration?.wp_users?.pseudo_winamax}</b> ?
+          <b>{selectedPlayer?.registration?.wp_users?.display_name}</b> ?
         </p>
       </GenericModal>
     </div>
