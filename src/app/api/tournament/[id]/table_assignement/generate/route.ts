@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
     }
     return arr;
   }
+  
 
   try {
     const { tournament } = extractParamsFromPath(req, ["tournament"]);
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Suppression des anciennes tables et assignments
+    // Suppression des anciennes tables comme avant
     const existingTables = await prisma.tournament_table.findMany({
       where: { tournament_id: BigInt(tournamentId) },
       select: { id: true }
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
       ]);
     }
 
-    // Récupération des joueurs et mélange aléatoire
+    // Obtention des joueurs et mélange aléatoire
     const registrations = await prisma.registration.findMany({
       where: {
         tournament_id: BigInt(tournamentId),
@@ -81,10 +82,10 @@ export async function POST(req: NextRequest) {
     const shuffled = shuffleArray(registrations);
     const totalPlayers = shuffled.length;
 
-    // Calcul des capacités des tables
+    // Ici, le nouveau calcul équilibré !
     const tableCapacities = getTableCapacities(totalPlayers, t.tournament_category);
 
-    // Création des tables + affectations en transaction optimisée avec timeout augmenté
+    // Création des tables & affectations comme avant...
     const createdTables = await prisma.$transaction(async (tx) => {
       const tables = [];
       for (let i = 0; i < tableCapacities.length; i++) {
@@ -97,34 +98,25 @@ export async function POST(req: NextRequest) {
         });
         tables.push(table);
       }
-
-      // Préparation des assignments à créer en masse
+      // Répartition des joueurs sur les tables
       let playerIndex = 0;
-      const assignmentsData = [];
       for (let i = 0; i < tables.length; i++) {
         const table = tables[i];
         const capacity = tableCapacities[i];
         const players = shuffled.slice(playerIndex, playerIndex + capacity);
         for (let j = 0; j < players.length; j++) {
-          assignmentsData.push({
-            registration_id: players[j].id,
-            table_id: table.id,
-            table_seat_number: j + 1
+          await tx.table_assignment.create({
+            data: {
+              registration_id: players[j].id,
+              table_id: table.id,
+              table_seat_number: j + 1
+            }
           });
         }
         playerIndex += capacity;
       }
-
-      // Insertion en masse des assignments
-      if (assignmentsData.length > 0) {
-        await tx.table_assignment.createMany({
-          data: assignmentsData,
-          skipDuplicates: true
-        });
-      }
-
       return tables;
-    }, { timeout: 20000 }); // timeout 20s
+    });
 
     return NextResponse.json(
       serializeBigInt({
@@ -140,3 +132,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
