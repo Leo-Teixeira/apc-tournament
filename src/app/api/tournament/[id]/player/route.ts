@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const alreadyRegistered = await prisma.registration.findMany({
       where: {
         tournament_id: BigInt(tournamentId),
-        wp_users: { pseudo_winamax: pseudo }
+        wp_users: { display_name: pseudo }
       }
     });
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     // Récupérer ou créer le joueur
     let user = await prisma.wp_users.findFirst({
-      where: { pseudo_winamax: pseudo }
+      where: { display_name: pseudo }
     });
 
     if (!user) {
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
           user_pass: "",
           user_nicename: `${firstName} ${lastName}`,
           user_email: `${pseudo}@external.com`,
-          display_name: `${firstName} ${lastName}`,
+          display_name: pseudo,
           pseudo_winamax: pseudo,
           user_registered: new Date(),
           photo_url: ""

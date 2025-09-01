@@ -38,14 +38,12 @@ export const PlayerFormBody = ({
     const filtered = players.filter((p): p is WPUser => {
       // ici p est de type User, mais la fonction sert à affirmer que p est un WPUser si condition vraie
       return (
-        "pseudo_winamax" in p &&
         "display_name" in p &&
         (
-          (p as WPUser).pseudo_winamax.toLowerCase().startsWith(search.toLowerCase()) ||
           (p as WPUser).display_name.toLowerCase().startsWith(search.toLowerCase())
         ) &&
         !registration.some(
-          (r) => r.wp_users?.pseudo_winamax === p.pseudo_winamax)
+          (r) => r.wp_users?.display_name === p.display_name)
       );
     });
     
@@ -78,8 +76,8 @@ export const PlayerFormBody = ({
                   key={player.ID}
                   className="py-1 px-2 rounded hover:bg-default-200 cursor-pointer transition-colors"
                   onClick={() => {
-                    setPseudo(player.pseudo_winamax);
-                    setSearch(player.pseudo_winamax);
+                    setPseudo(player.display_name);
+                    setSearch(player.display_name);
                   }}>
                   {player.display_name}
                 </li>
