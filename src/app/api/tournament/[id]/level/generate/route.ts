@@ -3,6 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
+type Level = {
+  tournament_id: bigint;
+  level_number: number;
+  level_start: Date;
+  level_end: Date;
+  level_small_blinde: number;
+  level_big_blinde: number;
+  level_pause: boolean;
+  level_chip_race: boolean;
+  level_ante: number;
+};
+
 export async function POST(req: NextRequest) {
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
 
@@ -38,17 +50,19 @@ export async function POST(req: NextRequest) {
     const totalMinutes =
       estimateDuration.getUTCHours() * 60 + estimateDuration.getUTCMinutes();
 
-    const levels: any[] = [];
+    const levels: Level[] = [];
     let currentTime = new Date(startDate);
     let elapsedMinutes = 0;
     let levelNumber = 1;
     let sb = 25;
     let bb = 50;
+    const PAUSE_DURATION = 15;
+    const LEVEL_DURATION = 20;
     let consecutivePlayedLevels = 0;
 
     while (elapsedMinutes < totalMinutes) {
       const isPause = consecutivePlayedLevels === 3;
-      const duration = isPause ? 15 : 20;
+      const duration = isPause ? PAUSE_DURATION : LEVEL_DURATION;
 
       const levelStart = new Date(currentTime);
       const levelEnd = new Date(currentTime);
@@ -63,14 +77,14 @@ export async function POST(req: NextRequest) {
         level_big_blinde: isPause ? 0 : bb,
         level_pause: isPause,
         level_chip_race: false,
-        level_ante: 0
+        level_ante: 0,
       });
 
       if (isPause) {
         consecutivePlayedLevels = 0;
       } else {
         sb = bb;
-        bb += 50;
+        bb += bb;
         consecutivePlayedLevels++;
       }
 

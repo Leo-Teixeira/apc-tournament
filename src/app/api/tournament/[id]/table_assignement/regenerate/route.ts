@@ -33,13 +33,15 @@ export async function POST(req: NextRequest) {
 
       const tableIds = existingTables.map((t) => t.id);
 
-      await tx.table_assignment.deleteMany({
-        where: { table_id: { in: tableIds } }
-      });
+      if (tableIds.length > 0) {
+        await tx.table_assignment.deleteMany({
+          where: { table_id: { in: tableIds } }
+        });
 
-      await tx.tournament_table.deleteMany({
-        where: { tournament_id: BigInt(tournamentId) }
-      });
+        await tx.tournament_table.deleteMany({
+          where: { id: { in: tableIds } }
+        });
+      }
 
       const shuffled = registrations.sort(() => Math.random() - 0.5);
       const totalPlayers = shuffled.length;
@@ -51,6 +53,7 @@ export async function POST(req: NextRequest) {
       const tables = [];
       let playerIndex = 0;
 
+      // Création des tables
       for (let i = 0; i < totalTables; i++) {
         const remaining = totalPlayers - playerIndex;
         const capacity = i < fullTableCount ? playersPerTable : remaining;
@@ -63,21 +66,31 @@ export async function POST(req: NextRequest) {
           }
         });
 
-        for (let j = 0; j < capacity; j++) {
-          if (playerIndex >= totalPlayers) break;
+        tables.push({ table, capacity });
+        playerIndex += capacity;
+      }
 
-          await tx.table_assignment.create({
-            data: {
-              registration_id: shuffled[playerIndex].id,
-              table_id: table.id,
-              table_seat_number: j + 1
-            }
+      // Préparation des assignments
+      playerIndex = 0;
+      const assignmentsData = [];
+      for (let i = 0; i < tables.length; i++) {
+        const { table, capacity } = tables[i];
+        const players = shuffled.slice(playerIndex, playerIndex + capacity);
+        for (let j = 0; j < players.length; j++) {
+          assignmentsData.push({
+            registration_id: players[j].id,
+            table_id: table.id,
+            table_seat_number: j + 1
           });
-
-          playerIndex++;
         }
+        playerIndex += capacity;
+      }
 
-        tables.push(table);
+      if (assignmentsData.length > 0) {
+        await tx.table_assignment.createMany({
+          data: assignmentsData,
+          skipDuplicates: true
+        });
       }
     });
 

@@ -1,9 +1,8 @@
-import { tournamentLevelMocks } from "@/mock";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
-import { getDurationInMinutes } from "@/app/utils/date";
 import { extractParamsFromPath } from "@/app/utils/api-params";
+import { getDurationInMinutes } from "@/app/utils/date";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -37,18 +36,7 @@ export async function PUT(req: NextRequest) {
     const updatedEnd = new Date(levelStart);
     updatedEnd.setMinutes(updatedEnd.getMinutes() + duration);
 
-    const updatedLevel = await prisma.tournament_level.update({
-      where: { id: levelId },
-      data: {
-        level_end: updatedEnd,
-        level_small_blinde: data.level_small_blinde,
-        level_big_blinde: data.level_big_blinde,
-        level_pause: data.level_pause,
-        level_chip_race: data.level_chip_race,
-        level_ante: data.level_ante
-      }
-    });
-
+    // Récupérer tous les niveaux du tournoi ordonnés
     const allLevels = await prisma.tournament_level.findMany({
       where: { tournament_id: currentLevel.tournament_id },
       orderBy: { level_number: "asc" }
@@ -64,34 +52,59 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    let currentTime = new Date(updatedEnd);
-    const updateFollowing = [];
+    const updatedLevelData = {
+      level_end: updatedEnd,
+      level_small_blinde: data.level_small_blinde,
+      level_big_blinde: data.level_big_blinde,
+      level_pause: data.level_pause,
+      level_chip_race: data.level_chip_race,
+      level_ante: data.level_ante
+    };
 
+    // Préparation des mises à jour pour les niveaux suivants
+    let currentTime = new Date(updatedEnd);
+    const updates: { id: bigint; data: { level_start: Date; level_end: Date; }; }[] = [];
     for (let i = updatedIndex + 1; i < allLevels.length; i++) {
       const level = allLevels[i];
-      const duration =
+      const durationMinutes =
         (new Date(level.level_end).getTime() -
-          new Date(level.level_start).getTime()) /
+         new Date(level.level_start).getTime()) /
         60000;
 
       const newStart = new Date(currentTime);
       const newEnd = new Date(currentTime);
-      newEnd.setMinutes(newEnd.getMinutes() + duration);
+      newEnd.setMinutes(newEnd.getMinutes() + durationMinutes);
 
-      updateFollowing.push(
-        prisma.tournament_level.update({
-          where: { id: level.id },
-          data: {
-            level_start: newStart,
-            level_end: newEnd
-          }
-        })
-      );
+      updates.push({
+        id: level.id,
+        data: {
+          level_start: newStart,
+          level_end: newEnd
+        }
+      });
 
       currentTime = newEnd;
     }
 
-    await Promise.all(updateFollowing);
+    // Transaction unique avec update du niveau modifié puis updates batchés
+    await prisma.$transaction(async (tx) => {
+      await tx.tournament_level.update({
+        where: { id: levelId },
+        data: updatedLevelData
+      });
+
+      // Enchaîner les updates suivants dans la transaction
+      for (const u of updates) {
+        await tx.tournament_level.update({
+          where: { id: u.id },
+          data: u.data
+        });
+      }
+    });
+
+    const updatedLevel = await prisma.tournament_level.findUnique({
+      where: { id: levelId }
+    });
 
     return NextResponse.json(serializeBigInt(updatedLevel));
   } catch (error) {
@@ -103,9 +116,9 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { level } = extractParamsFromPath(request, ["level"]);
+    const { level } = extractParamsFromPath(req, ["level"]);
     if (!level) {
       return NextResponse.json(
         { error: "Level ID is required" },
@@ -113,11 +126,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const levelId = parseInt(level);
+    const levelId = BigInt(level);
     const deletedLevel = await prisma.tournament_level.findUnique({
       where: { id: levelId }
     });
-
     if (!deletedLevel) {
       return NextResponse.json({ error: "Level not found" }, { status: 404 });
     }
@@ -125,7 +137,7 @@ export async function DELETE(request: NextRequest) {
     const tournamentId = deletedLevel.tournament_id;
     const levelNumber = deletedLevel.level_number;
 
-    // Récupérer tous les niveaux avant la transaction
+    // Récupérer niveaux précédents et suivants hors transaction (optimisation)
     const previousLevel = await prisma.tournament_level.findFirst({
       where: {
         tournament_id: tournamentId,
@@ -145,7 +157,7 @@ export async function DELETE(request: NextRequest) {
       ? new Date(previousLevel.level_end)
       : new Date(deletedLevel.level_start);
 
-    // Préparer la nouvelle liste avec les nouveaux horaires et numéros
+    // Préparer mises à jour avec nouveaux horaires et numéros
     const updates = followingLevels.map((level) => {
       const durationMin = getDurationInMinutes(
         new Date(level.level_start),
@@ -167,18 +179,16 @@ export async function DELETE(request: NextRequest) {
       };
     });
 
-    // Dans la transaction, n’exécute que les requêtes nécessaires
     await prisma.$transaction(async (tx) => {
       await tx.tournament_level.delete({ where: { id: levelId } });
-      await Promise.all(
-        updates.map((u) =>
-          tx.tournament_level.update({
-            where: { id: u.id },
-            data: u.data
-          })
-        )
-      );
-    }, { timeout: 15000 }); // Timeout monté à 15 secondes par prudence
+
+      for (const u of updates) {
+        await tx.tournament_level.update({
+          where: { id: u.id },
+          data: u.data
+        });
+      }
+    }, { timeout: 15000 });
 
     return NextResponse.json({
       message: "Level deleted and reordered successfully"
@@ -191,4 +201,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-

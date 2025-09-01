@@ -2,7 +2,6 @@ import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { extractParamsFromPath } from "@/app/utils/api-params";
-import { formatDate } from "@/app/utils/date";
 
 export async function PATCH(req: NextRequest) {
   console.log("🔄 Début PATCH tournois");
@@ -37,7 +36,6 @@ export async function PATCH(req: NextRequest) {
     const now = new Date();
     const offsetInMinutes = now.getTimezoneOffset();
     const nowWithOffset = new Date(now.getTime() - offsetInMinutes * 60 * 1000);
-    // nowWithOffset est la date ajustée pour avoir l'heure locale comme temps UTC
 
     console.log(`⏰ Moment actuel : ${now.toISOString()}`);
 
@@ -52,8 +50,8 @@ export async function PATCH(req: NextRequest) {
     }
     console.log("🔍 Données tournoi récupérées:", tournamentData);
 
-    // Mise en pause
     if (pause) {
+      // Mise en pause simple
       const updated = await prisma.tournament.update({
         where: { id: tournamentId },
         data: {
@@ -65,25 +63,22 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json(serializeBigInt(updated));
     }
 
-    // Reprise du tournoi
     if (!tournamentData.tournament_pause_date) {
       console.log("❌ Pas de date de pause trouvée lors de la reprise");
       return NextResponse.json({ error: "No pause date set" }, { status: 400 });
     }
 
     const pauseDate = new Date(tournamentData.tournament_pause_date);
-
     let pauseDurationMs = nowWithOffset.getTime() - pauseDate.getTime();
     if (pauseDurationMs < 0) {
       console.warn("Durée pause négative détectée, correction appliquée");
       pauseDurationMs = 0;
     }
 
-    const updatedLevels = [];
+    const updatedLevels: { id: bigint; level_start: Date; level_end: Date; }[] = [];
     let foundPauseLevel = false;
 
     for (const level of tournamentData.tournament_level) {
-      // Note : ici pas besoin de modifier levelStart/levelEnd, ils sont ok en UTC
       const levelStart = new Date(level.level_start);
       const levelEnd = new Date(level.level_end);
 
@@ -92,7 +87,6 @@ export async function PATCH(req: NextRequest) {
           foundPauseLevel = true;
 
           const remainingLevelMs = levelEnd.getTime() - pauseDate.getTime();
-
           const newLevelStart = nowWithOffset;
           const newLevelEnd = new Date(newLevelStart.getTime() + remainingLevelMs);
 
@@ -101,7 +95,6 @@ export async function PATCH(req: NextRequest) {
             level_start: newLevelStart,
             level_end: newLevelEnd,
           });
-
         } else {
           updatedLevels.push({
             id: level.id,
@@ -110,7 +103,7 @@ export async function PATCH(req: NextRequest) {
           });
         }
       } else {
-        // Décalage complet pour les niveaux suivants du temps de la pause
+        // Décalage complet des niveaux suivants par la durée de pause
         const newLevelStart = new Date(levelStart.getTime() + pauseDurationMs);
         const newLevelEnd = new Date(levelEnd.getTime() + pauseDurationMs);
 
@@ -122,26 +115,27 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-
     console.log("▶️ Mise à jour en base via transaction");
-    await prisma.$transaction([
-      prisma.tournament.update({
+
+    await prisma.$transaction(async (tx) => {
+      await tx.tournament.update({
         where: { id: tournamentId },
         data: {
           tournament_pause: false,
           tournament_pause_date: null,
         },
-      }),
-      ...updatedLevels.map((lvl) =>
-        prisma.tournament_level.update({
+      });
+
+      for (const lvl of updatedLevels) {
+        await tx.tournament_level.update({
           where: { id: lvl.id },
           data: {
             level_start: lvl.level_start,
             level_end: lvl.level_end,
           },
-        })
-      ),
-    ]);
+        });
+      }
+    });
 
     console.log("✅ Tournoi repris et niveaux mis à jour");
 

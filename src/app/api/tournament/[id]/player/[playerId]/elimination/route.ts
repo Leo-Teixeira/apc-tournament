@@ -5,10 +5,9 @@ import { Prisma, tournament_tournament_status } from "@/generated/prisma";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
-
 function getAptScore(total: number, rank: number): number {
   const aptScoreRanges = [
-    { min: 0,  max: 15, scores: [26, 18, 12, 8, 6, 5] },
+    { min: 0, max: 15, scores: [26, 18, 12, 8, 6, 5] },
     { min: 16, max: 20, scores: [28, 20, 15, 11, 8, 5, 3] },
     { min: 21, max: 25, scores: [35, 25, 18, 13, 9, 6, 4, 3, 2] },
     { min: 26, max: 30, scores: [40, 28, 21, 15, 11, 8, 6, 4, 3, 2, 1] },
@@ -23,7 +22,6 @@ function getAptScore(total: number, rank: number): number {
   return range?.scores[rank - 1] ?? 0;
 }
 
-
 function getSitAndGoScore(total: number, rank: number): number {
   const sitAndGoScores: Record<number, number[]> = {
     5: [5, 2, 0, 0, 0],
@@ -35,7 +33,6 @@ function getSitAndGoScore(total: number, rank: number): number {
   const scores = sitAndGoScores[total];
   return scores ? scores[rank - 1] ?? 0 : 0;
 }
-
 
 async function getScoreAndRankingPosition(
   tx: Prisma.TransactionClient,
@@ -65,7 +62,6 @@ async function getScoreAndRankingPosition(
   return { ranking_position, score, tournament_category: tournament.tournament_category, totalRegistrations };
 }
 
-
 export async function PUT(req: NextRequest) {
   const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
   if (!tournament || !player) {
@@ -91,7 +87,7 @@ export async function PUT(req: NextRequest) {
 
     const { tournament_category } = tournamentData;
     const needReequilibrage = tournament_category !== "SITANDGO";
-    const hasRanking = tournament_category === "APT" || tournament_category === "SITANDGO" || tournament_category === "SPECIAUX";
+    const hasRanking = ["APT", "SITANDGO", "SPECIAUX"].includes(tournament_category);
     const isSitAndGo = tournament_category === "SITANDGO";
 
     const assignment = await prisma.table_assignment.findFirst({
@@ -103,7 +99,6 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Assignment or registration not found" }, { status: 404 });
     }
 
-    // Récupérer le rôle de l'utilisateur lié à la registration
     const userMeta = await prisma.wp_usermeta.findFirst({
       where: {
         user_id: assignment.registration.user_id,
@@ -112,43 +107,45 @@ export async function PUT(req: NextRequest) {
       select: { meta_value: true },
     });
 
-    // --- Transaction : élimination + MAJ classement avec check rôle ---
+    // Élimination + MAJ classement dans une transaction unique
     const result = await prisma.$transaction(async (tx) => {
       await tx.table_assignment.update({
         where: { id: assignment.id },
         data: { eliminated: true, user_kill_id: BigInt(user_kill_id) },
       });
 
-      let ranking_position: number = 0;
-      let score: number = 0; // score par défaut à 0
+      let ranking_position = 0;
+      let score = 0;
       let tableId: bigint | null = null;
 
       if (hasRanking) {
         if (isSitAndGo) {
           tableId = assignment.table_id ?? null;
+
           const aliveOnThisTable = await tx.table_assignment.count({
             where: {
               table_id: tableId!,
               eliminated: false,
               registration: { statut: "Confirmed" },
-            },
+            }
           });
           ranking_position = aliveOnThisTable + 1;
+
           const totalOnThisTable = await tx.table_assignment.count({
             where: {
               table_id: tableId!,
               registration: { statut: "Confirmed" },
-            },
+            }
           });
+
           score = getSitAndGoScore(totalOnThisTable, ranking_position);
         } else {
-          // Pour toutes catégories hors SitAndGo
           const aliveCount = await tx.table_assignment.count({
             where: {
               tournament_table: { tournament_id: BigInt(tournamentId) },
               eliminated: false,
               registration: { statut: "Confirmed" },
-            },
+            }
           });
           ranking_position = aliveCount + 1;
 
@@ -156,14 +153,13 @@ export async function PUT(req: NextRequest) {
             const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
             score = res.score;
           } else if (tournament_category === "SPECIAUX") {
-            score = 0; // score toujours 0 pour spéciaux
+            score = 0;
           } else {
             score = 0;
           }
         }
       }
 
-      // Mise à jour classement tournoi toujours
       await tx.tournament_ranking.deleteMany({
         where: {
           registration_id: assignment.registration.id,
@@ -181,7 +177,6 @@ export async function PUT(req: NextRequest) {
         },
       });
 
-      // Suite inchangée ...
       const aliveCount = await tx.table_assignment.count({
         where: {
           tournament_table: { tournament_id: BigInt(tournamentId) },
@@ -193,7 +188,6 @@ export async function PUT(req: NextRequest) {
       return { ranking_position, score, aliveCount };
     });
 
-    // --- Rééquilibrage ---
     let rebalanced = false;
     let moves: {
       playerName: string;
@@ -221,7 +215,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // --- Fin du tournoi ---
     let tournamentFinished = false;
     if (isSitAndGo) {
       const tables = await prisma.tournament_table.findMany({
@@ -263,7 +256,6 @@ export async function PUT(req: NextRequest) {
               tournament_id: BigInt(tournamentId),
             },
           });
-
           await prisma.tournament_ranking.create({
             data: {
               registration_id: survivor.registration.id,
@@ -291,7 +283,6 @@ export async function PUT(req: NextRequest) {
               tournament_id: BigInt(tournamentId),
             },
           });
-
           await prisma.tournament_ranking.create({
             data: {
               registration_id: lastAssignment.registration.id,

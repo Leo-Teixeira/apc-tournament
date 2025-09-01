@@ -35,40 +35,47 @@ export async function PATCH(req: NextRequest) {
       // Création date UTC
       const utcDate = DateTime.now().toUTC().toJSDate();
 
-      await prisma.tournament.update({
-        where: { id: tournamentId },
-        data: {
-          tournament_start_date: utcDate,
-          tournament_status: status
-        }
-      });
-
+      // Récupération des niveaux triés avant la transaction
       const levels = await prisma.tournament_level.findMany({
         where: { tournament_id: tournamentId },
         orderBy: { level_number: "asc" }
       });
 
+      // Calcul des nouveaux horaires
       let previousEnd = new Date(utcDate);
+      const updateLevelsData = levels.map(level => {
+        const originalDuration =
+          new Date(level.level_end).getTime() - new Date(level.level_start).getTime();
 
-      const updatedLevels = await Promise.all(
-        levels.map((level) => {
-          const originalDuration =
-            new Date(level.level_end).getTime() -
-            new Date(level.level_start).getTime();
+        const start = new Date(previousEnd);
+        const end = new Date(start.getTime() + originalDuration);
+        previousEnd = end;
 
-          const start = new Date(previousEnd);
-          const end = new Date(start.getTime() + originalDuration);
-          previousEnd = end;
+        return {
+          id: level.id,
+          data: {
+            level_start: start,
+            level_end: end
+          }
+        };
+      });
 
-          return prisma.tournament_level.update({
-            where: { id: level.id },
-            data: {
-              level_start: start,
-              level_end: end
-            }
-          });
-        })
-      );
+      // Transaction regroupée : mise à jour tournoi + tous les niveaux
+      const [updatedTournament, ...updatedLevels] = await prisma.$transaction([
+        prisma.tournament.update({
+          where: { id: tournamentId },
+          data: {
+            tournament_start_date: utcDate,
+            tournament_status: status
+          }
+        }),
+        ...updateLevelsData.map(levelUpdate =>
+          prisma.tournament_level.update({
+            where: { id: levelUpdate.id },
+            data: levelUpdate.data
+          })
+        )
+      ]);
 
       return NextResponse.json(
         serializeBigInt({

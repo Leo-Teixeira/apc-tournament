@@ -25,18 +25,20 @@ export async function POST(req: NextRequest) {
     }
 
     if (mode === "swap") {
-      const [playerA, playerB] = await prisma.table_assignment.findMany({
+      const players = await prisma.table_assignment.findMany({
         where: {
           id: { in: [BigInt(playerId), BigInt(targetId)] }
         }
       });
 
-      if (!playerA || !playerB) {
+      if (players.length !== 2) {
         return NextResponse.json(
           { error: "Joueurs non trouvés" },
           { status: 404 }
         );
       }
+
+      const [playerA, playerB] = players;
 
       await prisma.$transaction([
         prisma.table_assignment.update({
@@ -82,6 +84,7 @@ export async function POST(req: NextRequest) {
 
       let targetSeat = seatNumber ? parseInt(seatNumber) : 1;
       if (!targetSeat || isNaN(targetSeat) || targetSeat < 1) {
+        targetSeat = 1;
         while (usedSeats.includes(targetSeat)) targetSeat++;
       }
 
