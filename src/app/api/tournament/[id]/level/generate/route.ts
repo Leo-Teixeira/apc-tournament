@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
         consecutivePlayedLevels = 0;
       } else {
         sb = bb;
-        bb += bb;
+        bb += 50;
         consecutivePlayedLevels++;
       }
 
