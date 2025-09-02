@@ -136,6 +136,12 @@ export function formatHourFr(date: string | Date): string {
   }).replace(':', 'h');
 }
 
+export const formatDurationFromMinutes = (minutes: number) => {
+  if (typeof minutes !== "number" || minutes < 0) return "-";
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m > 0 ? `${h}h${m}` : `${h}h`;
+};
 
 
 

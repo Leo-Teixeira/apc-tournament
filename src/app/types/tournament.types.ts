@@ -11,7 +11,7 @@ export type Tournament = {
   tournament_description: string;
   tournament_start_date: Date;
   tournament_open_date: Date;
-  estimate_duration: Date;
+  estimate_duration: number;
   tournament_stack: number;
   tournament_pause: boolean;
   tournament_pause_date?: Date;

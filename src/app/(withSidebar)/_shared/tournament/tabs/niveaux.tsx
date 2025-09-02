@@ -106,7 +106,9 @@ export const NiveauxTabs: React.FC = () => {
             console.error("Erreur suppression niveau :", error);
             alert("Une erreur est survenue.");
           }
-        }}>
+        }}
+        loading={deleteLevelMutation.isLoading}
+        >
         <p>
           Es-tu sûr de vouloir supprimer le niveau <b>{levelToDelete?.level}</b>{" "}
           ?
@@ -134,7 +136,9 @@ export const NiveauxTabs: React.FC = () => {
             console.error("Erreur modification niveau :", error);
             alert("Une erreur est survenue.");
           }
-        }}>
+        }}
+        loading={updateLevelMutation.isLoading}
+        >
         <NiveauFormBody
           isModify={true}
           tournamentStart={new Date(levels?.[0]?.level_start)}

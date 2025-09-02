@@ -8730,6 +8730,7 @@ export namespace Prisma {
     id: number | null
     wordpress_post_id: number | null
     tournament_trimestry: number | null
+    estimate_duration: number | null
     tournament_stack: number | null
   }
 
@@ -8737,6 +8738,7 @@ export namespace Prisma {
     id: bigint | null
     wordpress_post_id: bigint | null
     tournament_trimestry: bigint | null
+    estimate_duration: number | null
     tournament_stack: number | null
   }
 
@@ -8750,7 +8752,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | null
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
-    estimate_duration: Date | null
+    estimate_duration: number | null
     tournament_stack: number | null
     tournament_pause: boolean | null
     tournament_pause_date: Date | null
@@ -8768,7 +8770,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | null
     tournament_category: $Enums.tournament_tournament_category | null
     tournament_status: $Enums.tournament_tournament_status | null
-    estimate_duration: Date | null
+    estimate_duration: number | null
     tournament_stack: number | null
     tournament_pause: boolean | null
     tournament_pause_date: Date | null
@@ -8800,6 +8802,7 @@ export namespace Prisma {
     id?: true
     wordpress_post_id?: true
     tournament_trimestry?: true
+    estimate_duration?: true
     tournament_stack?: true
   }
 
@@ -8807,6 +8810,7 @@ export namespace Prisma {
     id?: true
     wordpress_post_id?: true
     tournament_trimestry?: true
+    estimate_duration?: true
     tournament_stack?: true
   }
 
@@ -8961,7 +8965,7 @@ export namespace Prisma {
     tournament_trimestry: bigint
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date
+    estimate_duration: number
     tournament_stack: number
     tournament_pause: boolean
     tournament_pause_date: Date | null
@@ -9061,7 +9065,7 @@ export namespace Prisma {
       tournament_trimestry: bigint
       tournament_category: $Enums.tournament_tournament_category
       tournament_status: $Enums.tournament_tournament_status
-      estimate_duration: Date
+      estimate_duration: number
       tournament_stack: number
       tournament_pause: boolean
       tournament_pause_date: Date | null
@@ -9450,7 +9454,7 @@ export namespace Prisma {
     readonly tournament_trimestry: FieldRef<"tournament", 'BigInt'>
     readonly tournament_category: FieldRef<"tournament", 'tournament_tournament_category'>
     readonly tournament_status: FieldRef<"tournament", 'tournament_tournament_status'>
-    readonly estimate_duration: FieldRef<"tournament", 'DateTime'>
+    readonly estimate_duration: FieldRef<"tournament", 'Int'>
     readonly tournament_stack: FieldRef<"tournament", 'Int'>
     readonly tournament_pause: FieldRef<"tournament", 'Boolean'>
     readonly tournament_pause_date: FieldRef<"tournament", 'DateTime'>
@@ -46764,7 +46768,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    estimate_duration?: IntFilter<"tournament"> | number
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
@@ -46814,7 +46818,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    estimate_duration?: IntFilter<"tournament"> | number
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
@@ -46863,7 +46867,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntWithAggregatesFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusWithAggregatesFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeWithAggregatesFilter<"tournament"> | Date | string
+    estimate_duration?: IntWithAggregatesFilter<"tournament"> | number
     tournament_stack?: IntWithAggregatesFilter<"tournament"> | number
     tournament_pause?: BoolWithAggregatesFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableWithAggregatesFilter<"tournament"> | Date | string | null
@@ -49553,7 +49557,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -49575,7 +49579,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -49597,7 +49601,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49619,7 +49623,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49641,7 +49645,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -49659,7 +49663,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49676,7 +49680,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52782,6 +52786,7 @@ export namespace Prisma {
     id?: SortOrder
     wordpress_post_id?: SortOrder
     tournament_trimestry?: SortOrder
+    estimate_duration?: SortOrder
     tournament_stack?: SortOrder
   }
 
@@ -52825,6 +52830,7 @@ export namespace Prisma {
     id?: SortOrder
     wordpress_post_id?: SortOrder
     tournament_trimestry?: SortOrder
+    estimate_duration?: SortOrder
     tournament_stack?: SortOrder
   }
 
@@ -56303,7 +56309,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -56324,7 +56330,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -56478,7 +56484,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56499,7 +56505,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56655,7 +56661,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -56676,7 +56682,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -56742,7 +56748,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFilter<"tournament"> | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFilter<"tournament"> | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFilter<"tournament"> | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFilter<"tournament"> | Date | string
+    estimate_duration?: IntFilter<"tournament"> | number
     tournament_stack?: IntFilter<"tournament"> | number
     tournament_pause?: BoolFilter<"tournament"> | boolean
     tournament_pause_date?: DateTimeNullableFilter<"tournament"> | Date | string | null
@@ -57173,7 +57179,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -57194,7 +57200,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -57231,7 +57237,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57252,7 +57258,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57298,7 +57304,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -57319,7 +57325,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -57387,7 +57393,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57408,7 +57414,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57455,7 +57461,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -57476,7 +57482,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_stack: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
@@ -57529,7 +57535,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57550,7 +57556,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_stack?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58276,7 +58282,7 @@ export namespace Prisma {
     tournament_trimestry: bigint | number
     tournament_category: $Enums.tournament_tournament_category
     tournament_status: $Enums.tournament_tournament_status
-    estimate_duration: Date | string
+    estimate_duration: number
     tournament_pause?: boolean
     tournament_pause_date?: Date | string | null
     tournament_background_1?: string | null
@@ -58305,7 +58311,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58326,7 +58332,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58347,7 +58353,7 @@ export namespace Prisma {
     tournament_trimestry?: BigIntFieldUpdateOperationsInput | bigint | number
     tournament_category?: Enumtournament_tournament_categoryFieldUpdateOperationsInput | $Enums.tournament_tournament_category
     tournament_status?: Enumtournament_tournament_statusFieldUpdateOperationsInput | $Enums.tournament_tournament_status
-    estimate_duration?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimate_duration?: IntFieldUpdateOperationsInput | number
     tournament_pause?: BoolFieldUpdateOperationsInput | boolean
     tournament_pause_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tournament_background_1?: NullableStringFieldUpdateOperationsInput | string | null

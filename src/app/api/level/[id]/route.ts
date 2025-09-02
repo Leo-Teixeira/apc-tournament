@@ -188,7 +188,7 @@ export async function DELETE(req: NextRequest) {
           data: u.data
         });
       }
-    }, { timeout: 15000 });
+    }, { timeout: 5000 });
 
     return NextResponse.json({
       message: "Level deleted and reordered successfully"

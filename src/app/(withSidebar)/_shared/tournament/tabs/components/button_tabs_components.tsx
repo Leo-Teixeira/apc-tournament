@@ -89,7 +89,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
     case "2":
       return (
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-          {tournamentStatus !== "in_coming" && (
+          {/* {tournamentStatus !== "in_coming" && tourn && ( */}
             <ButtonComponents
               text="Ajouter un joueur"
               onClick={onAddPlayer}
@@ -98,7 +98,7 @@ export const ButtonTabsComponents: React.FC<ButtonTabsProps> = ({
               loading={isAddPlayerLoading}
               disabled={isAddPlayerLoading}
             />
-          )}
+          {/* )} */}
         </div>
       );
 

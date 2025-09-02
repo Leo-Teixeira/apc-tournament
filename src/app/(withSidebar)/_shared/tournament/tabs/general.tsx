@@ -1,7 +1,7 @@
 import { Card, Divider } from "@heroui/react";
 import { BackgroundComponent } from "./components/background_components";
 import { ClassementComponent } from "./components/classement_components";
-import { formatDate, formatDateFr, formatDateFR, formatHour, formatHourFr, formatHourFR, formatHourUTC, parseLocalDateTime, toLocalISOString } from "@/app/utils/date";
+import { formatDate, formatDateFr, formatDateFR, formatDurationFromMinutes, formatHour, formatHourFr, formatHourFR, formatHourUTC, parseLocalDateTime, toLocalISOString } from "@/app/utils/date";
 import { useTournamentContext } from "@/app/providers/TournamentContextProvider";
 
 export const GeneralTabs = () => {
@@ -23,10 +23,8 @@ export const GeneralTabs = () => {
   const openDateString = openDate ? formatDateFr(openDate) : "";
   const openTimeString = openDate ? formatHourFr(openDate) : "";
 
-
-
   const durationFormatted = tournament?.estimate_duration
-    ? formatHour(tournament.estimate_duration)
+    ? formatDurationFromMinutes(tournament.estimate_duration)
     : "";
 
   return (

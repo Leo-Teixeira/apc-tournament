@@ -46,10 +46,8 @@ export async function POST(req: NextRequest) {
     }
 
     const startDate = new Date(tournamentData.tournament_start_date);
-    const estimateDuration = new Date(tournamentData.estimate_duration);
-    const totalMinutes =
-      estimateDuration.getUTCHours() * 60 + estimateDuration.getUTCMinutes();
-
+    const totalMinutes = tournamentData.estimate_duration; // Durée déjà en minutes
+    
     const levels: Level[] = [];
     let currentTime = new Date(startDate);
     let elapsedMinutes = 0;

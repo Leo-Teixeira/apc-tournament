@@ -87,7 +87,7 @@ export async function PUT(req: NextRequest) {
 
     const { tournament_category } = tournamentData;
     const needReequilibrage = tournament_category !== "SITANDGO";
-    const hasRanking = ["APT", "SITANDGO", "SPECIAUX"].includes(tournament_category);
+    const hasRanking = ["APT", "SITANDGO", "SPECIAUX", "SOLIPOKER"].includes(tournament_category);
     const isSitAndGo = tournament_category === "SITANDGO";
 
     const assignment = await prisma.table_assignment.findFirst({

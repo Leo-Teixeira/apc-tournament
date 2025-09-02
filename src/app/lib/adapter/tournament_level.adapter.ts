@@ -21,7 +21,7 @@ export const mapTournamentLevelsToRow = (
         level: level.level_pause ? "Pause" : level.level_number,
         small: level.level_pause ? "" : level.level_small_blinde.toString(),
         big: level.level_pause ? "" : level.level_big_blinde.toString(),
-        ante: "-",
+        ante: level.level_ante ?? '-',
         pause: level.level_pause,
         duration: `${durationMinutes}"`,
         time: formatHourFr(start),  // Utilise formatHour pour UTC brute

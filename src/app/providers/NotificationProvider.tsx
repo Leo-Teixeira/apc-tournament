@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useRef } from "react";
 
 type Notification = {
   id: number;
@@ -11,12 +11,11 @@ type NotificationContextType = {
   notify: (type: Notification["type"], message: string) => void;
 };
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined
-);
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const timers = useRef<Map<number, NodeJS.Timeout>>(new Map());
 
   useEffect(() => {
     if (notifications.length > 0) {
@@ -27,13 +26,26 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [notifications]);
 
+  const removeNotification = (id: number) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    // Nettoie aussi le timer associé
+    const timeout = timers.current.get(id);
+    if (timeout) {
+      clearTimeout(timeout);
+      timers.current.delete(id);
+    }
+  };
+
   const notify = (type: Notification["type"], message: string) => {
     const id = Date.now();
     setNotifications((prev) => [...prev, { id, type, message }]);
 
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
-    }, 5000);
+    // Durée plus longue (ex: 8s)
+    const timeout = setTimeout(() => {
+      removeNotification(id);
+    }, 15000);
+
+    timers.current.set(id, timeout);
   };
 
   return (
@@ -43,12 +55,21 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         {notifications.map((n) => (
           <div
             key={n.id}
-            className={`min-w-[280px] max-w-[400px] px-6 py-4 rounded-xl shadow-lg text-white text-lg font-medium
+            className={`min-w-[280px] max-w-[400px] px-6 py-4 rounded-xl shadow-lg text-white text-lg font-medium flex justify-between items-center
               ${n.type === "success" ? "bg-green-600" : ""}
               ${n.type === "error" ? "bg-red-600" : ""}
-              ${n.type === "info" ? "bg-blue-600" : ""}`}
+              ${n.type === "info" ? "bg-blue-600" : ""}
+            `}
           >
-            {n.message}
+            <span>{n.message}</span>
+            <button
+              onClick={() => removeNotification(n.id)}
+              aria-label="Fermer la notification"
+              className="ml-4 text-white hover:text-gray-300 focus:outline-none"
+              style={{ fontWeight: 'bold', fontSize: '1.2rem', lineHeight: 1 }}
+            >
+              &times;
+            </button>
           </div>
         ))}
       </div>
@@ -58,7 +79,6 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
 export const useNotification = () => {
   const ctx = useContext(NotificationContext);
-  if (!ctx)
-    throw new Error("useNotification must be used inside NotificationProvider");
+  if (!ctx) throw new Error("useNotification must be used inside NotificationProvider");
   return ctx;
 };
