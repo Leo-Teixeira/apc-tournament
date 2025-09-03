@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 import { getDurationInMinutes } from "@/app/utils/date";
+import { Prisma } from "@/generated/prisma";
+import { DefaultArgs } from "@/generated/prisma/runtime/library";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -36,7 +38,6 @@ export async function PUT(req: NextRequest) {
     const updatedEnd = new Date(levelStart);
     updatedEnd.setMinutes(updatedEnd.getMinutes() + duration);
 
-    // Récupérer tous les niveaux du tournoi ordonnés
     const allLevels = await prisma.tournament_level.findMany({
       where: { tournament_id: currentLevel.tournament_id },
       orderBy: { level_number: "asc" }
@@ -61,9 +62,15 @@ export async function PUT(req: NextRequest) {
       level_ante: data.level_ante
     };
 
-    // Préparation des mises à jour pour les niveaux suivants
+    // Préparation des updates en batch
     let currentTime = new Date(updatedEnd);
-    const updates: { id: bigint; data: { level_start: Date; level_end: Date; }; }[] = [];
+    const updatesBatch = [
+      prisma.tournament_level.update({
+        where: { id: levelId },
+        data: updatedLevelData
+      })
+    ];
+
     for (let i = updatedIndex + 1; i < allLevels.length; i++) {
       const level = allLevels[i];
       const durationMinutes =
@@ -75,32 +82,21 @@ export async function PUT(req: NextRequest) {
       const newEnd = new Date(currentTime);
       newEnd.setMinutes(newEnd.getMinutes() + durationMinutes);
 
-      updates.push({
-        id: level.id,
-        data: {
-          level_start: newStart,
-          level_end: newEnd
-        }
-      });
+      updatesBatch.push(
+        prisma.tournament_level.update({
+          where: { id: level.id },
+          data: {
+            level_start: newStart,
+            level_end: newEnd
+          }
+        })
+      );
 
       currentTime = newEnd;
     }
 
-    // Transaction unique avec update du niveau modifié puis updates batchés
-    await prisma.$transaction(async (tx) => {
-      await tx.tournament_level.update({
-        where: { id: levelId },
-        data: updatedLevelData
-      });
-
-      // Enchaîner les updates suivants dans la transaction
-      for (const u of updates) {
-        await tx.tournament_level.update({
-          where: { id: u.id },
-          data: u.data
-        });
-      }
-    });
+    // Transaction batch directe
+    await prisma.$transaction(updatesBatch);
 
     const updatedLevel = await prisma.tournament_level.findUnique({
       where: { id: levelId }
@@ -115,6 +111,7 @@ export async function PUT(req: NextRequest) {
     );
   }
 }
+
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -137,7 +134,6 @@ export async function DELETE(req: NextRequest) {
     const tournamentId = deletedLevel.tournament_id;
     const levelNumber = deletedLevel.level_number;
 
-    // Récupérer niveaux précédents et suivants hors transaction (optimisation)
     const previousLevel = await prisma.tournament_level.findFirst({
       where: {
         tournament_id: tournamentId,
@@ -157,8 +153,10 @@ export async function DELETE(req: NextRequest) {
       ? new Date(previousLevel.level_end)
       : new Date(deletedLevel.level_start);
 
-    // Préparer mises à jour avec nouveaux horaires et numéros
-    const updates = followingLevels.map((level) => {
+    // Préparer la batch des update promises
+    const updatesBatch: Prisma.Prisma__tournament_levelClient<{ id: bigint; tournament_id: bigint; level_number: number; level_start: Date; level_end: Date; level_small_blinde: number; level_big_blinde: number; level_pause: boolean; level_chip_race: boolean; level_ante: number | null; }, never, DefaultArgs, Prisma.PrismaClientOptions>[] = [];
+
+    followingLevels.forEach((level) => {
       const durationMin = getDurationInMinutes(
         new Date(level.level_start),
         new Date(level.level_end)
@@ -169,26 +167,23 @@ export async function DELETE(req: NextRequest) {
 
       previousEnd = newEnd;
 
-      return {
-        id: level.id,
-        data: {
-          level_number: level.level_number - 1,
-          level_start: newStart,
-          level_end: newEnd
-        }
-      };
+      updatesBatch.push(
+        prisma.tournament_level.update({
+          where: { id: level.id },
+          data: {
+            level_number: level.level_number - 1,
+            level_start: newStart,
+            level_end: newEnd
+          }
+        })
+      );
     });
 
-    await prisma.$transaction(async (tx) => {
-      await tx.tournament_level.delete({ where: { id: levelId } });
-
-      for (const u of updates) {
-        await tx.tournament_level.update({
-          where: { id: u.id },
-          data: u.data
-        });
-      }
-    }, { timeout: 5000 });
+    // Transaction batch (delete + updates)
+    await prisma.$transaction([
+      prisma.tournament_level.delete({ where: { id: levelId } }),
+      ...updatesBatch
+    ]); // timeout augmenté à 20s
 
     return NextResponse.json({
       message: "Level deleted and reordered successfully"
@@ -201,3 +196,4 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+

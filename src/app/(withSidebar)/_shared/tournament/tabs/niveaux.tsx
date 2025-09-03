@@ -10,7 +10,7 @@ import { TournamentLevel } from "@/app/types";
 import { useDisclosure } from "@heroui/react";
 import { Delete02Icon, PencilEdit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { NiveauFormBody } from "./components/popup/add_level_popup";
 import {
   useDeleteTournamentLevel,
@@ -33,6 +33,16 @@ export const NiveauxTabs: React.FC = () => {
 
   const updateLevelMutation = useUpdateTournamentLevel();
   const deleteLevelMutation = useDeleteTournamentLevel();
+
+  // const handleUpdate = useCallback((updated) => {
+  //   setTournamentLevelFormData((prev) => ({ ...prev, ...updated }));
+  // }, []);
+  
+  
+  const currentLevel = useMemo(() => {
+    return levels.find((l) => l.id === levelToModify?.id) || undefined;
+  }, [levels, levelToModify]);
+  
 
   useEffect(() => {
     const rows = mapTournamentLevelsToRow(levels);
@@ -142,7 +152,7 @@ export const NiveauxTabs: React.FC = () => {
         <NiveauFormBody
           isModify={true}
           tournamentStart={new Date(levels?.[0]?.level_start)}
-          level={levels.find((l) => l.id == levelToModify?.id)}
+          level={currentLevel}
           onUpdate={(updated) =>
             setTournamentLevelFormData((prev) => ({ ...prev, ...updated }))
           }

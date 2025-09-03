@@ -45,39 +45,97 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
   );
 
   useEffect(() => {
-    const [durH, durM] = duration.split(":").map(Number);
-    const durationMinutes = durH * 60 + durM;
+    if (level) {
+      setIsPause(level.level_pause ?? false);
+      setAfterLevel(String(level.level_number ?? 0));
+      setDuration(
+        level.level_start && level.level_end
+          ? computeDuration(level.level_start, level.level_end)
+          : "00:00"
+      );
+      setSmallBlind(level.level_small_blinde ?? 0);
+      setBigBlind(level.level_big_blinde ?? 0);
+      setAnte(level.level_ante ?? 0);
+      setChipRace(level.level_chip_race ?? false);
+    }
+  }, [level]);
 
+  const triggerUpdate = (overrideValues?: Partial<{ 
+    isPause: boolean;
+    afterLevel: string;
+    duration: string;
+    smallBlind: number;
+    bigBlind: number;
+    ante: number;
+    chipRace: boolean;
+  }>) => {
+    const newIsPause = overrideValues?.isPause ?? isPause;
+    const newAfterLevel = overrideValues?.afterLevel ?? afterLevel;
+    const newDuration = overrideValues?.duration ?? duration;
+    const newSmallBlind = overrideValues?.smallBlind ?? smallBlind ?? 0;
+    const newBigBlind = overrideValues?.bigBlind ?? bigBlind ?? 0;
+    const newAnte = overrideValues?.ante ?? ante;
+    const newChipRace = overrideValues?.chipRace ?? chipRace;
+  
+    const [durH, durM] = newDuration.split(":").map(Number);
+    const durationMinutes = durH * 60 + durM;
+  
     if (!isNaN(durationMinutes)) {
       onUpdate({
-        level_number: parseInt(afterLevel) + 1,
+        level_number: parseInt(newAfterLevel) + 1,
         level_start: initialStart.toISOString(),
         duration_minutes: durationMinutes,
-        level_pause: isPause,
-        level_small_blinde: smallBlind,
-        level_big_blinde: bigBlind,
-        level_ante: ante,
-        level_chip_race: chipRace
+        level_pause: newIsPause,
+        level_small_blinde: newSmallBlind,
+        level_big_blinde: newBigBlind,
+        level_ante: newAnte,
+        level_chip_race: newChipRace,
       });
     }
-  }, [
-    afterLevel,
-    duration,
-    isPause,
-    smallBlind,
-    bigBlind,
-    ante,
-    chipRace,
-    initialStart,
-    onUpdate
-  ]);
+  };
+  
+  
+  
+
+  // useEffect(() => {
+  //   const [durH, durM] = duration.split(":").map(Number);
+  //   const durationMinutes = durH * 60 + durM;
+
+  //   if (!isNaN(durationMinutes)) {
+  //     onUpdate({
+  //       level_number: parseInt(afterLevel) + 1,
+  //       level_start: initialStart.toISOString(),
+  //       duration_minutes: durationMinutes,
+  //       level_pause: isPause,
+  //       level_small_blinde: smallBlind,
+  //       level_big_blinde: bigBlind,
+  //       level_ante: ante,
+  //       level_chip_race: chipRace
+  //     });
+  //   }
+  // }, [
+  //   afterLevel,
+  //   duration,
+  //   isPause,
+  //   smallBlind,
+  //   bigBlind,
+  //   ante,
+  //   chipRace,
+  //   initialStart,
+  //   onUpdate
+  // ]);
 
   return (
     <div className="flex flex-col gap-6 text-primary_brand-50">
       <RadioGroupComponents
         label="Pause"
         value={String(isPause)}
-        onChange={(e) => setIsPause(e.target.value === "true")}
+        onChange={(e) => {
+          const newPauseValue = e.target.value === "true";
+          setIsPause(newPauseValue);
+          triggerUpdate({ isPause: newPauseValue });
+        }}
+        
       />
 
       <div className="flex flex-col md:flex-row gap-4">
@@ -86,12 +144,22 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
           type="text"
           label="Après le niveau"
           value={afterLevel}
-          onChange={(e) => setAfterLevel(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            setAfterLevel(val);
+            triggerUpdate({ afterLevel: val });
+          }}
+          
         />
         <TimeInputComponents
           label="Durée"
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            setDuration(val);
+            triggerUpdate({ duration: val });
+          }}
+          
         />
       </div>
 
@@ -101,19 +169,33 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
             type="number"
             label="Petite blinde"
             value={smallBlind}
-            onChange={(value) => setSmallBlind(Number(value))}
+            onChange={(value) => {
+              const smallBlindValue = Number(value);
+              const safeValue = isNaN(smallBlindValue) ? 0 : smallBlindValue;
+              setSmallBlind(safeValue);
+              triggerUpdate({ smallBlind: safeValue });
+            }}            
           />
           <NumberInputComponents
             type="number"
             label="Grosse blinde"
             value={bigBlind}
-            onChange={(value) => setBigBlind(Number(value))}
+            onChange={(value) => {
+              const bigBlindValue = Number(value);
+              setBigBlind(bigBlindValue);
+              triggerUpdate({ bigBlind: bigBlindValue });
+            }}
+            
           />
           <NumberInputComponents
             type="number"
             label="Ante"
             value={ante}
-            onChange={(value) => setAnte(Number(value))}
+            onChange={(value) => {
+              const newAnte = Number(value);
+              setAnte(newAnte);
+              triggerUpdate({ ante: newAnte });
+            }}
           />
         </div>
       )}
@@ -121,7 +203,13 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
         <div className="mt-2">
           <Checkbox
             isSelected={chipRace}
-            onValueChange={() => setChipRace(!chipRace)}>
+            onValueChange={() => {
+              const newChipRace = !chipRace;
+              setChipRace(newChipRace);
+              triggerUpdate({ chipRace: newChipRace });
+            }}
+            
+            >
             Chip race
           </Checkbox>
         </div>
