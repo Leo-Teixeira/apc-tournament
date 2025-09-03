@@ -295,12 +295,42 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    if (tournamentFinished) {
-      await prisma.tournament.update({
-        where: { id: BigInt(tournamentId) },
-        data: { tournament_status: tournament_tournament_status.finish },
+    if (tournament_category === "SOLIPOKER") {
+      // Récupère tous les rankings des joueurs éliminés, triés du plus grand au plus petit
+      const rankings = await prisma.tournament_ranking.findMany({
+        where: { tournament_id: BigInt(tournamentId) },
+        orderBy: { ranking_position: "desc" },
       });
+    
+      // Repère le classement du dernier éliminé
+      const newEliminated = rankings.find(r => r.registration_id === assignment.registration.id);
+      if (!newEliminated) {
+        console.error("Ranking missing for newly eliminated player");
+        // facultatif : return ou throw ici
+      } else {
+        const conflictPosition = newEliminated.ranking_position;
+    
+        // Vérifie s'il y a doublon (plus d'un joueur avec cette position)
+        const positionCount = rankings.filter(r => r.ranking_position === conflictPosition).length;
+        if (positionCount > 1) {
+          // Décale toutes les positions ≥ à celle du conflit (sauf le dernier nouvel éliminé)
+          const toShift = rankings.filter(
+            r =>
+              r.ranking_position >= conflictPosition &&
+              r.registration_id !== assignment.registration.id
+          );
+          for (const ranking of toShift) {
+            await prisma.tournament_ranking.update({
+              where: { id: ranking.id },
+              data: { ranking_position: ranking.ranking_position + 1 },
+            });
+          }
+        }
+      }
     }
+    
+    
+
 
     return NextResponse.json(
       serializeBigInt({

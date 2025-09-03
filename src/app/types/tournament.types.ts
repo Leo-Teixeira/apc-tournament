@@ -16,7 +16,7 @@ export type Tournament = {
   tournament_pause: boolean;
   tournament_pause_date?: Date;
   tournament_trimestry: number;
-  tournament_category: "APT" | "Special" | "Sit&Go" | "Superfinale" | "Solipoker";
+  tournament_category: "APT" | "SPECIAL" | "SITANDGO" | "SUPERFINALE" | "SOLIPOKER";
   tournament_status: "in_coming" | "finish" | "start";
   registration?: Registration[];
   tournament_level?: TournamentLevel[];

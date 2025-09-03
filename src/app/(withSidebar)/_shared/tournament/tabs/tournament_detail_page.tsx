@@ -27,6 +27,7 @@ import { useAddTableAssignment } from "@/app/hook/useAddTableAssignment";
 import { useResetLevels } from "@/app/hook/useResetLevels";
 import { useGenerateLevels } from "@/app/hook/useGenerateLevel";
 import LoadingComponent from "@/app/error/loading/page";
+import { useEndTournament } from "@/app/hook/useEndTournament";
 
 export default function TournamentDetailPage() {
   const { id } = useParams();
@@ -54,6 +55,9 @@ export default function TournamentDetailPage() {
   const addTableMutation = useAddTableAssignment();
   const resetLevelsMutation = useResetLevels();
   const generateLevelsMutation = useGenerateLevels();
+
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false);
+  const endTournamentMutation = useEndTournament(String(id));
 
   // Example: you can also add future mutations for add level, generate tables, etc.
 
@@ -180,6 +184,14 @@ export default function TournamentDetailPage() {
           )}
           {tournament.tournament_status === "in_coming" && (
             <>
+              {tournament.tournament_category === "SOLIPOKER" && (
+                <ButtonComponents
+                  text="Mettre fin au tournoi"
+                  onClick={() => setIsEndModalOpen(true)}
+                  buttonClassName="bg-danger-900 hover:bg-danger-500"
+                  textClassName="text-white"
+                />
+              )}
               <ButtonComponents
                 text={
                   tournament.tournament_pause
@@ -340,6 +352,30 @@ export default function TournamentDetailPage() {
           Il doit contenir au moins une table, un niveau et un jeton.
         </p>
       </GenericModal>
+
+      <GenericModal
+        isOpen={isEndModalOpen}
+        onClose={() => setIsEndModalOpen(false)}
+        title="Mettre fin au tournoi"
+        confirmLabel="Terminer"
+        cancelLabel="Annuler"
+        onConfirm={async () => {
+          try {
+            await endTournamentMutation.mutateAsync();
+            setIsEndModalOpen(false);
+          } catch (err) {
+            console.error("❌ Erreur pour terminer le tournoi :", err);
+            alert("Erreur lors de la clôture du tournoi");
+          }
+        }}
+        loading={endTournamentMutation.isLoading}
+      >
+        <p>
+          Es-tu sûr de vouloir <strong>mettre fin au tournoi</strong> ?<br />
+          Cette action le clôturera définitivement.
+        </p>
+      </GenericModal>
+
 
       <GenericModal
         isOpen={isGenerateLevelModalOpen}
