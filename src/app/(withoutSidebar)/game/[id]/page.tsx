@@ -7,7 +7,6 @@ import { Chip, TournamentLevel } from "@/app/types";
 import { useParams } from "next/navigation";
 import { useTournamentData } from "@/app/hook/useTournamentData";
 import LoadingComponent from "@/app/error/loading/page";
-
 import { DateTime } from "luxon";
 
 export default function Game() {
@@ -107,6 +106,10 @@ export default function Game() {
     return Math.round(averageStack).toString();
   };
 
+  // Ref pour le son
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [hasPlayedBeep, setHasPlayedBeep] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(interval);
@@ -159,6 +162,29 @@ export default function Game() {
     setNextLevel(next ?? null);
     setNextPause(np ?? null);
   }, [levels, now, frozenNow, isPaused]);
+
+  // UseEffect pour jouer le son 10s avant fin niveau
+  useEffect(() => {
+    if (!currentLevel) return;
+
+    const nowTime = getNow().getTime();
+    const levelEndTime = DateTime.fromISO(currentLevel.level_end, { zone: "utc" })
+      .setZone("Europe/Paris").toJSDate().getTime();
+
+    const secondsLeft = Math.floor((levelEndTime - nowTime) / 1000);
+
+    if (secondsLeft <= 7 && secondsLeft > 6 && !hasPlayedBeep) {
+      const audio = new Audio("/sounds/alert_level.mp3");
+      audio.play().catch((err) => {
+        console.warn("Audio beep failed to play:", err);
+      });
+      setHasPlayedBeep(true);
+    }
+  
+    if (secondsLeft > 10 && hasPlayedBeep) {
+      setHasPlayedBeep(false);
+    }
+  }, [currentLevel, now, frozenNow]);
 
   if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
 
