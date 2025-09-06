@@ -218,15 +218,15 @@ export default function Game() {
               label="Durée totale"
               value={
                 tournament
-                  ? getDurationSince(String(tournament.tournament_start_date))
+                  ? <span className="font-satoshiBold tabular-nums">{getDurationSince(String(tournament.tournament_start_date))}</span>
                   : "--:--:--"
               }
             />
-            <InfoItem label="Pause" value={getTimeUntilNextPause()} />
+            <InfoItem label="Pause" value={<span className="font-satoshiBold tabular-nums">{getTimeUntilNextPause()}</span>} />
           </div>
 
           <div className="text-center text-primary_brand-50">
-            <div className="text-xl12 font-satoshiBold">
+            <div className="text-xl12 font-satoshiBold tabular-nums">
               {currentLevel ? getTimeLeft(DateTime.fromISO(currentLevel.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate()) : "--:--"}
             </div>
             <div className="text-xl7 font-satoshiBold">
