@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const users = await prisma.wp_users.findMany({
       orderBy: {
-        pseudo_winamax: "asc"
+        display_name: "asc"
       },
       select: {
         ID: true,

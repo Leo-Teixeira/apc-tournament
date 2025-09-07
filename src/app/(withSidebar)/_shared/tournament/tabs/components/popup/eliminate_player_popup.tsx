@@ -35,11 +35,11 @@ export const EliminatePlayerFormBody: React.FC<EliminatePlayerProps> = ({
             <div className="flex items-center gap-4 p-2 rounded w-full">
               <img
                 src={player.wp_users?.photo_url || "/images/ellipseAvatar.png"}
-                alt={player.wp_users?.pseudo_winamax ?? ""}
+                alt={player.wp_users?.display_name ?? ""}
                 className="w-10 h-10 rounded-full object-cover"
               />
               <span className="font-satoshiRegular text-l">
-                {player.wp_users?.pseudo_winamax ?? ""}
+                {player.wp_users?.display_name ?? ""}
               </span>
             </div>
           </Radio>

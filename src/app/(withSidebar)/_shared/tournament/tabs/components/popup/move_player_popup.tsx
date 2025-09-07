@@ -62,7 +62,7 @@ export const MovePlayerModalBody = ({
             .filter((a) => !a.eliminated && a.id !== selectedPlayer.id)
             .map((a) => (
               <option key={a.id} value={a.id}>
-                {a.registration?.wp_users?.pseudo_winamax} – Table{" "}
+                {a.registration?.wp_users?.display_name} – Table{" "}
                 {a.tournament_table?.table_number} – Siège {a.table_seat_number}
               </option>
             ))}

@@ -68,7 +68,7 @@ export async function reequilibrateTables(tournamentId: number) {
       });
 
       moves.push({
-        playerName: player.registration?.wp_users?.pseudo_winamax ?? "??",
+        playerName: player.registration?.wp_users?.display_name ?? "??",
         registrationId: Number(player.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,
@@ -146,7 +146,7 @@ export async function reequilibrateTables(tournamentId: number) {
       changed = true;
 
       moves.push({
-        playerName: player.registration?.wp_users?.pseudo_winamax ?? "??",
+        playerName: player.registration?.wp_users?.display_name ?? "??",
         registrationId: Number(player.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,
@@ -183,7 +183,7 @@ export async function reequilibrateTables(tournamentId: number) {
       changed = true;
 
       moves.push({
-        playerName: movedPlayer.registration?.wp_users?.pseudo_winamax ?? "??",
+        playerName: movedPlayer.registration?.wp_users?.display_name ?? "??",
         registrationId: Number(movedPlayer.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,

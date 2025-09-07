@@ -19,7 +19,7 @@ export const mapFlatAssignementsToSeatRows = (
         const user = r.wp_users;
         return {
           id: r.id,
-          avatarName: user?.pseudo_winamax || user?.display_name || "Inconnu",
+          avatarName: user?.display_name || "Inconnu",
           avatar: user?.photo_url ?? "/images/ellipseAvatar.png",
           seat: "Non assigné",
           action: "",
@@ -37,12 +37,8 @@ export const mapFlatAssignementsToSeatRows = (
       const table = a.tournament_table;
 
       let avatarName = "Inconnu";
-      if (user?.pseudo_winamax) {
-        avatarName = user.pseudo_winamax;
-      } else if (user?.display_name) {
+      if (user?.display_name) {
         avatarName = user.display_name;
-      } else if (registration?.wp_users?.pseudo_winamax) {
-        avatarName = registration.wp_users.pseudo_winamax;
       } else if (registration?.wp_users?.display_name) {
         avatarName = registration.wp_users.display_name;
       }
@@ -86,12 +82,8 @@ export const mapAssignementsGroupedByTable = (
     const tableNumber = table?.table_number ?? "0";
 
     let avatarName = "Inconnu";
-    if (user?.pseudo_winamax) {
-      avatarName = user.pseudo_winamax;
-    } else if (user?.display_name) {
+    if (user?.display_name) {
       avatarName = user.display_name;
-    } else if (registration?.wp_users?.pseudo_winamax) {
-      avatarName = registration.wp_users.pseudo_winamax;
     } else if (registration?.wp_users?.display_name) {
       avatarName = registration.wp_users.display_name;
     }

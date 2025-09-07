@@ -52,7 +52,7 @@ export const mapQuarterRankingByTrimestry = (
     if (!(trimestryKey in result)) return;
 
     const userId = ranking.registration.id;
-    const userName = ranking.registration.wp_users.pseudo_winamax || `Joueur ${userId}`;
+    const userName = ranking.registration.wp_users.display_name || `Joueur ${userId}`;
 
     const existingUser = result[trimestryKey].find((user) => user.name === userName);
     if (existingUser) {
@@ -91,7 +91,7 @@ export const mapClassementTournament = (
       return {
         id: String(classe.id),
         place: classe.ranking_position,
-        name: classe.registration.wp_users.pseudo_winamax,
+        name: classe.registration.wp_users.display_name,
         points: classe.ranking_score,
       };
     })
