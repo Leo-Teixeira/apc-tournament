@@ -176,20 +176,21 @@ export const PlayerTabs = React.memo(() => {
       notify("error", `💀 ${selectedPlayer.registration?.wp_users?.display_name} a été éliminé par ${killerRegistration?.wp_users?.display_name}`);
 
       if (res?.moves?.length) {
-        res.moves.forEach(move => {
-          if (move.fromTableNumber && move.playerName && move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
-          } else if (move.fromTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
-          } else if (move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
-          } else {
-            notify("info", `♻️ ${move.playerName} a été déplacé`);
-          }
-        });
-      } else if (res?.rebalanced) {
-        notify("info", "♻️ Rééquilibrage des tables effectué");
-      }
+              res.moves.forEach((move) => {
+                if (move.fromTableNumber && move.playerName && move.toTableNumber) {
+                  notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
+                } else if (move.fromTableNumber) {
+                  notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
+                } else if (move.toTableNumber) {
+                  notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
+                } else {
+                  notify("info", `♻️ ${move.playerName} a été déplacé`);
+                }
+              });
+            } else if (res?.rebalanced) {
+              notify("info", "♻️ Rééquilibrage des tables effectué");
+            }
+
 
       const remainingAlive = assignements.filter(a => !a.eliminated);
       if (remainingAlive.length === 1 && tournament.tournament_status !== "finish") {

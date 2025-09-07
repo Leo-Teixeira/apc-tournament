@@ -5,14 +5,12 @@ import { extractParamsFromPath } from "@/app/utils/api-params";
 export async function POST(req: NextRequest) {
   try {
     const { tournament } = extractParamsFromPath(req, ["tournament"]);
-
     if (!tournament) {
       return NextResponse.json(
         { error: "Missing tournament ID" },
         { status: 400 }
       );
     }
-
     const tournamentId = BigInt(tournament);
     const body = await req.json();
     const { playerId, mode, targetId, seatNumber } = body;
@@ -30,16 +28,13 @@ export async function POST(req: NextRequest) {
           id: { in: [BigInt(playerId), BigInt(targetId)] }
         }
       });
-
       if (players.length !== 2) {
         return NextResponse.json(
           { error: "Joueurs non trouvés" },
           { status: 404 }
         );
       }
-
       const [playerA, playerB] = players;
-
       await prisma.$transaction([
         prisma.table_assignment.update({
           where: { id: playerA.id },
@@ -56,7 +51,6 @@ export async function POST(req: NextRequest) {
           }
         })
       ]);
-
       return NextResponse.json({ message: "Échange effectué avec succès" });
     }
 
@@ -64,7 +58,6 @@ export async function POST(req: NextRequest) {
       const player = await prisma.table_assignment.findUnique({
         where: { id: BigInt(playerId) }
       });
-
       if (!player) {
         return NextResponse.json(
           { error: "Joueur non trouvé" },
@@ -79,44 +72,62 @@ export async function POST(req: NextRequest) {
         },
         orderBy: { table_seat_number: "asc" }
       });
-
       const usedSeats = assignments.map((a) => a.table_seat_number);
 
-      let targetSeat = seatNumber ? parseInt(seatNumber) : 1;
-      if (!targetSeat || isNaN(targetSeat) || targetSeat < 1) {
+      let targetSeat: number | undefined;
+      if (seatNumber !== undefined && seatNumber !== null && seatNumber !== "") {
+        const parsedSeat = parseInt(seatNumber);
+        if (!isNaN(parsedSeat) && parsedSeat >= 1 && parsedSeat <= 8) {
+          targetSeat = parsedSeat;
+        }
+      }
+
+      // Si aucun siège valide donné, on prend le premier siège libre entre 1 et 8
+      if (!targetSeat) {
         targetSeat = 1;
-        while (usedSeats.includes(targetSeat)) targetSeat++;
-      }
-
-      const conflict = assignments.find(
-        (a) => a.table_seat_number === targetSeat
-      );
-
-      const updates = [];
-
-      if (conflict) {
-        const lastSeat = Math.max(...usedSeats) + 1;
-        updates.push(
-          prisma.table_assignment.update({
-            where: { id: conflict.id },
-            data: {
-              table_seat_number: lastSeat
-            }
-          })
-        );
-      }
-
-      updates.push(
-        prisma.table_assignment.update({
-          where: { id: player.id },
-          data: {
-            table_id: BigInt(targetId),
-            table_seat_number: targetSeat
+        while (usedSeats.includes(targetSeat) && targetSeat <= 8) {
+          targetSeat++;
+        }
+        if (targetSeat > 8) {
+          return NextResponse.json(
+            { error: "Toutes les places sont occupées à cette table" },
+            { status: 400 }
+          );
+        }
+      } else {
+        // Si le siège donné est occupé, on gère le conflit (idem que précédemment)
+        if (usedSeats.includes(targetSeat)) {
+          // On décale le joueur déjà à ce siège au dernier siège libre entre 1 et 8
+          let lastSeat = 8;
+          while (usedSeats.includes(lastSeat) && lastSeat > 0) {
+            lastSeat--;
           }
-        })
-      );
+          if (lastSeat === 0) {
+            return NextResponse.json(
+              { error: "Toutes les places sont occupées à cette table" },
+              { status: 400 }
+            );
+          }
+          const conflict = assignments.find(
+            (a) => a.table_seat_number === targetSeat
+          );
+          if (conflict) {
+            await prisma.table_assignment.update({
+              where: { id: conflict.id },
+              data: { table_seat_number: lastSeat }
+            });
+          }
+        }
+      }
 
-      await prisma.$transaction(updates);
+      // Mise à jour du joueur déplacé
+      await prisma.table_assignment.update({
+        where: { id: player.id },
+        data: {
+          table_id: BigInt(targetId),
+          table_seat_number: targetSeat
+        }
+      });
 
       return NextResponse.json({ message: "Joueur déplacé avec succès" });
     }

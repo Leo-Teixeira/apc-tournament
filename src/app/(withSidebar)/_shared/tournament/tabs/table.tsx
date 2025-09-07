@@ -78,7 +78,7 @@ export const TableTabs = () => {
         `💀 ${selectedPlayer.registration?.wp_users?.display_name} a été éliminé par ${killerRegistration?.wp_users?.display_name}`
       );
   
-      if (res?.moves?.length) {
+if (res?.moves?.length) {
         res.moves.forEach((move) => {
           if (move.fromTableNumber && move.playerName && move.toTableNumber) {
             notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
@@ -93,6 +93,9 @@ export const TableTabs = () => {
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
+
+
+
   
       const remainingAlive = assignements.filter((a) => !a.eliminated);
       if (
