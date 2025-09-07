@@ -210,7 +210,21 @@ export async function PUT(req: NextRequest) {
           rebalanced = rebalancedData;
         } else {
           rebalanced = rebalancedData.changed;
-          moves = rebalancedData.moves ?? [];
+          moves = (reequilibrateTables as any).moves.map((move: any) => {
+          const fromTable = tables.find(t => t.id === move.fromTableId);
+          const toTable = tables.find(t => t.id === move.toTableId);
+          return {
+            playerName: move.playerName,
+            registrationId: move.registrationId,
+            fromTableId: move.fromTableId,
+            fromTableNumber: fromTable?.table_number,
+            fromTableSeat: move.fromTableSeat,
+            toTableId: move.toTableId,
+            toTableNumber: toTable?.table_number,
+            toTableSeat: move.toTableSeat,
+          };
+        }) ?? [];
+
         }
       }
     }
