@@ -24,6 +24,7 @@ export default function Game() {
   const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(null);
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
+  const [hasPlayedOneAliveSound, setHasPlayedOneAliveSound] = useState(false);
 
   const [bgIndex, setBgIndex] = useState(0);
   const previousLevelId = useRef<number | null>(null);
@@ -92,6 +93,19 @@ export default function Game() {
 
   const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
   const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
+
+  useEffect(() => {
+    const aliveCount = getAlivePlayers().length;
+    if (aliveCount === 1 && !hasPlayedOneAliveSound) {
+      const audio = new Audio("/sounds/victory.mp3");
+      audio.play().catch((err) => {
+        console.warn("Audio victory failed to play:", err);
+      });
+    }
+    if (aliveCount > 1 && hasPlayedOneAliveSound) {
+      setHasPlayedOneAliveSound(false);
+    }
+  }, [getAlivePlayers, hasPlayedOneAliveSound]);
 
   const getAverageStackAlive = () => {
     const alivePlayersCount = getAlivePlayers().length;
@@ -173,7 +187,7 @@ export default function Game() {
 
     const secondsLeft = Math.floor((levelEndTime - nowTime) / 1000);
 
-    if (secondsLeft <= 7 && secondsLeft > 6 && !hasPlayedBeep) {
+    if (secondsLeft <= 2 && secondsLeft > 1 && !hasPlayedBeep) {
       const audio = new Audio("/sounds/alert_level.mp3");
       audio.play().catch((err) => {
         console.warn("Audio beep failed to play:", err);
@@ -198,10 +212,11 @@ export default function Game() {
 
   return (
     <div
-      className="relative w-full h-screen bg-cover bg-center transition-all duration-500"
+      className="relative w-full min-h-screen bg-cover bg-center transition-all duration-500 overflow-auto"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
-      <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-8">
+      <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-4 md:p-8 max-h-full overflow-auto">
+
         <div className="text-center text-white">
           <h1 className="text-7xl font-satoshiBold text-primary_brand-50">
             {tournament.tournament_name}
@@ -230,7 +245,8 @@ export default function Game() {
               {currentLevel ? getTimeLeft(DateTime.fromISO(currentLevel.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate()) : "--:--"}
             </div>
             <div className="text-xl7 font-satoshiBold">
-              {currentLevel && !currentLevel.level_pause
+              {currentLevel?.level_pause ? "PAUSE"
+               : currentLevel && !currentLevel.level_pause
                 ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}/${currentLevel.level_ante}`
                 : nextLevel
                 ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
