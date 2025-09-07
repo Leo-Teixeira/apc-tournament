@@ -79,20 +79,24 @@ export const TableTabs = () => {
       );
   
       if (res?.moves?.length) {
-        res.moves.forEach((move) => {
-          if (move.fromTableNumber && move.playerName && move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
-          } else if (move.fromTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
-          } else if (move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
-          } else {
-            notify("info", `♻️ ${move.playerName} a été déplacé`);
+        res.moves.forEach(({ playerName, fromTableNumber, fromTableSeat, toTableNumber, toTableSeat }) => {
+          let msg = `♻️ ${playerName} :`;
+          if (fromTableNumber !== undefined && fromTableSeat !== undefined) {
+            msg += ` ${fromTableNumber}#${fromTableSeat} →`;
+          } else if (fromTableNumber !== undefined) {
+            msg += ` ${fromTableNumber} →`;
           }
+          if (toTableNumber !== undefined && toTableSeat !== undefined) {
+            msg += ` ${toTableNumber}#${toTableSeat}`;
+          } else if (toTableNumber !== undefined) {
+            msg += ` ${toTableNumber}`;
+          }
+          notify("info", msg);
         });
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
+
   
       const remainingAlive = assignements.filter((a) => !a.eliminated);
       if (
