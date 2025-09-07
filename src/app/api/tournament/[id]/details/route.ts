@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
                 wp_users: {
                   select: {
                     ID: true,
-                    pseudo_winamax: true
+                    display_name: true
                   }
                 }
               }
