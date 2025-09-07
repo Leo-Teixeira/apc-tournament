@@ -5,14 +5,12 @@ import { extractParamsFromPath } from "@/app/utils/api-params";
 
 export async function PATCH(req: NextRequest) {
   console.log("🔄 Début PATCH tournois");
-
   const { tournament } = extractParamsFromPath(req, ["tournament"]);
   if (!tournament) {
     console.log("❌ Pas d'ID tournoi dans le chemin");
     return NextResponse.json({ error: "Missing tournament ID" }, { status: 400 });
   }
   console.log(`🏷️ ID tournoi extrait : ${tournament}`);
-
   let tournamentId: bigint;
   try {
     tournamentId = BigInt(tournament);
@@ -21,22 +19,18 @@ export async function PATCH(req: NextRequest) {
     console.error("❌ Erreur conversion ID tournoi en BigInt :", err);
     return NextResponse.json({ error: "Invalid tournament ID format" }, { status: 400 });
   }
-
   try {
     const body = await req.json();
     console.log("📥 Payload reçu :", body);
-
     const { pause } = body;
     if (typeof pause !== "boolean") {
       console.log("❌ Payload invalide : 'pause' non booléen");
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
     console.log(`⏸️ Valeur 'pause' reçue : ${pause}`);
-
     const now = new Date();
     const offsetInMinutes = now.getTimezoneOffset();
     const nowWithOffset = new Date(now.getTime() - offsetInMinutes * 60 * 1000);
-
     console.log(`⏰ Moment actuel : ${now.toISOString()}`);
 
     const tournamentData = await prisma.tournament.findUnique({
@@ -81,15 +75,12 @@ export async function PATCH(req: NextRequest) {
     for (const level of tournamentData.tournament_level) {
       const levelStart = new Date(level.level_start);
       const levelEnd = new Date(level.level_end);
-
       if (!foundPauseLevel) {
         if (pauseDate >= levelStart && pauseDate < levelEnd) {
           foundPauseLevel = true;
-
           const remainingLevelMs = levelEnd.getTime() - pauseDate.getTime();
           const newLevelStart = nowWithOffset;
           const newLevelEnd = new Date(newLevelStart.getTime() + remainingLevelMs);
-
           updatedLevels.push({
             id: level.id,
             level_start: newLevelStart,
@@ -106,7 +97,6 @@ export async function PATCH(req: NextRequest) {
         // Décalage complet des niveaux suivants par la durée de pause
         const newLevelStart = new Date(levelStart.getTime() + pauseDurationMs);
         const newLevelEnd = new Date(levelEnd.getTime() + pauseDurationMs);
-
         updatedLevels.push({
           id: level.id,
           level_start: newLevelStart,
@@ -116,7 +106,6 @@ export async function PATCH(req: NextRequest) {
     }
 
     console.log("▶️ Mise à jour en base via transaction");
-
     await prisma.$transaction(async (tx) => {
       await tx.tournament.update({
         where: { id: tournamentId },
@@ -138,7 +127,6 @@ export async function PATCH(req: NextRequest) {
     });
 
     console.log("✅ Tournoi repris et niveaux mis à jour");
-
     return NextResponse.json(serializeBigInt({ success: true }));
   } catch (err) {
     console.error("❌ Erreur lors du PATCH tournoi :", err);
