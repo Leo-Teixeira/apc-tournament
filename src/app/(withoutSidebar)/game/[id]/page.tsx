@@ -231,21 +231,20 @@ export default function Game() {
             </div>
             <div className="text-xl7 font-satoshiBold">
               {currentLevel && !currentLevel.level_pause
-                ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}`
+                ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}/${currentLevel.level_ante}`
                 : nextLevel
                 ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
                 : "-/-"}
             </div>
-            <div className="text-xl6 font-satoshiBold">
+            <div className="text-xl4 font-satoshiBold">
               {nextLevel
-                ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
+                ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}/${nextLevel.level_ante}`
                 : "-/-"}
             </div>
           </div>
 
           <div className="space-y-4 text-right">
             <InfoItem label="Stack moyen" value={getAverageStackAlive()} />
-            <InfoItem label="Ante" value="-" />
             <InfoItem
               label="Joueurs"
               value={`${getAlivePlayers().length}/${getConfirmedPlayers().length}`}
