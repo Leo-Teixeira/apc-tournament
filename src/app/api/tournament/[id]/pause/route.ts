@@ -32,10 +32,12 @@ export async function PATCH(req: NextRequest) {
     const offsetInMinutes = now.getTimezoneOffset();
     const nowWithOffset = new Date(now.getTime() - offsetInMinutes * 60 * 1000);
     console.log(`⏰ Moment actuel : ${now.toISOString()}`);
+
     const tournamentData = await prisma.tournament.findUnique({
       where: { id: tournamentId },
       include: { tournament_level: { orderBy: { level_number: "asc" } } },
     });
+
     if (!tournamentData) {
       console.log("❌ Tournoi introuvable en base");
       return NextResponse.json({ error: "Tournament not found" }, { status: 404 });
@@ -57,12 +59,14 @@ export async function PATCH(req: NextRequest) {
       console.log("❌ Pas de date de pause trouvée lors de la reprise");
       return NextResponse.json({ error: "No pause date set" }, { status: 400 });
     }
+
     const pauseDate = new Date(tournamentData.tournament_pause_date);
     let pauseDurationMs = nowWithOffset.getTime() - pauseDate.getTime();
     if (pauseDurationMs < 0) {
       console.warn("Durée pause négative détectée, correction appliquée");
       pauseDurationMs = 0;
     }
+
     const updatedLevels: { id: bigint; level_start: Date; level_end: Date; }[] = [];
     let foundPauseLevel = false;
     for (const level of tournamentData.tournament_level) {
@@ -97,29 +101,37 @@ export async function PATCH(req: NextRequest) {
         });
       }
     }
-    console.log("▶️ Mise à jour en base via transaction");
-    await prisma.$transaction(async (tx) => {
-      await tx.tournament.update({
-        where: { id: tournamentId },
-        data: {
-          tournament_pause: false,
-          tournament_pause_date: null,
-        },
-      });
-      // Mise à jour parallèle des levels pour éviter le timeout
-      await Promise.all(
-        updatedLevels.map((lvl) => 
-          tx.tournament_level.update({
-            where: { id: lvl.id },
-            data: {
-              level_start: lvl.level_start,
-              level_end: lvl.level_end,
-            },
-          })
+
+    console.log("▶️ Mise à jour en base avec découpage par lots");
+
+    await prisma.tournament.update({
+      where: { id: tournamentId },
+      data: {
+        tournament_pause: false,
+        tournament_pause_date: null,
+      },
+    });
+
+    const batchSize = 10;
+    for (let i = 0; i < updatedLevels.length; i += batchSize) {
+      const batch = updatedLevels.slice(i, i + batchSize);
+      await prisma.$transaction(tx =>
+        Promise.all(
+          batch.map(lvl =>
+            tx.tournament_level.update({
+              where: { id: lvl.id },
+              data: {
+                level_start: lvl.level_start,
+                level_end: lvl.level_end,
+              },
+            })
+          )
         )
       );
-    });
+    }
+
     console.log("✅ Tournoi repris et niveaux mis à jour");
+
     return NextResponse.json(serializeBigInt({ success: true }));
   } catch (err) {
     console.error("❌ Erreur lors du PATCH tournoi :", err);
