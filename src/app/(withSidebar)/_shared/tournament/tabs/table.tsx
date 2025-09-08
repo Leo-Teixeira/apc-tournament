@@ -229,7 +229,7 @@ if (res?.moves?.length) {
           setSelectedTableId(null);
           setMoveMode("swap");
         }}
-        title="Changer de place"
+        title={`Changer de place : ${selectedPlayerToMove?.registration?.wp_users?.display_name ?? ""}`}
         confirmLabel="Confirmer"
         onConfirm={async () => {
           if (!selectedPlayerToMove || !tournament?.id) return;
