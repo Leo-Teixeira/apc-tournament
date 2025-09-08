@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, ReactNode, useEffect, useRef } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useRef, useCallback } from "react";
 
 type Notification = {
   id: number;
@@ -9,6 +9,7 @@ type Notification = {
 
 type NotificationContextType = {
   notify: (type: Notification["type"], message: string) => void;
+  removeNotification: (id: number) => void;
 };
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -16,6 +17,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const timers = useRef<Map<number, NodeJS.Timeout>>(new Map());
+  const idCounter = useRef(0);
 
   useEffect(() => {
     if (notifications.length > 0) {
@@ -26,30 +28,30 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [notifications]);
 
-  const removeNotification = (id: number) => {
+  const removeNotification = useCallback((id: number) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
-    // Nettoie aussi le timer associé
     const timeout = timers.current.get(id);
     if (timeout) {
       clearTimeout(timeout);
       timers.current.delete(id);
     }
-  };
+  }, []);
 
-  const notify = (type: Notification["type"], message: string) => {
-    const id = Date.now();
+  const notify = useCallback((type: Notification["type"], message: string) => {
+    idCounter.current += 1;
+    const id = idCounter.current;
     setNotifications((prev) => [...prev, { id, type, message }]);
 
-    // Durée plus longue (ex: 8s)
+    // Durée : 10 minutes
     const timeout = setTimeout(() => {
       removeNotification(id);
-    }, 15000);
+    }, 600000);
 
     timers.current.set(id, timeout);
-  };
+  }, [removeNotification]);
 
   return (
-    <NotificationContext.Provider value={{ notify }}>
+    <NotificationContext.Provider value={{ notify, removeNotification }}>
       {children}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4 items-end">
         {notifications.map((n) => (
@@ -66,7 +68,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
               onClick={() => removeNotification(n.id)}
               aria-label="Fermer la notification"
               className="ml-4 text-white hover:text-gray-300 focus:outline-none"
-              style={{ fontWeight: 'bold', fontSize: '1.2rem', lineHeight: 1 }}
+              style={{ fontWeight: "bold", fontSize: "1.2rem", lineHeight: 1 }}
             >
               &times;
             </button>

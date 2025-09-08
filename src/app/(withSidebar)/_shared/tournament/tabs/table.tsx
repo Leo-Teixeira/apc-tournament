@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@heroui/react";
 import { Cancel01Icon, CoinsSwapIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -45,6 +45,9 @@ export const TableTabs = () => {
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
   const [isEliminateLoading, setIsEliminateLoading] = useState(false);
 
+  
+  const finishTriggered = useRef(false);
+
 
   const { data: availableTables } = useAvailableTables(
     tournament?.id,
@@ -57,6 +60,29 @@ export const TableTabs = () => {
       setGroupedRows(mapAssignementsGroupedByTable(assignements));
     }
   }, [tournament?.id, assignements]);
+
+  useEffect(() => {
+    if (!tournament) return;
+    const alivePlayers = assignements.filter(a => !a.eliminated);
+  
+    if (alivePlayers.length === 1 && tournament.tournament_status !== "finish" && !finishTriggered.current) {
+      finishTriggered.current = true; // évite de re-lancer plusieurs fois
+  
+      finishTournamentMutation.mutateAsync(tournament.id)
+        .then(() => notify("success", "🏆 Le tournoi est terminé !"))
+        .catch(() => {
+          finishTriggered.current = false; // réactive si erreur pour retenter
+          notify("error", "Erreur lors de la clôture du tournoi.");
+        });
+    }
+  
+    // Si le tournoi est fini ou plus d'un joueur, on reset pour pouvoir relancer plus tard
+    if (tournament.tournament_status === "finish" || alivePlayers.length > 1) {
+      finishTriggered.current = false;
+    }
+  }, [assignements, tournament?.tournament_status, finishTournamentMutation, notify, tournament]);
+  
+
 
   // ✅ Elimination avec notifs killer + mouvements rééquilibrage détaillés
   const handleConfirmElimination = async (killerId: number) => {
@@ -119,7 +145,6 @@ export const TableTabs = () => {
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
-      
   
       onClose();
     } catch (error) {

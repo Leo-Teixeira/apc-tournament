@@ -179,7 +179,8 @@ export async function reequilibrateTables(tournamentId: number) {
     const max = tablesWithPlayers[tablesWithPlayers.length - 1];
 
     if (max.players.length - min.players.length > 1) {
-      const movedPlayer = max.players.pop();
+      const randomIndex = Math.floor(Math.random() * max.players.length);
+      const [movedPlayer] = max.players.splice(randomIndex, 1);
       if (!movedPlayer) break;
 
       const fromTableId = max.id;

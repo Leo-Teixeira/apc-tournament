@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useDisclosure } from "@heroui/react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -39,6 +39,7 @@ export const PlayerTabs = React.memo(() => {
   const [isCancelStatusModal, setIsCancelStatusModal] = useState(false);
   // Nouveau state pour loader modal élimination
   const [isEliminateLoading, setIsEliminateLoading] = useState(false);
+  const finishTriggered = useRef(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { tournament, assignements, registration } = useTournamentContext();
@@ -57,6 +58,28 @@ export const PlayerTabs = React.memo(() => {
     setFlatRows(transformedRows);
     setIsLoading(false);
   }, [transformedRows]);
+
+  useEffect(() => {
+    if (!tournament) return;
+    const alivePlayers = assignements.filter(a => !a.eliminated);
+  
+    if (alivePlayers.length === 1 && tournament.tournament_status !== "finish" && !finishTriggered.current) {
+      finishTriggered.current = true; // évite de re-lancer plusieurs fois
+  
+      finishTournamentMutation.mutateAsync(tournament.id)
+        .then(() => notify("success", "🏆 Le tournoi est terminé !"))
+        .catch(() => {
+          finishTriggered.current = false; // réactive si erreur pour retenter
+          notify("error", "Erreur lors de la clôture du tournoi.");
+        });
+    }
+  
+    // Si le tournoi est fini ou plus d'un joueur, on reset pour pouvoir relancer plus tard
+    if (tournament.tournament_status === "finish" || alivePlayers.length > 1) {
+      finishTriggered.current = false;
+    }
+  }, [assignements, tournament?.tournament_status, finishTournamentMutation, notify, tournament]);
+
 
   const filteredRows = useMemo(() => {
     if (!search) return flatRows;
@@ -195,12 +218,6 @@ export const PlayerTabs = React.memo(() => {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
 
-      const remainingAlive = assignements.filter(a => !a.eliminated);
-      if (remainingAlive.length === 1 && tournament.tournament_status !== "finish") {
-        await finishTournamentMutation.mutateAsync(tournament.id);
-        notify("success", "🏆 Le tournoi est terminé !");
-      }
-
       onClose();
     } catch (error) {
       console.error("Erreur élimination joueur:", error);
@@ -208,7 +225,7 @@ export const PlayerTabs = React.memo(() => {
     } finally {
       setIsEliminateLoading(false);
     }
-  }, [selectedPlayer, tournament, eliminatePlayerMutation, assignements, finishTournamentMutation, onClose, notify]);
+  }, [selectedPlayer, tournament, killerOptions, eliminatePlayerMutation, notify, onClose]);
 
   if (isLoading) return <LoadingComponent />;
 

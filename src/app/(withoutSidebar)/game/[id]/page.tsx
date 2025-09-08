@@ -98,14 +98,17 @@ export default function Game() {
     const aliveCount = getAlivePlayers().length;
     if (aliveCount === 1 && !hasPlayedOneAliveSound) {
       const audio = new Audio("/sounds/victory.mp3");
-      audio.play().catch((err) => {
-        console.warn("Audio victory failed to play:", err);
-      });
+      audio.play()
+        .catch((err) => {
+          console.warn("Audio victory failed to play:", err);
+        });
+      setHasPlayedOneAliveSound(true);
     }
     if (aliveCount > 1 && hasPlayedOneAliveSound) {
       setHasPlayedOneAliveSound(false);
     }
   }, [getAlivePlayers, hasPlayedOneAliveSound]);
+  
 
   const getAverageStackAlive = () => {
     const alivePlayersCount = getAlivePlayers().length;
