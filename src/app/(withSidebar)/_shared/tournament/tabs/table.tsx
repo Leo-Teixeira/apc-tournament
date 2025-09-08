@@ -78,33 +78,48 @@ export const TableTabs = () => {
         `💀 ${selectedPlayer.registration?.wp_users?.display_name} a été éliminé par ${killerRegistration?.wp_users?.display_name}`
       );
   
-if (res?.moves?.length) {
-        res.moves.forEach((move) => {
-          if (move.fromTableNumber && move.playerName && move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber} à la Table ${move.toTableNumber}`);
-          } else if (move.fromTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé du Siège ${move.fromTableNumber}`);
-          } else if (move.toTableNumber) {
-            notify("info", `♻️ ${move.playerName} déplacé à la Table ${move.toTableNumber}`);
-          } else {
-            notify("info", `♻️ ${move.playerName} a été déplacé`);
+      if (res?.moves?.length) {
+        res.moves.forEach((move, idx) => {
+          // Logs détaillés pour chaque move
+          console.log(`Move [${idx}]:`, move);
+          if (move.fromTableNumber === undefined) {
+            console.warn(`‼️ Move[${idx}] missing fromTableNumber`, move);
           }
+          if (move.fromTableSeat === undefined) {
+            console.warn(`‼️ Move[${idx}] missing fromTableSeat`, move);
+          }
+          if (move.toTableNumber === undefined) {
+            console.warn(`‼️ Move[${idx}] missing toTableNumber`, move);
+          }
+          if (move.toTableSeat === undefined) {
+            console.warn(`‼️ Move[${idx}] missing toTableSeat`, move);
+          }
+      
+          const from =
+            move.fromTableNumber !== undefined && move.fromTableSeat !== undefined
+              ? `T${move.fromTableNumber}#S${move.fromTableSeat}`
+              : move.fromTableNumber !== undefined
+              ? `T${move.fromTableNumber}`
+              : "Table inconnue";
+      
+          const to =
+            move.toTableNumber !== undefined && move.toTableSeat !== undefined
+              ? `T${move.toTableNumber}#S${move.toTableSeat}`
+              : move.toTableNumber !== undefined
+              ? `T${move.toTableNumber}`
+              : "Table inconnue";
+      
+          // Log l’affichage final de la notif
+          console.log(
+            `Notif affichee pour move[${idx}] : ♻️ ${move.playerName}: ${from} → ${to}`
+          );
+      
+          notify("info", `♻️ ${move.playerName}: ${from} → ${to}`);
         });
       } else if (res?.rebalanced) {
         notify("info", "♻️ Rééquilibrage des tables effectué");
       }
-
-
-
-  
-      const remainingAlive = assignements.filter((a) => !a.eliminated);
-      if (
-        remainingAlive.length === 1 &&
-        tournament.tournament_status !== "finish"
-      ) {
-        await finishTournamentMutation.mutateAsync(tournament.id);
-        notify("success", "🏆 Le tournoi est terminé !");
-      }
+      
   
       onClose();
     } catch (error) {

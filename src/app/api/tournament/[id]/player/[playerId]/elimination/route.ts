@@ -194,9 +194,12 @@ export async function PUT(req: NextRequest) {
       registrationId: number;
       fromTableId: number;
       fromTableNumber?: number;
+      fromTableSeat?: number;   // Ajouter ici
       toTableId: number;
       toTableNumber?: number;
+      toTableSeat?: number;     // Ajouter ici
     }[] = [];
+    
 
     if (needReequilibrage) {
       const tables = await prisma.tournament_table.findMany({

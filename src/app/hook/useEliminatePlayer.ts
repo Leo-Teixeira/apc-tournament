@@ -12,15 +12,17 @@ export type EliminatePlayerResponse = {
   ranking_position?: number;
   score?: number;
   aliveCount?: number;
-  rebalanced?: boolean; // 🔹 flag rééquilibrage transmis par l’API
+  rebalanced?: boolean;
   moves?: {
     playerName: string;
     registrationId: number;
     fromTableId: number;
     fromTableNumber?: number;
+    fromTableSeat: number;
     toTableId: number;
     toTableNumber?: number;
-  }[]; // 🔹 optionnel si on veut la liste des déplacements
+    toTableSeat: number;
+  }[];
 };
 
 export const useEliminatePlayer = () => {

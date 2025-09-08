@@ -29,7 +29,7 @@ export async function reequilibrateTables(tournamentId: number) {
           eliminated: false,
           registration: { statut: "Confirmed" }
         },
-        include: { 
+        include: {
           registration: {
             include: {
               wp_users: true
@@ -47,8 +47,10 @@ export async function reequilibrateTables(tournamentId: number) {
     registrationId: number;
     fromTableId: number;
     fromTableNumber?: number;
+    fromTableSeat?: number;
     toTableId: number;
     toTableNumber?: number;
+    toTableSeat?: number;
   }[] = [];
 
   const allRemainingPlayers = tables.flatMap(t => t.table_assignment);
@@ -61,6 +63,7 @@ export async function reequilibrateTables(tournamentId: number) {
     for (const player of allRemainingPlayers) {
       const fromTableId = player.table_id;
       const fromTableNumber = player.tournament_table?.table_number;
+      const fromTableSeat = player.table_seat_number ?? null;
 
       await prisma.table_assignment.update({
         where: { id: player.id },
@@ -72,8 +75,10 @@ export async function reequilibrateTables(tournamentId: number) {
         registrationId: Number(player.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,
+        fromTableSeat,
         toTableId: Number(mainTable.id),
         toTableNumber: mainTable.table_number
+        // toTableSeat sera défini ensuite
       });
     }
 
@@ -91,6 +96,12 @@ export async function reequilibrateTables(tournamentId: number) {
           data: { table_seat_number: nextSeat }
         })
       );
+
+      // Met à jour la bonne entrée dans moves pour finaliser toTableSeat
+      const move = moves.find(m => m.registrationId === Number(player.registration_id));
+      if (move) {
+        move.toTableSeat = nextSeat;
+      }
     }
     await Promise.all(updatedAssignments);
 
@@ -126,6 +137,8 @@ export async function reequilibrateTables(tournamentId: number) {
   for (const player of underfilledPlayers) {
     const fromTableId = player.table_id;
     const fromTableNumber = player.tournament_table?.table_number;
+    const fromTableSeat = player.table_seat_number ?? null;
+
     const targetTable = tablesWithPlayers.find(t => {
       const limit = isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : t.capacity;
       return t.players.length < limit;
@@ -150,8 +163,10 @@ export async function reequilibrateTables(tournamentId: number) {
         registrationId: Number(player.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,
+        fromTableSeat,
         toTableId: Number(targetTable.id),
-        toTableNumber: targetTable.tableNumber
+        toTableNumber: targetTable.tableNumber,
+        toTableSeat: nextSeat
       });
     }
   }
@@ -169,6 +184,7 @@ export async function reequilibrateTables(tournamentId: number) {
 
       const fromTableId = max.id;
       const fromTableNumber = max.tableNumber;
+      const fromTableSeat = movedPlayer.table_seat_number ?? null;
       const nextSeat = findNextAvailableSeat(min.players);
 
       await prisma.table_assignment.update({
@@ -187,8 +203,10 @@ export async function reequilibrateTables(tournamentId: number) {
         registrationId: Number(movedPlayer.registration_id),
         fromTableId: Number(fromTableId),
         fromTableNumber,
+        fromTableSeat,
         toTableId: Number(min.id),
-        toTableNumber: min.tableNumber
+        toTableNumber: min.tableNumber,
+        toTableSeat: nextSeat
       });
 
       // Resort pour continuer
