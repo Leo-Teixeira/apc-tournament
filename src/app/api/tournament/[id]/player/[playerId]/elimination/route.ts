@@ -351,97 +351,100 @@ export async function PUT(req: NextRequest) {
       }
     });
 
-    // Ne rien faire si 16 joueurs ou moins (2 dernières tables gérées ailleurs)
-    if (aliveCount <= 15) {
-      console.log("Moins de 17 joueurs vivants, pas de rééquilibrage automatique.");
-    } else if (aliveCount % 8 === 0) {
-      // Rééquilibrage comme décrit précédemment, **sans supprimer la dernière table**, simplement redistribuer
-      const allTables = await prisma.tournament_table.findMany({
-        where: { tournament_id: BigInt(tournamentId) },
-        orderBy: { table_number: "asc" },
-        include: {
-          table_assignment: {
-            where: { eliminated: false, registration: { statut: "Confirmed" } },
-            orderBy: { table_seat_number: "asc" },
-            include: { registration: { include: { wp_users: true } } }
-          }
-        }
-      });
-
-      if (allTables.length <= 1) {
-        console.log("Une seule table, pas de rééquilibrage nécessaire.");
-      } else {
-        // **On ne supprime pas la dernière table**
-        // On considère toutes les tables pour placer les joueurs
-        const tablesExceptLast = allTables.slice(0, -1);
-
-        // On récupère les joueurs de la dernière table
-        const lastTable = allTables[allTables.length - 1];
-        const playersToMove = [...lastTable.table_assignment];
-
-        const maxSeatsPerTable = 8; // sauf la dernière table, non modifiée ici
-
-        // Calcul des places libres sur toutes sauf dernière table
-        const freeSeats = tablesExceptLast.reduce((acc, t) => acc + (maxSeatsPerTable - t.table_assignment.length), 0);
-
-        if (freeSeats < playersToMove.length) {
-          throw new Error("Pas assez de places pour rééquilibrer la dernière table.");
-        }
-
-        // Mélanger aléatoirement les joueurs à déplacer
-        for (let i = playersToMove.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [playersToMove[i], playersToMove[j]] = [playersToMove[j], playersToMove[i]];
-        }
-
-        const moveNotifications: {
-          playerName: string;
-          registrationId: number;
-          fromTableId: number;
-          fromTableNumber?: number;
-          fromTableSeat?: number;
-          toTableId: number;
-          toTableNumber?: number;
-          toTableSeat?: number;
-        }[] = [];
-
-        // Redistribuer joueurs
-        for (const player of playersToMove) {
-          let placed = false;
-          for (const table of tablesExceptLast) {
-            if (table.table_assignment.length < maxSeatsPerTable) {
-              const nextSeat = findNextAvailableSeat(table.table_assignment);
-              await prisma.table_assignment.update({
-                where: { id: player.id },
-                data: { table_id: table.id, table_seat_number: nextSeat },
-              });
-
-              table.table_assignment.push({ ...player, table_id: table.id, table_seat_number: nextSeat });
-
-              moveNotifications.push({
-                playerName: player.registration?.wp_users?.display_name ?? "??",
-                registrationId: Number(player.registration_id),
-                fromTableId: Number(lastTable.id),
-                fromTableNumber: lastTable.table_number,
-                fromTableSeat: player.table_seat_number ?? null,
-                toTableId: Number(table.id),
-                toTableNumber: table.table_number,
-                toTableSeat: nextSeat,
-              });
-
-              placed = true;
-              break;
+    if (needReequilibrage) {
+      // Ne rien faire si 16 joueurs ou moins (2 dernières tables gérées ailleurs)
+      if (aliveCount <= 15) {
+        console.log("Moins de 17 joueurs vivants, pas de rééquilibrage automatique.");
+      } else if (aliveCount % 8 === 0) {
+        // Rééquilibrage comme décrit précédemment, **sans supprimer la dernière table**, simplement redistribuer
+        const allTables = await prisma.tournament_table.findMany({
+          where: { tournament_id: BigInt(tournamentId) },
+          orderBy: { table_number: "asc" },
+          include: {
+            table_assignment: {
+              where: { eliminated: false, registration: { statut: "Confirmed" } },
+              orderBy: { table_seat_number: "asc" },
+              include: { registration: { include: { wp_users: true } } }
             }
           }
-          if (!placed) {
-            throw new Error("Erreur : pas pu placer un joueur lors du rééquilibrage.");
+        });
+
+        if (allTables.length <= 1) {
+          console.log("Une seule table, pas de rééquilibrage nécessaire.");
+        } else {
+          // **On ne supprime pas la dernière table**
+          // On considère toutes les tables pour placer les joueurs
+          const tablesExceptLast = allTables.slice(0, -1);
+
+          // On récupère les joueurs de la dernière table
+          const lastTable = allTables[allTables.length - 1];
+          const playersToMove = [...lastTable.table_assignment];
+
+          const maxSeatsPerTable = 8; // sauf la dernière table, non modifiée ici
+
+          // Calcul des places libres sur toutes sauf dernière table
+          const freeSeats = tablesExceptLast.reduce((acc, t) => acc + (maxSeatsPerTable - t.table_assignment.length), 0);
+
+          if (freeSeats < playersToMove.length) {
+            throw new Error("Pas assez de places pour rééquilibrer la dernière table.");
           }
+
+          // Mélanger aléatoirement les joueurs à déplacer
+          for (let i = playersToMove.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [playersToMove[i], playersToMove[j]] = [playersToMove[j], playersToMove[i]];
+          }
+
+          const moveNotifications: {
+            playerName: string;
+            registrationId: number;
+            fromTableId: number;
+            fromTableNumber?: number;
+            fromTableSeat?: number;
+            toTableId: number;
+            toTableNumber?: number;
+            toTableSeat?: number;
+          }[] = [];
+
+          // Redistribuer joueurs
+          for (const player of playersToMove) {
+            let placed = false;
+            for (const table of tablesExceptLast) {
+              if (table.table_assignment.length < maxSeatsPerTable) {
+                const nextSeat = findNextAvailableSeat(table.table_assignment);
+                await prisma.table_assignment.update({
+                  where: { id: player.id },
+                  data: { table_id: table.id, table_seat_number: nextSeat },
+                });
+
+                table.table_assignment.push({ ...player, table_id: table.id, table_seat_number: nextSeat });
+
+                moveNotifications.push({
+                  playerName: player.registration?.wp_users?.display_name ?? "??",
+                  registrationId: Number(player.registration_id),
+                  fromTableId: Number(lastTable.id),
+                  fromTableNumber: lastTable.table_number,
+                  fromTableSeat: player.table_seat_number ?? null,
+                  toTableId: Number(table.id),
+                  toTableNumber: table.table_number,
+                  toTableSeat: nextSeat,
+                });
+
+                placed = true;
+                break;
+              }
+            }
+            if (!placed) {
+              throw new Error("Erreur : pas pu placer un joueur lors du rééquilibrage.");
+            }
+          }
+        
+
+          // Ajouter ces moves pour notification/retour API
+          moves.push(...moveNotifications);
+
+          console.log(`Rééquilibrage automatique effectué : ${playersToMove.length} joueurs redistribués, dernière table non supprimée.`);
         }
-
-        // Ajouter ces moves pour notification/retour API
-        moves.push(...moveNotifications);
-
-        console.log(`Rééquilibrage automatique effectué : ${playersToMove.length} joueurs redistribués, dernière table non supprimée.`);
       }
     }
 
