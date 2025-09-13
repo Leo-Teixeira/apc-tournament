@@ -161,7 +161,12 @@ export default function Game() {
     let next: TournamentLevel | undefined = undefined;
     if (currentLevel) {
       const currentIndex = levels.findIndex((lvl) => lvl.id === currentLevel.id);
-      next = levels.slice(currentIndex + 1).find((lvl) => !lvl.level_pause);
+      for (let i = currentIndex + 1; i < levels.length; i++) {
+        if (!levels[i].level_pause) {
+          next = levels[i];
+          break;
+        }
+      }
     }
 
     const np = levels

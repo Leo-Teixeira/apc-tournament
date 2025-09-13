@@ -33,6 +33,10 @@ function ShowTableFullScreen() {
   const { id } = useParams();
   const { tournament, assignements } = useTournamentContext();
   const [groupedRows, setGroupedRows] = useState<Record<string, SeatRow[]>>({});
+  const [visiblePage, setVisiblePage] = useState(0);
+
+  // Nombre de tables affichées par page
+  const tablesPerPage = 4;
 
   useEffect(() => {
     if (tournament?.id) {
@@ -40,13 +44,39 @@ function ShowTableFullScreen() {
     }
   }, [tournament?.id, assignements]);
 
+  // Pagination automatique : change toutes les minutes
+  useEffect(() => {
+    if (Object.keys(groupedRows).length === 0) return;
+
+    const pageCount = Math.ceil(Object.keys(groupedRows).length / tablesPerPage);
+    const interval = setInterval(() => {
+      setVisiblePage((current) => (current + 1) % pageCount);
+    }, 20000); // 20 secondes
+
+    return () => clearInterval(interval);
+  }, [groupedRows, tablesPerPage]);
+
   if (!tournament) return <LoadingComponent />;
+
+  // Génère les entrées à afficher pour la page courante
+  const tableEntries = Object.entries(groupedRows);
+  const paginatedEntries = tableEntries.slice(
+    visiblePage * tablesPerPage,
+    (visiblePage + 1) * tablesPerPage
+  );
 
   return (
     <div className="min-h-screen bg-neutral-900 flex flex-col gap-6 p-4">
-      {Object.keys(groupedRows).length > 0 ? (
-        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', display: 'grid', maxWidth: '100vw' }}>
-          {Object.entries(groupedRows).map(([tableNumber, rows]) => (
+      {paginatedEntries.length > 0 ? (
+        <div
+          className="grid gap-6"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            display: "grid",
+            maxWidth: "100vw",
+          }}
+        >
+          {paginatedEntries.map(([tableNumber, rows]) => (
             <div key={tableNumber} className="flex flex-col gap-2">
               <h2 className="text-center text-xl font-bold text-white">
                 TABLE {tableNumber}
@@ -70,4 +100,4 @@ function ShowTableFullScreen() {
       )}
     </div>
   );
-} 
+}

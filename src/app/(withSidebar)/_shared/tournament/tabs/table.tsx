@@ -61,26 +61,56 @@ export const TableTabs = () => {
     }
   }, [tournament?.id, assignements]);
 
+  const wasTournamentFinished = useRef(false);
+  
   useEffect(() => {
     if (!tournament) return;
+  
     const alivePlayers = assignements.filter(a => !a.eliminated);
   
-    if (alivePlayers.length === 1 && tournament.tournament_status !== "finish" && !finishTriggered.current) {
-      finishTriggered.current = true; // évite de re-lancer plusieurs fois
+    let tournamentIsFinished = false;
+    if (tournament.tournament_category === "SITANDGO") {
+      const playersByTable = alivePlayers.reduce<Record<number, number>>((acc, player) => {
+        const tableNumber = player.tournament_table?.table_number ?? -1;
+        if (tableNumber >= 0) {
+          acc[tableNumber] = (acc[tableNumber] || 0) + 1;
+        }
+        return acc;
+      }, {});
+      const allTablesHaveOnePlayer = Object.values(playersByTable).length > 0 &&
+        Object.values(playersByTable).every(count => count === 1);
+      tournamentIsFinished = allTablesHaveOnePlayer;
+    } else {
+      tournamentIsFinished = alivePlayers.length === 1;
+    }
+  
+    if (
+      tournamentIsFinished &&
+      tournament.tournament_status !== "finish" &&
+      !finishTriggered.current &&
+      !wasTournamentFinished.current
+    ) {
+      finishTriggered.current = true;
+      wasTournamentFinished.current = true;
   
       finishTournamentMutation.mutateAsync(tournament.id)
         .then(() => notify("success", "🏆 Le tournoi est terminé !"))
         .catch(() => {
-          finishTriggered.current = false; // réactive si erreur pour retenter
+          finishTriggered.current = false;
           notify("error", "Erreur lors de la clôture du tournoi.");
         });
     }
   
-    // Si le tournoi est fini ou plus d'un joueur, on reset pour pouvoir relancer plus tard
+    if (!tournamentIsFinished) {
+      wasTournamentFinished.current = false;
+    }
+  
     if (tournament.tournament_status === "finish" || alivePlayers.length > 1) {
       finishTriggered.current = false;
     }
   }, [assignements, tournament?.tournament_status, finishTournamentMutation, notify, tournament]);
+  
+  
   
 
 

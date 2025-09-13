@@ -238,10 +238,11 @@ export async function PUT(req: NextRequest) {
           },
         },
       });
-      tournamentFinished = tables.every((t) => t.table_assignment.length <= 1);
+      // Terminé seulement si chaque table a exactement 1 joueur vivant
+      tournamentFinished = tables.every((t) => t.table_assignment.length === 1);
     } else {
       tournamentFinished = result.aliveCount === 1;
-    }
+    }    
 
     if (tournamentFinished && hasRanking) {
       if (isSitAndGo) {
