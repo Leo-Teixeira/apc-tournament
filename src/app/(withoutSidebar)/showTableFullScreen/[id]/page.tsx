@@ -36,7 +36,7 @@ function ShowTableFullScreen() {
   const [visiblePage, setVisiblePage] = useState(0);
 
   // Nombre de tables affichées par page
-  const tablesPerPage = 4;
+  const tablesPerPage = 3;
 
   useEffect(() => {
     if (tournament?.id) {

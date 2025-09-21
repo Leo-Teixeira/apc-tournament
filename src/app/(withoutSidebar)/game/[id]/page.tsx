@@ -79,16 +79,11 @@ export default function Game() {
 
     if (!nextPause) return "Aucune autre pause";
 
-    const pauseStart = DateTime.fromISO(nextPause.level_start, { zone: "utc" })
-      .setZone("Europe/Paris")
-      .toJSDate()
-      .getTime();
-    const diff = pauseStart - getNow().getTime();
-    const total = Math.max(0, Math.floor(diff / 1000));
-    const m = Math.floor(total / 60);
-    const s = total % 60;
-
-    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    const nowParis = DateTime.fromJSDate(getNow()).setZone("Europe/Paris");
+    const pauseParis = DateTime.fromISO(nextPause.level_start, { zone: "utc" }).setZone("Europe/Paris");
+    const diff = pauseParis.diff(nowParis, ['hours','minutes','seconds']).toObject();
+    
+    return `${String(diff.hours ?? 0).padStart(2, "0")}:${String(diff.minutes ?? 0).padStart(2, "0")}:${String(Math.floor(diff.seconds ?? 0)).padStart(2, "0")}`;    
   };
 
   const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
