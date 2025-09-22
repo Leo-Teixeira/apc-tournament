@@ -87,7 +87,11 @@ export default function Game() {
   };
 
   const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
-  const getAlivePlayers = () => assignements.filter((r) => !r.eliminated);
+  const getAlivePlayers = () =>
+    assignements.filter(
+      (r) => !r.eliminated && r.registration?.statut === "Confirmed"
+  );
+  
 
   useEffect(() => {
     const aliveCount = getAlivePlayers().length;
