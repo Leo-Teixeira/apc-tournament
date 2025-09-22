@@ -155,6 +155,36 @@ export const PlayerTabs = React.memo(() => {
                 setSelectedKillerId(null);
                 onOpen();
               }
+            },
+            {
+              tooltip: "Supprimer",
+              icon: <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.5} />,
+              onClick: () => {
+                let assignment = assignements.find((a) => a.id === item.id);
+      
+                if (!assignment) {
+                  const fallbackReg = registration.find(
+                    (r) => r.wp_users?.display_name === item.avatarName
+                  );
+                  if (fallbackReg) {
+                    assignment = {
+                      id: -1,
+                      tournament_id: tournament?.id,
+                      registration_id: fallbackReg.id,
+                      eliminated: false,
+                      table_seat_number: 0,
+                      tournament_table: null,
+                      registration: fallbackReg
+                    } as unknown as TableAssignment;
+                  }
+                }
+      
+                if (assignment) {
+                  setSelectedPlayer(assignment);
+                  setIsCancelStatusModal(true);
+                }
+              },
+              color: "danger"
             }
           ]
         : [

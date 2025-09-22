@@ -43,22 +43,26 @@ export async function PATCH(req: NextRequest) {
 
       // Calcul des nouveaux horaires
       let previousEnd = new Date(utcDate);
-      const updateLevelsData = levels.map(level => {
-        const originalDuration =
-          new Date(level.level_end).getTime() - new Date(level.level_start).getTime();
 
-        const start = new Date(previousEnd);
-        const end = new Date(start.getTime() + originalDuration);
-        previousEnd = end;
+      const updateLevelsData = levels.map(level => {
+        // Parse explicitement en UTC depuis ISO string
+        const startOriginal = DateTime.fromISO(level.level_start.toISOString(), { zone: "utc" });
+        const endOriginal = DateTime.fromISO(level.level_end.toISOString(), { zone: "utc" });        
+        const originalDuration = endOriginal.toMillis() - startOriginal.toMillis();
+
+        const start = DateTime.fromJSDate(previousEnd).toUTC();
+        const end = start.plus({ milliseconds: originalDuration });
+        previousEnd = end.toJSDate();
 
         return {
           id: level.id,
           data: {
-            level_start: start,
-            level_end: end
+            level_start: start.toJSDate(),
+            level_end: end.toJSDate()
           }
         };
       });
+
 
       // Transaction regroupée : mise à jour tournoi + tous les niveaux
       const [updatedTournament, ...updatedLevels] = await prisma.$transaction([
