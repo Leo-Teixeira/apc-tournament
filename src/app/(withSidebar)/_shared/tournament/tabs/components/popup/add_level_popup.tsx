@@ -53,8 +53,8 @@ export const NiveauFormBody: React.FC<NiveauFormBodyProps> = ({
           ? computeDuration(level.level_start, level.level_end)
           : "00:00"
       );
-      setSmallBlind(level.level_small_blinde ?? 0);
-      setBigBlind(level.level_big_blinde ?? 0);
+      setSmallBlind(level.level_pause ? 0 : level.level_small_blinde ?? 0);
+      setBigBlind(level.level_pause ? 0 : level.level_big_blinde ?? 0);
       setAnte(level.level_ante ?? 0);
       setChipRace(level.level_chip_race ?? false);
     }
