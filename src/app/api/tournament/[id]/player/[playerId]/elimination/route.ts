@@ -149,6 +149,7 @@ export async function PUT(req: NextRequest) {
           });
 
           score = getSitAndGoScore(totalOnThisTable, ranking_position);
+
         } else {
           const aliveCount = await tx.table_assignment.count({
             where: {
@@ -176,6 +177,7 @@ export async function PUT(req: NextRequest) {
           tournament_id: BigInt(tournamentId),
         },
       });
+
 
       await tx.tournament_ranking.create({
         data: {
@@ -246,39 +248,53 @@ export async function PUT(req: NextRequest) {
 
     if (tournamentFinished && hasRanking) {
       if (isSitAndGo) {
-        const lastAssignments = await prisma.table_assignment.findMany({
-          where: {
-            tournament_table: { tournament_id: BigInt(tournamentId) },
-            eliminated: false,
-          },
-          include: { registration: true },
+        await prisma.$transaction(async (tx) => { // rendu atomique [web:8]
+          const tablesCheck = await tx.tournament_table.findMany({
+            where: { tournament_id: BigInt(tournamentId) },
+            include: {
+              table_assignment: {
+                where: { eliminated: false, registration: { statut: "Confirmed" } },
+                include: { registration: true },
+              },
+            },
+          });
+    
+          const stillFinished = tablesCheck.every((t) => t.table_assignment.length === 1);
+          if (!stillFinished) {
+            return;
+          }
+    
+          for (const table of tablesCheck) {
+            const survivor = table.table_assignment[0];
+            if (!survivor?.registration) {
+              continue;
+            }
+    
+            const totalOnThisTable = await tx.table_assignment.count({
+              where: {
+                table_id: table.id,
+                registration: { statut: "Confirmed" },
+              },
+            });
+            const finalScore = getSitAndGoScore(totalOnThisTable, 1);
+    
+            await tx.tournament_ranking.deleteMany({
+              where: {
+                registration_id: survivor.registration.id,
+                tournament_id: BigInt(tournamentId),
+              },
+            });
+            await tx.tournament_ranking.create({
+              data: {
+                registration_id: survivor.registration.id,
+                tournament_id: BigInt(tournamentId),
+                ranking_position: 1,
+                ranking_score: finalScore,
+                table_id: table.id,
+              },
+            });
+          }
         });
-
-        for (const survivor of lastAssignments) {
-          const tableId = survivor.table_id;
-          const totalOnThisTable = await prisma.table_assignment.count({
-            where: {
-              table_id: tableId!,
-              registration: { statut: "Confirmed" },
-            },
-          });
-          const finalScore = getSitAndGoScore(totalOnThisTable, 1);
-
-          await prisma.tournament_ranking.deleteMany({
-            where: {
-              registration_id: survivor.registration.id,
-              tournament_id: BigInt(tournamentId),
-            },
-          });
-          await prisma.tournament_ranking.create({
-            data: {
-              registration_id: survivor.registration.id,
-              tournament_id: BigInt(tournamentId),
-              ranking_position: 1,
-              ranking_score: finalScore,
-            },
-          });
-        }
       } else {
         const lastAssignment = await prisma.table_assignment.findFirst({
           where: {
