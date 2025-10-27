@@ -336,8 +336,8 @@ export default function TournamentDetailPage() {
               );
               return;
             }
-            setIsLaunchModalOpen(false);
             await launchTournamentMutation.mutateAsync();
+            setIsLaunchModalOpen(false);
             window.open(`/game/${id}`);
           } catch (err) {
             console.error("❌ Erreur lancement tournoi :", err);
