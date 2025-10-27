@@ -70,7 +70,8 @@ export async function PATCH(req: NextRequest) {
           where: { id: tournamentId },
           data: {
             tournament_start_date: utcDate,
-            tournament_status: status
+            tournament_status: status,
+            tournament_pause: false
           }
         }),
         ...updateLevelsData.map(levelUpdate =>
