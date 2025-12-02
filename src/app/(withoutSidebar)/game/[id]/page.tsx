@@ -19,9 +19,13 @@ export default function Game() {
   const registration = data?.registrations ?? [];
   const assignements = data?.assignements ?? [];
 
+  // Track client-server time offset for synchronization
+  const [timeOffset, setTimeOffset] = useState<number>(0); // milliseconds
   const [now, setNow] = useState(new Date());
   const [frozenNow, setFrozenNow] = useState<Date | null>(null);
-  const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(null);
+  const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(
+    null
+  );
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
   const [hasPlayedOneAliveSound, setHasPlayedOneAliveSound] = useState(false);
@@ -30,7 +34,13 @@ export default function Game() {
   const previousLevelId = useRef<number | null>(null);
 
   const isPaused = tournament?.tournament_pause === true;
-  const getNow = () => (isPaused && frozenNow ? frozenNow : now);
+
+  // Get synchronized time (adjusted for server offset)
+  const getSyncedNow = () => {
+    if (isPaused && frozenNow) return frozenNow;
+    // Subtract offset to get server-equivalent time
+    return new Date(now.getTime() - timeOffset);
+  };
 
   let chips = (tournament?.stack?.stack_chip ?? [])
     .map((sc) => sc?.chip)
@@ -40,74 +50,95 @@ export default function Game() {
     const levelEnd = DateTime.fromISO(level.level_end, { zone: "utc" })
       .setZone("Europe/Paris")
       .toJSDate();
-    return levelEnd <= getNow() && Number(level.level_chip_race) === 1;
+    return levelEnd <= getSyncedNow() && Number(level.level_chip_race) === 1;
   }).length;
 
   for (let i = 0; i < chipRaceCount; i++) {
     if (chips.length > 0) {
-      const minValue = Math.min(...chips.map(c => c.value));
-      chips = chips.filter(c => c.value !== minValue);
+      const minValue = Math.min(...chips.map((c) => c.value));
+      chips = chips.filter((c) => c.value !== minValue);
     }
   }
 
   const getDurationSince = (startISO: string) => {
-    const start = DateTime.fromISO(startISO, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
-    const diff = getNow().getTime() - start.getTime();
+    const start = DateTime.fromISO(startISO, { zone: "utc" })
+      .setZone("Europe/Paris")
+      .toJSDate();
+    const diff = getSyncedNow().getTime() - start.getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const h = Math.floor(total / 3600);
     const m = Math.floor((total % 3600) / 60);
     const s = total % 60;
-    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(
+      2,
+      "0"
+    )}:${String(s).padStart(2, "0")}`;
   };
 
   const getTimeLeft = (end: string | Date) => {
-    const endDate = typeof end === "string" ?
-      DateTime.fromISO(end, { zone: "utc" }).setZone("Europe/Paris").toJSDate() :
-      end;
-    const diff = endDate.getTime() - getNow().getTime();
+    const endDate =
+      typeof end === "string"
+        ? DateTime.fromISO(end, { zone: "utc" })
+            .setZone("Europe/Paris")
+            .toJSDate()
+        : end;
+    const diff = endDate.getTime() - getSyncedNow().getTime();
     const total = Math.max(0, Math.floor(diff / 1000));
     const m = Math.floor(total / 60);
     const s = total % 60;
-    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
+      m % 60
+    ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
   const getTimeUntilNextPause = () => {
     if (currentLevel?.level_pause) {
-      console.log("⏸ [DEBUG] On est actuellement en pause, pas de timer affiché.");
+      console.log(
+        "⏸ [DEBUG] On est actuellement en pause, pas de timer affiché."
+      );
       return "-";
     }
 
     if (!nextPause) return "Aucune autre pause";
 
-    const nowParis = DateTime.fromJSDate(getNow()).setZone("Europe/Paris");
-    const pauseParis = DateTime.fromISO(nextPause.level_start, { zone: "utc" }).setZone("Europe/Paris");
-    const diff = pauseParis.diff(nowParis, ['hours','minutes','seconds']).toObject();
-    
-    return `${String(diff.hours ?? 0).padStart(2, "0")}:${String(diff.minutes ?? 0).padStart(2, "0")}:${String(Math.floor(diff.seconds ?? 0)).padStart(2, "0")}`;    
+    const nowParis = DateTime.fromJSDate(getSyncedNow()).setZone(
+      "Europe/Paris"
+    );
+    const pauseParis = DateTime.fromISO(nextPause.level_start, {
+      zone: "utc",
+    }).setZone("Europe/Paris");
+    const diff = pauseParis
+      .diff(nowParis, ["hours", "minutes", "seconds"])
+      .toObject();
+
+    return `${String(diff.hours ?? 0).padStart(2, "0")}:${String(
+      diff.minutes ?? 0
+    ).padStart(2, "0")}:${String(Math.floor(diff.seconds ?? 0)).padStart(
+      2,
+      "0"
+    )}`;
   };
 
-  const getConfirmedPlayers = () => registration.filter((r) => r.statut === "Confirmed");
+  const getConfirmedPlayers = () =>
+    registration.filter((r) => r.statut === "Confirmed");
   const getAlivePlayers = () =>
     assignements.filter(
       (r) => !r.eliminated && r.registration?.statut === "Confirmed"
-  );
-  
+    );
 
   useEffect(() => {
     const aliveCount = getAlivePlayers().length;
     if (aliveCount === 1 && !hasPlayedOneAliveSound) {
       const audio = new Audio("/sounds/victory.mp3");
-      audio.play()
-        .catch((err) => {
-          console.warn("Audio victory failed to play:", err);
-        });
+      audio.play().catch((err) => {
+        console.warn("Audio victory failed to play:", err);
+      });
       setHasPlayedOneAliveSound(true);
     }
     if (aliveCount > 1 && hasPlayedOneAliveSound) {
       setHasPlayedOneAliveSound(false);
     }
   }, [getAlivePlayers, hasPlayedOneAliveSound]);
-  
 
   const getAverageStackAlive = () => {
     const alivePlayersCount = getAlivePlayers().length;
@@ -126,6 +157,26 @@ export default function Game() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [hasPlayedBeep, setHasPlayedBeep] = useState(false);
 
+  // Calculate time offset when server time is received
+  useEffect(() => {
+    if (data?.serverTime) {
+      const serverTime = new Date(data.serverTime).getTime();
+      const clientTime = Date.now();
+      const offset = clientTime - serverTime;
+      setTimeOffset(offset);
+
+      console.log("[SYNC] Server time:", data.serverTime);
+      console.log("[SYNC] Client time:", new Date().toISOString());
+      console.log(
+        "[SYNC] Time offset:",
+        offset,
+        "ms (",
+        Math.round(offset / 1000),
+        "seconds )"
+      );
+    }
+  }, [data?.serverTime]);
+
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(interval);
@@ -141,25 +192,33 @@ export default function Game() {
     return () => clearInterval(interval);
   }, [refetch]);
 
-  useEffect(() => { refetch(); }, [refetch]);
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
-    if (isPaused && !frozenNow) setFrozenNow(new Date());
+    if (isPaused && !frozenNow) setFrozenNow(getSyncedNow());
     if (!isPaused && frozenNow) setFrozenNow(null);
-  }, [isPaused, frozenNow]);
+  }, [isPaused, frozenNow, timeOffset]);
 
   useEffect(() => {
-    const refDate = getNow();
+    const refDate = getSyncedNow();
 
     const cl = levels.find((level) => {
-      const start = DateTime.fromISO(level.level_start, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
-      const end = DateTime.fromISO(level.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate();
+      const start = DateTime.fromISO(level.level_start, { zone: "utc" })
+        .setZone("Europe/Paris")
+        .toJSDate();
+      const end = DateTime.fromISO(level.level_end, { zone: "utc" })
+        .setZone("Europe/Paris")
+        .toJSDate();
       return refDate >= start && refDate < end;
     });
 
     let next: TournamentLevel | undefined = undefined;
     if (currentLevel) {
-      const currentIndex = levels.findIndex((lvl) => lvl.id === currentLevel.id);
+      const currentIndex = levels.findIndex(
+        (lvl) => lvl.id === currentLevel.id
+      );
       for (let i = currentIndex + 1; i < levels.length; i++) {
         if (!levels[i].level_pause) {
           next = levels[i];
@@ -170,7 +229,12 @@ export default function Game() {
 
     const np = levels
       .filter((level) => level.level_pause)
-      .find((pauseLevel) => DateTime.fromISO(pauseLevel.level_start, { zone: "utc" }).setZone("Europe/Paris").toJSDate() > refDate);
+      .find(
+        (pauseLevel) =>
+          DateTime.fromISO(pauseLevel.level_start, { zone: "utc" })
+            .setZone("Europe/Paris")
+            .toJSDate() > refDate
+      );
 
     setNextPause(np ?? null);
 
@@ -182,15 +246,19 @@ export default function Game() {
     setCurrentLevel(cl ?? null);
     setNextLevel(next ?? null);
     setNextPause(np ?? null);
-  }, [levels, now, frozenNow, isPaused]);
+  }, [levels, now, frozenNow, isPaused, timeOffset]);
 
   // UseEffect pour jouer le son 10s avant fin niveau
   useEffect(() => {
     if (!currentLevel) return;
 
-    const nowTime = getNow().getTime();
-    const levelEndTime = DateTime.fromISO(currentLevel.level_end, { zone: "utc" })
-      .setZone("Europe/Paris").toJSDate().getTime();
+    const nowTime = getSyncedNow().getTime();
+    const levelEndTime = DateTime.fromISO(currentLevel.level_end, {
+      zone: "utc",
+    })
+      .setZone("Europe/Paris")
+      .toJSDate()
+      .getTime();
 
     const secondsLeft = Math.floor((levelEndTime - nowTime) / 1000);
 
@@ -201,21 +269,24 @@ export default function Game() {
       });
       setHasPlayedBeep(true);
     }
-  
+
     if (secondsLeft > 10 && hasPlayedBeep) {
       setHasPlayedBeep(false);
     }
-  }, [currentLevel, now, frozenNow]);
+  }, [currentLevel, now, frozenNow, timeOffset]);
 
   if (!tournament || !Array.isArray(levels)) return <LoadingComponent />;
 
-  const nowTime = getNow();
-  const localNowStr = DateTime.fromJSDate(nowTime).setZone("Europe/Paris").toFormat("dd/MM/yyyy HH:mm");
+  const nowTime = getSyncedNow();
+  const localNowStr = DateTime.fromJSDate(nowTime)
+    .setZone("Europe/Paris")
+    .toFormat("dd/MM/yyyy HH:mm");
 
   const backgroundUrl =
     bgIndex === 0
       ? tournament.tournament_background_1 || "/images/background_dashboard.svg"
-      : tournament.tournament_background_2 || "/images/background_dashboard.svg";
+      : tournament.tournament_background_2 ||
+        "/images/background_dashboard.svg";
 
   return (
     <div
@@ -223,7 +294,6 @@ export default function Game() {
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
       <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-4 md:p-8 max-h-full overflow-auto">
-
         <div className="text-center text-white">
           <h1 className="text-7xl font-satoshiBold text-primary_brand-50">
             {tournament.tournament_name}
@@ -235,25 +305,46 @@ export default function Game() {
 
         <div className="flex justify-between">
           <div className="space-y-4">
-            <InfoItem label="Niveau" value={currentLevel?.level_number.toString() ?? "-"} />
+            <InfoItem
+              label="Niveau"
+              value={currentLevel?.level_number.toString() ?? "-"}
+            />
             <InfoItem
               label="Durée totale"
               value={
-                tournament
-                  ? <span className="font-satoshiBold tabular-nums">{getDurationSince(String(tournament.tournament_start_date))}</span>
-                  : "--:--:--"
+                tournament ? (
+                  <span className="font-satoshiBold tabular-nums">
+                    {getDurationSince(String(tournament.tournament_start_date))}
+                  </span>
+                ) : (
+                  "--:--:--"
+                )
               }
             />
-            <InfoItem label="Pause" value={<span className="font-satoshiBold tabular-nums">{getTimeUntilNextPause()}</span>} />
+            <InfoItem
+              label="Pause"
+              value={
+                <span className="font-satoshiBold tabular-nums">
+                  {getTimeUntilNextPause()}
+                </span>
+              }
+            />
           </div>
 
           <div className="text-center text-primary_brand-50">
             <div className="text-xl12 font-satoshiBold tabular-nums">
-              {currentLevel ? getTimeLeft(DateTime.fromISO(currentLevel.level_end, { zone: "utc" }).setZone("Europe/Paris").toJSDate()) : "--:--"}
+              {currentLevel
+                ? getTimeLeft(
+                    DateTime.fromISO(currentLevel.level_end, { zone: "utc" })
+                      .setZone("Europe/Paris")
+                      .toJSDate()
+                  )
+                : "--:--"}
             </div>
             <div className="text-xl7 font-satoshiBold">
-              {currentLevel?.level_pause ? "PAUSE"
-               : currentLevel && !currentLevel.level_pause
+              {currentLevel?.level_pause
+                ? "PAUSE"
+                : currentLevel && !currentLevel.level_pause
                 ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}/${currentLevel.level_ante}`
                 : nextLevel
                 ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
@@ -270,7 +361,9 @@ export default function Game() {
             <InfoItem label="Stack moyen" value={getAverageStackAlive()} />
             <InfoItem
               label="Joueurs"
-              value={`${getAlivePlayers().length}/${getConfirmedPlayers().length}`}
+              value={`${getAlivePlayers().length}/${
+                getConfirmedPlayers().length
+              }`}
             />
           </div>
         </div>

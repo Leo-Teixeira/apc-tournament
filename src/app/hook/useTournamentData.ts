@@ -1,4 +1,4 @@
-// hooks/useTournamentData.ts
+//hooks/useTournamentData.ts
 import { useQuery } from "@tanstack/react-query";
 import {
   Tournament,
@@ -18,6 +18,7 @@ type TournamentData = {
   assignements: TableAssignment[];
   stacks: Stack[];
   trimestry: Trimester[];
+  serverTime?: string; // ISO timestamp from server for time synchronization
 };
 
 export const useTournamentData = (tournamentId: string) => {
@@ -40,7 +41,8 @@ export const useTournamentData = (tournamentId: string) => {
             (r: Registration) => r.table_assignment
           ) || [],
         stacks: data.stacks,
-        trimestry: data.trimestry
+        trimestry: data.trimestry,
+        serverTime: data.serverTime, // Pass through server timestamp
       };
     },
   });
