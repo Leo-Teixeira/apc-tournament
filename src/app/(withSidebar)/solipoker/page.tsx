@@ -10,9 +10,7 @@ import {
 } from "../../components/table/table.types";
 import { tournamentColumns } from "../../components/table/presets/tournament.config";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ViewIcon,
-} from "@hugeicons/core-free-icons";
+import { ViewIcon } from "@hugeicons/core-free-icons";
 import { useTournamentDataByCategory } from "@/app/hook/useTournamentsData";
 import TabBar from "../../components/tabBar";
 import { TournamentMobileCards } from "../../components/tournament-mobile-cards";
@@ -20,7 +18,7 @@ import { TournamentMobileCards } from "../../components/tournament-mobile-cards"
 export default function SoliPokerHome() {
   type TrimestryKey = "T1" | "T2" | "T3";
 
-  const { data, isLoading } = useTournamentDataByCategory("solipoker");
+  const { data, isLoading } = useTournamentDataByCategory("SOLIPOKER");
 
   const tournamentRows = data?.tournamentRows ?? [];
   const quarterRankingRows = data?.quarterRankingRows ?? {
@@ -102,22 +100,24 @@ export default function SoliPokerHome() {
           Classement
         </h2>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-          {(Object.keys(quarterRankingRows) as TrimestryKey[]).map((trimestry) => (
-            <div
-              key={trimestry}
-              className="flex-1 flex flex-col gap-2 overflow-x-auto"
-            >
-              <h2 className="font-satoshiRegular text-m sm:text-xl2p9 leading-8 sm:leading-10">
-                {STRINGS.apt.trimestry[trimestry]}
-              </h2>
-              <GenericTable<StandingRow>
-                items={quarterRankingRows[trimestry]}
-                columns={standingsColumns}
-                ariaLabel={`Classement ${trimestry}`}
-                showActions={false}
-              />
-            </div>
-          ))}
+          {(Object.keys(quarterRankingRows) as TrimestryKey[]).map(
+            (trimestry) => (
+              <div
+                key={trimestry}
+                className="flex-1 flex flex-col gap-2 overflow-x-auto"
+              >
+                <h2 className="font-satoshiRegular text-m sm:text-xl2p9 leading-8 sm:leading-10">
+                  {STRINGS.apt.trimestry[trimestry]}
+                </h2>
+                <GenericTable<StandingRow>
+                  items={quarterRankingRows[trimestry]}
+                  columns={standingsColumns}
+                  ariaLabel={`Classement ${trimestry}`}
+                  showActions={false}
+                />
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>

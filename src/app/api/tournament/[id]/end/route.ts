@@ -19,7 +19,10 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { status } = body;
 
-    if (!status || !Object.values(tournament_tournament_status).includes(status)) {
+    if (
+      !status ||
+      !Object.values(tournament_tournament_status).includes(status)
+    ) {
       return NextResponse.json(
         { error: "Invalid or missing status" },
         { status: 400 }
@@ -29,7 +32,7 @@ export async function PATCH(req: NextRequest) {
     if (status === "finish") {
       // 1. Vérifie que le tournoi existe
       const mainTournament = await prisma.tournament.findUnique({
-        where: { id: tournamentId }
+        where: { id: tournamentId },
       });
       if (!mainTournament)
         return NextResponse.json(
@@ -41,20 +44,33 @@ export async function PATCH(req: NextRequest) {
       const survivors = await prisma.table_assignment.findMany({
         where: {
           eliminated: false,
-          tournament_table: { tournament_id: tournamentId }
+          tournament_table: { tournament_id: tournamentId },
         },
-        select: { registration_id: true }
+        select: { registration_id: true },
       });
-      const survivorRegistrationIds = survivors.map(s => s.registration_id);
+      const survivorRegistrationIds = survivors.map((s) => s.registration_id);
 
       // 3. Trouve le tournoi du dimanche
+      const sundayVariants = [
+        "Dimanche",
+        "dimanche",
+        "DIMANCHE",
+        "Dim.",
+        "Dim ",
+        "Dimanche soir",
+        "Sunday",
+        "SUNDAY",
+      ];
+
       const sundayTournament = await prisma.tournament.findFirst({
         where: {
           tournament_trimestry: mainTournament.tournament_trimestry,
-          tournament_name: { contains: "Dimanche" },
+          tournament_name: {
+            in: sundayVariants,
+          },
         },
       });
-      
+
       if (!sundayTournament)
         return NextResponse.json(
           { error: "Tournoi du dimanche introuvable" },
@@ -63,16 +79,17 @@ export async function PATCH(req: NextRequest) {
 
       // 4. Récupère les user_id des survivants
       const userIds = await Promise.all(
-        survivorRegistrationIds.map(async regId => {
-          const reg = await prisma.registration.findUnique({ where: { id: regId } });
-          if (!reg)
-            throw new Error("Registration introuvable pour survivor");
+        survivorRegistrationIds.map(async (regId) => {
+          const reg = await prisma.registration.findUnique({
+            where: { id: regId },
+          });
+          if (!reg) throw new Error("Registration introuvable pour survivor");
           return reg.user_id;
         })
       );
 
       // 5. Prépare les inscriptions à créer (enum !)
-      const registrationCreateData = userIds.map(user_id => ({
+      const registrationCreateData = userIds.map((user_id) => ({
         user_id,
         tournament_id: sundayTournament.id,
         inscription_date: DateTime.now().toJSDate(),
@@ -82,12 +99,12 @@ export async function PATCH(req: NextRequest) {
       // 6. Récupère et trie le classement
       const rankings = await prisma.tournament_ranking.findMany({
         where: { tournament_id: tournamentId },
-        orderBy: { ranking_position: "asc" }
+        orderBy: { ranking_position: "asc" },
       });
 
       // 7. Recalcule les positions des éliminés
-      const eliminatedRankings = rankings.filter(ranking =>
-        !survivorRegistrationIds.includes(ranking.registration_id)
+      const eliminatedRankings = rankings.filter(
+        (ranking) => !survivorRegistrationIds.includes(ranking.registration_id)
       );
       eliminatedRankings.forEach((ranking, idx) => {
         ranking.ranking_position = idx + 1;
@@ -97,15 +114,15 @@ export async function PATCH(req: NextRequest) {
       const transactionOps = [
         prisma.tournament.update({
           where: { id: tournamentId },
-          data: { tournament_status: "finish" }
+          data: { tournament_status: "finish" },
         }),
-        ...registrationCreateData.map(data =>
+        ...registrationCreateData.map((data) =>
           prisma.registration.create({ data })
         ),
-        ...eliminatedRankings.map(elim =>
+        ...eliminatedRankings.map((elim) =>
           prisma.tournament_ranking.update({
             where: { id: elim.id },
-            data: { ranking_position: elim.ranking_position }
+            data: { ranking_position: elim.ranking_position },
           })
         ),
       ];
@@ -114,11 +131,12 @@ export async function PATCH(req: NextRequest) {
 
       return NextResponse.json(
         serializeBigInt({
-          message: "Tournoi terminé, survivants inscrits à la finale, classement recalculé.",
+          message:
+            "Tournoi terminé, survivants inscrits à la finale, classement recalculé.",
           tournamentId,
           sundayTournamentId: sundayTournament.id,
           registrationsInserted: registrationCreateData.length,
-          eliminatedRankingCount: eliminatedRankings.length
+          eliminatedRankingCount: eliminatedRankings.length,
         }),
         { status: 200 }
       );
@@ -126,7 +144,7 @@ export async function PATCH(req: NextRequest) {
       // Cas d'autres statuts
       const updated = await prisma.tournament.update({
         where: { id: tournamentId },
-        data: { tournament_status: status }
+        data: { tournament_status: status },
       });
       return NextResponse.json(serializeBigInt(updated), { status: 200 });
     }
