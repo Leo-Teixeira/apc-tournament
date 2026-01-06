@@ -17,14 +17,89 @@ function findNextAvailableSeat(
   return seat;
 }
 
+// 🎯 Helper function to determine max capacity based on category and table count
+function getMaxCapacityForCategory(
+  category: string,
+  remainingTableCount: number
+): number {
+  if (category === "APT") {
+    // APT: max 8 for multi-table, max 9 for single table
+    return remainingTableCount === 1 ? 9 : 8;
+  } else if (category === "SITANDGO") {
+    return 9;
+  } else {
+    // Default for other categories
+    return 8;
+  }
+}
+
+// 🔍 Check if a set of tables can be closed without exceeding max capacity
+// Returns the list of tables that can be safely closed
+function findClosableTables(
+  tables: Array<{
+    id: bigint;
+    tableNumber: number;
+    capacity: number;
+    players: any[];
+  }>,
+  maxCapacity: number
+): Array<{
+  id: bigint;
+  tableNumber: number;
+  capacity: number;
+  players: any[];
+}> {
+  if (tables.length <= 1) {
+    return [];
+  }
+
+  // Sort tables by player count (ascending) - weakest tables first
+  const sorted = [...tables].sort(
+    (a, b) => a.players.length - b.players.length
+  );
+  const closableTables: typeof tables = [];
+
+  let remainingTables = [...sorted];
+
+  for (const candidate of sorted) {
+    // Calculate what would happen if we close this table
+    const tablesAfterClosure = remainingTables.filter(
+      (t) => t.id !== candidate.id
+    );
+
+    if (tablesAfterClosure.length === 0) {
+      // Can't close all tables
+      break;
+    }
+
+    // Calculate total players after closing this table
+    const totalPlayers =
+      tablesAfterClosure.reduce((sum, t) => sum + t.players.length, 0) +
+      candidate.players.length;
+
+    const avgPlayersPerTable = totalPlayers / tablesAfterClosure.length;
+
+    // Check if redistribution would keep all tables within max capacity
+    // We need to ensure that even in the worst case (uneven distribution),
+    // no table exceeds max capacity
+    const maxPlayersAfterRedistribution = Math.ceil(avgPlayersPerTable);
+
+    if (maxPlayersAfterRedistribution <= maxCapacity) {
+      // This table can be safely closed
+      closableTables.push(candidate);
+      remainingTables = tablesAfterClosure;
+    }
+  }
+
+  return closableTables;
+}
+
 export async function reequilibrateTables(tournamentId: number) {
   const tournament = await prisma.tournament.findUnique({
     where: { id: BigInt(tournamentId) },
     select: { tournament_category: true },
   });
 
-  const isAPT = tournament?.tournament_category === "APT";
-  const aptMaxDefault = 8;
   const aptMaxLastTable = 9;
 
   // Inclure uniquement les joueurs non éliminés & Confirmed
@@ -61,6 +136,99 @@ export async function reequilibrateTables(tournamentId: number) {
   }[] = [];
 
   const allRemainingPlayers = tables.flatMap((t) => t.table_assignment);
+
+  // ----- NEW: Enhanced table closure logic ---------
+  // Try to close multiple weak tables if redistribution is viable
+  const candidateTables = tables.map((table) => ({
+    id: table.id,
+    tableNumber: table.table_number,
+    capacity: table.table_capacity,
+    players: table.table_assignment,
+  }));
+
+  // Only attempt closure if we have at least 2 tables
+  if (candidateTables.length > 1) {
+    // Determine max capacity for the current situation
+    const maxCapacity = getMaxCapacityForCategory(
+      tournament?.tournament_category || "APT",
+      candidateTables.length
+    );
+
+    // Find all tables that can be safely closed
+    const closableTables = findClosableTables(candidateTables, maxCapacity);
+
+    if (closableTables.length > 0) {
+      // Get all players from tables to be closed
+      const playersToRedistribute = closableTables.flatMap((t) => t.players);
+
+      // Get remaining tables (not being closed)
+      const remainingTables = candidateTables.filter(
+        (t) => !closableTables.some((ct) => ct.id === t.id)
+      );
+
+      // Sort remaining tables by player count (ascending) - fill emptiest first
+      remainingTables.sort((a, b) => a.players.length - b.players.length);
+
+      // Redistribute players to remaining tables, prioritizing emptiest tables
+      for (const player of playersToRedistribute) {
+        const fromTableId = player.table_id;
+        const fromTableNumber = player.tournament_table?.table_number;
+        const fromTableSeat = player.table_seat_number ?? null;
+
+        // Find the table with the fewest players that hasn't reached max capacity
+        const targetTable = remainingTables.find(
+          (t) => t.players.length < maxCapacity
+        );
+
+        if (!targetTable) {
+          // This shouldn't happen if our closure detection logic is correct
+          console.error("No available table for redistribution - logic error");
+          break;
+        }
+
+        const nextSeat = findNextAvailableSeat(targetTable.players);
+
+        await prisma.table_assignment.update({
+          where: { id: player.id },
+          data: {
+            table_id: targetTable.id,
+            table_seat_number: nextSeat,
+          },
+        });
+
+        // Update local state
+        targetTable.players.push({
+          ...player,
+          table_id: targetTable.id,
+          table_seat_number: nextSeat,
+        });
+
+        // Re-sort after adding a player to maintain emptiest-first order
+        remainingTables.sort((a, b) => a.players.length - b.players.length);
+
+        changed = true;
+
+        moves.push({
+          playerName: player.registration?.wp_users?.display_name ?? "??",
+          registrationId: Number(player.registration_id),
+          fromTableId: Number(fromTableId),
+          fromTableNumber,
+          fromTableSeat,
+          toTableId: Number(targetTable.id),
+          toTableNumber: targetTable.tableNumber,
+          toTableSeat: nextSeat,
+        });
+      }
+
+      // Delete the closed tables
+      for (const closedTable of closableTables) {
+        await prisma.tournament_table.delete({ where: { id: closedTable.id } });
+      }
+
+      // Return early - we've made significant changes
+      return { changed: true, moves };
+    }
+  }
 
   // ----- Fusion en table unique ---------
   if (allRemainingPlayers.length === aptMaxLastTable) {
@@ -159,9 +327,11 @@ export async function reequilibrateTables(tournamentId: number) {
     const fromTableSeat = player.table_seat_number ?? null;
 
     // Trouver une table cible qui N'EST PAS dans la liste de suppression
+    const limit = getMaxCapacityForCategory(
+      tournament?.tournament_category || "APT",
+      tablesWithPlayers.length
+    );
     const targetTable = tablesWithPlayers.find((t) => {
-      const limit =
-        isAPT && tablesWithPlayers.length > 1 ? aptMaxDefault : t.capacity;
       return t.players.length < limit && !tablesToDeleteIds.has(t.id);
     });
 
