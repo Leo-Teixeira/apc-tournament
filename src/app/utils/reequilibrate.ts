@@ -17,6 +17,17 @@ function findNextAvailableSeat(
   return seat;
 }
 
+// 🎲 Random player sorting for rebalancing
+// Fisher-Yates shuffle algorithm for true randomness
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 // 🎯 Helper function to determine max capacity based on category and table count
 function getMaxCapacityForCategory(
   category: string,
@@ -53,10 +64,19 @@ function findClosableTables(
     return [];
   }
 
-  // Sort tables by player count (ascending) - weakest tables first
-  const sorted = [...tables].sort(
-    (a, b) => a.players.length - b.players.length
-  );
+  // Table sorting by number DESC for closure
+  // Start with highest table number (last table), work down to table 1
+  // This matches physical room layout (high tables at back, easier to close)
+  const sorted = [...tables].sort((a, b) => {
+    // First sort by player count (ascending) to find weakest tables
+    const playerDiff = a.players.length - b.players.length;
+    if (playerDiff !== 0) {
+      return playerDiff;
+    }
+    // If same player count, prioritize higher table numbers
+    return b.tableNumber - a.tableNumber;
+  });
+
   const closableTables: typeof tables = [];
 
   let remainingTables = [...sorted];
@@ -159,7 +179,11 @@ export async function reequilibrateTables(tournamentId: number) {
 
     if (closableTables.length > 0) {
       // Get all players from tables to be closed
-      const playersToRedistribute = closableTables.flatMap((t) => t.players);
+      const playersFromClosedTables = closableTables.flatMap((t) => t.players);
+
+      // Random player sorting for rebalancing
+      // Shuffle players to ensure random order during redistribution
+      const playersToRedistribute = shuffleArray(playersFromClosedTables);
 
       // Get remaining tables (not being closed)
       const remainingTables = candidateTables.filter(
@@ -223,6 +247,26 @@ export async function reequilibrateTables(tournamentId: number) {
       // Delete the closed tables
       for (const closedTable of closableTables) {
         await prisma.tournament_table.delete({ where: { id: closedTable.id } });
+      }
+
+      // Sequential renumbering after closure
+      // Renumber remaining tables continuously: 1, 2, 3, 4... (no gaps)
+      const allTablesAfterClosure = await prisma.tournament_table.findMany({
+        where: { tournament_id: BigInt(tournamentId) },
+        orderBy: { table_number: "asc" },
+      });
+
+      // Renumber sequentially starting from 1
+      for (let i = 0; i < allTablesAfterClosure.length; i++) {
+        const newTableNumber = i + 1;
+        const table = allTablesAfterClosure[i];
+
+        if (table.table_number !== newTableNumber) {
+          await prisma.tournament_table.update({
+            where: { id: table.id },
+            data: { table_number: newTableNumber },
+          });
+        }
       }
 
       // Return early - we've made significant changes
@@ -299,6 +343,15 @@ export async function reequilibrateTables(tournamentId: number) {
       await prisma.tournament_table.delete({ where: { id: empty.id } });
     }
 
+    // Sequential renumbering after closure
+    // Ensure final table is numbered as table 1
+    if (mainTable.table_number !== 1) {
+      await prisma.tournament_table.update({
+        where: { id: mainTable.id },
+        data: { table_number: 1 },
+      });
+    }
+
     return { changed: playersToMove.length > 0, moves };
   }
 
@@ -320,8 +373,12 @@ export async function reequilibrateTables(tournamentId: number) {
   // Garder seulement les tables viables (>= 4 joueurs) pour placer les joueurs déplacés
   tablesWithPlayers = tablesWithPlayers.filter((t) => t.players.length >= 4);
 
+  // Random player sorting for rebalancing
+  // Shuffle players from underfilled tables for random redistribution order
+  const shuffledUnderfilledPlayers = shuffleArray(underfilledPlayers);
+
   // Déplacer les joueurs des tables à supprimer vers des tables viables
-  for (const player of underfilledPlayers) {
+  for (const player of shuffledUnderfilledPlayers) {
     const fromTableId = player.table_id;
     const fromTableNumber = player.tournament_table?.table_number;
     const fromTableSeat = player.table_seat_number ?? null;
@@ -428,6 +485,30 @@ export async function reequilibrateTables(tournamentId: number) {
   const toDelete = allTables.filter((t) => t.table_assignment.length === 0);
   for (const empty of toDelete) {
     await prisma.tournament_table.delete({ where: { id: empty.id } });
+  }
+
+  // Sequential renumbering after closure
+  // Renumber remaining tables continuously: 1, 2, 3, 4... (no gaps)
+  if (toDelete.length > 0) {
+    const remainingTablesAfterDeletion = await prisma.tournament_table.findMany(
+      {
+        where: { tournament_id: BigInt(tournamentId) },
+        orderBy: { table_number: "asc" },
+      }
+    );
+
+    // Renumber sequentially starting from 1
+    for (let i = 0; i < remainingTablesAfterDeletion.length; i++) {
+      const newTableNumber = i + 1;
+      const table = remainingTablesAfterDeletion[i];
+
+      if (table.table_number !== newTableNumber) {
+        await prisma.tournament_table.update({
+          where: { id: table.id },
+          data: { table_number: newTableNumber },
+        });
+      }
+    }
   }
 
   return { changed, moves };
