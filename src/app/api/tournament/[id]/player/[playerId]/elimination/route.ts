@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
-import { Prisma, tournament_tournament_status } from "@/generated/prisma";
+import { Prisma } from "@/generated/prisma";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 import { reequilibrateTables } from "@/app/utils/reequilibrate";
 
@@ -12,13 +12,38 @@ function getAptScore(total: number, rank: number): number {
     { min: 21, max: 25, scores: [35, 25, 18, 13, 9, 6, 4, 3, 2] },
     { min: 26, max: 30, scores: [40, 28, 21, 15, 11, 8, 6, 4, 3, 2, 1] },
     { min: 31, max: 35, scores: [45, 32, 24, 18, 12, 10, 7, 5, 4, 3, 2, 1, 1] },
-    { min: 36, max: 40, scores: [51, 36, 27, 20, 15, 11, 8, 5, 4, 3, 3, 2, 2, 1, 1] },
-    { min: 41, max: 45, scores: [56, 41, 30, 22, 16, 12, 9, 7, 5, 4, 3, 3, 2, 2, 1, 1, 1] },
-    { min: 46, max: 50, scores: [62, 47, 33, 24, 17, 13, 9, 7, 5, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1] },
-    { min: 51, max: 55, scores: [67, 51, 36, 26, 19, 14, 10, 8, 6, 5, 5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1, 1] },
-    { min: 56, max: 60, scores: [73, 56, 39, 28, 20, 15, 11, 9, 6, 5, 5, 5, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1] }
+    {
+      min: 36,
+      max: 40,
+      scores: [51, 36, 27, 20, 15, 11, 8, 5, 4, 3, 3, 2, 2, 1, 1],
+    },
+    {
+      min: 41,
+      max: 45,
+      scores: [56, 41, 30, 22, 16, 12, 9, 7, 5, 4, 3, 3, 2, 2, 1, 1, 1],
+    },
+    {
+      min: 46,
+      max: 50,
+      scores: [62, 47, 33, 24, 17, 13, 9, 7, 5, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1],
+    },
+    {
+      min: 51,
+      max: 55,
+      scores: [
+        67, 51, 36, 26, 19, 14, 10, 8, 6, 5, 5, 4, 4, 3, 3, 2, 2, 2, 2, 1, 1, 1,
+      ],
+    },
+    {
+      min: 56,
+      max: 60,
+      scores: [
+        73, 56, 39, 28, 20, 15, 11, 9, 6, 5, 5, 5, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1,
+        1,
+      ],
+    },
   ] as const;
-  const range = aptScoreRanges.find(r => total >= r.min && total <= r.max);
+  const range = aptScoreRanges.find((r) => total >= r.min && total <= r.max);
   return range?.scores[rank - 1] ?? 0;
 }
 
@@ -28,14 +53,21 @@ function getSitAndGoScore(total: number, rank: number): number {
     6: [6, 3, 0, 0, 0, 0],
     7: [7, 4, 2, 0, 0, 0, 0],
     8: [8, 5, 3, 0, 0, 0, 0, 0],
-    9: [9, 6, 4, 2, 0, 0, 0, 0, 0]
+    9: [9, 6, 4, 2, 0, 0, 0, 0, 0],
   };
   const scores = sitAndGoScores[total];
   return scores ? scores[rank - 1] ?? 0 : 0;
 }
 
-function findNextAvailableSeat(players: {table_seat_number: number | null}[], startSeat: number = 1): number {
-  const occupied = new Set(players.map(p => p.table_seat_number).filter((n): n is number => n !== null));
+function findNextAvailableSeat(
+  players: { table_seat_number: number | null }[],
+  startSeat: number = 1
+): number {
+  const occupied = new Set(
+    players
+      .map((p) => p.table_seat_number)
+      .filter((n): n is number => n !== null)
+  );
   let seat = startSeat;
   while (occupied.has(seat)) {
     seat++;
@@ -43,23 +75,27 @@ function findNextAvailableSeat(players: {table_seat_number: number | null}[], st
   return seat;
 }
 
-
 async function getScoreAndRankingPosition(
   tx: Prisma.TransactionClient,
   tournamentId: number | bigint,
   ranking_position: number
 ) {
   const tournament = await tx.tournament.findUnique({
-    where: { id: BigInt(tournamentId) }
+    where: { id: BigInt(tournamentId) },
   });
   if (!tournament) {
-    return { ranking_position, score: 0, tournament_category: undefined, totalRegistrations: 0 };
+    return {
+      ranking_position,
+      score: 0,
+      tournament_category: undefined,
+      totalRegistrations: 0,
+    };
   }
   const totalRegistrations = await tx.registration.count({
     where: {
       tournament_id: BigInt(tournamentId),
-      statut: "Confirmed"
-    }
+      statut: "Confirmed",
+    },
   });
 
   let score = 0;
@@ -69,11 +105,19 @@ async function getScoreAndRankingPosition(
     score = getSitAndGoScore(totalRegistrations, ranking_position);
   }
 
-  return { ranking_position, score, tournament_category: tournament.tournament_category, totalRegistrations };
+  return {
+    ranking_position,
+    score,
+    tournament_category: tournament.tournament_category,
+    totalRegistrations,
+  };
 }
 
 export async function PUT(req: NextRequest) {
-  const { tournament, player } = extractParamsFromPath(req, ["tournament", "player"]);
+  const { tournament, player } = extractParamsFromPath(req, [
+    "tournament",
+    "player",
+  ]);
   if (!tournament || !player) {
     return NextResponse.json({ error: "Missing params" }, { status: 400 });
   }
@@ -92,12 +136,17 @@ export async function PUT(req: NextRequest) {
       select: { tournament_category: true },
     });
     if (!tournamentData) {
-      return NextResponse.json({ error: "Tournament not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Tournament not found" },
+        { status: 404 }
+      );
     }
 
     const { tournament_category } = tournamentData;
     const needReequilibrage = tournament_category !== "SITANDGO";
-    const hasRanking = ["APT", "SITANDGO", "SPECIAUX", "SOLIPOKER"].includes(tournament_category);
+    const hasRanking = ["APT", "SITANDGO", "SPECIAUX", "SOLIPOKER"].includes(
+      tournament_category
+    );
     const isSitAndGo = tournament_category === "SITANDGO";
 
     const assignment = await prisma.table_assignment.findFirst({
@@ -106,7 +155,10 @@ export async function PUT(req: NextRequest) {
     });
 
     if (!assignment?.registration) {
-      return NextResponse.json({ error: "Assignment or registration not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Assignment or registration not found" },
+        { status: 404 }
+      );
     }
 
     const userMeta = await prisma.wp_usermeta.findFirst({
@@ -137,7 +189,7 @@ export async function PUT(req: NextRequest) {
               table_id: tableId!,
               eliminated: false,
               registration: { statut: "Confirmed" },
-            }
+            },
           });
           ranking_position = aliveOnThisTable + 1;
 
@@ -145,23 +197,26 @@ export async function PUT(req: NextRequest) {
             where: {
               table_id: tableId!,
               registration: { statut: "Confirmed" },
-            }
+            },
           });
 
           score = getSitAndGoScore(totalOnThisTable, ranking_position);
-
         } else {
           const aliveCount = await tx.table_assignment.count({
             where: {
               tournament_table: { tournament_id: BigInt(tournamentId) },
               eliminated: false,
               registration: { statut: "Confirmed" },
-            }
+            },
           });
           ranking_position = aliveCount + 1;
 
           if (tournament_category === "APT") {
-            const res = await getScoreAndRankingPosition(tx, tournamentId, ranking_position);
+            const res = await getScoreAndRankingPosition(
+              tx,
+              tournamentId,
+              ranking_position
+            );
             score = res.score;
           } else if (tournament_category === "SPECIAUX") {
             score = 0;
@@ -177,7 +232,6 @@ export async function PUT(req: NextRequest) {
           tournament_id: BigInt(tournamentId),
         },
       });
-
 
       await tx.tournament_ranking.create({
         data: {
@@ -206,12 +260,11 @@ export async function PUT(req: NextRequest) {
       registrationId: number;
       fromTableId: number;
       fromTableNumber?: number;
-      fromTableSeat?: number;   // Ajouter ici
+      fromTableSeat?: number; // Ajouter ici
       toTableId: number;
       toTableNumber?: number;
-      toTableSeat?: number;     // Ajouter ici
+      toTableSeat?: number; // Ajouter ici
     }[] = [];
-    
 
     if (needReequilibrage) {
       const tables = await prisma.tournament_table.findMany({
@@ -244,32 +297,38 @@ export async function PUT(req: NextRequest) {
       tournamentFinished = tables.every((t) => t.table_assignment.length === 1);
     } else {
       tournamentFinished = result.aliveCount === 1;
-    }    
+    }
 
     if (tournamentFinished && hasRanking) {
       if (isSitAndGo) {
-        await prisma.$transaction(async (tx) => { // rendu atomique [web:8]
+        await prisma.$transaction(async (tx) => {
+          // rendu atomique [web:8]
           const tablesCheck = await tx.tournament_table.findMany({
             where: { tournament_id: BigInt(tournamentId) },
             include: {
               table_assignment: {
-                where: { eliminated: false, registration: { statut: "Confirmed" } },
+                where: {
+                  eliminated: false,
+                  registration: { statut: "Confirmed" },
+                },
                 include: { registration: true },
               },
             },
           });
-    
-          const stillFinished = tablesCheck.every((t) => t.table_assignment.length === 1);
+
+          const stillFinished = tablesCheck.every(
+            (t) => t.table_assignment.length === 1
+          );
           if (!stillFinished) {
             return;
           }
-    
+
           for (const table of tablesCheck) {
             const survivor = table.table_assignment[0];
             if (!survivor?.registration) {
               continue;
             }
-    
+
             const totalOnThisTable = await tx.table_assignment.count({
               where: {
                 table_id: table.id,
@@ -277,7 +336,7 @@ export async function PUT(req: NextRequest) {
               },
             });
             const finalScore = getSitAndGoScore(totalOnThisTable, 1);
-    
+
             await tx.tournament_ranking.deleteMany({
               where: {
                 registration_id: survivor.registration.id,
@@ -305,7 +364,11 @@ export async function PUT(req: NextRequest) {
         });
 
         if (lastAssignment?.registration) {
-          const { score: lastScore } = await getScoreAndRankingPosition(prisma, tournamentId, 1);
+          const { score: lastScore } = await getScoreAndRankingPosition(
+            prisma,
+            tournamentId,
+            1
+          );
 
           await prisma.tournament_ranking.deleteMany({
             where: {
@@ -331,21 +394,25 @@ export async function PUT(req: NextRequest) {
         where: { tournament_id: BigInt(tournamentId) },
         orderBy: { ranking_position: "desc" },
       });
-    
+
       // Repère le classement du dernier éliminé
-      const newEliminated = rankings.find(r => r.registration_id === assignment.registration.id);
+      const newEliminated = rankings.find(
+        (r) => r.registration_id === assignment.registration.id
+      );
       if (!newEliminated) {
         console.error("Ranking missing for newly eliminated player");
         // facultatif : return ou throw ici
       } else {
         const conflictPosition = newEliminated.ranking_position;
-    
+
         // Vérifie s'il y a doublon (plus d'un joueur avec cette position)
-        const positionCount = rankings.filter(r => r.ranking_position === conflictPosition).length;
+        const positionCount = rankings.filter(
+          (r) => r.ranking_position === conflictPosition
+        ).length;
         if (positionCount > 1) {
           // Décale toutes les positions ≥ à celle du conflit (sauf le dernier nouvel éliminé)
           const toShift = rankings.filter(
-            r =>
+            (r) =>
               r.ranking_position >= conflictPosition &&
               r.registration_id !== assignment.registration.id
           );
@@ -358,112 +425,15 @@ export async function PUT(req: NextRequest) {
         }
       }
     }
-    
+
     // Récupérer le nombre de joueurs vivants (non éliminés et confirmés)
     const aliveCount = await prisma.table_assignment.count({
       where: {
         tournament_table: { tournament_id: BigInt(tournamentId) },
         eliminated: false,
         registration: { statut: "Confirmed" },
-      }
+      },
     });
-
-    if (needReequilibrage) {
-      // Ne rien faire si 16 joueurs ou moins (2 dernières tables gérées ailleurs)
-      if (aliveCount <= 15) {
-        console.log("Moins de 17 joueurs vivants, pas de rééquilibrage automatique.");
-      } else if (aliveCount % 8 === 0) {
-        // Rééquilibrage comme décrit précédemment, **sans supprimer la dernière table**, simplement redistribuer
-        const allTables = await prisma.tournament_table.findMany({
-          where: { tournament_id: BigInt(tournamentId) },
-          orderBy: { table_number: "asc" },
-          include: {
-            table_assignment: {
-              where: { eliminated: false, registration: { statut: "Confirmed" } },
-              orderBy: { table_seat_number: "asc" },
-              include: { registration: { include: { wp_users: true } } }
-            }
-          }
-        });
-
-        if (allTables.length <= 1) {
-          console.log("Une seule table, pas de rééquilibrage nécessaire.");
-        } else {
-          // **On ne supprime pas la dernière table**
-          // On considère toutes les tables pour placer les joueurs
-          const tablesExceptLast = allTables.slice(0, -1);
-
-          // On récupère les joueurs de la dernière table
-          const lastTable = allTables[allTables.length - 1];
-          const playersToMove = [...lastTable.table_assignment];
-
-          const maxSeatsPerTable = 8; // sauf la dernière table, non modifiée ici
-
-          // Calcul des places libres sur toutes sauf dernière table
-          const freeSeats = tablesExceptLast.reduce((acc, t) => acc + (maxSeatsPerTable - t.table_assignment.length), 0);
-
-          if (freeSeats < playersToMove.length) {
-            throw new Error("Pas assez de places pour rééquilibrer la dernière table.");
-          }
-
-          // Mélanger aléatoirement les joueurs à déplacer
-          for (let i = playersToMove.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [playersToMove[i], playersToMove[j]] = [playersToMove[j], playersToMove[i]];
-          }
-
-          const moveNotifications: {
-            playerName: string;
-            registrationId: number;
-            fromTableId: number;
-            fromTableNumber?: number;
-            fromTableSeat?: number;
-            toTableId: number;
-            toTableNumber?: number;
-            toTableSeat?: number;
-          }[] = [];
-
-          // Redistribuer joueurs
-          for (const player of playersToMove) {
-            let placed = false;
-            for (const table of tablesExceptLast) {
-              if (table.table_assignment.length < maxSeatsPerTable) {
-                const nextSeat = findNextAvailableSeat(table.table_assignment);
-                await prisma.table_assignment.update({
-                  where: { id: player.id },
-                  data: { table_id: table.id, table_seat_number: nextSeat },
-                });
-
-                table.table_assignment.push({ ...player, table_id: table.id, table_seat_number: nextSeat });
-
-                moveNotifications.push({
-                  playerName: player.registration?.wp_users?.display_name ?? "??",
-                  registrationId: Number(player.registration_id),
-                  fromTableId: Number(lastTable.id),
-                  fromTableNumber: lastTable.table_number,
-                  fromTableSeat: player.table_seat_number ?? null,
-                  toTableId: Number(table.id),
-                  toTableNumber: table.table_number,
-                  toTableSeat: nextSeat,
-                });
-
-                placed = true;
-                break;
-              }
-            }
-            if (!placed) {
-              throw new Error("Erreur : pas pu placer un joueur lors du rééquilibrage.");
-            }
-          }
-        
-
-          // Ajouter ces moves pour notification/retour API
-          moves.push(...moveNotifications);
-
-          console.log(`Rééquilibrage automatique effectué : ${playersToMove.length} joueurs redistribués, dernière table non supprimée.`);
-        }
-      }
-    }
 
     return NextResponse.json(
       serializeBigInt({
@@ -475,6 +445,9 @@ export async function PUT(req: NextRequest) {
     );
   } catch (error) {
     console.error("🔥 Error in eliminate route:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

@@ -51,23 +51,25 @@ export async function PATCH(req: NextRequest) {
       const survivorRegistrationIds = survivors.map((s) => s.registration_id);
 
       // 3. Trouve le tournoi du dimanche
-      const sundayVariants = [
-        "Dimanche",
-        "dimanche",
-        "DIMANCHE",
-        "Dim.",
-        "Dim ",
-        "Dimanche soir",
-        "Sunday",
-        "SUNDAY",
-      ];
+      // Assurer que tournament_trimestry existe
+      if (!mainTournament.tournament_trimestry) {
+        return NextResponse.json(
+          { error: "Trimestre du tournoi principal introuvable" },
+          { status: 400 }
+        );
+      }
 
       const sundayTournament = await prisma.tournament.findFirst({
         where: {
           tournament_trimestry: mainTournament.tournament_trimestry,
-          tournament_name: {
-            in: sundayVariants,
-          },
+          OR: [
+            { tournament_name: { contains: "dimanche" } },
+            { tournament_name: { contains: "Dimanche" } },
+            { tournament_name: { contains: "DIMANCHE" } },
+            { tournament_name: { contains: "sunday" } },
+            { tournament_name: { contains: "Sunday" } },
+            { tournament_name: { contains: "SUNDAY" } },
+          ],
         },
       });
 
@@ -77,16 +79,26 @@ export async function PATCH(req: NextRequest) {
           { status: 404 }
         );
 
-      // 4. Récupère les user_id des survivants
-      const userIds = await Promise.all(
-        survivorRegistrationIds.map(async (regId) => {
-          const reg = await prisma.registration.findUnique({
-            where: { id: regId },
-          });
-          if (!reg) throw new Error("Registration introuvable pour survivor");
-          return reg.user_id;
-        })
-      );
+      // 4. Récupère et valide les user_id des survivants
+      const userIds: bigint[] = [];
+      for (const regId of survivorRegistrationIds) {
+        const reg = await prisma.registration.findUnique({
+          where: { id: regId },
+          select: { user_id: true },
+        });
+        if (!reg || !reg.user_id) {
+          console.error(
+            `Registration invalide ou manquante pour survivor: ${regId}`
+          );
+          return NextResponse.json(
+            {
+              error: `Données de survivor invalides (registration_id: ${regId})`,
+            },
+            { status: 400 }
+          );
+        }
+        userIds.push(BigInt(reg.user_id));
+      }
 
       // 5. Prépare les inscriptions à créer (enum !)
       const registrationCreateData = userIds.map((user_id) => ({
@@ -150,8 +162,15 @@ export async function PATCH(req: NextRequest) {
     }
   } catch (error) {
     console.error("❌ Error in PATCH tournament finish:", error);
+
+    // Fournir un message d'erreur plus spécifique si possible
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }
