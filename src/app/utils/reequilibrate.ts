@@ -411,20 +411,33 @@ export async function reequilibrateTables(tournamentId: number) {
     }
   }
 
-  // Rééquilibrage max -> min
-  tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
-
+  // Rééquilibrage max -> min (AVEC VRAIE SÉLECTION ALÉATOIRE DES TABLES)
   while (tablesWithPlayers.length > 1) {
+    // Trier pour trouver min et max
+    tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
     const min = tablesWithPlayers[0];
     const max = tablesWithPlayers[tablesWithPlayers.length - 1];
 
+    // Vérifier s'il y a déséquilibre
     if (max.players.length - min.players.length > 1) {
-      const randomIndex = Math.floor(Math.random() * max.players.length);
-      const [movedPlayer] = max.players.splice(randomIndex, 1);
+      // 🎲 VRAIE RANDOMISATION : mélanger TOUTES les tables avec joueurs excédentaires
+      const tablesWithExtra = tablesWithPlayers.filter(
+        (t) => t.players.length > min.players.length
+      );
+      const shuffledTablesWithExtra = shuffleArray(tablesWithExtra);
+
+      // Prendre la PREMIÈRE table de la liste mélangée (donc aléatoire)
+      const randomSourceTable = shuffledTablesWithExtra[0];
+
+      // Sélectionner un joueur aléatoire de cette table
+      const randomIndex = Math.floor(
+        Math.random() * randomSourceTable.players.length
+      );
+      const [movedPlayer] = randomSourceTable.players.splice(randomIndex, 1);
       if (!movedPlayer) break;
 
-      const fromTableId = max.id;
-      const fromTableNumber = max.tableNumber;
+      const fromTableId = randomSourceTable.id;
+      const fromTableNumber = randomSourceTable.tableNumber;
       const fromTableSeat = movedPlayer.table_seat_number ?? null;
       const nextSeat = findNextAvailableSeat(min.players);
 
@@ -454,8 +467,7 @@ export async function reequilibrateTables(tournamentId: number) {
         toTableSeat: nextSeat,
       });
 
-      // Resort pour continuer
-      tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
+      // Continuer la boucle (pas besoin de resort, on refait au début du while)
       continue;
     }
     break;
