@@ -158,7 +158,8 @@ export async function reequilibrateTables(tournamentId: number) {
   const allRemainingPlayers = tables.flatMap((t) => t.table_assignment);
 
   // ----- NEW: Enhanced table closure logic ---------
-  // Try to close multiple weak tables if redistribution is viable
+  // Strategy: Use weak table detection for feasibility, but always close LAST table
+  // This keeps table numbers stable and minimizes "virtual moves" from renumbering
   const candidateTables = tables.map((table) => ({
     id: table.id,
     tableNumber: table.table_number,
@@ -174,26 +175,32 @@ export async function reequilibrateTables(tournamentId: number) {
       candidateTables.length
     );
 
-    // Find all tables that can be safely closed
+    // Find all tables that can be safely closed (for feasibility check)
     const closableTables = findClosableTables(candidateTables, maxCapacity);
 
     if (closableTables.length > 0) {
-      // Get all players from tables to be closed
-      const playersFromClosedTables = closableTables.flatMap((t) => t.players);
+      // Always close highest numbered table to limit movements and keep table order
+      // Find the last table (highest table number) among ALL tables
+      const lastTable = candidateTables.reduce((max, table) =>
+        table.tableNumber > max.tableNumber ? table : max
+      );
+
+      // Get all players from the last table that will be closed
+      const playersFromLastTable = lastTable.players;
 
       // Random player sorting for rebalancing
       // Shuffle players to ensure random order during redistribution
-      const playersToRedistribute = shuffleArray(playersFromClosedTables);
+      const playersToRedistribute = shuffleArray(playersFromLastTable);
 
-      // Get remaining tables (not being closed)
+      // Get remaining tables (all except the last one)
       const remainingTables = candidateTables.filter(
-        (t) => !closableTables.some((ct) => ct.id === t.id)
+        (t) => t.id !== lastTable.id
       );
 
       // Sort remaining tables by player count (ascending) - fill emptiest first
       remainingTables.sort((a, b) => a.players.length - b.players.length);
 
-      // Redistribute players to remaining tables, prioritizing emptiest tables
+      // Redistribute players from last table to remaining tables
       for (const player of playersToRedistribute) {
         const fromTableId = player.table_id;
         const fromTableNumber = player.tournament_table?.table_number;
@@ -244,30 +251,11 @@ export async function reequilibrateTables(tournamentId: number) {
         });
       }
 
-      // Delete the closed tables
-      for (const closedTable of closableTables) {
-        await prisma.tournament_table.delete({ where: { id: closedTable.id } });
-      }
+      // Delete only the last table (highest number)
+      await prisma.tournament_table.delete({ where: { id: lastTable.id } });
 
-      // Sequential renumbering after closure
-      // Renumber remaining tables continuously: 1, 2, 3, 4... (no gaps)
-      const allTablesAfterClosure = await prisma.tournament_table.findMany({
-        where: { tournament_id: BigInt(tournamentId) },
-        orderBy: { table_number: "asc" },
-      });
-
-      // Renumber sequentially starting from 1
-      for (let i = 0; i < allTablesAfterClosure.length; i++) {
-        const newTableNumber = i + 1;
-        const table = allTablesAfterClosure[i];
-
-        if (table.table_number !== newTableNumber) {
-          await prisma.tournament_table.update({
-            where: { id: table.id },
-            data: { table_number: newTableNumber },
-          });
-        }
-      }
+      // NO renumbering needed - all other tables keep their original numbers
+      // This minimizes "virtual moves" and keeps table numbers stable
 
       // Return early - we've made significant changes
       return { changed: true, moves };
@@ -487,29 +475,8 @@ export async function reequilibrateTables(tournamentId: number) {
     await prisma.tournament_table.delete({ where: { id: empty.id } });
   }
 
-  // Sequential renumbering after closure
-  // Renumber remaining tables continuously: 1, 2, 3, 4... (no gaps)
-  if (toDelete.length > 0) {
-    const remainingTablesAfterDeletion = await prisma.tournament_table.findMany(
-      {
-        where: { tournament_id: BigInt(tournamentId) },
-        orderBy: { table_number: "asc" },
-      }
-    );
-
-    // Renumber sequentially starting from 1
-    for (let i = 0; i < remainingTablesAfterDeletion.length; i++) {
-      const newTableNumber = i + 1;
-      const table = remainingTablesAfterDeletion[i];
-
-      if (table.table_number !== newTableNumber) {
-        await prisma.tournament_table.update({
-          where: { id: table.id },
-          data: { table_number: newTableNumber },
-        });
-      }
-    }
-  }
+  // NO automatic renumbering - tables keep their original numbers
+  // This minimizes "virtual moves" and keeps table numbers stable
 
   return { changed, moves };
 }
