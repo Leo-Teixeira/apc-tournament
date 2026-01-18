@@ -3,12 +3,12 @@ import { prisma } from "@/lib/prisma";
 // 🔎 Fonction utilitaire pour trouver le prochain siège disponible dans une table
 function findNextAvailableSeat(
   players: { table_seat_number: number | null }[],
-  startSeat: number = 1
+  startSeat: number = 1,
 ): number {
   const occupied = new Set(
     players
       .map((p) => p.table_seat_number)
-      .filter((n): n is number => n !== null)
+      .filter((n): n is number => n !== null),
   );
   let seat = startSeat;
   while (occupied.has(seat)) {
@@ -31,10 +31,10 @@ function shuffleArray<T>(array: T[]): T[] {
 // 🎯 Helper function to determine max capacity based on category and table count
 function getMaxCapacityForCategory(
   category: string,
-  remainingTableCount: number
+  remainingTableCount: number,
 ): number {
   if (category === "APT") {
-    // APT: max 8 for multi-table, max 9 for single table
+    // APT: max 8 for multi-table, max 9 for single table (final table)
     return remainingTableCount === 1 ? 9 : 8;
   } else if (category === "SITANDGO") {
     return 9;
@@ -44,85 +44,68 @@ function getMaxCapacityForCategory(
   }
 }
 
-// 🔍 Check if a set of tables can be closed without exceeding max capacity
-// Returns the list of tables that can be safely closed
-function findClosableTables(
-  tables: Array<{
-    id: bigint;
-    tableNumber: number;
-    capacity: number;
-    players: any[];
-  }>,
-  maxCapacity: number
-): Array<{
+// 📊 Type definitions for rebalancing
+type TableData = {
   id: bigint;
   tableNumber: number;
   capacity: number;
   players: any[];
-}> {
-  if (tables.length <= 1) {
-    return [];
-  }
+};
 
-  // Table sorting by number DESC for closure
-  // Start with highest table number (last table), work down to table 1
-  // This matches physical room layout (high tables at back, easier to close)
-  const sorted = [...tables].sort((a, b) => {
-    // First sort by player count (ascending) to find weakest tables
-    const playerDiff = a.players.length - b.players.length;
-    if (playerDiff !== 0) {
-      return playerDiff;
-    }
-    // If same player count, prioritize higher table numbers
-    return b.tableNumber - a.tableNumber;
-  });
+type PlayerMovement = {
+  playerName: string;
+  registrationId: number;
+  fromTableId: number;
+  fromTableNumber?: number;
+  fromTableSeat?: number;
+  toTableId: number;
+  toTableNumber?: number;
+  toTableSeat?: number;
+};
 
-  const closableTables: typeof tables = [];
+type RebalanceResult = {
+  changed: boolean;
+  moves: PlayerMovement[];
+  phase?: "closure" | "small_table" | "gap_rebalance" | "none";
+  closedTables?: number[];
+};
 
-  let remainingTables = [...sorted];
+/**
+ * 🎯 MAIN REBALANCING FUNCTION
+ *
+ * Implements strict 3-phase algorithm:
+ * PHASE 1: Check possibility of TABLE CLOSURE
+ * PHASE 2: Check for table with LESS THAN 4 PLAYERS
+ * PHASE 3: Rebalancing if GAP ≥ 2
+ *
+ * CRITICAL: Sit&Go tournaments are EXCLUDED from rebalancing
+ */
+export async function reequilibrateTables(
+  tournamentId: number,
+): Promise<RebalanceResult> {
+  console.log(
+    "🔄 [REBALANCE] Starting rebalancing for tournament:",
+    tournamentId,
+  );
 
-  for (const candidate of sorted) {
-    // Calculate what would happen if we close this table
-    const tablesAfterClosure = remainingTables.filter(
-      (t) => t.id !== candidate.id
-    );
-
-    if (tablesAfterClosure.length === 0) {
-      // Can't close all tables
-      break;
-    }
-
-    // Calculate total players after closing this table
-    const totalPlayers =
-      tablesAfterClosure.reduce((sum, t) => sum + t.players.length, 0) +
-      candidate.players.length;
-
-    const avgPlayersPerTable = totalPlayers / tablesAfterClosure.length;
-
-    // Check if redistribution would keep all tables within max capacity
-    // We need to ensure that even in the worst case (uneven distribution),
-    // no table exceeds max capacity
-    const maxPlayersAfterRedistribution = Math.ceil(avgPlayersPerTable);
-
-    if (maxPlayersAfterRedistribution <= maxCapacity) {
-      // This table can be safely closed
-      closableTables.push(candidate);
-      remainingTables = tablesAfterClosure;
-    }
-  }
-
-  return closableTables;
-}
-
-export async function reequilibrateTables(tournamentId: number) {
+  // Fetch tournament data
   const tournament = await prisma.tournament.findUnique({
     where: { id: BigInt(tournamentId) },
     select: { tournament_category: true },
   });
 
-  const aptMaxLastTable = 9;
+  if (!tournament) {
+    console.error("❌ [REBALANCE] Tournament not found");
+    return { changed: false, moves: [], phase: "none" };
+  }
 
-  // Inclure uniquement les joueurs non éliminés & Confirmed
+  // ⚠️ CRITICAL: Sit&Go tournaments do NOT rebalance
+  if (tournament.tournament_category === "SITANDGO") {
+    console.log("🚫 [REBALANCE] Sit&Go tournament - NO rebalancing");
+    return { changed: false, moves: [], phase: "none" };
+  }
+
+  // Fetch all tables with non-eliminated confirmed players
   const tables = await prisma.tournament_table.findMany({
     where: { tournament_id: BigInt(tournamentId) },
     include: {
@@ -143,352 +126,349 @@ export async function reequilibrateTables(tournamentId: number) {
     },
   });
 
-  let changed = false;
-  const moves: {
-    playerName: string;
-    registrationId: number;
-    fromTableId: number;
-    fromTableNumber?: number;
-    fromTableSeat?: number;
-    toTableId: number;
-    toTableNumber?: number;
-    toTableSeat?: number;
-  }[] = [];
+  // Filter out empty tables for analysis
+  const tablesWithPlayers = tables
+    .filter((t) => t.table_assignment.length > 0)
+    .map((table) => ({
+      id: table.id,
+      tableNumber: table.table_number,
+      capacity: table.table_capacity,
+      players: table.table_assignment,
+    }));
 
-  const allRemainingPlayers = tables.flatMap((t) => t.table_assignment);
-
-  // ----- NEW: Enhanced table closure logic ---------
-  // Strategy: Use weak table detection for feasibility, but always close LAST table
-  // This keeps table numbers stable and minimizes "virtual moves" from renumbering
-  const candidateTables = tables.map((table) => ({
-    id: table.id,
-    tableNumber: table.table_number,
-    capacity: table.table_capacity,
-    players: table.table_assignment,
-  }));
-
-  // Only attempt closure if we have at least 2 tables
-  if (candidateTables.length > 1) {
-    // Determine max capacity for the current situation
-    const maxCapacity = getMaxCapacityForCategory(
-      tournament?.tournament_category || "APT",
-      candidateTables.length
-    );
-
-    // Find all tables that can be safely closed (for feasibility check)
-    const closableTables = findClosableTables(candidateTables, maxCapacity);
-
-    if (closableTables.length > 0) {
-      // Always close highest numbered table to limit movements and keep table order
-      // Find the last table (highest table number) among ALL tables
-      const lastTable = candidateTables.reduce((max, table) =>
-        table.tableNumber > max.tableNumber ? table : max
-      );
-
-      // Get all players from the last table that will be closed
-      const playersFromLastTable = lastTable.players;
-
-      // Random player sorting for rebalancing
-      // Shuffle players to ensure random order during redistribution
-      const playersToRedistribute = shuffleArray(playersFromLastTable);
-
-      // Get remaining tables (all except the last one)
-      const remainingTables = candidateTables.filter(
-        (t) => t.id !== lastTable.id
-      );
-
-      // Sort remaining tables by player count (ascending) - fill emptiest first
-      remainingTables.sort((a, b) => a.players.length - b.players.length);
-
-      // Redistribute players from last table to remaining tables
-      for (const player of playersToRedistribute) {
-        const fromTableId = player.table_id;
-        const fromTableNumber = player.tournament_table?.table_number;
-        const fromTableSeat = player.table_seat_number ?? null;
-
-        // Find the table with the fewest players that hasn't reached max capacity
-        const targetTable = remainingTables.find(
-          (t) => t.players.length < maxCapacity
-        );
-
-        if (!targetTable) {
-          // This shouldn't happen if our closure detection logic is correct
-          console.error("No available table for redistribution - logic error");
-          break;
-        }
-
-        const nextSeat = findNextAvailableSeat(targetTable.players);
-
-        await prisma.table_assignment.update({
-          where: { id: player.id },
-          data: {
-            table_id: targetTable.id,
-            table_seat_number: nextSeat,
-          },
-        });
-
-        // Update local state
-        targetTable.players.push({
-          ...player,
-          table_id: targetTable.id,
-          table_seat_number: nextSeat,
-        });
-
-        // Re-sort after adding a player to maintain emptiest-first order
-        remainingTables.sort((a, b) => a.players.length - b.players.length);
-
-        changed = true;
-
-        moves.push({
-          playerName: player.registration?.wp_users?.display_name ?? "??",
-          registrationId: Number(player.registration_id),
-          fromTableId: Number(fromTableId),
-          fromTableNumber,
-          fromTableSeat,
-          toTableId: Number(targetTable.id),
-          toTableNumber: targetTable.tableNumber,
-          toTableSeat: nextSeat,
-        });
-      }
-
-      // Delete only the last table (highest number)
-      await prisma.tournament_table.delete({ where: { id: lastTable.id } });
-
-      // NO renumbering needed - all other tables keep their original numbers
-      // This minimizes "virtual moves" and keeps table numbers stable
-
-      // Return early - we've made significant changes
-      return { changed: true, moves };
-    }
+  // SPECIAL CASE: Final table (only 1 table remaining)
+  if (tablesWithPlayers.length === 1) {
+    console.log("🏁 [REBALANCE] Final table - NO rebalancing needed");
+    return { changed: false, moves: [], phase: "none" };
   }
 
-  // ----- Fusion en table unique ---------
-  if (allRemainingPlayers.length === aptMaxLastTable) {
-    const mainTable = tables.find((t) => t.table_number === 1) || tables[0];
+  const totalPlayers = tablesWithPlayers.reduce(
+    (sum, t) => sum + t.players.length,
+    0,
+  );
+  const currentTableCount = tablesWithPlayers.length;
 
-    // Séparer les joueurs : ceux déjà sur la table principale vs ceux à déplacer
-    const playersToMove = allRemainingPlayers.filter(
-      (p) => p.table_id !== mainTable.id
+  console.log(
+    `📊 [REBALANCE] Current state: ${totalPlayers} players, ${currentTableCount} tables`,
+  );
+
+  // ============================================================
+  // PHASE 1: Check possibility of TABLE CLOSURE
+  // ============================================================
+  console.log("🔍 [PHASE 1] Checking table closure possibility...");
+
+  const maxCapacity = getMaxCapacityForCategory(
+    tournament.tournament_category,
+    currentTableCount - 1, // Capacity after closing one table
+  );
+
+  // Check if we can close one table
+  const canCloseTable = totalPlayers / (currentTableCount - 1) <= maxCapacity;
+
+  if (canCloseTable) {
+    console.log(
+      `✅ [PHASE 1] Table closure possible: ${totalPlayers} / ${currentTableCount - 1} = ${totalPlayers / (currentTableCount - 1)} ≤ ${maxCapacity}`,
     );
 
-    // Déplacer uniquement les joueurs qui ne sont PAS déjà sur la table principale
-    for (const player of playersToMove) {
-      const fromTableId = player.table_id;
-      const fromTableNumber = player.tournament_table?.table_number;
-      const fromTableSeat = player.table_seat_number ?? null;
+    // Always close the LAST table (highest table number)
+    const lastTable = tablesWithPlayers.reduce((max, table) =>
+      table.tableNumber > max.tableNumber ? table : max,
+    );
 
-      await prisma.table_assignment.update({
-        where: { id: player.id },
-        data: { table_id: mainTable.id, table_seat_number: undefined },
-      });
+    console.log(
+      `🗑️ [PHASE 1] Closing table ${lastTable.tableNumber} (${lastTable.players.length} players)`,
+    );
 
-      moves.push({
-        playerName: player.registration?.wp_users?.display_name ?? "??",
-        registrationId: Number(player.registration_id),
-        fromTableId: Number(fromTableId),
-        fromTableNumber,
-        fromTableSeat,
-        toTableId: Number(mainTable.id),
-        toTableNumber: mainTable.table_number,
-        // toTableSeat sera défini ensuite
-      });
-    }
+    return await closeTableAndRedistribute(
+      lastTable,
+      tablesWithPlayers.filter((t) => t.id !== lastTable.id),
+      maxCapacity,
+      "closure",
+    );
+  }
 
-    // Réattribuer les sièges pour TOUS les joueurs sur la table principale
-    // (incluant ceux qui y étaient déjà et ceux qui viennent d'arriver)
-    const updatedAssignments: Promise<any>[] = [];
-    const tempPlayers: any[] = [];
+  console.log(
+    `❌ [PHASE 1] Table closure NOT possible: ${totalPlayers} / ${currentTableCount - 1} = ${totalPlayers / (currentTableCount - 1)} > ${maxCapacity}`,
+  );
 
-    for (const player of allRemainingPlayers) {
-      const nextSeat = findNextAvailableSeat(tempPlayers);
-      tempPlayers.push({ ...player, table_seat_number: nextSeat });
+  // ============================================================
+  // PHASE 2: Check for table with LESS THAN 4 PLAYERS
+  // ============================================================
+  console.log("🔍 [PHASE 2] Checking for small tables (< 4 players)...");
 
-      updatedAssignments.push(
-        prisma.table_assignment.update({
-          where: { id: player.id },
-          data: { table_seat_number: nextSeat },
-        })
-      );
+  const smallTables = tablesWithPlayers.filter((t) => t.players.length < 4);
 
-      // Met à jour la bonne entrée dans moves pour finaliser toTableSeat
-      // (seulement pour les joueurs qui ont été déplacés)
-      const move = moves.find(
-        (m) => m.registrationId === Number(player.registration_id)
-      );
-      if (move) {
-        move.toTableSeat = nextSeat;
-      }
-    }
-    await Promise.all(updatedAssignments);
-
-    // Supprimer les tables vides (toutes sauf la table principale)
-    const allTables = await prisma.tournament_table.findMany({
-      where: { tournament_id: BigInt(tournamentId) },
-      include: { table_assignment: { where: { eliminated: false } } },
+  if (smallTables.length > 0) {
+    // Sort by player count (ascending), then by table number (descending)
+    // This prioritizes closing the weakest table with highest number
+    smallTables.sort((a, b) => {
+      const playerDiff = a.players.length - b.players.length;
+      if (playerDiff !== 0) return playerDiff;
+      return b.tableNumber - a.tableNumber;
     });
-    const toDelete = allTables.filter((t) => t.id !== mainTable.id);
-    for (const empty of toDelete) {
-      await prisma.tournament_table.delete({ where: { id: empty.id } });
-    }
 
-    // Sequential renumbering after closure
-    // Ensure final table is numbered as table 1
-    if (mainTable.table_number !== 1) {
-      await prisma.tournament_table.update({
-        where: { id: mainTable.id },
-        data: { table_number: 1 },
-      });
-    }
+    const tableToClose = smallTables[0];
+    console.log(
+      `⚠️ [PHASE 2] Found small table ${tableToClose.tableNumber} with ${tableToClose.players.length} players`,
+    );
 
-    return { changed: playersToMove.length > 0, moves };
+    // Check if we can close this table
+    const remainingTables = tablesWithPlayers.filter(
+      (t) => t.id !== tableToClose.id,
+    );
+    const maxCapacityAfterClosure = getMaxCapacityForCategory(
+      tournament.tournament_category,
+      remainingTables.length,
+    );
+
+    const totalPlayersAfterClosure =
+      remainingTables.reduce((sum, t) => sum + t.players.length, 0) +
+      tableToClose.players.length;
+
+    const canCloseSmallTable =
+      totalPlayersAfterClosure / remainingTables.length <=
+      maxCapacityAfterClosure;
+
+    if (canCloseSmallTable) {
+      console.log(
+        `✅ [PHASE 2] Closing small table ${tableToClose.tableNumber}`,
+      );
+      return await closeTableAndRedistribute(
+        tableToClose,
+        remainingTables,
+        maxCapacityAfterClosure,
+        "small_table",
+      );
+    } else {
+      console.log(
+        `❌ [PHASE 2] Cannot close small table - would exceed capacity`,
+      );
+    }
+  } else {
+    console.log("✅ [PHASE 2] No small tables found");
   }
 
-  // ----- Rééquilibrage classique ---------
-  let tablesWithPlayers = tables.map((table) => ({
-    id: table.id,
-    tableNumber: table.table_number,
-    capacity: table.table_capacity,
-    players: table.table_assignment,
-  }));
+  // ============================================================
+  // PHASE 3: Rebalancing if GAP ≥ 2
+  // ============================================================
+  console.log("🔍 [PHASE 3] Checking gap-based rebalancing...");
 
-  // Identifier les tables qui seront supprimées (< 4 joueurs)
-  const tablesToDelete = tablesWithPlayers.filter((t) => t.players.length < 4);
-  const tablesToDeleteIds = new Set(tablesToDelete.map((t) => t.id));
+  const playerCounts = tablesWithPlayers.map((t) => t.players.length);
+  const maxPlayers = Math.max(...playerCounts);
+  const minPlayers = Math.min(...playerCounts);
+  const gap = maxPlayers - minPlayers;
 
-  // Récupérer les joueurs des tables à supprimer
-  const underfilledPlayers = tablesToDelete.flatMap((t) => t.players);
+  console.log(
+    `📊 [PHASE 3] Gap analysis: max=${maxPlayers}, min=${minPlayers}, gap=${gap}`,
+  );
 
-  // Garder seulement les tables viables (>= 4 joueurs) pour placer les joueurs déplacés
-  tablesWithPlayers = tablesWithPlayers.filter((t) => t.players.length >= 4);
+  if (gap < 2) {
+    console.log(
+      `✅ [PHASE 3] Gap acceptable (${gap} < 2) - NO rebalancing needed`,
+    );
+    return { changed: false, moves: [], phase: "none" };
+  }
 
-  // Random player sorting for rebalancing
-  // Shuffle players from underfilled tables for random redistribution order
-  const shuffledUnderfilledPlayers = shuffleArray(underfilledPlayers);
+  console.log(`⚠️ [PHASE 3] Gap too large (${gap} ≥ 2) - Rebalancing required`);
 
-  // Déplacer les joueurs des tables à supprimer vers des tables viables
-  for (const player of shuffledUnderfilledPlayers) {
+  return await performGapRebalancing(
+    tablesWithPlayers,
+    tournament.tournament_category,
+    gap,
+  );
+}
+
+/**
+ * 🗑️ Close a table and redistribute its players
+ */
+async function closeTableAndRedistribute(
+  tableToClose: TableData,
+  remainingTables: TableData[],
+  maxCapacity: number,
+  phase: "closure" | "small_table",
+): Promise<RebalanceResult> {
+  const moves: PlayerMovement[] = [];
+
+  // Shuffle players for random redistribution
+  const playersToRedistribute = shuffleArray(tableToClose.players);
+
+  // Sort remaining tables by player count (ascending) - fill emptiest first
+  remainingTables.sort((a, b) => a.players.length - b.players.length);
+
+  console.log(
+    `📦 [${phase.toUpperCase()}] Redistributing ${playersToRedistribute.length} players from table ${tableToClose.tableNumber}`,
+  );
+
+  // Redistribute players
+  for (const player of playersToRedistribute) {
     const fromTableId = player.table_id;
     const fromTableNumber = player.tournament_table?.table_number;
     const fromTableSeat = player.table_seat_number ?? null;
 
-    // Trouver une table cible qui N'EST PAS dans la liste de suppression
-    const limit = getMaxCapacityForCategory(
-      tournament?.tournament_category || "APT",
-      tablesWithPlayers.length
+    // Find the table with the fewest players that hasn't reached max capacity
+    const targetTable = remainingTables.find(
+      (t) => t.players.length < maxCapacity,
     );
-    const targetTable = tablesWithPlayers.find((t) => {
-      return t.players.length < limit && !tablesToDeleteIds.has(t.id);
-    });
 
-    if (targetTable) {
-      const nextSeat = findNextAvailableSeat(targetTable.players);
+    if (!targetTable) {
+      console.error("❌ No available table for redistribution - logic error");
+      break;
+    }
 
-      await prisma.table_assignment.update({
-        where: { id: player.id },
-        data: {
-          table_id: targetTable.id,
-          table_seat_number: nextSeat,
-        },
-      });
+    const nextSeat = findNextAvailableSeat(targetTable.players);
 
-      targetTable.players.push({
-        ...player,
+    await prisma.table_assignment.update({
+      where: { id: player.id },
+      data: {
         table_id: targetTable.id,
         table_seat_number: nextSeat,
-      });
-      changed = true;
-
-      moves.push({
-        playerName: player.registration?.wp_users?.display_name ?? "??",
-        registrationId: Number(player.registration_id),
-        fromTableId: Number(fromTableId),
-        fromTableNumber,
-        fromTableSeat,
-        toTableId: Number(targetTable.id),
-        toTableNumber: targetTable.tableNumber,
-        toTableSeat: nextSeat,
-      });
-    }
-  }
-
-  // Rééquilibrage max -> min (AVEC VRAIE SÉLECTION ALÉATOIRE DES TABLES)
-  while (tablesWithPlayers.length > 1) {
-    // Trier pour trouver min et max
-    tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
-    const min = tablesWithPlayers[0];
-    const max = tablesWithPlayers[tablesWithPlayers.length - 1];
-
-    // Vérifier s'il y a déséquilibre
-    if (max.players.length - min.players.length > 1) {
-      // 🎲 VRAIE RANDOMISATION : mélanger TOUTES les tables avec joueurs excédentaires
-      const tablesWithExtra = tablesWithPlayers.filter(
-        (t) => t.players.length > min.players.length
-      );
-      const shuffledTablesWithExtra = shuffleArray(tablesWithExtra);
-
-      // Prendre la PREMIÈRE table de la liste mélangée (donc aléatoire)
-      const randomSourceTable = shuffledTablesWithExtra[0];
-
-      // Sélectionner un joueur aléatoire de cette table
-      const randomIndex = Math.floor(
-        Math.random() * randomSourceTable.players.length
-      );
-      const [movedPlayer] = randomSourceTable.players.splice(randomIndex, 1);
-      if (!movedPlayer) break;
-
-      const fromTableId = randomSourceTable.id;
-      const fromTableNumber = randomSourceTable.tableNumber;
-      const fromTableSeat = movedPlayer.table_seat_number ?? null;
-      const nextSeat = findNextAvailableSeat(min.players);
-
-      await prisma.table_assignment.update({
-        where: { id: movedPlayer.id },
-        data: {
-          table_id: min.id,
-          table_seat_number: nextSeat,
-        },
-      });
-
-      min.players.push({
-        ...movedPlayer,
-        table_id: min.id,
-        table_seat_number: nextSeat,
-      });
-      changed = true;
-
-      moves.push({
-        playerName: movedPlayer.registration?.wp_users?.display_name ?? "??",
-        registrationId: Number(movedPlayer.registration_id),
-        fromTableId: Number(fromTableId),
-        fromTableNumber,
-        fromTableSeat,
-        toTableId: Number(min.id),
-        toTableNumber: min.tableNumber,
-        toTableSeat: nextSeat,
-      });
-
-      // Continuer la boucle (pas besoin de resort, on refait au début du while)
-      continue;
-    }
-    break;
-  }
-
-  // Supprimer tables vides
-  const allTables = await prisma.tournament_table.findMany({
-    where: { tournament_id: BigInt(tournamentId) },
-    include: {
-      table_assignment: {
-        where: { eliminated: false, registration: { statut: "Confirmed" } },
       },
-    },
-  });
-  const toDelete = allTables.filter((t) => t.table_assignment.length === 0);
-  for (const empty of toDelete) {
-    await prisma.tournament_table.delete({ where: { id: empty.id } });
+    });
+
+    // Update local state
+    targetTable.players.push({
+      ...player,
+      table_id: targetTable.id,
+      table_seat_number: nextSeat,
+    });
+
+    // Re-sort after adding a player to maintain emptiest-first order
+    remainingTables.sort((a, b) => a.players.length - b.players.length);
+
+    moves.push({
+      playerName: player.registration?.wp_users?.display_name ?? "??",
+      registrationId: Number(player.registration_id),
+      fromTableId: Number(fromTableId),
+      fromTableNumber,
+      fromTableSeat,
+      toTableId: Number(targetTable.id),
+      toTableNumber: targetTable.tableNumber,
+      toTableSeat: nextSeat,
+    });
+
+    console.log(
+      `  ➡️ ${player.registration?.wp_users?.display_name} moved from T${fromTableNumber} to T${targetTable.tableNumber}`,
+    );
   }
 
-  // NO automatic renumbering - tables keep their original numbers
-  // This minimizes "virtual moves" and keeps table numbers stable
+  // Delete the closed table
+  await prisma.tournament_table.delete({ where: { id: tableToClose.id } });
 
-  return { changed, moves };
+  console.log(
+    `✅ [${phase.toUpperCase()}] Table ${tableToClose.tableNumber} closed successfully`,
+  );
+
+  return {
+    changed: true,
+    moves,
+    phase,
+    closedTables: [tableToClose.tableNumber],
+  };
+}
+
+/**
+ * ⚖️ Perform gap-based rebalancing (Phase 3)
+ */
+async function performGapRebalancing(
+  tablesWithPlayers: TableData[],
+  _category: string,
+  _initialGap: number,
+): Promise<RebalanceResult> {
+  const moves: PlayerMovement[] = [];
+  let iterations = 0;
+  const MAX_ITERATIONS = 10; // Safety limit
+
+  while (iterations < MAX_ITERATIONS) {
+    iterations++;
+
+    // Sort tables by player count
+    tablesWithPlayers.sort((a, b) => a.players.length - b.players.length);
+
+    const minTable = tablesWithPlayers[0];
+    const maxTable = tablesWithPlayers[tablesWithPlayers.length - 1];
+    const currentGap = maxTable.players.length - minTable.players.length;
+
+    console.log(
+      `  🔄 [ITERATION ${iterations}] Gap: ${currentGap}, Min: T${minTable.tableNumber}(${minTable.players.length}), Max: T${maxTable.tableNumber}(${maxTable.players.length})`,
+    );
+
+    if (currentGap < 2) {
+      console.log(`  ✅ Gap acceptable (${currentGap} < 2) - Stopping`);
+      break;
+    }
+
+    // Find ALL tables with maximum players (for random selection)
+    const fullTables = tablesWithPlayers.filter(
+      (t) => t.players.length === maxTable.players.length,
+    );
+
+    // Find ALL tables with minimum players (for random selection)
+    const emptyTables = tablesWithPlayers.filter(
+      (t) => t.players.length === minTable.players.length,
+    );
+
+    // 🎲 RANDOM selection of source and target tables
+    const shuffledFullTables = shuffleArray(fullTables);
+    const shuffledEmptyTables = shuffleArray(emptyTables);
+
+    const sourceTable = shuffledFullTables[0];
+    const targetTable = shuffledEmptyTables[0];
+
+    // 🎲 RANDOM selection of player from source table
+    const randomIndex = Math.floor(Math.random() * sourceTable.players.length);
+    const [movedPlayer] = sourceTable.players.splice(randomIndex, 1);
+
+    if (!movedPlayer) {
+      console.error("❌ No player to move - breaking");
+      break;
+    }
+
+    const fromTableId = sourceTable.id;
+    const fromTableNumber = sourceTable.tableNumber;
+    const fromTableSeat = movedPlayer.table_seat_number ?? null;
+    const nextSeat = findNextAvailableSeat(targetTable.players);
+
+    await prisma.table_assignment.update({
+      where: { id: movedPlayer.id },
+      data: {
+        table_id: targetTable.id,
+        table_seat_number: nextSeat,
+      },
+    });
+
+    targetTable.players.push({
+      ...movedPlayer,
+      table_id: targetTable.id,
+      table_seat_number: nextSeat,
+    });
+
+    moves.push({
+      playerName: movedPlayer.registration?.wp_users?.display_name ?? "??",
+      registrationId: Number(movedPlayer.registration_id),
+      fromTableId: Number(fromTableId),
+      fromTableNumber,
+      fromTableSeat,
+      toTableId: Number(targetTable.id),
+      toTableNumber: targetTable.tableNumber,
+      toTableSeat: nextSeat,
+    });
+
+    console.log(
+      `  ➡️ ${movedPlayer.registration?.wp_users?.display_name} moved from T${fromTableNumber} to T${targetTable.tableNumber}`,
+    );
+  }
+
+  if (iterations >= MAX_ITERATIONS) {
+    console.warn(`⚠️ [PHASE 3] Reached max iterations (${MAX_ITERATIONS})`);
+  }
+
+  console.log(
+    `✅ [PHASE 3] Gap rebalancing complete after ${iterations} iterations`,
+  );
+
+  return {
+    changed: moves.length > 0,
+    moves,
+    phase: "gap_rebalance",
+  };
 }
