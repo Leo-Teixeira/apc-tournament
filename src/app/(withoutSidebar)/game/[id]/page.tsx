@@ -24,7 +24,7 @@ export default function Game() {
   const [now, setNow] = useState(new Date());
   const [frozenNow, setFrozenNow] = useState<Date | null>(null);
   const [currentLevel, setCurrentLevel] = useState<TournamentLevel | null>(
-    null
+    null,
   );
   const [nextLevel, setNextLevel] = useState<TournamentLevel | null>(null);
   const [nextPause, setNextPause] = useState<TournamentLevel | null>(null);
@@ -32,6 +32,10 @@ export default function Game() {
 
   const [bgIndex, setBgIndex] = useState(0);
   const previousLevelId = useRef<number | null>(null);
+
+  // SOLIPOKER Day 2 special calculation state
+  const [day1TotalChips, setDay1TotalChips] = useState<number | null>(null);
+  const [isLoadingDay1Data, setIsLoadingDay1Data] = useState(false);
 
   const isPaused = tournament?.tournament_pause === true;
 
@@ -71,7 +75,7 @@ export default function Game() {
     const s = total % 60;
     return `${String(h).padStart(2, "0")}:${String(m).padStart(
       2,
-      "0"
+      "0",
     )}:${String(s).padStart(2, "0")}`;
   };
 
@@ -87,23 +91,22 @@ export default function Game() {
     const m = Math.floor(total / 60);
     const s = total % 60;
     return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(
-      m % 60
+      m % 60,
     ).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
   const getTimeUntilNextPause = () => {
     if (currentLevel?.level_pause) {
       console.log(
-        "⏸ [DEBUG] On est actuellement en pause, pas de timer affiché."
+        "⏸ [DEBUG] On est actuellement en pause, pas de timer affiché.",
       );
       return "-";
     }
 
     if (!nextPause) return "Aucune autre pause";
 
-    const nowParis = DateTime.fromJSDate(getSyncedNow()).setZone(
-      "Europe/Paris"
-    );
+    const nowParis =
+      DateTime.fromJSDate(getSyncedNow()).setZone("Europe/Paris");
     const pauseParis = DateTime.fromISO(nextPause.level_start, {
       zone: "utc",
     }).setZone("Europe/Paris");
@@ -112,10 +115,10 @@ export default function Game() {
       .toObject();
 
     return `${String(diff.hours ?? 0).padStart(2, "0")}:${String(
-      diff.minutes ?? 0
+      diff.minutes ?? 0,
     ).padStart(2, "0")}:${String(Math.floor(diff.seconds ?? 0)).padStart(
       2,
-      "0"
+      "0",
     )}`;
   };
 
@@ -123,7 +126,7 @@ export default function Game() {
     registration.filter((r) => r.statut === "Confirmed");
   const getAlivePlayers = () =>
     assignements.filter(
-      (r) => !r.eliminated && r.registration?.statut === "Confirmed"
+      (r) => !r.eliminated && r.registration?.statut === "Confirmed",
     );
 
   useEffect(() => {
@@ -140,12 +143,31 @@ export default function Game() {
     }
   }, [getAlivePlayers, hasPlayedOneAliveSound]);
 
+  // Helper to detect if current tournament is SOLIPOKER Day 2
+  const isSolipokerDay2 = () => {
+    if (tournament?.tournament_category !== "SOLIPOKER") return false;
+    const name = tournament?.tournament_name?.toLowerCase() ?? "";
+    return (
+      name.includes("dimanche") ||
+      name.includes("sunday") ||
+      name.includes("DIMANCHE") ||
+      name.includes("SUNDAY")
+    );
+  };
+
   const getAverageStackAlive = () => {
     const alivePlayersCount = getAlivePlayers().length;
-    const confirmedPlayersCount = getConfirmedPlayers().length;
 
     if (alivePlayersCount === 0) return "0";
 
+    // Special calculation for SOLIPOKER Day 2
+    if (isSolipokerDay2() && day1TotalChips !== null) {
+      const averageStack = day1TotalChips / alivePlayersCount;
+      return Math.round(averageStack).toString();
+    }
+
+    // Classic calculation for all other tournaments
+    const confirmedPlayersCount = getConfirmedPlayers().length;
     const stackTotalPerPlayer = tournament?.stack?.stack_total_player ?? 0;
     const totalChipsInitial = stackTotalPerPlayer * confirmedPlayersCount;
     const averageStack = totalChipsInitial / alivePlayersCount;
@@ -172,7 +194,7 @@ export default function Game() {
         offset,
         "ms (",
         Math.round(offset / 1000),
-        "seconds )"
+        "seconds )",
       );
     }
   }, [data?.serverTime]);
@@ -196,6 +218,32 @@ export default function Game() {
     refetch();
   }, [refetch]);
 
+  // Fetch Day 1 data for SOLIPOKER Day 2 tournaments
+  useEffect(() => {
+    if (!tournament || !isSolipokerDay2()) {
+      setDay1TotalChips(null);
+      return;
+    }
+
+    setIsLoadingDay1Data(true);
+    fetch(`/api/tournament/${tournamentId}/day2-stack`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch Day 1 data");
+        return res.json();
+      })
+      .then((data) => {
+        setDay1TotalChips(data.totalChips ?? 0);
+        console.log("[SOLIPOKER Day 2] Loaded Day 1 data:", data);
+      })
+      .catch((err) => {
+        console.error("[SOLIPOKER Day 2] Error fetching Day 1 data:", err);
+        setDay1TotalChips(null);
+      })
+      .finally(() => {
+        setIsLoadingDay1Data(false);
+      });
+  }, [tournament, tournamentId]);
+
   useEffect(() => {
     if (isPaused && !frozenNow) setFrozenNow(getSyncedNow());
     if (!isPaused && frozenNow) setFrozenNow(null);
@@ -217,7 +265,7 @@ export default function Game() {
     let next: TournamentLevel | undefined = undefined;
     if (currentLevel) {
       const currentIndex = levels.findIndex(
-        (lvl) => lvl.id === currentLevel.id
+        (lvl) => lvl.id === currentLevel.id,
       );
       for (let i = currentIndex + 1; i < levels.length; i++) {
         if (!levels[i].level_pause) {
@@ -233,7 +281,7 @@ export default function Game() {
         (pauseLevel) =>
           DateTime.fromISO(pauseLevel.level_start, { zone: "utc" })
             .setZone("Europe/Paris")
-            .toJSDate() > refDate
+            .toJSDate() > refDate,
       );
 
     setNextPause(np ?? null);
@@ -337,7 +385,7 @@ export default function Game() {
                 ? getTimeLeft(
                     DateTime.fromISO(currentLevel.level_end, { zone: "utc" })
                       .setZone("Europe/Paris")
-                      .toJSDate()
+                      .toJSDate(),
                   )
                 : "--:--"}
             </div>
@@ -345,10 +393,10 @@ export default function Game() {
               {currentLevel?.level_pause
                 ? "PAUSE"
                 : currentLevel && !currentLevel.level_pause
-                ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}/${currentLevel.level_ante}`
-                : nextLevel
-                ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
-                : "-/-"}
+                  ? `${currentLevel.level_small_blinde}/${currentLevel.level_big_blinde}/${currentLevel.level_ante}`
+                  : nextLevel
+                    ? `${nextLevel.level_small_blinde}/${nextLevel.level_big_blinde}`
+                    : "-/-"}
             </div>
             <div className="text-xl4 font-satoshiBold">
               {nextLevel
@@ -358,7 +406,10 @@ export default function Game() {
           </div>
 
           <div className="space-y-4 text-right">
-            <InfoItem label="Stack moyen" value={getAverageStackAlive()} />
+            <InfoItem
+              label="Stack moyen"
+              value={isLoadingDay1Data ? "-" : getAverageStackAlive()}
+            />
             <InfoItem
               label="Joueurs"
               value={`${getAlivePlayers().length}/${
