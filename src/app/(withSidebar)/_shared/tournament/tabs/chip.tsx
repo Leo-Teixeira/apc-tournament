@@ -106,7 +106,7 @@ export const ChipTabs: React.FC = () => {
   if (chips.length === 0) {
     return (
       <div className="text-center text-white mt-10">
-        Aucun jeton n'a encore été défini pour ce tournoi.
+        Aucun jeton n&apos;a encore été défini pour ce tournoi.
       </div>
     );
   }
