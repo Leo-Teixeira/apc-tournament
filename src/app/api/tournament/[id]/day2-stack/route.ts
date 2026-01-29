@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> }, // ✅ params est maintenant une Promise
 ) {
   try {
-    const tournamentId = BigInt(params.id);
+    const { id } = await params; // ✅ Await params pour obtenir l'id
+    const tournamentId = BigInt(id);
 
     // Get the Day 2 tournament details
     const day2Tournament = await prisma.tournament.findUnique({
@@ -96,7 +97,7 @@ export async function GET(
       totalChips,
       day1Details,
       metadata: {
-        day2TournamentId: params.id,
+        day2TournamentId: id, // ✅ Utilise id au lieu de params.id
         day1TournamentsFound: day1Tournaments.length,
         dateRangeStart: sevenDaysBefore.toISOString(),
         dateRangeEnd: day2StartDate.toISOString(),
