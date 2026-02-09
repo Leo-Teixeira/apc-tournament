@@ -289,6 +289,96 @@ async function closeTableAndRedistribute(
 ): Promise<RebalanceResult> {
   const moves: PlayerMovement[] = [];
 
+  // 🎯 FINAL TABLE SHUFFLE: When closing leaves exactly 1 table
+  if (remainingTables.length === 1) {
+    console.log(
+      `🎲 [FINAL TABLE SHUFFLE] Closing table ${tableToClose.tableNumber} leaves exactly 1 table - shuffling ALL players`,
+    );
+
+    // Get tournament category to check for SITANDGO exclusion
+    const tableRecord = await prisma.tournament_table.findUnique({
+      where: { id: tableToClose.id },
+      include: {
+        tournament: {
+          select: { tournament_category: true },
+        },
+      },
+    });
+
+    const tournamentCategory = tableRecord?.tournament?.tournament_category;
+
+    // SITANDGO tournaments skip the shuffle (already handled by early return)
+    if (tournamentCategory === "SITANDGO") {
+      console.log(
+        "🚫 [FINAL TABLE SHUFFLE] Sit&Go category - skipping shuffle",
+      );
+      // Fall through to normal redistribution logic below
+    } else {
+      // ✅ APPLY FINAL TABLE SHUFFLE for APT, SOLIPOKER, SPECIAUX, SUPERFINALE
+      const finalTable = remainingTables[0];
+
+      // 1️⃣ Combine ALL players from BOTH tables
+      const allFinalPlayers = [...finalTable.players, ...tableToClose.players];
+
+      console.log(
+        `  🎯 Total players for shuffle: ${allFinalPlayers.length} (${finalTable.players.length} from T${finalTable.tableNumber} + ${tableToClose.players.length} from T${tableToClose.tableNumber})`,
+      );
+
+      // 2️⃣ SHUFFLE ALL players randomly
+      const shuffledPlayers = shuffleArray(allFinalPlayers);
+
+      // 3️⃣ Reassign sequential seats 1, 2, 3... on final table
+      for (let i = 0; i < shuffledPlayers.length; i++) {
+        const player = shuffledPlayers[i];
+        const fromTableId = player.table_id;
+        const fromTableNumber = player.tournament_table?.table_number;
+        const fromTableSeat = player.table_seat_number ?? null;
+        const newSeatNumber = i + 1;
+
+        await prisma.table_assignment.update({
+          where: { id: player.id },
+          data: {
+            table_id: finalTable.id,
+            table_seat_number: newSeatNumber,
+          },
+        });
+
+        moves.push({
+          playerName: player.registration?.wp_users?.display_name ?? "??",
+          registrationId: Number(player.registration_id),
+          fromTableId: Number(fromTableId),
+          fromTableNumber,
+          fromTableSeat,
+          toTableId: Number(finalTable.id),
+          toTableNumber: finalTable.tableNumber,
+          toTableSeat: newSeatNumber,
+        });
+
+        console.log(
+          `  🎲 ${player.registration?.wp_users?.display_name} → T${finalTable.tableNumber} Seat ${newSeatNumber} (from T${fromTableNumber} S${fromTableSeat})`,
+        );
+      }
+
+      // 4️⃣ Delete the closing table
+      await prisma.tournament_table.delete({ where: { id: tableToClose.id } });
+
+      console.log(
+        `✅ [FINAL TABLE SHUFFLE] All ${shuffledPlayers.length} players shuffled on T${finalTable.tableNumber}, T${tableToClose.tableNumber} deleted`,
+      );
+
+      return {
+        changed: true,
+        moves,
+        phase: "closure",
+        closedTables: [tableToClose.tableNumber],
+      };
+    }
+  }
+
+  // ============================================================
+  // NORMAL REDISTRIBUTION LOGIC (non-final-table or SITANDGO)
+  // ============================================================
+
   // Shuffle players for random redistribution
   const playersToRedistribute = shuffleArray(tableToClose.players);
 

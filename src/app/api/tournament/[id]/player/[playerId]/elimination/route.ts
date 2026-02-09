@@ -56,17 +56,17 @@ function getSitAndGoScore(total: number, rank: number): number {
     9: [9, 6, 4, 2, 0, 0, 0, 0, 0],
   };
   const scores = sitAndGoScores[total];
-  return scores ? scores[rank - 1] ?? 0 : 0;
+  return scores ? (scores[rank - 1] ?? 0) : 0;
 }
 
 function findNextAvailableSeat(
   players: { table_seat_number: number | null }[],
-  startSeat: number = 1
+  startSeat: number = 1,
 ): number {
   const occupied = new Set(
     players
       .map((p) => p.table_seat_number)
-      .filter((n): n is number => n !== null)
+      .filter((n): n is number => n !== null),
   );
   let seat = startSeat;
   while (occupied.has(seat)) {
@@ -78,7 +78,7 @@ function findNextAvailableSeat(
 async function getScoreAndRankingPosition(
   tx: Prisma.TransactionClient,
   tournamentId: number | bigint,
-  ranking_position: number
+  ranking_position: number,
 ) {
   const tournament = await tx.tournament.findUnique({
     where: { id: BigInt(tournamentId) },
@@ -138,14 +138,14 @@ export async function PUT(req: NextRequest) {
     if (!tournamentData) {
       return NextResponse.json(
         { error: "Tournament not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     const { tournament_category } = tournamentData;
     const needReequilibrage = tournament_category !== "SITANDGO";
     const hasRanking = ["APT", "SITANDGO", "SPECIAUX", "SOLIPOKER"].includes(
-      tournament_category
+      tournament_category,
     );
     const isSitAndGo = tournament_category === "SITANDGO";
 
@@ -157,7 +157,7 @@ export async function PUT(req: NextRequest) {
     if (!assignment?.registration) {
       return NextResponse.json(
         { error: "Assignment or registration not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -215,7 +215,7 @@ export async function PUT(req: NextRequest) {
             const res = await getScoreAndRankingPosition(
               tx,
               tournamentId,
-              ranking_position
+              ranking_position,
             );
             score = res.score;
           } else if (tournament_category === "SPECIAUX") {
@@ -317,7 +317,7 @@ export async function PUT(req: NextRequest) {
           });
 
           const stillFinished = tablesCheck.every(
-            (t) => t.table_assignment.length === 1
+            (t) => t.table_assignment.length === 1,
           );
           if (!stillFinished) {
             return;
@@ -367,7 +367,7 @@ export async function PUT(req: NextRequest) {
           const { score: lastScore } = await getScoreAndRankingPosition(
             prisma,
             tournamentId,
-            1
+            1,
           );
 
           await prisma.tournament_ranking.deleteMany({
@@ -397,7 +397,7 @@ export async function PUT(req: NextRequest) {
 
       // Repère le classement du dernier éliminé
       const newEliminated = rankings.find(
-        (r) => r.registration_id === assignment.registration.id
+        (r) => r.registration_id === assignment.registration.id,
       );
       if (!newEliminated) {
         console.error("Ranking missing for newly eliminated player");
@@ -407,14 +407,14 @@ export async function PUT(req: NextRequest) {
 
         // Vérifie s'il y a doublon (plus d'un joueur avec cette position)
         const positionCount = rankings.filter(
-          (r) => r.ranking_position === conflictPosition
+          (r) => r.ranking_position === conflictPosition,
         ).length;
         if (positionCount > 1) {
           // Décale toutes les positions ≥ à celle du conflit (sauf le dernier nouvel éliminé)
           const toShift = rankings.filter(
             (r) =>
               r.ranking_position >= conflictPosition &&
-              r.registration_id !== assignment.registration.id
+              r.registration_id !== assignment.registration.id,
           );
           for (const ranking of toShift) {
             await prisma.tournament_ranking.update({
@@ -441,13 +441,13 @@ export async function PUT(req: NextRequest) {
         ...result,
         rebalanced,
         moves,
-      })
+      }),
     );
   } catch (error) {
     console.error("🔥 Error in eliminate route:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

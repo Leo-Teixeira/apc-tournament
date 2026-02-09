@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
     if (!level) {
       return NextResponse.json(
         { error: "Level ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -20,7 +20,7 @@ export async function PUT(req: NextRequest) {
     const data = await req.json();
 
     const currentLevel = await prisma.tournament_level.findUnique({
-      where: { id: levelId }
+      where: { id: levelId },
     });
     if (!currentLevel) {
       return NextResponse.json({ error: "Level not found" }, { status: 404 });
@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest) {
     if (isNaN(duration) || duration <= 0) {
       return NextResponse.json(
         { error: "Invalid duration_minutes" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -40,16 +40,16 @@ export async function PUT(req: NextRequest) {
 
     const allLevels = await prisma.tournament_level.findMany({
       where: { tournament_id: currentLevel.tournament_id },
-      orderBy: { level_number: "asc" }
+      orderBy: { level_number: "asc" },
     });
 
     const updatedIndex = allLevels.findIndex(
-      (lvl) => lvl.id.toString() === levelId.toString()
+      (lvl) => lvl.id.toString() === levelId.toString(),
     );
     if (updatedIndex === -1) {
       return NextResponse.json(
         { error: "Level index not found" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -59,7 +59,7 @@ export async function PUT(req: NextRequest) {
       level_big_blinde: data.level_big_blinde,
       level_pause: data.level_pause,
       level_chip_race: data.level_chip_race,
-      level_ante: data.level_ante
+      level_ante: data.level_ante,
     };
 
     // Préparation des updates en batch
@@ -67,15 +67,15 @@ export async function PUT(req: NextRequest) {
     const updatesBatch = [
       prisma.tournament_level.update({
         where: { id: levelId },
-        data: updatedLevelData
-      })
+        data: updatedLevelData,
+      }),
     ];
 
     for (let i = updatedIndex + 1; i < allLevels.length; i++) {
       const level = allLevels[i];
       const durationMinutes =
         (new Date(level.level_end).getTime() -
-         new Date(level.level_start).getTime()) /
+          new Date(level.level_start).getTime()) /
         60000;
 
       const newStart = new Date(currentTime);
@@ -87,9 +87,9 @@ export async function PUT(req: NextRequest) {
           where: { id: level.id },
           data: {
             level_start: newStart,
-            level_end: newEnd
-          }
-        })
+            level_end: newEnd,
+          },
+        }),
       );
 
       currentTime = newEnd;
@@ -99,7 +99,7 @@ export async function PUT(req: NextRequest) {
     await prisma.$transaction(updatesBatch);
 
     const updatedLevel = await prisma.tournament_level.findUnique({
-      where: { id: levelId }
+      where: { id: levelId },
     });
 
     return NextResponse.json(serializeBigInt(updatedLevel));
@@ -107,11 +107,10 @@ export async function PUT(req: NextRequest) {
     console.error("Error updating level duration and rescheduling:", error);
     return NextResponse.json(
       { error: "Failed to update level and reschedule following levels" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -119,13 +118,13 @@ export async function DELETE(req: NextRequest) {
     if (!level) {
       return NextResponse.json(
         { error: "Level ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const levelId = BigInt(level);
     const deletedLevel = await prisma.tournament_level.findUnique({
-      where: { id: levelId }
+      where: { id: levelId },
     });
     if (!deletedLevel) {
       return NextResponse.json({ error: "Level not found" }, { status: 404 });
@@ -134,35 +133,48 @@ export async function DELETE(req: NextRequest) {
     const tournamentId = deletedLevel.tournament_id;
     const levelNumber = deletedLevel.level_number;
 
-    const previousLevel = await prisma.tournament_level.findFirst({
-      where: {
-        tournament_id: tournamentId,
-        level_number: levelNumber - 1
-      }
-    });
-
     const followingLevels = await prisma.tournament_level.findMany({
       where: {
         tournament_id: tournamentId,
-        level_number: { gt: levelNumber }
+        level_number: { gt: levelNumber },
       },
-      orderBy: { level_number: "asc" }
+      orderBy: { level_number: "asc" },
     });
 
-    let previousEnd = previousLevel
-      ? new Date(previousLevel.level_end)
-      : new Date(deletedLevel.level_start);
+    // 🎯 FEATURE 2: Level Reset Bug Fix
+    // When a level is deleted, the next level should start at NOW with full duration
+    // instead of inheriting remaining time from the deleted level
+    const now = new Date();
+    let previousEnd = now; // Start from NOW instead of previous level's end
 
     // Préparer la batch des update promises
-    const updatesBatch: Prisma.Prisma__tournament_levelClient<{ id: bigint; tournament_id: bigint; level_number: number; level_start: Date; level_end: Date; level_small_blinde: number; level_big_blinde: number; level_pause: boolean; level_chip_race: boolean; level_ante: number | null; }, never, DefaultArgs, Prisma.PrismaClientOptions>[] = [];
+    const updatesBatch: Prisma.Prisma__tournament_levelClient<
+      {
+        id: bigint;
+        tournament_id: bigint;
+        level_number: number;
+        level_start: Date;
+        level_end: Date;
+        level_small_blinde: number;
+        level_big_blinde: number;
+        level_pause: boolean;
+        level_chip_race: boolean;
+        level_ante: number | null;
+      },
+      never,
+      DefaultArgs,
+      Prisma.PrismaClientOptions
+    >[] = [];
 
-    followingLevels.forEach((level) => {
+    followingLevels.forEach((level, index) => {
       const durationMin = getDurationInMinutes(
         new Date(level.level_start),
-        new Date(level.level_end)
+        new Date(level.level_end),
       );
 
-      const newStart = new Date(previousEnd);
+      // For the first following level (the one immediately after deletion):
+      // Set start to NOW and end to NOW + full duration
+      const newStart = index === 0 ? now : new Date(previousEnd);
       const newEnd = new Date(newStart.getTime() + durationMin * 60 * 1000);
 
       previousEnd = newEnd;
@@ -173,27 +185,26 @@ export async function DELETE(req: NextRequest) {
           data: {
             level_number: level.level_number - 1,
             level_start: newStart,
-            level_end: newEnd
-          }
-        })
+            level_end: newEnd,
+          },
+        }),
       );
     });
 
     // Transaction batch (delete + updates)
     await prisma.$transaction([
       prisma.tournament_level.delete({ where: { id: levelId } }),
-      ...updatesBatch
+      ...updatesBatch,
     ]); // timeout augmenté à 20s
 
     return NextResponse.json({
-      message: "Level deleted and reordered successfully"
+      message: "Level deleted and reordered successfully",
     });
   } catch (error) {
     console.error("Error in DELETE level reorder:", error);
     return NextResponse.json(
       { error: "Failed to delete and reorder levels" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
