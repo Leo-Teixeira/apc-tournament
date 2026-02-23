@@ -3,7 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { serializeBigInt } from "@/app/utils/serializeBigInt";
 import { extractParamsFromPath } from "@/app/utils/api-params";
 
-function getBalancedCapacities(totalPlayers: number, maxPerTable: number): number[] {
+function getBalancedCapacities(
+  totalPlayers: number,
+  maxPerTable: number,
+): number[] {
   const nTables = Math.ceil(totalPlayers / maxPerTable);
   const minPerTable = Math.floor(totalPlayers / nTables);
   const remainder = totalPlayers % nTables;
@@ -15,7 +18,8 @@ function getBalancedCapacities(totalPlayers: number, maxPerTable: number): numbe
 }
 
 function getTableCapacities(totalPlayers: number, category: string): number[] {
-  if (category === "APT") {
+  if (category === "APT" || category === "SOLIPOKER") {
+    // APT & SOLIPOKER: final table holds up to 9, multi-table max 8
     if (totalPlayers <= 9) {
       return [totalPlayers];
     }
@@ -45,29 +49,29 @@ export async function POST(req: NextRequest) {
     }
     const t = await prisma.tournament.findUnique({
       where: { id: BigInt(tournamentId) },
-      select: { tournament_category: true }
+      select: { tournament_category: true },
     });
     if (!t) {
       return NextResponse.json(
         { error: "Tournament not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Suppression des anciennes tables et assignments en batch
     const existingTables = await prisma.tournament_table.findMany({
       where: { tournament_id: BigInt(tournamentId) },
-      select: { id: true }
+      select: { id: true },
     });
     if (existingTables.length > 0) {
       const tableIds = existingTables.map((t) => t.id);
       await prisma.$transaction([
         prisma.table_assignment.deleteMany({
-          where: { table_id: { in: tableIds } }
+          where: { table_id: { in: tableIds } },
         }),
         prisma.tournament_table.deleteMany({
-          where: { id: { in: tableIds } }
-        })
+          where: { id: { in: tableIds } },
+        }),
       ]);
     }
 
@@ -75,14 +79,17 @@ export async function POST(req: NextRequest) {
     const registrations = await prisma.registration.findMany({
       where: {
         tournament_id: BigInt(tournamentId),
-        statut: "Confirmed"
-      }
+        statut: "Confirmed",
+      },
     });
     const shuffled = shuffleArray(registrations);
     const totalPlayers = shuffled.length;
 
     // Calcul des capacités équilibrées
-    const tableCapacities = getTableCapacities(totalPlayers, t.tournament_category);
+    const tableCapacities = getTableCapacities(
+      totalPlayers,
+      t.tournament_category,
+    );
 
     // Création tables et assignments dans une transaction optimisée
     const createdTables = await prisma.$transaction(async (tx) => {
@@ -92,8 +99,8 @@ export async function POST(req: NextRequest) {
           data: {
             tournament_id: BigInt(tournamentId),
             table_number: i + 1,
-            table_capacity: tableCapacities[i]
-          }
+            table_capacity: tableCapacities[i],
+          },
         });
         tables.push(table);
       }
@@ -109,7 +116,7 @@ export async function POST(req: NextRequest) {
           assignmentsData.push({
             registration_id: players[j].id,
             table_id: table.id,
-            table_seat_number: j + 1
+            table_seat_number: j + 1,
           });
         }
         playerIndex += capacity;
@@ -118,7 +125,7 @@ export async function POST(req: NextRequest) {
       if (assignmentsData.length > 0) {
         await tx.table_assignment.createMany({
           data: assignmentsData,
-          skipDuplicates: true
+          skipDuplicates: true,
         });
       }
 
@@ -128,14 +135,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       serializeBigInt({
         message: "Tables and assignments created",
-        createdTables
-      })
+        createdTables,
+      }),
     );
   } catch (error) {
     console.error("❌ Erreur lors de la génération des tables :", error);
     return NextResponse.json(
       { error: "Failed to generate tables" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
