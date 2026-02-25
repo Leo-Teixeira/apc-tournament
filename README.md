@@ -23,10 +23,9 @@
 7. [🐛 Debug & Logs](#-debug--logs)
 8. [👥 Rôles & Auth](#-rôles--auth)
 9. [📱 Pages & Features](#-pages--features)
-10. [🚨 Incidents Courants](#-incidents-courants)
-11. [📈 Performances](#-performances)
-12. [🔄 Maintenance](#-maintenance)
-13. [🤝 Support & Contact](#-support--contact)
+10. [📈 Performances](#-performances)
+11. [🔄 Maintenance](#-maintenance)
+12. [🤝 Support & Contact](#-support--contact)
 
 ---
 
@@ -719,83 +718,6 @@ PHASE 3 : Écart (gap) ≥ 2
 - Les tables sont fermées **par le numéro le plus élevé** en premier
 - Après fermeture, les tables restantes sont **renumérotées séquentiellement**
 - Le shuffle de la dernière table se fait **sauf pour les Sit&Go**
-
----
-
-## 🚨 Incidents Courants
-
-### 1. "Le rééquilibrage ne s'arrête pas"
-
-**Symptômes** : Le système continue de déplacer des joueurs en boucle.
-
-**Cause probable** : Edge case dans l'algorithme de gap ≥ 2 avec des capacités proches.
-
-**Solution** :
-
-1. Ouvrir les logs Vercel → chercher `reequilibrate`
-2. Vérifier le nombre de joueurs par table via Prisma Studio :
-   ```sql
-   SELECT tt.table_number, COUNT(ta.id) as players
-   FROM tournament_table tt
-   LEFT JOIN table_assignment ta ON ta.table_id = tt.id AND ta.eliminated = 0
-   WHERE tt.tournament_id = [ID]
-   GROUP BY tt.table_number;
-   ```
-3. **Fix temporaire** : déplacer manuellement les joueurs via l'onglet Tables (drag & drop)
-
-### 2. "Points/score manquants dans le classement"
-
-**Symptômes** : Un joueur éliminé n'apparaît pas dans le classement, ou son score est 0.
-
-**Cause probable** : L'élimination n'a pas créé l'entrée `tournament_ranking`.
-
-**Solution** :
-
-1. Ouvrir Prisma Studio → table `tournament_ranking`
-2. Vérifier que le joueur a une entrée avec le bon `registration_id`
-3. Si absente, créer manuellement l'entrée ou utiliser la page `/[categorie]/[id]/edit-rankings`
-
-### 3. "Le shuffle de la dernière table ne fonctionne pas"
-
-**Symptômes** : Les joueurs gardent le même siège quand il ne reste qu'une table.
-
-**Cause** : Le shuffle n'est pas déclenché, ou c'est un tournoi Sit&Go (exclu par design).
-
-**Vérification** :
-
-1. Confirmer que le tournoi n'est **pas** un Sit&Go
-2. Vérifier l'API `final-table-shuffle` : chercher le dossier dans `src/app/api/tournament/[id]/final-table-shuffle/`
-
-### 4. "Fin de tournoi échoue — Dimanche introuvable"
-
-**Symptômes** : Erreur 404 "Tournoi du dimanche introuvable" en terminant un tournoi SoliPoker.
-
-**Cause** : Le tournoi du dimanche n'existe pas encore ou son nom ne contient pas "dimanche"/"Sunday".
-
-**Solution** :
-
-1. Vérifier dans Prisma Studio que le tournoi du dimanche existe dans le **même trimestre**
-2. S'assurer que son `tournament_name` contient le mot **"dimanche"** ou **"Sunday"** (insensible à la casse)
-
-### 5. "Erreur 500 au lancement du tournoi"
-
-**Cause probable** : Pas de joueurs confirmés, ou pas de stack assigné.
-
-**Vérification** :
-
-1. Onglet Joueurs → vérifier qu'il y a au moins **2 joueurs** en statut `Confirmed`
-2. Onglet Général → vérifier qu'un stack est sélectionné (`tournament_stack`)
-
-### 6. "Les données ne se rafraîchissent pas sur l'écran Game"
-
-**Cause probable** : Problème de connexion réseau, ou timeout API.
-
-**Solution** :
-
-1. Vérifier la connexion internet du PC projetant le game
-2. Ouvrir les DevTools → Network → vérifier les appels `/api/tournament/[id]/details`
-3. Si timeout : les fonctions Vercel ont un max de 30s (configuré dans `vercel.json`)
-4. **Fix rapide** : recharger la page game (F5)
 
 ---
 
