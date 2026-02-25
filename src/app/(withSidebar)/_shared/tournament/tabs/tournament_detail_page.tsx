@@ -2,7 +2,17 @@
 
 import { Chip, Tab, Tabs } from "@heroui/react";
 import { GeneralTabs } from "./general";
-import { LinkSquare02Icon, ArrowLeft01Icon, Home01Icon, Table01Icon, Home11Icon, Layers01Icon, UserGroup03Icon, Table02Icon, TableRoundIcon } from "@hugeicons/core-free-icons";
+import {
+  LinkSquare02Icon,
+  ArrowLeft01Icon,
+  Home01Icon,
+  Table01Icon,
+  Home11Icon,
+  Layers01Icon,
+  UserGroup03Icon,
+  Table02Icon,
+  TableRoundIcon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { STRINGS } from "@/app/constants/string";
@@ -19,7 +29,7 @@ import { useTournamentContext } from "@/app/providers/TournamentContextProvider"
 import { GenericModal } from "@/app/components/popup";
 import {
   AddTableForm,
-  AddTableFormHandle
+  AddTableFormHandle,
 } from "./components/popup/add_table_popup";
 import { useTogglePause } from "@/app/hook/useTogglePause";
 import { useLaunchTournament } from "@/app/hook/useLaunchTournament";
@@ -32,19 +42,16 @@ import { useEndTournament } from "@/app/hook/useEndTournament";
 export default function TournamentDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const {
-    tournament,
-    levels,
-    registration,
-    classement,
-    trimestry
-  } = useTournamentContext();
+  const { tournament, levels, registration, classement, trimestry } =
+    useTournamentContext();
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false);
-  const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] = useState(false);
-  const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] = useState(false);
+  const [isReinitialiseLevelModalOpen, setIsReinitialiseLevelModalOpen] =
+    useState(false);
+  const [isGenerateLevelModalOpen, setIsGenerateLevelModalOpen] =
+    useState(false);
   const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
   const [isPauseModalOpen, setIsPauseModalOpen] = useState(false);
   const formRef = useRef<AddTableFormHandle>(null);
@@ -63,7 +70,9 @@ export default function TournamentDetailPage() {
 
   const nextTableNumber =
     (tournament?.tournament_table?.length ?? 0) > 0
-      ? Math.max(...(tournament!.tournament_table ?? []).map((t) => t.table_number)) + 1
+      ? Math.max(
+          ...(tournament!.tournament_table ?? []).map((t) => t.table_number),
+        ) + 1
       : 1;
 
   useEffect(() => {
@@ -88,7 +97,7 @@ export default function TournamentDetailPage() {
     (tournament?.stack?.stack_chip?.length ?? 0) > 0;
 
   const trimesterObj = trimestry.find(
-    (trimester) => trimester.id === tournament?.tournament_trimestry
+    (trimester) => trimester.id === tournament?.tournament_trimestry,
   );
 
   const tabs = useMemo(() => {
@@ -98,7 +107,7 @@ export default function TournamentDetailPage() {
       { id: "1", label: "Niveaux", content: <NiveauxTabs /> },
       { id: "2", label: "Joueurs", content: <PlayerTabs /> },
       { id: "3", label: "Tables", content: <TableTabs /> },
-      { id: "4", label: "Jetons", content: <ChipTabs /> }
+      { id: "4", label: "Jetons", content: <ChipTabs /> },
     ];
   }, [tournament, registration, classement, levels]);
 
@@ -122,7 +131,7 @@ export default function TournamentDetailPage() {
                 color: "white",
                 fontWeight: 400,
                 fontSize: "18px",
-                lineHeight: "24px"
+                lineHeight: "24px",
               }}
             >
               <HugeiconsIcon
@@ -144,10 +153,10 @@ export default function TournamentDetailPage() {
                 tournament.tournament_status === "finish"
                   ? "bg-red-950"
                   : tournament.tournament_status === "start"
-                  ? "bg-purple-950"
-                  : tournament.tournament_pause
-                  ? "bg-danger-500"
-                  : "bg-green-950"
+                    ? "bg-purple-950"
+                    : tournament.tournament_pause
+                      ? "bg-danger-500"
+                      : "bg-green-950"
               }`}
             >
               {tournament.tournament_pause
@@ -158,6 +167,18 @@ export default function TournamentDetailPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-end">
+          {tournament.tournament_status === "finish" && (
+            <ButtonComponents
+              text="Modifier le classement"
+              onClick={() =>
+                router.push(
+                  `/${window.location.pathname.split("/").filter(Boolean).slice(0, 2).join("/")}/edit-rankings`,
+                )
+              }
+              buttonClassName="bg-primary_background hover:bg-primary_hover_background"
+              textClassName="text-primary_brand-50"
+            />
+          )}
           {tournament.tournament_status === "start" && (
             <ButtonComponents
               text="Lancer le tournoi"
@@ -248,25 +269,18 @@ export default function TournamentDetailPage() {
               tournamentStatus={tournament.tournament_status}
               tabsId={selectedTab}
               levels={levels}
-
               onAddLevel={onOpen}
               isAddLevelLoading={false}
-
               onResetLevel={() => setIsReinitialiseLevelModalOpen(true)}
               isResetLevelLoading={resetLevelsMutation.isLoading}
-
               onGenerateLevel={() => setIsGenerateLevelModalOpen(true)}
               isGenerateLevelLoading={generateLevelsMutation.isLoading}
-
               onAddPlayer={onOpen}
               isAddPlayerLoading={false}
-
               onEditStack={onOpen}
               isEditStackLoading={false}
-
               onAddTable={() => setIsAddTableModalOpen(true)}
               isAddTableLoading={addTableMutation.isLoading}
-
               onGenerateTables={onOpen}
               isGenerateTablesLoading={false}
             />
@@ -278,7 +292,7 @@ export default function TournamentDetailPage() {
             { id: "0", label: "Général", icon: Home11Icon },
             { id: "1", label: "Niveaux", icon: Layers01Icon },
             { id: "2", label: "Joueurs", icon: UserGroup03Icon },
-            { id: "3", label: "Tables", icon: TableRoundIcon }
+            { id: "3", label: "Tables", icon: TableRoundIcon },
           ].map((tab) => {
             const disabled = tournament.tournament_status === "finish";
             return (
@@ -320,7 +334,11 @@ export default function TournamentDetailPage() {
         </div>
       </div>
 
-      <ModalManager selectedTab={selectedTab} isOpen={isOpen} onClose={onClose} />
+      <ModalManager
+        selectedTab={selectedTab}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
 
       <GenericModal
         isOpen={isLaunchModalOpen}
@@ -332,7 +350,7 @@ export default function TournamentDetailPage() {
           try {
             if (!isLaunchable) {
               alert(
-                "Impossible de lancer le tournoi sans tables, niveaux et jetons."
+                "Impossible de lancer le tournoi sans tables, niveaux et jetons.",
               );
               return;
             }
@@ -371,11 +389,11 @@ export default function TournamentDetailPage() {
         loading={endTournamentMutation.isLoading}
       >
         <p>
-          Es-tu sûr de vouloir <strong>mettre fin au tournoi</strong> ?<br />
+          Es-tu sûr de vouloir <strong>mettre fin au tournoi</strong> ?
+          <br />
           Cette action le clôturera définitivement.
         </p>
       </GenericModal>
-
 
       <GenericModal
         isOpen={isGenerateLevelModalOpen}
@@ -417,7 +435,8 @@ export default function TournamentDetailPage() {
         loading={resetLevelsMutation.isLoading}
       >
         <p>
-          Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront tous perdus.
+          Es-tu sûr de vouloir réinitialiser les niveaux ? Attention ils seront
+          tous perdus.
         </p>
       </GenericModal>
 
@@ -434,7 +453,7 @@ export default function TournamentDetailPage() {
             if (!tournament) throw new Error("Tournoi non disponible");
             await addTableMutation.mutateAsync({
               tournamentId: tournament.id,
-              data: values
+              data: values,
             });
             setIsAddTableModalOpen(false);
           } catch (err) {
@@ -451,7 +470,9 @@ export default function TournamentDetailPage() {
         isOpen={isPauseModalOpen}
         onClose={() => setIsPauseModalOpen(false)}
         title={
-          tournament.tournament_pause ? "Reprendre le tournoi" : "Mettre en pause le tournoi"
+          tournament.tournament_pause
+            ? "Reprendre le tournoi"
+            : "Mettre en pause le tournoi"
         }
         confirmLabel={
           tournament.tournament_pause ? "Reprendre" : "Mettre en pause"
@@ -470,7 +491,8 @@ export default function TournamentDetailPage() {
       >
         <p>
           Es-tu sûr de vouloir{" "}
-          {tournament.tournament_pause ? "reprendre" : "mettre en pause"} le tournoi ?
+          {tournament.tournament_pause ? "reprendre" : "mettre en pause"} le
+          tournoi ?
         </p>
       </GenericModal>
     </div>

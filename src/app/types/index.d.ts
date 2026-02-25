@@ -11,3 +11,4 @@ export * from "./helpers";
 export * from "./populated";
 export * from "./images.types";
 export * from "./season.types";
+export * from "./edit-rankings.types";
