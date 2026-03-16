@@ -18,8 +18,12 @@ function getBalancedCapacities(
 }
 
 function getTableCapacities(totalPlayers: number, category: string): number[] {
-  if (category === "APT" || category === "SOLIPOKER") {
-    // APT & SOLIPOKER: final table holds up to 9, multi-table max 8
+  if (
+    category === "APT" ||
+    category === "SOLIPOKER" ||
+    category === "SPECIAUX"
+  ) {
+    // APT, SOLIPOKER, SPECIAUX, SUPERFINALE: final table holds up to 9, multi-table max 8
     if (totalPlayers <= 9) {
       return [totalPlayers];
     }

@@ -33,8 +33,13 @@ function getMaxCapacityForCategory(
   category: string,
   remainingTableCount: number,
 ): number {
-  if (category === "APT" || category === "SOLIPOKER") {
-    // APT & SOLIPOKER: max 8 for multi-table, max 9 for single table (final table)
+  if (
+    category === "APT" ||
+    category === "SOLIPOKER" ||
+    category === "SPECIAUX" ||
+    category === "SUPERFINALE"
+  ) {
+    // APT, SOLIPOKER, SPECIAUX, SUPERFINALE: max 8 for multi-table, max 9 for single table (final table)
     return remainingTableCount === 1 ? 9 : 8;
   } else if (category === "SITANDGO") {
     return 9;
