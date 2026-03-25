@@ -103,7 +103,7 @@ export const PlayerTabs = React.memo(() => {
       wasTournamentFinished.current = false;
     }
   
-    if (tournament.tournament_status === "finish" || alivePlayers.length > 1) {
+    if (tournament.tournament_status === "finish" || !tournamentIsFinished) {
       finishTriggered.current = false;
     }
   }, [assignements, tournament?.tournament_status, finishTournamentMutation, notify, tournament]);

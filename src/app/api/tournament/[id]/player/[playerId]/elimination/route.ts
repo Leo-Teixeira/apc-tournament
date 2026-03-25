@@ -201,6 +201,38 @@ export async function PUT(req: NextRequest) {
           });
 
           score = getSitAndGoScore(totalOnThisTable, ranking_position);
+
+          // Si il ne reste qu'1 survivant sur cette table, attribuer ses points rang 1 immédiatement
+          if (aliveOnThisTable === 1) {
+            const survivor = await tx.table_assignment.findFirst({
+              where: {
+                table_id: tableId!,
+                eliminated: false,
+                registration: { statut: "Confirmed" },
+              },
+              include: { registration: true },
+            });
+
+            if (survivor?.registration) {
+              const survivorScore = getSitAndGoScore(totalOnThisTable, 1);
+
+              await tx.tournament_ranking.deleteMany({
+                where: {
+                  registration_id: survivor.registration.id,
+                  tournament_id: BigInt(tournamentId),
+                },
+              });
+              await tx.tournament_ranking.create({
+                data: {
+                  registration_id: survivor.registration.id,
+                  tournament_id: BigInt(tournamentId),
+                  ranking_position: 1,
+                  ranking_score: survivorScore,
+                  table_id: tableId!,
+                },
+              });
+            }
+          }
         } else {
           const aliveCount = await tx.table_assignment.count({
             where: {
